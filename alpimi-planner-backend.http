@@ -1,0 +1,6 @@
+@alpimi_planner_backend_HostAddress = http://localhost:5062
+
+GET {{alpimi_planner_backend_HostAddress}}/alpimi/
+Accept: application/json
+
+###

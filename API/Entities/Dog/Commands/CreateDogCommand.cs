@@ -1,9 +1,9 @@
-﻿using MediatR;
-using Microsoft.Data.SqlClient;
-using Dapper;
-using System.Data;
-using Azure.Core;
+﻿using System.Data;
 using alpimi_planner_backend.API.Utilities;
+using Azure.Core;
+using Dapper;
+using MediatR;
+using Microsoft.Data.SqlClient;
 
 namespace AlpimiAPI.Dog.Commands
 {
@@ -13,14 +13,22 @@ namespace AlpimiAPI.Dog.Commands
     {
         public async Task<int> Handle(CreateDogCommand request, CancellationToken cancellationToken)
         {
-            using (IDbConnection connection = new SqlConnection(Configuration.GetConnectionString()))
+            using (
+                IDbConnection connection = new SqlConnection(Configuration.GetConnectionString())
+            )
             {
-                await connection.QueryFirstOrDefaultAsync<AlpimiAPI.Breed.Breed>("SELECT [Id], [Name], [CountryOrigin] FROM [Breed] WHERE [Id] = @Id;", new { Id = request.BreedId});
-                
-                var insertedId = await connection.QuerySingleOrDefaultAsync<int>(@"
+                await connection.QueryFirstOrDefaultAsync<AlpimiAPI.Breed.Breed>(
+                    "SELECT [Id], [Name], [CountryOrigin] FROM [Breed] WHERE [Id] = @Id;",
+                    new { Id = request.BreedId }
+                );
+
+                var insertedId = await connection.QuerySingleOrDefaultAsync<int>(
+                    @"
                     INSERT INTO [Dog] ([Name], [BirthDate], [BreedId])
                     OUTPUT INSERTED.Id                    
-                    VALUES (@Name, @BirthDate, @BreedId);", request);
+                    VALUES (@Name, @BirthDate, @BreedId);",
+                    request
+                );
 
                 return insertedId;
             }

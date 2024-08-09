@@ -1,8 +1,8 @@
-﻿using MediatR;
-using Microsoft.Data.SqlClient;
-using Dapper;
-using System.Data;
+﻿using System.Data;
 using alpimi_planner_backend.API.Utilities;
+using Dapper;
+using MediatR;
+using Microsoft.Data.SqlClient;
 
 namespace AlpimiAPI.Breed.Commands
 {
@@ -10,18 +10,25 @@ namespace AlpimiAPI.Breed.Commands
 
     public class CreateBreedHandler : IRequestHandler<CreateBreedCommand, int>
     {
-        public async Task<int> Handle(CreateBreedCommand request, CancellationToken cancellationToken)
+        public async Task<int> Handle(
+            CreateBreedCommand request,
+            CancellationToken cancellationToken
+        )
         {
-            using (IDbConnection connection = new SqlConnection(Configuration.GetConnectionString()))
+            using (
+                IDbConnection connection = new SqlConnection(Configuration.GetConnectionString())
+            )
             {
-                var insertedId = await connection.QuerySingleOrDefaultAsync<int>(@"
+                var insertedId = await connection.QuerySingleOrDefaultAsync<int>(
+                    @"
                     INSERT INTO [Breed] ([Name], [CountryOrigin])
                     OUTPUT INSERTED.Id                    
-                    VALUES (@Name, @CountryOrigin);", request);
+                    VALUES (@Name, @CountryOrigin);",
+                    request
+                );
 
                 return insertedId;
             }
-
         }
     }
 }

@@ -6,8 +6,10 @@ namespace AlpimiAPI.Dog.Requests
     {
         [Required]
         public string Name { get; set; }
+
         [Required]
         public DateTime BirthDate { get; set; }
+
         [Required]
         public int BreedId { get; set; }
     }

@@ -15,7 +15,8 @@ namespace alpimi_planner_backend.Migrations
                 name: "Breed",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table
+                        .Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CountryOrigin = table.Column<string>(type: "nvarchar(max)", nullable: false)
@@ -23,13 +24,15 @@ namespace alpimi_planner_backend.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Breed", x => x.Id);
-                });
+                }
+            );
 
             migrationBuilder.CreateTable(
                 name: "Dog",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table
+                        .Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     BirthDate = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -43,23 +46,20 @@ namespace alpimi_planner_backend.Migrations
                         column: x => x.BreedId,
                         principalTable: "Breed",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
+                        onDelete: ReferentialAction.Cascade
+                    );
+                }
+            );
 
-            migrationBuilder.CreateIndex(
-                name: "IX_Dog_BreedId",
-                table: "Dog",
-                column: "BreedId");
+            migrationBuilder.CreateIndex(name: "IX_Dog_BreedId", table: "Dog", column: "BreedId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Dog");
+            migrationBuilder.DropTable(name: "Dog");
 
-            migrationBuilder.DropTable(
-                name: "Breed");
+            migrationBuilder.DropTable(name: "Breed");
         }
     }
 }

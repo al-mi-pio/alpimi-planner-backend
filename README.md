@@ -5,7 +5,7 @@ A WEP API created in .NET for the Alpimi planner
 
 - Install [SQL Server Developer](https://www.microsoft.com/pl-pl/sql-server/sql-server-downloads)
 
-- Launch Server Explorer in Visual Studio, right click `Data Connections` and `Create New SQL Server Database`, provide your hostname as a server name and check `Trust server certificate`
+- Launch `View > Server Explorer` in Visual Studio, right click `Data Connections` and `Create New SQL Server Database`, provide your hostname as a server name and check `Trust server certificate`
 
 - After a successful connection, right click the database, select `Properties` and copy the connection string
 

@@ -1,9 +1,9 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using AlpimiAPI.Dog.Commands;
+﻿using AlpimiAPI.Dog.Commands;
 using AlpimiAPI.Dog.Queries;
 using AlpimiAPI.Dog.Requests;
+using MediatR;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AlpimiAPI.Dog
 {
@@ -12,6 +12,7 @@ namespace AlpimiAPI.Dog
     public class DogController : ControllerBase
     {
         private readonly IMediator _mediator;
+
         public DogController(IMediator mediator) => _mediator = mediator;
 
         [HttpPost]
@@ -29,7 +30,7 @@ namespace AlpimiAPI.Dog
             var query = new GetDogQuery(id);
             var res = await _mediator.Send(query);
 
-            if(res is null) 
+            if (res is null)
             {
                 return NotFound();
             }

@@ -1,8 +1,8 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using AlpimiAPI.Breed.Commands;
+﻿using AlpimiAPI.Breed.Commands;
 using AlpimiAPI.Breed.Queries;
 using AlpimiAPI.Breed.Requests;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AlpimiAPI.Breed
 {
@@ -11,6 +11,7 @@ namespace AlpimiAPI.Breed
     public class BreedController : ControllerBase
     {
         private readonly IMediator _mediator;
+
         public BreedController(IMediator mediator) => _mediator = mediator;
 
         [HttpPost]
@@ -29,26 +30,26 @@ namespace AlpimiAPI.Breed
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Breed>> GetOne([FromRoute]int id)
+        public async Task<ActionResult<Breed>> GetOne([FromRoute] int id)
         {
             var query = new GetBreedQuery(id);
             Breed res = await _mediator.Send(query);
 
-            if(res is null)
+            if (res is null)
             {
                 return NotFound();
             }
 
             return Ok(res);
         }
-        
+
         [HttpDelete("{id}")]
         [ProducesResponseType(204)]
         public async Task<ActionResult> Delete([FromRoute] int id)
         {
             var command = new DeleteBreedCommand(id);
             await _mediator.Send(command);
-            
+
             return NoContent();
         }
     }

@@ -1,8 +1,8 @@
-﻿using alpimi_planner_backend.API.Utilities;
+﻿using System.Data;
+using alpimi_planner_backend.API.Utilities;
 using Dapper;
 using MediatR;
 using Microsoft.Data.SqlClient;
-using System.Data;
 
 namespace AlpimiAPI.Breed.Queries
 {
@@ -12,14 +12,17 @@ namespace AlpimiAPI.Breed.Queries
     {
         public async Task<Breed> Handle(GetBreedQuery request, CancellationToken cancellationToken)
         {
-            using (IDbConnection connection = new SqlConnection(Configuration.GetConnectionString()))
+            using (
+                IDbConnection connection = new SqlConnection(Configuration.GetConnectionString())
+            )
             {
-                var breed = await connection.QueryFirstOrDefaultAsync<Breed>("SELECT [Id], [Name], [CountryOrigin] FROM [Breed] WHERE [Id] = @Id;", request);
+                var breed = await connection.QueryFirstOrDefaultAsync<Breed>(
+                    "SELECT [Id], [Name], [CountryOrigin] FROM [Breed] WHERE [Id] = @Id;",
+                    request
+                );
 
                 return breed;
             }
-
         }
     }
-
 }

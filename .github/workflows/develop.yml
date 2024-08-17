@@ -1,4 +1,4 @@
-name: Default ci pipeline
+name: Default development pipeline
 
 on:
   push:

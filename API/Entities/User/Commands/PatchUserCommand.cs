@@ -6,11 +6,11 @@ using Microsoft.Data.SqlClient;
 
 namespace AlpimiAPI.User.Commands
 {
-    public record PatchUserCommand(Guid Id, string? Login, string? CustomURL) : IRequest<Guid>;
+    public record PatchUserCommand(Guid Id, string? Login, string? CustomURL) : IRequest<User>;
 
-    public class PatchUserHandler : IRequestHandler<PatchUserCommand, Guid>
+    public class PatchUserHandler : IRequestHandler<PatchUserCommand, User>
     {
-        public async Task<Guid> Handle(
+        public async Task<User> Handle(
             PatchUserCommand request,
             CancellationToken cancellationToken
         )
@@ -19,7 +19,7 @@ namespace AlpimiAPI.User.Commands
                 IDbConnection connection = new SqlConnection(Configuration.GetConnectionString())
             )
             {
-                var changedId = await connection.QuerySingleOrDefaultAsync<Guid>(
+                var user = await connection.QuerySingleOrDefaultAsync<User>(
                     @"
                     UPDATE [User] 
                     SET [Login]=CASE WHEN @Login IS NOT NULL THEN @Login 
@@ -28,7 +28,7 @@ namespace AlpimiAPI.User.Commands
                     request
                 );
 
-                return changedId;
+                return user;
             }
         }
     }

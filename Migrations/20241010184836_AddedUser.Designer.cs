@@ -12,7 +12,7 @@ using alpimi_planner_backend.API;
 namespace alpimi_planner_backend.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20241010125635_AddedUser")]
+    [Migration("20241010184836_AddedUser")]
     partial class AddedUser
     {
         /// <inheritdoc />
@@ -82,10 +82,6 @@ namespace alpimi_planner_backend.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Login")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

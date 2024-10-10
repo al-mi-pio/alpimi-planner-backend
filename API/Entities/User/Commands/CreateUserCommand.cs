@@ -6,8 +6,7 @@ using Microsoft.Data.SqlClient;
 
 namespace AlpimiAPI.User.Commands
 {
-    public record CreateUserCommand(Guid Id, string Login, string Password, string CustomURL)
-        : IRequest<Guid>;
+    public record CreateUserCommand(Guid Id, string Login, string CustomURL) : IRequest<Guid>;
 
     public class CreateUserHandler : IRequestHandler<CreateUserCommand, Guid>
     {
@@ -22,9 +21,9 @@ namespace AlpimiAPI.User.Commands
             {
                 var insertedId = await connection.QuerySingleOrDefaultAsync<Guid>(
                     @"
-                    INSERT INTO [User] ([Id],[Login], [Password],[CustomURL])
+                    INSERT INTO [User] ([Id],[Login],[CustomURL])
                     OUTPUT INSERTED.Id                    
-                    VALUES (@Id,@Login,@Password,@CustomURL);",
+                    VALUES (@Id,@Login,@CustomURL);",
                     request
                 );
 

@@ -4,6 +4,7 @@ using System.Security.Claims;
 using System.Text;
 using AlpimiAPI.Breed;
 using AlpimiAPI.Breed.Queries;
+using AlpimiAPI.User;
 using alpimi_planner_backend.API.Utilities;
 using Dapper;
 using MediatR;
@@ -27,13 +28,13 @@ namespace alpimi_planner_backend.API.Entities.Auth.Queries
 
         public async Task<String> Handle(LoginQuery request, CancellationToken cancellationToken)
         {
-            User user;
+            Auth user;
             using (
                 IDbConnection connection = new SqlConnection(Configuration.GetConnectionString())
             )
             {
-                user = await connection.QueryFirstOrDefaultAsync<User>(
-                    "SELECT [Id],[Login],[Password], FROM [User] WHERE [Login] = @UserName;",
+                user = await connection.QueryFirstOrDefaultAsync<Auth>(
+                    "SELECT [Id],[Login],[Password] FROM [User] WHERE [Login] = @UserName;",
                     request
                 );
             }

@@ -1,4 +1,13 @@
-﻿namespace alpimi_planner_backend.API.Entities.Auth.DTO
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace alpimi_planner_backend.API.Entities.Auth.DTO
 {
-    public class LoginRequest { }
+    public record CreateBreedRequest
+    {
+        [Required]
+        public string UserName { get; set; }
+
+        [Required]
+        public string Password { get; set; }
+    }
 }

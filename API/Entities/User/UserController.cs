@@ -2,6 +2,7 @@
 using AlpimiAPI.User.Commands;
 using AlpimiAPI.User.DTO;
 using AlpimiAPI.User.Queries;
+using Azure.Core;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -48,6 +49,18 @@ namespace AlpimiAPI.User
         public async Task<ActionResult> Delete([FromRoute] Guid id)
         {
             var command = new DeleteUserCommand(id);
+            await _mediator.Send(command);
+
+            return NoContent();
+        }
+
+        [HttpPatch("{id}")]
+        public async Task<ActionResult> Patch(
+            [FromBody] PatchUserRequest request,
+            [FromRoute] Guid id
+        )
+        {
+            var command = new PatchUserCommand(id, request.Login, request.CustomURL);
             await _mediator.Send(command);
 
             return NoContent();

@@ -17,7 +17,7 @@ namespace AlpimiAPI.User.Queries
             )
             {
                 var user = await connection.QueryFirstOrDefaultAsync<User>(
-                    "SELECT [Id], [Login], [Password], [CustomURL] FROM [User] WHERE [Id] = @Id;",
+                    "SELECT [Id], [Login], [CustomURL] FROM [User] WHERE [Id] = @Id;",
                     request
                 );
 

@@ -17,7 +17,7 @@ namespace AlpimiAPI.User
         public UserController(IMediator mediator) => _mediator = mediator;
 
         [HttpPost]
-        public async Task<ActionResult<Guid>> Create([FromBody] CreateUserRequest request)
+        public async Task<ActionResult<int>> Create([FromBody] CreateUserRequest request)
         {
             var command = new CreateUserCommand(Guid.NewGuid(), request.Login, request.CustomURL);
             var res = await _mediator.Send(command);
@@ -50,15 +50,15 @@ namespace AlpimiAPI.User
         }
 
         [HttpPatch("{id}")]
-        public async Task<ActionResult<User>> Patch(
+        public async Task<ActionResult> Patch(
             [FromBody] PatchUserRequest request,
             [FromRoute] Guid id
         )
         {
             var command = new PatchUserCommand(id, request.Login, request.CustomURL);
-            User res = await _mediator.Send(command);
+            await _mediator.Send(command);
 
-            return Ok(res);
+            return NoContent();
         }
     }
 }

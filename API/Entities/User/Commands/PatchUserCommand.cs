@@ -24,7 +24,6 @@ namespace AlpimiAPI.User.Commands
                     UPDATE [User] 
                     SET [Login]=CASE WHEN @Login IS NOT NULL THEN @Login 
                     ELSE [Login] END,[CustomURL]=CASE WHEN @CustomURL IS NOT NULL THEN @CustomURL ELSE [CustomURL] END 
-                    OUTPUT INSERTED.[Id], INSERTED.[Login], INSERTED.[CustomURL]
                     WHERE [Id]=@Id;",
                     request
                 );

@@ -7,9 +7,9 @@ using Microsoft.Data.SqlClient;
 
 namespace AlpimiAPI.User.Queries
 {
-    public record GetUserQuery(Guid Id) : IRequest<User>;
+    public record GetUserQuery(Guid Id) : IRequest<User?>;
 
-    public class GetUserHandler : IRequestHandler<GetUserQuery, User>
+    public class GetUserHandler : IRequestHandler<GetUserQuery, User?>
     {
         private readonly IDbService _dbService;
 
@@ -18,9 +18,9 @@ namespace AlpimiAPI.User.Queries
             _dbService = dbService;
         }
 
-        public async Task<User> Handle(GetUserQuery request, CancellationToken cancellationToken)
+        public async Task<User?> Handle(GetUserQuery request, CancellationToken cancellationToken)
         {
-            var user = await _dbService.Get<User>(
+            var user = await _dbService.Get<User?>(
                 "SELECT [Id], [Login], [CustomURL] FROM [User] WHERE [Id] = @Id;",
                 request
             );

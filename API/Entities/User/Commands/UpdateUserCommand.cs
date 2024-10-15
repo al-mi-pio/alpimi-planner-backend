@@ -7,9 +7,9 @@ using Microsoft.Data.SqlClient;
 
 namespace AlpimiAPI.User.Commands
 {
-    public record UpdateUserCommand(Guid Id, string? Login, string? CustomURL) : IRequest<User>;
+    public record UpdateUserCommand(Guid Id, string? Login, string? CustomURL) : IRequest<User?>;
 
-    public class UpdateUserHandler : IRequestHandler<UpdateUserCommand, User>
+    public class UpdateUserHandler : IRequestHandler<UpdateUserCommand, User?>
     {
         private readonly IDbService _dbService;
 
@@ -18,12 +18,12 @@ namespace AlpimiAPI.User.Commands
             _dbService = dbService;
         }
 
-        public async Task<User> Handle(
+        public async Task<User?> Handle(
             UpdateUserCommand request,
             CancellationToken cancellationToken
         )
         {
-            var user = await _dbService.Update<User>(
+            var user = await _dbService.Update<User?>(
                 @"
                     UPDATE [User] 
                     SET [Login]=CASE WHEN @Login IS NOT NULL THEN @Login 

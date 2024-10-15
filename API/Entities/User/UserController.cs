@@ -57,7 +57,10 @@ namespace AlpimiAPI.User
         {
             var command = new UpdateUserCommand(id, request.Login, request.CustomURL);
             User res = await _mediator.Send(command);
-
+            if (res is null)
+            {
+                return NotFound();
+            }
             return Ok(res);
         }
     }

@@ -4,8 +4,8 @@ namespace AlpimiAPI.User.DTO
 {
     public class UpdateUserDTO
     {
-        public string? Login { get; set; }
+        public required string? Login { get; set; }
 
-        public string? CustomURL { get; set; }
+        public required string? CustomURL { get; set; }
     }
 }

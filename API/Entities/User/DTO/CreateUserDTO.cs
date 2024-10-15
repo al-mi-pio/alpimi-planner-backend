@@ -5,9 +5,9 @@ namespace AlpimiAPI.User.DTO
     public class CreateUserDTO
     {
         [Required]
-        public string Login { get; set; }
+        public required string Login { get; set; }
 
         [Required]
-        public string CustomURL { get; set; }
+        public required string CustomURL { get; set; }
     }
 }

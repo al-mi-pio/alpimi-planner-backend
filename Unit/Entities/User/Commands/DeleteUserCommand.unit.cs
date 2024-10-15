@@ -5,15 +5,15 @@ using Microsoft.EntityFrameworkCore;
 using Moq;
 using Xunit;
 
-namespace AlpimiAPI.Unit.Entities.UserTest.Commands
+namespace alpimi_planner_backend.Unit.Entities.User.Commands
 {
     public class DeleteUserCommandUnit
     {
         private readonly Mock<IDbService> _dbService = new();
 
-        private User.User GetUserDetails()
+        private AlpimiAPI.User.User GetUserDetails()
         {
-            var user = new User.User()
+            var user = new AlpimiAPI.User.User()
             {
                 Id = new Guid(),
                 Login = "marek",

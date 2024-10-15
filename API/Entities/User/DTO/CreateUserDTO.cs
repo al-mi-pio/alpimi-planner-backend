@@ -2,7 +2,7 @@
 
 namespace AlpimiAPI.User.DTO
 {
-    public class CreateUserRequest
+    public class CreateUserDTO
     {
         [Required]
         public string Login { get; set; }

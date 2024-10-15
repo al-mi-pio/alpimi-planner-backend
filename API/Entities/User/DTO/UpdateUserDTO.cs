@@ -2,7 +2,7 @@
 
 namespace AlpimiAPI.User.DTO
 {
-    public class PatchUserRequest
+    public class UpdateUserDTO
     {
         public string? Login { get; set; }
 

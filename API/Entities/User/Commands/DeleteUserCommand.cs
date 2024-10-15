@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using alpimi_planner_backend.API;
 using alpimi_planner_backend.API.Utilities;
 using Dapper;
 using MediatR;
@@ -10,14 +11,16 @@ namespace AlpimiAPI.User.Commands
 
     public class DeleteUserHandler : IRequestHandler<DeleteUserCommand>
     {
+        private readonly IDbService _dbService;
+
+        public DeleteUserHandler(IDbService dbService)
+        {
+            _dbService = dbService;
+        }
+
         public async Task Handle(DeleteUserCommand request, CancellationToken cancellationToken)
         {
-            using (
-                IDbConnection connection = new SqlConnection(Configuration.GetConnectionString())
-            )
-            {
-                await connection.ExecuteAsync("DELETE [User] WHERE [Id] = @Id;", request);
-            }
+            await _dbService.Delete("DELETE [User] WHERE [Id] = @Id;", request);
         }
     }
 }

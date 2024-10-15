@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using alpimi_planner_backend.API;
 using alpimi_planner_backend.API.Utilities;
 using Dapper;
 using MediatR;
@@ -10,25 +11,27 @@ namespace AlpimiAPI.User.Commands
 
     public class CreateUserHandler : IRequestHandler<CreateUserCommand, Guid>
     {
+        private readonly IDbService _dbService;
+
+        public CreateUserHandler(IDbService dbService)
+        {
+            _dbService = dbService;
+        }
+
         public async Task<Guid> Handle(
             CreateUserCommand request,
             CancellationToken cancellationToken
         )
         {
-            using (
-                IDbConnection connection = new SqlConnection(Configuration.GetConnectionString())
-            )
-            {
-                var insertedId = await connection.QuerySingleOrDefaultAsync<Guid>(
-                    @"
+            var insertedId = await _dbService.Create<Guid>(
+                @"
                     INSERT INTO [User] ([Id],[Login],[CustomURL])
                     OUTPUT INSERTED.Id                    
                     VALUES (@Id,@Login,@CustomURL);",
-                    request
-                );
+                request
+            );
 
-                return insertedId;
-            }
+            return insertedId;
         }
     }
 }

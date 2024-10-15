@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using alpimi_planner_backend.API;
 using alpimi_planner_backend.API.Utilities;
 using Dapper;
 using MediatR;
@@ -8,21 +9,23 @@ namespace AlpimiAPI.User.Queries
 {
     public record GetUserQuery(Guid Id) : IRequest<User>;
 
-    public class GetBreedHandler : IRequestHandler<GetUserQuery, User>
+    public class GetUserHandler : IRequestHandler<GetUserQuery, User>
     {
+        private readonly IDbService _dbService;
+
+        public GetUserHandler(IDbService dbService)
+        {
+            _dbService = dbService;
+        }
+
         public async Task<User> Handle(GetUserQuery request, CancellationToken cancellationToken)
         {
-            using (
-                IDbConnection connection = new SqlConnection(Configuration.GetConnectionString())
-            )
-            {
-                var user = await connection.QueryFirstOrDefaultAsync<User>(
-                    "SELECT [Id], [Login], [CustomURL] FROM [User] WHERE [Id] = @Id;",
-                    request
-                );
+            var user = await _dbService.Get<User>(
+                "SELECT [Id], [Login], [CustomURL] FROM [User] WHERE [Id] = @Id;",
+                request
+            );
 
-                return user;
-            }
+            return user;
         }
     }
 }

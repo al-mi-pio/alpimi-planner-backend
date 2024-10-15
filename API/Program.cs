@@ -1,4 +1,5 @@
 using System.Text;
+using alpimi_planner_backend.API;
 using alpimi_planner_backend.API.Utilities;
 using Microsoft.IdentityModel.Tokens;
 
@@ -7,6 +8,8 @@ DotNetEnv.Env.Load();
 
 builder.Services.AddControllers();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(Program).Assembly));
+
+builder.Services.AddScoped<IDbService, DbService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

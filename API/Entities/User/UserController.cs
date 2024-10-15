@@ -29,7 +29,7 @@ namespace AlpimiAPI.User
         public async Task<ActionResult<User>> GetOne([FromRoute] Guid id)
         {
             var query = new GetUserQuery(id);
-            User res = await _mediator.Send(query);
+            User? res = await _mediator.Send(query);
 
             if (res is null)
             {
@@ -56,7 +56,7 @@ namespace AlpimiAPI.User
         )
         {
             var command = new UpdateUserCommand(id, request.Login, request.CustomURL);
-            User res = await _mediator.Send(command);
+            User? res = await _mediator.Send(command);
             if (res is null)
             {
                 return NotFound();

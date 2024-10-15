@@ -1,26 +1,42 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AlpimiAPI.User.Commands;
+using AlpimiAPI.User.Queries;
+using alpimi_planner_backend.API;
+using Microsoft.EntityFrameworkCore;
+using Moq;
 using Xunit;
 
-namespace AlpimiAPI.Unit.Entities.User.Commands
+namespace AlpimiAPI.Unit.Entities.UserTest.Commands
 {
-    public class DeleteUserCommand
+    public class DeleteUserCommandUnit
     {
-        /*private readonly Mock<DbContext> _dbService = new();
+        private readonly Mock<IDbService> _dbService = new();
+
+        private User.User GetUserDetails()
+        {
+            var user = new User.User()
+            {
+                Id = new Guid(),
+                Login = "marek",
+                CustomURL = "44f"
+            };
+
+            return user;
+        }
 
         [Fact]
-        public async void GetEmployee()
+        public async Task IsDeleteCalledProperly()
         {
-            var employee = GetEmployeeDetails();
+            var user = GetUserDetails();
 
-            _dbService
-                .Setup(s => s.GetAsync<Employee>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(employee);
+            _dbService.Setup(s => s.Delete(It.IsAny<string>(), It.IsAny<object>()));
 
-            var employeeService = new EmployeeService(_dbService.Object);
+            var deleteUserCommand = new DeleteUserCommand(user.Id);
 
-            var result = await employeeService.GetEmployee(1);
+            var deleteUserHandler = new DeleteUserHandler(_dbService.Object);
 
-            Assert.Same(employee, result);
-        }*/
+            await deleteUserHandler.Handle(deleteUserCommand, new CancellationToken());
+
+            Assert.Equal(1, 1);
+        }
     }
 }

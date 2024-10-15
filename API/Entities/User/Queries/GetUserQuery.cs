@@ -24,7 +24,6 @@ namespace AlpimiAPI.User.Queries
                 "SELECT [Id], [Login], [CustomURL] FROM [User] WHERE [Id] = @Id;",
                 request
             );
-
             return user;
         }
     }

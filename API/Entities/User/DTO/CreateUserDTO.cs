@@ -9,5 +9,8 @@ namespace AlpimiAPI.User.DTO
 
         [Required]
         public required string CustomURL { get; set; }
+
+        [Required]
+        public required string Password { get; set; }
     }
 }

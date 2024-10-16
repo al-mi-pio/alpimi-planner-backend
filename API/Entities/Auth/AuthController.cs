@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AlpimiAPI.Auth
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class AuthController : ControllerBase
     {
         private readonly IMediator _mediator;

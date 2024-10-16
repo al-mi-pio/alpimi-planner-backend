@@ -7,7 +7,13 @@ using Microsoft.Data.SqlClient;
 
 namespace AlpimiAPI.User.Commands
 {
-    public record CreateUserCommand(Guid Id, string Login, string CustomURL) : IRequest<Guid>;
+    public record CreateUserCommand(
+        Guid Id,
+        Guid AuthId,
+        string Login,
+        string CustomURL,
+        string Password
+    ) : IRequest<Guid>;
 
     public class CreateUserHandler : IRequestHandler<CreateUserCommand, Guid>
     {
@@ -28,6 +34,13 @@ namespace AlpimiAPI.User.Commands
                     INSERT INTO [User] ([Id],[Login],[CustomURL])
                     OUTPUT INSERTED.Id                    
                     VALUES (@Id,@Login,@CustomURL);",
+                request
+            );
+            await _dbService.Create<Guid>(
+                @"
+                    INSERT INTO [Auth] ([Id],[Password],[UserID])
+                    OUTPUT INSERTED.UserID                    
+                    VALUES (@AuthId,@Password,@Id);",
                 request
             );
 

@@ -19,7 +19,13 @@ namespace AlpimiAPI.User
         [HttpPost]
         public async Task<ActionResult<Guid>> Create([FromBody] CreateUserDTO request)
         {
-            var command = new CreateUserCommand(Guid.NewGuid(), request.Login, request.CustomURL);
+            var command = new CreateUserCommand(
+                Guid.NewGuid(),
+                Guid.NewGuid(),
+                request.Login,
+                request.CustomURL,
+                request.Password
+            );
             var res = await _mediator.Send(command);
 
             return Ok(res);

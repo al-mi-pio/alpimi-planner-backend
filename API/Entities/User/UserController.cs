@@ -7,6 +7,7 @@ using AlpimiAPI.User.Queries;
 using Azure.Core;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Sprache;
 
@@ -32,6 +33,7 @@ namespace AlpimiAPI.User
                 request.CustomURL,
                 Convert.ToHexString(passwordHash)
             );
+
             var res = await _mediator.Send(command);
 
             return Ok(res);
@@ -42,14 +44,26 @@ namespace AlpimiAPI.User
         public async Task<ActionResult<User>> GetOne([FromRoute] Guid id)
         {
             var query = new GetUserQuery(id);
-            User? res = await _mediator.Send(query);
-
-            if (res is null)
+            try
             {
-                return NotFound();
-            }
+                User? res = await _mediator.Send(query);
 
-            return Ok(res);
+                if (res is null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(res);
+            }
+            catch (HttpRequestException ex)
+                when (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            {
+                return Unauthorized();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("TODO make a message");
+            }
         }
 
         [HttpDelete("{id}")]
@@ -58,9 +72,21 @@ namespace AlpimiAPI.User
         public async Task<ActionResult> Delete([FromRoute] Guid id)
         {
             var command = new DeleteUserCommand(id);
-            await _mediator.Send(command);
+            try
+            {
+                await _mediator.Send(command);
 
-            return NoContent();
+                return NoContent();
+            }
+            catch (HttpRequestException ex)
+                when (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            {
+                return Unauthorized();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("TODO make a message");
+            }
         }
 
         [HttpPatch("{id}")]
@@ -71,12 +97,24 @@ namespace AlpimiAPI.User
         )
         {
             var command = new UpdateUserCommand(id, request.Login, request.CustomURL);
-            User? res = await _mediator.Send(command);
-            if (res is null)
+            try
             {
-                return NotFound();
+                User? res = await _mediator.Send(command);
+                if (res is null)
+                {
+                    return NotFound();
+                }
+                return Ok(res);
             }
-            return Ok(res);
+            catch (HttpRequestException ex)
+                when (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            {
+                return Unauthorized();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("TODO make a message");
+            }
         }
     }
 }

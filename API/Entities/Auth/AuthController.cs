@@ -21,9 +21,19 @@ namespace AlpimiAPI.Auth
         public async Task<ActionResult<String>> Login([FromBody] DTO.LoginDTO request)
         {
             var query = new LoginQuery(request.Login, request.Password);
-            string res = await _mediator.Send(query);
-            //TODO add exceptions
-            return Ok(res);
+            try
+            {
+                string res = await _mediator.Send(query);
+                return Ok(res);
+            }
+            catch (BadHttpRequestException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("TODO make a message");
+            }
         }
     }
 }

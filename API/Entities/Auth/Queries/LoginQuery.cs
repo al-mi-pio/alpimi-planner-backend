@@ -43,7 +43,6 @@ namespace AlpimiAPI.Auth.Queries
                 request
             );
 
-            //TODO ERRORS LMAO
             if (auth == null || user == null)
             {
                 throw new BadHttpRequestException("Invalid login or password");
@@ -67,7 +66,7 @@ namespace AlpimiAPI.Auth.Queries
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetJWTKey()));
             var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            //TODO rework
+            //TODO DO SMTH
             var expires = DateTime.Now;
             if (Configuration.GetJWTExpire() != null)
             {

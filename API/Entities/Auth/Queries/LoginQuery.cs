@@ -2,9 +2,8 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using AlpimiAPI.Breed;
-using AlpimiAPI.Breed.Queries;
 using AlpimiAPI.User;
+using alpimi_planner_backend.API;
 using alpimi_planner_backend.API.Utilities;
 using Dapper;
 using MediatR;
@@ -13,41 +12,40 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
-namespace alpimi_planner_backend.API.Entities.Auth.Queries
+namespace AlpimiAPI.Auth.Queries
 {
-    public record LoginQuery(string UserName, string Password) : IRequest<Auth>;
+    public record LoginQuery(string UserName, string Password) : IRequest<String>;
 
     public class LoginHandler
     {
         private readonly IPasswordHasher<Auth> _passwordHasher;
 
-        public LoginHandler(IPasswordHasher<Auth> passwordHasher)
+        private readonly IDbService _dbService;
+
+        public LoginHandler(IDbService dbService, IPasswordHasher<Auth> passwordHasher)
         {
             _passwordHasher = passwordHasher;
+            _dbService = dbService;
         }
 
         public async Task<String> Handle(LoginQuery request, CancellationToken cancellationToken)
         {
-            Auth user;
-            using (
-                IDbConnection connection = new SqlConnection(Configuration.GetConnectionString())
-            )
-            {
-                user = await connection.QueryFirstOrDefaultAsync<Auth>(
-                    "SELECT [Id],[Login],[Password] FROM [User] WHERE [Login] = @UserName;",
-                    request
-                );
-            }
+            var auth = await _dbService.Get<Auth?>(
+                @"SELECT [Auth].[Id],[Auth].[Password],[Auth].[UserID],[User].[Id],[User].[Login],[User].[CustomURL] 
+                FROM [User] JOIN [Auth] on [User].[Id]=[Auth].[UserID] 
+                WHERE [Login] = @UserName;",
+                request
+            );
 
-            if (user == null)
+            if (auth == null)
             {
                 // TODO: add errors.xml file like in java tylko .json
                 throw new BadHttpRequestException("Invalid login or password");
             }
 
             var result = _passwordHasher.VerifyHashedPassword(
-                user,
-                user.Password,
+                auth,
+                auth.Password,
                 request.Password
             );
             if (result == PasswordVerificationResult.Failed)
@@ -57,8 +55,8 @@ namespace alpimi_planner_backend.API.Entities.Auth.Queries
 
             var claims = new List<Claim>()
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim("Login", $"{user.Login}"),
+                new Claim(ClaimTypes.NameIdentifier, auth.Id.ToString()),
+                new Claim("Login", $"{auth.User.Login}"),
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetJWTKey()));

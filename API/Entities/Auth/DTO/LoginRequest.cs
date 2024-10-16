@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace alpimi_planner_backend.API.Entities.Auth.DTO
+namespace AlpimiAPI.Auth.DTO
 {
     public record CreateBreedRequest
     {

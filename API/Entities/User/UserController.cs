@@ -6,6 +6,7 @@ using AlpimiAPI.User.DTO;
 using AlpimiAPI.User.Queries;
 using Azure.Core;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Sprache;
 
@@ -37,6 +38,7 @@ namespace AlpimiAPI.User
         }
 
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ActionResult<User>> GetOne([FromRoute] Guid id)
         {
             var query = new GetUserQuery(id);
@@ -51,6 +53,7 @@ namespace AlpimiAPI.User
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         [ProducesResponseType(204)]
         public async Task<ActionResult> Delete([FromRoute] Guid id)
         {
@@ -61,6 +64,7 @@ namespace AlpimiAPI.User
         }
 
         [HttpPatch("{id}")]
+        [Authorize]
         public async Task<ActionResult<User>> Patch(
             [FromBody] UpdateUserDTO request,
             [FromRoute] Guid id

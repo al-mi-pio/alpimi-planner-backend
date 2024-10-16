@@ -12,7 +12,7 @@ namespace alpimi_planner_backend.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Auths",
+                name: "Auth",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -21,9 +21,9 @@ namespace alpimi_planner_backend.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Auths", x => x.Id);
+                    table.PrimaryKey("PK_Auth", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Auths_User_UserID",
+                        name: "FK_Auth_User_UserID",
                         column: x => x.UserID,
                         principalTable: "User",
                         principalColumn: "Id",
@@ -31,8 +31,8 @@ namespace alpimi_planner_backend.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Auths_UserID",
-                table: "Auths",
+                name: "IX_Auth_UserID",
+                table: "Auth",
                 column: "UserID");
         }
 
@@ -40,7 +40,7 @@ namespace alpimi_planner_backend.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Auths");
+                name: "Auth");
         }
     }
 }

@@ -27,10 +27,16 @@ namespace alpimi_planner_backend.Unit.Entities.User.Commands
             var user = GetUserDetails();
 
             _dbService
-                .Setup(s => s.Create<AlpimiAPI.User.User>(It.IsAny<string>(), It.IsAny<object>()))
+                .Setup(s => s.Post<AlpimiAPI.User.User>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(user);
 
-            var createUserCommand = new CreateUserCommand(user.Id, user.Login, user.CustomURL);
+            var createUserCommand = new CreateUserCommand(
+                user.Id,
+                new Guid(),
+                user.Login,
+                user.CustomURL,
+                "RandomPassword"
+            );
 
             var createUserHandler = new CreateUserHandler(_dbService.Object);
 

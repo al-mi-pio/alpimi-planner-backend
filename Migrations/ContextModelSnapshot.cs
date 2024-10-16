@@ -39,7 +39,7 @@ namespace alpimi_planner_backend.Migrations
 
                     b.HasIndex("UserID");
 
-                    b.ToTable("Auths");
+                    b.ToTable("Auth");
                 });
 
             modelBuilder.Entity("AlpimiAPI.Breed.Breed", b =>

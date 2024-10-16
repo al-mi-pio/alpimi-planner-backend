@@ -14,7 +14,7 @@ namespace alpimi_planner_backend.API
         public DbSet<Breed> Breed { get; set; }
         public DbSet<Dog> Dog { get; set; }
         public DbSet<User> User { get; set; }
-        public DbSet<Auth> Auths { get; set; }
+        public DbSet<Auth> Auth { get; set; }
         #endregion
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

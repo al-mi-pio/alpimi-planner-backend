@@ -24,7 +24,7 @@ namespace alpimi_planner_backend.API
             return (await _db.QueryAsync<T>(command, parms)).ToList();
         }
 
-        public async Task<T?> Create<T>(string command, object parms)
+        public async Task<T?> Post<T>(string command, object parms)
         {
             Task<T?> result;
             result = _db.QuerySingleOrDefaultAsync<T>(command, parms);

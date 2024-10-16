@@ -12,7 +12,7 @@ using alpimi_planner_backend.API;
 namespace alpimi_planner_backend.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20241016191535_AddedAuth")]
+    [Migration("20241016193826_AddedAuth")]
     partial class AddedAuth
     {
         /// <inheritdoc />
@@ -42,7 +42,7 @@ namespace alpimi_planner_backend.Migrations
 
                     b.HasIndex("UserID");
 
-                    b.ToTable("Auths");
+                    b.ToTable("Auth");
                 });
 
             modelBuilder.Entity("AlpimiAPI.Breed.Breed", b =>

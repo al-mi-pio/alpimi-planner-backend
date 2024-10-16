@@ -10,17 +10,20 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Sprache;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace AlpimiAPI.User
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UserController : ControllerBase
     {
         private readonly IMediator _mediator;
 
         public UserController(IMediator mediator) => _mediator = mediator;
 
+        [AllowAnonymous]
         [HttpPost]
         public async Task<ActionResult<Guid>> Post([FromBody] CreateUserDTO request)
         {
@@ -40,7 +43,6 @@ namespace AlpimiAPI.User
         }
 
         [HttpGet("{id}")]
-        [Authorize]
         public async Task<ActionResult<User>> GetOne([FromRoute] Guid id)
         {
             var query = new GetUserQuery(id);
@@ -67,7 +69,6 @@ namespace AlpimiAPI.User
         }
 
         [HttpDelete("{id}")]
-        [Authorize]
         [ProducesResponseType(204)]
         public async Task<ActionResult> Delete([FromRoute] Guid id)
         {
@@ -90,7 +91,6 @@ namespace AlpimiAPI.User
         }
 
         [HttpPatch("{id}")]
-        [Authorize]
         public async Task<ActionResult<User>> Patch(
             [FromBody] UpdateUserDTO request,
             [FromRoute] Guid id

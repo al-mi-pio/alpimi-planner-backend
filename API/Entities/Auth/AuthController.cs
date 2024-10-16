@@ -3,6 +3,7 @@ using AlpimiAPI.Auth.Queries;
 using AlpimiAPI.Breed.Queries;
 using AlpimiAPI.Dog.Queries;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,6 +17,7 @@ namespace AlpimiAPI.Auth
 
         public AuthController(IMediator mediator) => _mediator = mediator;
 
+        [AllowAnonymous]
         [HttpPost]
         [Route("login")]
         public async Task<ActionResult<String>> Login([FromBody] DTO.LoginDTO request)

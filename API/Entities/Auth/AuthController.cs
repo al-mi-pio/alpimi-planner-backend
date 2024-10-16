@@ -1,6 +1,9 @@
-﻿using AlpimiAPI.Breed.Queries;
+﻿using AlpimiAPI.Auth.DTO;
+using AlpimiAPI.Auth.Queries;
+using AlpimiAPI.Breed.Queries;
 using AlpimiAPI.Dog.Queries;
 using MediatR;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AlpimiAPI.Auth
@@ -13,10 +16,14 @@ namespace AlpimiAPI.Auth
 
         public AuthController(IMediator mediator) => _mediator = mediator;
 
-        [HttpGet]
-        public async Task<ActionResult<String>> Get()
+        [HttpPost]
+        [Route("login")]
+        public async Task<ActionResult<String>> Login([FromBody] DTO.LoginDTO request)
         {
-            return Ok(await _mediator.Send(new GetBreedsQuery()));
+            var query = new LoginQuery(request.Login, request.Password);
+            string res = await _mediator.Send(query);
+            //TODO add exceptions
+            return Ok(res);
         }
     }
 }

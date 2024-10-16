@@ -1,8 +1,10 @@
 ﻿using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using AlpimiAPI.User;
+using AlpimiAPI.User.Queries;
 using alpimi_planner_backend.API;
 using alpimi_planner_backend.API.Utilities;
 using Dapper;
@@ -11,52 +13,55 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json.Linq;
 
 namespace AlpimiAPI.Auth.Queries
 {
-    public record LoginQuery(string UserName, string Password) : IRequest<String>;
+    public record LoginQuery(string Login, string Password) : IRequest<String>;
 
-    public class LoginHandler
+    public class LoginHandler : IRequestHandler<LoginQuery, string>
     {
-        private readonly IPasswordHasher<Auth> _passwordHasher;
-
         private readonly IDbService _dbService;
 
-        public LoginHandler(IDbService dbService, IPasswordHasher<Auth> passwordHasher)
+        public LoginHandler(IDbService dbService)
         {
-            _passwordHasher = passwordHasher;
             _dbService = dbService;
         }
 
         public async Task<String> Handle(LoginQuery request, CancellationToken cancellationToken)
         {
-            var auth = await _dbService.Get<Auth?>(
-                @"SELECT [Auth].[Id],[Auth].[Password],[Auth].[UserID],[User].[Id],[User].[Login],[User].[CustomURL] 
+            var auth = await _dbService.Post<Auth?>(
+                @"SELECT [Auth].[Id],[Auth].[Password],[Auth].[UserID]
                 FROM [User] JOIN [Auth] on [User].[Id]=[Auth].[UserID] 
-                WHERE [Login] = @UserName;",
+                WHERE [Login] = @Login;",
+                request
+            );
+            var user = await _dbService.Post<User.User?>(
+                @"SELECT [Id],[Login],[CustomURL]
+                FROM [User] 
+                WHERE [Login] = @Login;",
                 request
             );
 
-            if (auth == null)
+            //TODO ERRORS LMAO
+            if (auth == null || user == null)
             {
-                // TODO: add errors.xml file like in java tylko .json
                 throw new BadHttpRequestException("Invalid login or password");
             }
-
-            var result = _passwordHasher.VerifyHashedPassword(
-                auth,
-                auth.Password,
-                request.Password
-            );
-            if (result == PasswordVerificationResult.Failed)
+            auth.User = user;
+            if (
+                auth.Password
+                != Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(request.Password)))
+            )
             {
-                throw new BadHttpRequestException("Invaild password");
+                throw new BadHttpRequestException("Invalid password");
             }
 
             var claims = new List<Claim>()
             {
-                new Claim(ClaimTypes.NameIdentifier, auth.Id.ToString()),
-                new Claim("Login", $"{auth.User.Login}"),
+                new Claim(ClaimTypes.NameIdentifier, auth.UserID.ToString()),
+                new Claim("login", $"{auth.User.Login}"),
+                new Claim("userID", $"{auth.UserID}")
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetJWTKey()));

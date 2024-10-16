@@ -2,12 +2,12 @@
 
 namespace AlpimiAPI.Auth.DTO
 {
-    public record CreateBreedRequest
+    public record LoginDTO
     {
         [Required]
-        public string UserName { get; set; }
+        public required string Login { get; set; }
 
         [Required]
-        public string Password { get; set; }
+        public required string Password { get; set; }
     }
 }

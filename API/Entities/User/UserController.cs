@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Security.Cryptography;
+using System.Text;
 using AlpimiAPI.User.Commands;
 using AlpimiAPI.User.DTO;
 using AlpimiAPI.User.Queries;
 using Azure.Core;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Sprache;
 
 namespace AlpimiAPI.User
 {
@@ -17,14 +20,16 @@ namespace AlpimiAPI.User
         public UserController(IMediator mediator) => _mediator = mediator;
 
         [HttpPost]
-        public async Task<ActionResult<Guid>> Create([FromBody] CreateUserDTO request)
+        public async Task<ActionResult<Guid>> Post([FromBody] CreateUserDTO request)
         {
+            var passwordHash = SHA256.HashData(Encoding.UTF8.GetBytes(request.Password));
+
             var command = new CreateUserCommand(
                 Guid.NewGuid(),
                 Guid.NewGuid(),
                 request.Login,
                 request.CustomURL,
-                request.Password
+                Convert.ToHexString(passwordHash)
             );
             var res = await _mediator.Send(command);
 

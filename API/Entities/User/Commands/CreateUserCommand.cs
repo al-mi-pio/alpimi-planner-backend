@@ -29,14 +29,14 @@ namespace AlpimiAPI.User.Commands
             CancellationToken cancellationToken
         )
         {
-            var insertedId = await _dbService.Create<Guid>(
+            var insertedId = await _dbService.Post<Guid>(
                 @"
                     INSERT INTO [User] ([Id],[Login],[CustomURL])
                     OUTPUT INSERTED.Id                    
                     VALUES (@Id,@Login,@CustomURL);",
                 request
             );
-            await _dbService.Create<Guid>(
+            await _dbService.Post<Guid>(
                 @"
                     INSERT INTO [Auth] ([Id],[Password],[UserID])
                     OUTPUT INSERTED.UserID                    

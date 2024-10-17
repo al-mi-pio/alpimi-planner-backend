@@ -19,8 +19,6 @@ namespace alpimi_planner_backend.Unit.Entities.User.Commands
             var deleteUserHandler = new DeleteUserHandler(_dbService.Object);
 
             await deleteUserHandler.Handle(deleteUserCommand, new CancellationToken());
-
-            Assert.Equal(1, 1);
         }
     }
 }

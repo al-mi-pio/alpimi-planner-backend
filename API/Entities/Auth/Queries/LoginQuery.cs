@@ -1,19 +1,11 @@
-﻿using System.Data;
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using AlpimiAPI.User;
-using AlpimiAPI.User.Queries;
 using alpimi_planner_backend.API;
 using alpimi_planner_backend.API.Utilities;
-using Dapper;
 using MediatR;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json.Linq;
 
 namespace AlpimiAPI.Auth.Queries
 {

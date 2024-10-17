@@ -1,10 +1,7 @@
 using System.Text;
-using AlpimiAPI.Auth;
 using alpimi_planner_backend.API;
 using alpimi_planner_backend.API.Utilities;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);

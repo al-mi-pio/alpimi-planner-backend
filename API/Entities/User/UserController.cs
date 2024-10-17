@@ -1,16 +1,11 @@
-﻿using System;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
 using AlpimiAPI.User.Commands;
 using AlpimiAPI.User.DTO;
 using AlpimiAPI.User.Queries;
-using Azure.Core;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Sprache;
-using Swashbuckle.AspNetCore.Annotations;
 
 namespace AlpimiAPI.User
 {

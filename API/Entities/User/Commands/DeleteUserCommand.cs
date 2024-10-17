@@ -1,9 +1,5 @@
-﻿using System.Data;
-using alpimi_planner_backend.API;
-using alpimi_planner_backend.API.Utilities;
-using Dapper;
+﻿using alpimi_planner_backend.API;
 using MediatR;
-using Microsoft.Data.SqlClient;
 
 namespace AlpimiAPI.User.Commands
 {

@@ -1,10 +1,6 @@
-﻿using AlpimiAPI.Auth.DTO;
-using AlpimiAPI.Auth.Queries;
-using AlpimiAPI.Breed.Queries;
-using AlpimiAPI.Dog.Queries;
+﻿using AlpimiAPI.Auth.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AlpimiAPI.Auth

@@ -57,7 +57,7 @@ namespace AlpimiAPI.User
             {
                 return Unauthorized();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return BadRequest("TODO make a message");
             }
@@ -79,7 +79,7 @@ namespace AlpimiAPI.User
             {
                 return Unauthorized();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return BadRequest("TODO make a message");
             }
@@ -106,7 +106,7 @@ namespace AlpimiAPI.User
             {
                 return Unauthorized();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return BadRequest("TODO make a message");
             }

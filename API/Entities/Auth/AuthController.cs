@@ -28,7 +28,7 @@ namespace AlpimiAPI.Auth
             {
                 return BadRequest(ex.Message);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return BadRequest("TODO make a message");
             }

@@ -24,7 +24,7 @@ namespace alpimi_planner_backend.Unit.Entities.User.Commands
         }
 
         [Fact]
-        public async Task IsCreateCalledProperly()
+        public async Task CreatesUserWhenPaswordIsCorrect()
         {
             var user = GetUserDetails();
 
@@ -48,7 +48,7 @@ namespace alpimi_planner_backend.Unit.Entities.User.Commands
         }
 
         [Fact]
-        public async Task DoesPasswordMinLengthWorkProperly()
+        public async Task ThrowsErrorWhenPasswordIsTooShort()
         {
             var user = GetUserDetails();
 
@@ -79,7 +79,7 @@ namespace alpimi_planner_backend.Unit.Entities.User.Commands
         }
 
         [Fact]
-        public async Task DoesPasswordMaxLengthWorkProperly()
+        public async Task ThrowsErrorWhenPasswordIsTooLong()
         {
             var user = GetUserDetails();
 
@@ -110,7 +110,7 @@ namespace alpimi_planner_backend.Unit.Entities.User.Commands
         }
 
         [Fact]
-        public async Task DoesPasswordContainsSmallLetterWorkProperly()
+        public async Task ThrowsErrorWhenPasswordDosentContainSmallLetters()
         {
             var user = GetUserDetails();
 
@@ -132,15 +132,20 @@ namespace alpimi_planner_backend.Unit.Entities.User.Commands
                 async () =>
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())
             );
+            var requiredCharacters = authConfig.GetRequiredCharacters();
+            if (requiredCharacters == null)
+            {
+                requiredCharacters = [RequiredCharacterTypes.SmallLetter];
+            }
             Assert.Equal(
                 "Password must contain at least one of the following: "
-                    + string.Join(", ", authConfig.GetRequiredCharacters()),
+                    + string.Join(", ", requiredCharacters),
                 result.Message
             );
         }
 
         [Fact]
-        public async Task DoesPasswordContainsBigLetterWorkProperly()
+        public async Task ThrowsErrorWhenPasswordDosentContainBigLetters()
         {
             var user = GetUserDetails();
 
@@ -162,15 +167,20 @@ namespace alpimi_planner_backend.Unit.Entities.User.Commands
                 async () =>
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())
             );
+            var requiredCharacters = authConfig.GetRequiredCharacters();
+            if (requiredCharacters == null)
+            {
+                requiredCharacters = [RequiredCharacterTypes.BigLetter];
+            }
             Assert.Equal(
                 "Password must contain at least one of the following: "
-                    + string.Join(", ", authConfig.GetRequiredCharacters()),
+                    + string.Join(", ", requiredCharacters),
                 result.Message
             );
         }
 
         [Fact]
-        public async Task DoesPasswordContainsSymbolWorkProperly()
+        public async Task ThrowsErrorWhenPasswordDosentContainSymbols()
         {
             var user = GetUserDetails();
 
@@ -192,15 +202,20 @@ namespace alpimi_planner_backend.Unit.Entities.User.Commands
                 async () =>
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())
             );
+            var requiredCharacters = authConfig.GetRequiredCharacters();
+            if (requiredCharacters == null)
+            {
+                requiredCharacters = [RequiredCharacterTypes.Symbol];
+            }
             Assert.Equal(
                 "Password must contain at least one of the following: "
-                    + string.Join(", ", authConfig.GetRequiredCharacters()),
+                    + string.Join(", ", requiredCharacters),
                 result.Message
             );
         }
 
         [Fact]
-        public async Task DoesPasswordContainsDigitWorkProperly()
+        public async Task ThrowsErrorWhenPasswordDosentContainDigits()
         {
             var user = GetUserDetails();
 
@@ -222,9 +237,14 @@ namespace alpimi_planner_backend.Unit.Entities.User.Commands
                 async () =>
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())
             );
+            var requiredCharacters = authConfig.GetRequiredCharacters();
+            if (requiredCharacters == null)
+            {
+                requiredCharacters = [RequiredCharacterTypes.Digit];
+            }
             Assert.Equal(
                 "Password must contain at least one of the following: "
-                    + string.Join(", ", authConfig.GetRequiredCharacters()),
+                    + string.Join(", ", requiredCharacters),
                 result.Message
             );
         }

@@ -27,10 +27,19 @@ namespace AlpimiAPI.User
                 request.CustomURL,
                 request.Password
             );
-
-            var res = await _mediator.Send(command);
-
-            return Ok(res);
+            try
+            {
+                var res = await _mediator.Send(command);
+                return Ok(res);
+            }
+            catch (BadHttpRequestException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception)
+            {
+                return BadRequest("TODO make a message");
+            }
         }
 
         [HttpGet("{id}")]

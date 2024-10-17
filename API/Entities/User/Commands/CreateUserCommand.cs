@@ -1,4 +1,8 @@
-﻿using alpimi_planner_backend.API;
+﻿using System;
+using System.Security.Cryptography;
+using System.Text;
+using alpimi_planner_backend.API;
+using alpimi_planner_backend.API.Configuration;
 using MediatR;
 
 namespace AlpimiAPI.User.Commands
@@ -25,6 +29,78 @@ namespace AlpimiAPI.User.Commands
             CancellationToken cancellationToken
         )
         {
+            var passwordHash = SHA256.HashData(Encoding.UTF8.GetBytes(request.Password));
+
+            AuthConfiguration authConfig = new AuthConfiguration();
+
+            if (request.Password.Length <= authConfig.GetMinimumPasswordLength())
+            {
+                throw new BadHttpRequestException(
+                    "Password cannot be shorter than "
+                        + authConfig.GetMinimumPasswordLength()
+                        + " characters"
+                );
+            }
+
+            if (request.Password.Length > authConfig.GetMaximumPasswordLength())
+            {
+                throw new BadHttpRequestException(
+                    "Password cannot be longer than "
+                        + authConfig.GetMaximumPasswordLength()
+                        + " characters"
+                );
+            }
+
+            RequiredCharacterTypes[]? requiredCharacterTypes = authConfig.GetRequiredCharacters();
+            if (requiredCharacterTypes != null)
+            {
+                if (requiredCharacterTypes.Contains(RequiredCharacterTypes.BigLetter))
+                {
+                    if (!request.Password.Any(char.IsUpper))
+                    {
+                        throw new BadHttpRequestException(
+                            "Password must contain at least one of the following: "
+                                + string.Join(", ", requiredCharacterTypes)
+                        );
+                    }
+                }
+                if (requiredCharacterTypes.Contains(RequiredCharacterTypes.SmallLetter))
+                {
+                    if (!request.Password.Any(char.IsLower))
+                    {
+                        throw new BadHttpRequestException(
+                            "Password must contain at least one of the following: "
+                                + string.Join(", ", requiredCharacterTypes)
+                        );
+                    }
+                }
+                if (requiredCharacterTypes.Contains(RequiredCharacterTypes.Digit))
+                {
+                    if (!request.Password.Any(char.IsDigit))
+                    {
+                        throw new BadHttpRequestException(
+                            "Password must contain at least one of the following: "
+                                + string.Join(", ", requiredCharacterTypes)
+                        );
+                    }
+                }
+                if (requiredCharacterTypes.Contains(RequiredCharacterTypes.Symbol))
+                {
+                    if (
+                        !(
+                            request.Password.Any(char.IsSymbol)
+                            || request.Password.Any(char.IsPunctuation)
+                        )
+                    )
+                    {
+                        throw new BadHttpRequestException(
+                            "Password must contain at least one of the following: "
+                                + string.Join(", ", requiredCharacterTypes)
+                        );
+                    }
+                }
+            }
+
             var insertedId = await _dbService.Post<Guid>(
                 @"
                     INSERT INTO [User] ([Id],[Login],[CustomURL])
@@ -32,11 +108,14 @@ namespace AlpimiAPI.User.Commands
                     VALUES (@Id,@Login,@CustomURL);",
                 request
             );
+
             await _dbService.Post<Guid>(
                 @"
                     INSERT INTO [Auth] ([Id],[Password],[UserID])
                     OUTPUT INSERTED.UserID                    
-                    VALUES (@AuthId,@Password,@Id);",
+                    VALUES (@AuthId,'"
+                    + Convert.ToHexString(passwordHash)
+                    + "',@Id);",
                 request
             );
 

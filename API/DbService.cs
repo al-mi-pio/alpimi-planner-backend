@@ -11,7 +11,7 @@ namespace alpimi_planner_backend.API
 
         public DbService()
         {
-            _db = new SqlConnection(Configuration.GetConnectionString());
+            _db = new SqlConnection(Utilities.Configuration.GetConnectionString());
         }
 
         public async Task<T?> Get<T>(string command, object parms)

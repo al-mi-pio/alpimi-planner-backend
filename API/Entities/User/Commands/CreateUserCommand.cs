@@ -1,6 +1,5 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
-using AlpimiAPI.Auth;
 using alpimi_planner_backend.API;
 using alpimi_planner_backend.API.Configuration;
 using MediatR;

@@ -1,9 +1,10 @@
-﻿namespace alpimi_planner_backend.API.Entities.Auth
+﻿namespace AlpimiAPI.Auth
 {
     public class Auth
     {
         public Guid Id { get; set; }
-        public string Login { get; set; }
-        public string Password { get; set; }
+        public required string Password { get; set; }
+        public Guid UserID { get; set; }
+        public required AlpimiAPI.User.User User { get; set; }
     }
 }

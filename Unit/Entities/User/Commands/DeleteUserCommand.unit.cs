@@ -1,7 +1,5 @@
 ﻿using AlpimiAPI.User.Commands;
-using AlpimiAPI.User.Queries;
 using alpimi_planner_backend.API;
-using Microsoft.EntityFrameworkCore;
 using Moq;
 using Xunit;
 

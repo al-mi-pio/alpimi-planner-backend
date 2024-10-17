@@ -18,8 +18,12 @@
             return _connectionString;
         }
 
-        public static string? GetJWTKey()
+        public static string GetJWTKey()
         {
+            if (_jwtKey == null)
+            {
+                return "KeyNotFoundButThisMustBeLongEnough";
+            }
             return _jwtKey;
         }
 

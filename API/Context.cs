@@ -2,7 +2,6 @@
 using AlpimiAPI.Breed;
 using AlpimiAPI.Dog;
 using AlpimiAPI.User;
-using alpimi_planner_backend.API.Utilities;
 using Microsoft.EntityFrameworkCore;
 
 namespace alpimi_planner_backend.API
@@ -18,7 +17,7 @@ namespace alpimi_planner_backend.API
         #endregion
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(Configuration.GetConnectionString());
+            optionsBuilder.UseSqlServer(Utilities.Configuration.GetConnectionString());
         }
     }
 }

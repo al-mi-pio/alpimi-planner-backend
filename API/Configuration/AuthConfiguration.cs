@@ -1,6 +1,4 @@
-﻿using alpimi_planner_backend.API.Configuration;
-
-namespace alpimi_planner_backend.API.Settings
+﻿namespace alpimi_planner_backend.API.Configuration
 {
     public class AuthConfiguration
     {
@@ -16,7 +14,7 @@ namespace alpimi_planner_backend.API.Settings
 
         public int GetMaximumPasswordLength()
         {
-            return MinimumPasswordLength;
+            return MaximumPasswordLength;
         }
 
         public int GetMinimumPasswordLength()

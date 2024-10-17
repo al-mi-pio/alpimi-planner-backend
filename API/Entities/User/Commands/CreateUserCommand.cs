@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿using System;
+using System.Security.Cryptography;
 using System.Text;
 using alpimi_planner_backend.API;
 using alpimi_planner_backend.API.Configuration;
@@ -58,7 +59,8 @@ namespace AlpimiAPI.User.Commands
                     if (!request.Password.Any(char.IsUpper))
                     {
                         throw new BadHttpRequestException(
-                            "Password must contain at least one of the following: lower-case letters, upper-case letters, digits, special characters"
+                            "Password must contain at least one of the following: "
+                                + string.Join(", ", requiredCharacterTypes)
                         );
                     }
                 }
@@ -67,7 +69,8 @@ namespace AlpimiAPI.User.Commands
                     if (!request.Password.Any(char.IsLower))
                     {
                         throw new BadHttpRequestException(
-                            "Password must contain at least one of the following: lower-case letters, upper-case letters, digits, special characters"
+                            "Password must contain at least one of the following: "
+                                + string.Join(", ", requiredCharacterTypes)
                         );
                     }
                 }
@@ -76,7 +79,8 @@ namespace AlpimiAPI.User.Commands
                     if (!request.Password.Any(char.IsDigit))
                     {
                         throw new BadHttpRequestException(
-                            "Password must contain at least one of the following: lower-case letters, upper-case letters, digits, special characters"
+                            "Password must contain at least one of the following: "
+                                + string.Join(", ", requiredCharacterTypes)
                         );
                     }
                 }
@@ -90,7 +94,8 @@ namespace AlpimiAPI.User.Commands
                     )
                     {
                         throw new BadHttpRequestException(
-                            "Password must contain at least one of the following: lower-case letters, upper-case letters, digits, special characters"
+                            "Password must contain at least one of the following: "
+                                + string.Join(", ", requiredCharacterTypes)
                         );
                     }
                 }

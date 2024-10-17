@@ -133,7 +133,8 @@ namespace alpimi_planner_backend.Unit.Entities.User.Commands
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())
             );
             Assert.Equal(
-                "Password must contain at least one of the following: lower-case letters, upper-case letters, digits, special characters",
+                "Password must contain at least one of the following: "
+                    + string.Join(", ", authConfig.GetRequiredCharacters()),
                 result.Message
             );
         }
@@ -162,7 +163,8 @@ namespace alpimi_planner_backend.Unit.Entities.User.Commands
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())
             );
             Assert.Equal(
-                "Password must contain at least one of the following: lower-case letters, upper-case letters, digits, special characters",
+                "Password must contain at least one of the following: "
+                    + string.Join(", ", authConfig.GetRequiredCharacters()),
                 result.Message
             );
         }
@@ -191,7 +193,8 @@ namespace alpimi_planner_backend.Unit.Entities.User.Commands
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())
             );
             Assert.Equal(
-                "Password must contain at least one of the following: lower-case letters, upper-case letters, digits, special characters",
+                "Password must contain at least one of the following: "
+                    + string.Join(", ", authConfig.GetRequiredCharacters()),
                 result.Message
             );
         }
@@ -220,7 +223,8 @@ namespace alpimi_planner_backend.Unit.Entities.User.Commands
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())
             );
             Assert.Equal(
-                "Password must contain at least one of the following: lower-case letters, upper-case letters, digits, special characters",
+                "Password must contain at least one of the following: "
+                    + string.Join(", ", authConfig.GetRequiredCharacters()),
                 result.Message
             );
         }

@@ -1,6 +1,4 @@
 ﻿using AlpimiAPI.Auth.Queries;
-using AlpimiAPI.User;
-using AlpimiAPI.User.Queries;
 using alpimi_planner_backend.API;
 using Moq;
 using Xunit;

@@ -1,6 +1,5 @@
 ﻿using AlpimiAPI.Auth.Queries;
 using alpimi_planner_backend.API;
-using MediatR;
 using Moq;
 using Xunit;
 
@@ -9,7 +8,6 @@ namespace alpimi_planner_backend.Unit.Entities.Auth.Queries
     public class LoginQueryUnit
     {
         private readonly Mock<IDbService> _dbService = new();
-        private readonly Mock<IMediator> _mediator = new();
 
         private AlpimiAPI.Auth.Auth GetAuthDetails()
         {
@@ -21,7 +19,7 @@ namespace alpimi_planner_backend.Unit.Entities.Auth.Queries
             };
             var auth = new AlpimiAPI.Auth.Auth()
             {
-                Password = "A665A45920422F9D417E4867EFDC4FB8A04A1F3FFF1FA07E998E86F7F7A27AE3",
+                Password = "39690685e8a346e73e6f8aa1d3ca43bdaae1963559fe845df54c0851898b5512",
                 Id = new Guid(),
                 UserID = user.Id,
                 User = user
@@ -43,7 +41,7 @@ namespace alpimi_planner_backend.Unit.Entities.Auth.Queries
                 .ReturnsAsync(auth);
             Environment.SetEnvironmentVariable("JWT_KEY", "VeryLongFakeJWT_ThatWeMockedForTests");
 
-            var loginCommand = new LoginQuery(auth.User.Login, "123");
+            var loginCommand = new LoginQuery(auth.User.Login, "sssSSS1!");
 
             var loginHandler = new LoginHandler(_dbService.Object);
 

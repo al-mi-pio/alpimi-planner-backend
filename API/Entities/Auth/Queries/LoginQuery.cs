@@ -2,12 +2,10 @@
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using AlpimiAPI.User;
 using AlpimiAPI.User.Queries;
 using alpimi_planner_backend.API;
 using alpimi_planner_backend.API.Utilities;
 using MediatR;
-using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
@@ -39,11 +37,13 @@ namespace AlpimiAPI.Auth.Queries
                 getUserByLoginQuery,
                 new CancellationToken()
             );
+
             if (auth == null || user.Value == null)
             {
                 throw new BadHttpRequestException("Invalid login or password");
             }
             auth.User = user.Value;
+
             if (
                 auth.Password
                 != Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(request.Password)))

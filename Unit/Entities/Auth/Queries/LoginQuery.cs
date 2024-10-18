@@ -1,4 +1,6 @@
 ﻿using AlpimiAPI.Auth.Queries;
+using AlpimiAPI.User;
+using AlpimiAPI.User.Queries;
 using alpimi_planner_backend.API;
 using Moq;
 using Xunit;
@@ -19,7 +21,7 @@ namespace alpimi_planner_backend.Unit.Entities.Auth.Queries
             };
             var auth = new AlpimiAPI.Auth.Auth()
             {
-                Password = "39690685e8a346e73e6f8aa1d3ca43bdaae1963559fe845df54c0851898b5512",
+                Password = "39690685E8A346E73E6F8AA1D3CA43BDAAE1963559FE845DF54C0851898B5512",
                 Id = new Guid(),
                 UserID = user.Id,
                 User = user
@@ -34,7 +36,7 @@ namespace alpimi_planner_backend.Unit.Entities.Auth.Queries
             var auth = GetAuthDetails();
 
             _dbService
-                .Setup(s => s.Post<AlpimiAPI.User.User>(It.IsAny<string>(), It.IsAny<object>()))
+                .Setup(s => s.Get<AlpimiAPI.User.User>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(auth.User);
             _dbService
                 .Setup(s => s.Post<AlpimiAPI.Auth.Auth>(It.IsAny<string>(), It.IsAny<object>()))

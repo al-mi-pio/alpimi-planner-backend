@@ -19,7 +19,7 @@ namespace alpimi_planner_backend.Unit.Entities.Auth.Queries
             };
             var auth = new AlpimiAPI.Auth.Auth()
             {
-                Password = "A665A45920422F9D417E4867EFDC4FB8A04A1F3FFF1FA07E998E86F7F7A27AE3",
+                Password = "39690685E8A346E73E6F8AA1D3CA43BDAAE1963559FE845DF54C0851898B5512",
                 Id = new Guid(),
                 UserID = user.Id,
                 User = user
@@ -34,14 +34,14 @@ namespace alpimi_planner_backend.Unit.Entities.Auth.Queries
             var auth = GetAuthDetails();
 
             _dbService
-                .Setup(s => s.Post<AlpimiAPI.User.User>(It.IsAny<string>(), It.IsAny<object>()))
+                .Setup(s => s.Get<AlpimiAPI.User.User>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(auth.User);
             _dbService
                 .Setup(s => s.Post<AlpimiAPI.Auth.Auth>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(auth);
             Environment.SetEnvironmentVariable("JWT_KEY", "VeryLongFakeJWT_ThatWeMockedForTests");
 
-            var loginCommand = new LoginQuery(auth.User.Login, "123");
+            var loginCommand = new LoginQuery(auth.User.Login, "sssSSS1!");
 
             var loginHandler = new LoginHandler(_dbService.Object);
 

@@ -1,5 +1,6 @@
 ﻿using AlpimiAPI.Auth.Queries;
 using alpimi_planner_backend.API;
+using MediatR;
 using Moq;
 using Xunit;
 
@@ -8,6 +9,7 @@ namespace alpimi_planner_backend.Unit.Entities.Auth.Queries
     public class LoginQueryUnit
     {
         private readonly Mock<IDbService> _dbService = new();
+        private readonly Mock<IMediator> _mediator = new();
 
         private AlpimiAPI.Auth.Auth GetAuthDetails()
         {

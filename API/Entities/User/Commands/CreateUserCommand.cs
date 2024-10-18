@@ -33,7 +33,7 @@ namespace AlpimiAPI.User.Commands
 
             AuthConfiguration authConfig = new AuthConfiguration();
 
-            if (request.Password.Length <= authConfig.GetMinimumPasswordLength())
+            if (request.Password.Length < authConfig.GetMinimumPasswordLength())
             {
                 throw new BadHttpRequestException(
                     "Password cannot be shorter than "

@@ -1,7 +1,7 @@
 ﻿using alpimi_planner_backend.API;
 using MediatR;
 
-namespace AlpimiAPI.User
+namespace AlpimiAPI.User.Queries
 {
     public record GetUserByLoginQuery(string Login) : IRequest<User?>;
 

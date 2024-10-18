@@ -29,7 +29,7 @@ namespace alpimi_planner_backend.Unit.Entities.Auth.Queries
         }
 
         [Fact]
-        public async Task IsLoginCalledProperly()
+        public async Task GivesTokenIfLoginAndPasswordAreCorrect()
         {
             var auth = GetAuthDetails();
 
@@ -48,6 +48,54 @@ namespace alpimi_planner_backend.Unit.Entities.Auth.Queries
             var result = await loginHandler.Handle(loginCommand, new CancellationToken());
 
             Assert.IsType<String>(result);
+        }
+
+        [Fact]
+        public async Task ThrowsErrorWhenIncorrectLoginIsGiven()
+        {
+            var auth = GetAuthDetails();
+
+            _dbService
+                .Setup(s => s.Get<AlpimiAPI.User.User>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync((AlpimiAPI.User.User?)null);
+            _dbService
+                .Setup(s => s.Post<AlpimiAPI.Auth.Auth>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(auth);
+            Environment.SetEnvironmentVariable("JWT_KEY", "VeryLongFakeJWT_ThatWeMockedForTests");
+
+            var loginCommand = new LoginQuery("wrongLogin", "sssSSS1!");
+
+            var loginHandler = new LoginHandler(_dbService.Object);
+
+            var result = await Assert.ThrowsAsync<BadHttpRequestException>(
+                async () => await loginHandler.Handle(loginCommand, new CancellationToken())
+            );
+
+            Assert.Equal("Invalid login or password", result.Message);
+        }
+
+        [Fact]
+        public async Task ThrowsErrorWhenIncorrectPasswordIsGiven()
+        {
+            var auth = GetAuthDetails();
+
+            _dbService
+                .Setup(s => s.Get<AlpimiAPI.User.User>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(auth.User);
+            _dbService
+                .Setup(s => s.Post<AlpimiAPI.Auth.Auth>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(auth);
+            Environment.SetEnvironmentVariable("JWT_KEY", "VeryLongFakeJWT_ThatWeMockedForTests");
+
+            var loginCommand = new LoginQuery(auth.User.Login, "wrongPassword");
+
+            var loginHandler = new LoginHandler(_dbService.Object);
+
+            var result = await Assert.ThrowsAsync<BadHttpRequestException>(
+                async () => await loginHandler.Handle(loginCommand, new CancellationToken())
+            );
+
+            Assert.Equal("Invalid password", result.Message);
         }
     }
 }

@@ -1,9 +1,10 @@
-﻿using System;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
+using AlpimiAPI.User.Queries;
 using alpimi_planner_backend.API;
 using alpimi_planner_backend.API.Configuration;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AlpimiAPI.User.Commands
 {
@@ -29,11 +30,21 @@ namespace AlpimiAPI.User.Commands
             CancellationToken cancellationToken
         )
         {
+            GetUserByLoginHandler getUserByLoginHandler = new GetUserByLoginHandler(_dbService);
+            GetUserByLoginQuery getUserByLoginQuery = new GetUserByLoginQuery(request.Login);
+            ActionResult<User?> user = await getUserByLoginHandler.Handle(
+                getUserByLoginQuery,
+                cancellationToken
+            );
+
+            if (user.Value != null)
+            {
+                throw new BadHttpRequestException("Login already taken");
+            }
+
             var passwordHash = SHA256.HashData(Encoding.UTF8.GetBytes(request.Password));
-
             AuthConfiguration authConfig = new AuthConfiguration();
-
-            if (request.Password.Length <= authConfig.GetMinimumPasswordLength())
+            if (request.Password.Length < authConfig.GetMinimumPasswordLength())
             {
                 throw new BadHttpRequestException(
                     "Password cannot be shorter than "

@@ -28,11 +28,12 @@ namespace AlpimiAPI.Auth.Queries
                 WHERE [Login] = @Login;",
                 request
             );
-            var user = await _dbService.Post<User.User?>(
-                @"SELECT [Id],[Login],[CustomURL]
-                FROM [User] 
-                WHERE [Login] = @Login;",
-                request
+
+            GetUserByLoginHandler getUserByLoginHandler = new GetUserByLoginHandler(_dbService);
+            GetUserByLoginQuery getUserByLoginQuery = new GetUserByLoginQuery(request.Login);
+            ActionResult<User.User?> user = await getUserByLoginHandler.Handle(
+                getUserByLoginQuery,
+                cancellationToken
             );
 
             if (auth == null || user == null)
@@ -52,7 +53,7 @@ namespace AlpimiAPI.Auth.Queries
             {
                 new Claim(ClaimTypes.NameIdentifier, auth.UserID.ToString()),
                 new Claim("login", $"{auth.User.Login}"),
-                new Claim("userID", $"{auth.UserID}")
+                new Claim("userID", $"{auth.UserID}"),
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetJWTKey()));

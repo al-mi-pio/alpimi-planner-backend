@@ -110,9 +110,9 @@ namespace AlpimiAPI.User
             {
                 return Unauthorized();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return BadRequest("TODO make a message");
+                return BadRequest(ex);
             }
         }
 

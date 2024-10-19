@@ -35,7 +35,7 @@ namespace AlpimiAPI.Auth.Queries
             GetUserByLoginQuery getUserByLoginQuery = new GetUserByLoginQuery(request.Login);
             ActionResult<User.User?> user = await getUserByLoginHandler.Handle(
                 getUserByLoginQuery,
-                new CancellationToken()
+                cancellationToken
             );
 
             if (auth == null || user.Value == null)

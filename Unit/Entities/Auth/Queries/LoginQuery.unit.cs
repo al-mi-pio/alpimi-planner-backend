@@ -1,5 +1,4 @@
-﻿using System.Security.Cryptography;
-using AlpimiAPI.Auth.Queries;
+﻿using AlpimiAPI.Auth.Queries;
 using alpimi_planner_backend.API;
 using Moq;
 using Xunit;

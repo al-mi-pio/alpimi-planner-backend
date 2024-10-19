@@ -1,9 +1,10 @@
 ﻿using System.Security.Cryptography;
-using System.Text;
 using AlpimiAPI.User.Queries;
 using alpimi_planner_backend.API;
 using alpimi_planner_backend.API.Configuration;
+using alpimi_planner_backend.API.Utilities;
 using MediatR;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AlpimiAPI.User.Commands
@@ -42,7 +43,6 @@ namespace AlpimiAPI.User.Commands
                 throw new BadHttpRequestException("Login already taken");
             }
 
-            var passwordHash = SHA256.HashData(Encoding.UTF8.GetBytes(request.Password));
             AuthConfiguration authConfig = new AuthConfiguration();
             if (request.Password.Length < authConfig.GetMinimumPasswordLength())
             {
@@ -119,13 +119,23 @@ namespace AlpimiAPI.User.Commands
                     VALUES (@Id,@Login,@CustomURL);",
                 request
             );
+            byte[] salt = RandomNumberGenerator.GetBytes(16);
+            byte[] hash = Rfc2898DeriveBytes.Pbkdf2(
+                request.Password,
+                salt,
+                Configuration.GetHashIterations(),
+                Configuration.GetHashAlgorithm(),
+                Configuration.GetKeySize()
+            );
 
             await _dbService.Post<Guid>(
                 @"
-                    INSERT INTO [Auth] ([Id],[Password],[UserID])
+                    INSERT INTO [Auth] ([Id],[Password],[Salt],[UserID])
                     OUTPUT INSERTED.UserID                    
                     VALUES (@AuthId,'"
-                    + Convert.ToHexString(passwordHash)
+                    + Convert.ToBase64String(hash)
+                    + "','"
+                    + Convert.ToBase64String(salt)
                     + "',@Id);",
                 request
             );

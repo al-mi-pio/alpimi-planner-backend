@@ -2,9 +2,11 @@
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using AlpimiAPI.User.Queries;
 using alpimi_planner_backend.API;
 using alpimi_planner_backend.API.Utilities;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
 namespace AlpimiAPI.Auth.Queries
@@ -23,27 +25,34 @@ namespace AlpimiAPI.Auth.Queries
         public async Task<String> Handle(LoginQuery request, CancellationToken cancellationToken)
         {
             var auth = await _dbService.Post<Auth?>(
-                @"SELECT [Auth].[Id],[Auth].[Password],[Auth].[UserID]
+                @"SELECT [Auth].[Id],[Auth].[Password],[Auth].[Salt],[Auth].[UserID]
                 FROM [User] JOIN [Auth] on [User].[Id]=[Auth].[UserID] 
                 WHERE [Login] = @Login;",
                 request
             );
-            var user = await _dbService.Post<User.User?>(
-                @"SELECT [Id],[Login],[CustomURL]
-                FROM [User] 
-                WHERE [Login] = @Login;",
-                request
+
+            GetUserByLoginHandler getUserByLoginHandler = new GetUserByLoginHandler(_dbService);
+            GetUserByLoginQuery getUserByLoginQuery = new GetUserByLoginQuery(request.Login);
+            ActionResult<User.User?> user = await getUserByLoginHandler.Handle(
+                getUserByLoginQuery,
+                cancellationToken
             );
 
-            if (auth == null || user == null)
+            if (auth == null || user.Value == null)
             {
                 throw new BadHttpRequestException("Invalid login or password");
             }
-            auth.User = user;
-            if (
-                auth.Password
-                != Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(request.Password)))
-            )
+            auth.User = user.Value;
+
+            byte[] inputHash = Rfc2898DeriveBytes.Pbkdf2(
+                request.Password,
+                Convert.FromBase64String(auth.Salt),
+                Configuration.GetHashIterations(),
+                Configuration.GetHashAlgorithm(),
+                Configuration.GetKeySize()
+            );
+
+            if (Convert.ToBase64String(inputHash) != auth.Password)
             {
                 throw new BadHttpRequestException("Invalid password");
             }

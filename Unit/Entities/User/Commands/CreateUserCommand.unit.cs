@@ -248,5 +248,39 @@ namespace alpimi_planner_backend.Unit.Entities.User.Commands
                 result.Message
             );
         }
+
+        [Fact]
+        public async Task ThrowsErrorWhenLoginAlreadyExists()
+        {
+            var user = GetUserDetails();
+
+            _dbService
+                .Setup(s => s.Post<AlpimiAPI.User.User>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(user);
+            _dbService
+                .Setup(s => s.Get<AlpimiAPI.User.User>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(user);
+
+            var createUserCommand = new CreateUserCommand(
+                user.Id,
+                new Guid(),
+                user.Login,
+                user.CustomURL,
+                "Randomsmall1"
+            );
+
+            var createUserHandler = new CreateUserHandler(_dbService.Object);
+
+            var result = await Assert.ThrowsAsync<BadHttpRequestException>(
+                async () =>
+                    await createUserHandler.Handle(createUserCommand, new CancellationToken())
+            );
+            var requiredCharacters = authConfig.GetRequiredCharacters();
+            if (requiredCharacters == null)
+            {
+                requiredCharacters = [RequiredCharacterTypes.Symbol];
+            }
+            Assert.Equal("Login already taken", result.Message);
+        }
     }
 }

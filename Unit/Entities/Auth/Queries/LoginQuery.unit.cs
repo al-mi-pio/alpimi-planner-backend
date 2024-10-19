@@ -1,4 +1,5 @@
-﻿using AlpimiAPI.Auth.Queries;
+﻿using System.Security.Cryptography;
+using AlpimiAPI.Auth.Queries;
 using alpimi_planner_backend.API;
 using Moq;
 using Xunit;
@@ -14,13 +15,14 @@ namespace alpimi_planner_backend.Unit.Entities.Auth.Queries
             var user = new AlpimiAPI.User.User()
             {
                 Id = new Guid(),
-                Login = "marek",
+                Login = "SaltFinal",
                 CustomURL = "44f"
             };
             var auth = new AlpimiAPI.Auth.Auth()
             {
-                Password = "39690685E8A346E73E6F8AA1D3CA43BDAAE1963559FE845DF54C0851898B5512",
+                Password = "RPhZLnao+2lWH4JvwGZRLI/14QI=",
                 Id = new Guid(),
+                Salt = "zr+8L0dX4IBdGUgvHDM1Zw==",
                 UserID = user.Id,
                 User = user
             };
@@ -39,7 +41,6 @@ namespace alpimi_planner_backend.Unit.Entities.Auth.Queries
             _dbService
                 .Setup(s => s.Post<AlpimiAPI.Auth.Auth>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(auth);
-            Environment.SetEnvironmentVariable("JWT_KEY", "VeryLongFakeJWT_ThatWeMockedForTests");
 
             var loginCommand = new LoginQuery(auth.User.Login, "sssSSS1!");
 
@@ -61,7 +62,6 @@ namespace alpimi_planner_backend.Unit.Entities.Auth.Queries
             _dbService
                 .Setup(s => s.Post<AlpimiAPI.Auth.Auth>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(auth);
-            Environment.SetEnvironmentVariable("JWT_KEY", "VeryLongFakeJWT_ThatWeMockedForTests");
 
             var loginCommand = new LoginQuery("wrongLogin", "sssSSS1!");
 
@@ -85,7 +85,6 @@ namespace alpimi_planner_backend.Unit.Entities.Auth.Queries
             _dbService
                 .Setup(s => s.Post<AlpimiAPI.Auth.Auth>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(auth);
-            Environment.SetEnvironmentVariable("JWT_KEY", "VeryLongFakeJWT_ThatWeMockedForTests");
 
             var loginCommand = new LoginQuery(auth.User.Login, "wrongPassword");
 

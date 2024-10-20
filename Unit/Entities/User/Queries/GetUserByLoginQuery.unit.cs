@@ -5,7 +5,7 @@ using Xunit;
 
 namespace alpimi_planner_backend.Unit.Entities.User.Queres
 {
-    public class GetUserCommandUnit
+    public class GetUserByLoginCommandUnit
     {
         private readonly Mock<IDbService> _dbService = new();
 
@@ -22,7 +22,7 @@ namespace alpimi_planner_backend.Unit.Entities.User.Queres
         }
 
         [Fact]
-        public async Task GetsUserWhenIdIsCorrect()
+        public async Task GetsUserWhenLoginIsCorrect()
         {
             var user = GetUserDetails();
 
@@ -30,9 +30,9 @@ namespace alpimi_planner_backend.Unit.Entities.User.Queres
                 .Setup(s => s.Get<AlpimiAPI.User.User>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(user);
 
-            var getUserCommand = new GetUserQuery(user.Id);
+            var getUserCommand = new GetUserByLoginQuery(user.Login);
 
-            var getUserHandler = new GetUserHandler(_dbService.Object);
+            var getUserHandler = new GetUserByLoginHandler(_dbService.Object);
 
             var result = await getUserHandler.Handle(getUserCommand, new CancellationToken());
 
@@ -40,7 +40,7 @@ namespace alpimi_planner_backend.Unit.Entities.User.Queres
         }
 
         [Fact]
-        public async Task ReturnsNullWhenIdIsIncorrect()
+        public async Task ReturnsNullWhenLoginIsIncorrect()
         {
             var user = GetUserDetails();
 
@@ -48,9 +48,9 @@ namespace alpimi_planner_backend.Unit.Entities.User.Queres
                 .Setup(s => s.Get<AlpimiAPI.User.User>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync((AlpimiAPI.User.User?)null);
 
-            var getUserCommand = new GetUserQuery(new Guid());
+            var getUserCommand = new GetUserByLoginQuery("NieMarek");
 
-            var getUserHandler = new GetUserHandler(_dbService.Object);
+            var getUserHandler = new GetUserByLoginHandler(_dbService.Object);
 
             var result = await getUserHandler.Handle(getUserCommand, new CancellationToken());
 

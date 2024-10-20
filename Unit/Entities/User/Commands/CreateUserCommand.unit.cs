@@ -9,7 +9,6 @@ namespace alpimi_planner_backend.Unit.Entities.User.Commands
     public class CreateUserCommandUnit
     {
         private readonly Mock<IDbService> _dbService = new();
-        private readonly AuthConfiguration authConfig = new AuthConfiguration();
 
         private AlpimiAPI.User.User GetUserDetails()
         {
@@ -72,7 +71,7 @@ namespace alpimi_planner_backend.Unit.Entities.User.Commands
             );
             Assert.Equal(
                 "Password cannot be shorter than "
-                    + authConfig.GetMinimumPasswordLength()
+                    + AuthConfiguration.MinimumPasswordLength
                     + " characters",
                 result.Message
             );
@@ -103,7 +102,7 @@ namespace alpimi_planner_backend.Unit.Entities.User.Commands
             );
             Assert.Equal(
                 "Password cannot be longer than "
-                    + authConfig.GetMaximumPasswordLength()
+                    + AuthConfiguration.MaximumPasswordLength
                     + " characters",
                 result.Message
             );
@@ -132,7 +131,7 @@ namespace alpimi_planner_backend.Unit.Entities.User.Commands
                 async () =>
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())
             );
-            var requiredCharacters = authConfig.GetRequiredCharacters();
+            var requiredCharacters = AuthConfiguration.RequiredCharacters;
             if (requiredCharacters == null)
             {
                 requiredCharacters = [RequiredCharacterTypes.SmallLetter];
@@ -167,7 +166,7 @@ namespace alpimi_planner_backend.Unit.Entities.User.Commands
                 async () =>
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())
             );
-            var requiredCharacters = authConfig.GetRequiredCharacters();
+            var requiredCharacters = AuthConfiguration.RequiredCharacters;
             if (requiredCharacters == null)
             {
                 requiredCharacters = [RequiredCharacterTypes.BigLetter];
@@ -202,7 +201,7 @@ namespace alpimi_planner_backend.Unit.Entities.User.Commands
                 async () =>
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())
             );
-            var requiredCharacters = authConfig.GetRequiredCharacters();
+            var requiredCharacters = AuthConfiguration.RequiredCharacters;
             if (requiredCharacters == null)
             {
                 requiredCharacters = [RequiredCharacterTypes.Symbol];
@@ -237,7 +236,7 @@ namespace alpimi_planner_backend.Unit.Entities.User.Commands
                 async () =>
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())
             );
-            var requiredCharacters = authConfig.GetRequiredCharacters();
+            var requiredCharacters = AuthConfiguration.RequiredCharacters;
             if (requiredCharacters == null)
             {
                 requiredCharacters = [RequiredCharacterTypes.Digit];
@@ -247,6 +246,40 @@ namespace alpimi_planner_backend.Unit.Entities.User.Commands
                     + string.Join(", ", requiredCharacters),
                 result.Message
             );
+        }
+
+        [Fact]
+        public async Task ThrowsErrorWhenLoginAlreadyExists()
+        {
+            var user = GetUserDetails();
+
+            _dbService
+                .Setup(s => s.Post<AlpimiAPI.User.User>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(user);
+            _dbService
+                .Setup(s => s.Get<AlpimiAPI.User.User>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(user);
+
+            var createUserCommand = new CreateUserCommand(
+                user.Id,
+                new Guid(),
+                user.Login,
+                user.CustomURL,
+                "Randomsmall1"
+            );
+
+            var createUserHandler = new CreateUserHandler(_dbService.Object);
+
+            var result = await Assert.ThrowsAsync<BadHttpRequestException>(
+                async () =>
+                    await createUserHandler.Handle(createUserCommand, new CancellationToken())
+            );
+            var requiredCharacters = AuthConfiguration.RequiredCharacters;
+            if (requiredCharacters == null)
+            {
+                requiredCharacters = [RequiredCharacterTypes.Symbol];
+            }
+            Assert.Equal("Login already taken", result.Message);
         }
     }
 }

@@ -2,29 +2,14 @@
 {
     public class AuthConfiguration
     {
-        public int MinimumPasswordLength = 8;
-        public int MaximumPasswordLength = 256;
-        public RequiredCharacterTypes[]? RequiredCharacters =
+        public static int MinimumPasswordLength = 8;
+        public static int MaximumPasswordLength = 256;
+        public static RequiredCharacterTypes[]? RequiredCharacters =
         [
             RequiredCharacterTypes.SmallLetter,
             RequiredCharacterTypes.BigLetter,
             RequiredCharacterTypes.Digit,
             RequiredCharacterTypes.Symbol
         ];
-
-        public int GetMaximumPasswordLength()
-        {
-            return MaximumPasswordLength;
-        }
-
-        public int GetMinimumPasswordLength()
-        {
-            return MinimumPasswordLength;
-        }
-
-        public RequiredCharacterTypes[]? GetRequiredCharacters()
-        {
-            return RequiredCharacters;
-        }
     }
 }

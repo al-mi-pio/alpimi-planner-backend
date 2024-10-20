@@ -42,26 +42,25 @@ namespace AlpimiAPI.User.Commands
                 throw new BadHttpRequestException("Login already taken");
             }
 
-            AuthConfiguration authConfig = new AuthConfiguration();
-            if (request.Password.Length < authConfig.GetMinimumPasswordLength())
+            if (request.Password.Length < AuthConfiguration.MinimumPasswordLength)
             {
                 throw new BadHttpRequestException(
                     "Password cannot be shorter than "
-                        + authConfig.GetMinimumPasswordLength()
+                        + AuthConfiguration.MinimumPasswordLength
                         + " characters"
                 );
             }
 
-            if (request.Password.Length > authConfig.GetMaximumPasswordLength())
+            if (request.Password.Length > AuthConfiguration.MaximumPasswordLength)
             {
                 throw new BadHttpRequestException(
                     "Password cannot be longer than "
-                        + authConfig.GetMaximumPasswordLength()
+                        + AuthConfiguration.MaximumPasswordLength
                         + " characters"
                 );
             }
 
-            RequiredCharacterTypes[]? requiredCharacterTypes = authConfig.GetRequiredCharacters();
+            RequiredCharacterTypes[]? requiredCharacterTypes = AuthConfiguration.RequiredCharacters;
             if (requiredCharacterTypes != null)
             {
                 if (requiredCharacterTypes.Contains(RequiredCharacterTypes.BigLetter))

@@ -9,7 +9,6 @@ namespace alpimi_planner_backend.Unit.Entities.User.Commands
     public class CreateUserCommandUnit
     {
         private readonly Mock<IDbService> _dbService = new();
-        private readonly AuthConfiguration authConfig = new AuthConfiguration();
 
         private AlpimiAPI.User.User GetUserDetails()
         {
@@ -72,7 +71,7 @@ namespace alpimi_planner_backend.Unit.Entities.User.Commands
             );
             Assert.Equal(
                 "Password cannot be shorter than "
-                    + authConfig.GetMinimumPasswordLength()
+                    + AuthConfiguration.MinimumPasswordLength
                     + " characters",
                 result.Message
             );
@@ -103,7 +102,7 @@ namespace alpimi_planner_backend.Unit.Entities.User.Commands
             );
             Assert.Equal(
                 "Password cannot be longer than "
-                    + authConfig.GetMaximumPasswordLength()
+                    + AuthConfiguration.MaximumPasswordLength
                     + " characters",
                 result.Message
             );
@@ -132,7 +131,7 @@ namespace alpimi_planner_backend.Unit.Entities.User.Commands
                 async () =>
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())
             );
-            var requiredCharacters = authConfig.GetRequiredCharacters();
+            var requiredCharacters = AuthConfiguration.RequiredCharacters;
             if (requiredCharacters == null)
             {
                 requiredCharacters = [RequiredCharacterTypes.SmallLetter];
@@ -167,7 +166,7 @@ namespace alpimi_planner_backend.Unit.Entities.User.Commands
                 async () =>
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())
             );
-            var requiredCharacters = authConfig.GetRequiredCharacters();
+            var requiredCharacters = AuthConfiguration.RequiredCharacters;
             if (requiredCharacters == null)
             {
                 requiredCharacters = [RequiredCharacterTypes.BigLetter];
@@ -202,7 +201,7 @@ namespace alpimi_planner_backend.Unit.Entities.User.Commands
                 async () =>
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())
             );
-            var requiredCharacters = authConfig.GetRequiredCharacters();
+            var requiredCharacters = AuthConfiguration.RequiredCharacters;
             if (requiredCharacters == null)
             {
                 requiredCharacters = [RequiredCharacterTypes.Symbol];
@@ -237,7 +236,7 @@ namespace alpimi_planner_backend.Unit.Entities.User.Commands
                 async () =>
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())
             );
-            var requiredCharacters = authConfig.GetRequiredCharacters();
+            var requiredCharacters = AuthConfiguration.RequiredCharacters;
             if (requiredCharacters == null)
             {
                 requiredCharacters = [RequiredCharacterTypes.Digit];
@@ -275,7 +274,7 @@ namespace alpimi_planner_backend.Unit.Entities.User.Commands
                 async () =>
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())
             );
-            var requiredCharacters = authConfig.GetRequiredCharacters();
+            var requiredCharacters = AuthConfiguration.RequiredCharacters;
             if (requiredCharacters == null)
             {
                 requiredCharacters = [RequiredCharacterTypes.Symbol];

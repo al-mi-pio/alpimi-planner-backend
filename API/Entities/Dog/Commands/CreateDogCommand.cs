@@ -1,5 +1,4 @@
 ﻿using System.Data;
-using alpimi_planner_backend.API.Utilities;
 using Azure.Core;
 using Dapper;
 using MediatR;
@@ -14,7 +13,9 @@ namespace AlpimiAPI.Dog.Commands
         public async Task<int> Handle(CreateDogCommand request, CancellationToken cancellationToken)
         {
             using (
-                IDbConnection connection = new SqlConnection(Configuration.GetConnectionString())
+                IDbConnection connection = new SqlConnection(
+                    Utilities.Configuration.GetConnectionString()
+                )
             )
             {
                 await connection.QueryFirstOrDefaultAsync<AlpimiAPI.Breed.Breed>(

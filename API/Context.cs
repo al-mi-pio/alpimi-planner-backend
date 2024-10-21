@@ -1,7 +1,5 @@
-﻿using AlpimiAPI.Auth;
-using AlpimiAPI.Breed;
-using AlpimiAPI.Dog;
-using AlpimiAPI.User;
+﻿using AlpimiAPI.Entities.Auth;
+using AlpimiAPI.Entities.User;
 using Microsoft.EntityFrameworkCore;
 
 namespace AlpimiAPI
@@ -10,8 +8,8 @@ namespace AlpimiAPI
     {
         #region Entities
 
-        public DbSet<Breed> Breed { get; set; }
-        public DbSet<Dog> Dog { get; set; }
+        public DbSet<AlpimiAPI.Breed.Breed> Breed { get; set; }
+        public DbSet<AlpimiAPI.Dog.Dog> Dog { get; set; }
         public DbSet<User> User { get; set; }
         public DbSet<Auth> Auth { get; set; }
         #endregion

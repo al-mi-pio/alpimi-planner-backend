@@ -1,6 +1,6 @@
-﻿using AlpimiAPI.User.Commands;
-using alpimi_planner_backend.API;
-using alpimi_planner_backend.API.Configuration;
+﻿using AlpimiAPI;
+using AlpimiAPI.Configuration;
+using AlpimiAPI.Entities.User.Commands;
 using Moq;
 using Xunit;
 
@@ -10,9 +10,9 @@ namespace AlpimiTest.Entities.User.Commands
     {
         private readonly Mock<IDbService> _dbService = new();
 
-        private AlpimiAPI.User.User GetUserDetails()
+        private AlpimiAPI.Entities.User.User GetUserDetails()
         {
-            var user = new AlpimiAPI.User.User()
+            var user = new AlpimiAPI.Entities.User.User()
             {
                 Id = new Guid(),
                 Login = "marek",
@@ -28,7 +28,9 @@ namespace AlpimiTest.Entities.User.Commands
             var user = GetUserDetails();
 
             _dbService
-                .Setup(s => s.Post<AlpimiAPI.User.User>(It.IsAny<string>(), It.IsAny<object>()))
+                .Setup(s =>
+                    s.Post<AlpimiAPI.Entities.User.User>(It.IsAny<string>(), It.IsAny<object>())
+                )
                 .ReturnsAsync(user);
 
             var createUserCommand = new CreateUserCommand(
@@ -52,7 +54,9 @@ namespace AlpimiTest.Entities.User.Commands
             var user = GetUserDetails();
 
             _dbService
-                .Setup(s => s.Post<AlpimiAPI.User.User>(It.IsAny<string>(), It.IsAny<object>()))
+                .Setup(s =>
+                    s.Post<AlpimiAPI.Entities.User.User>(It.IsAny<string>(), It.IsAny<object>())
+                )
                 .ReturnsAsync(user);
 
             var createUserCommand = new CreateUserCommand(
@@ -83,7 +87,9 @@ namespace AlpimiTest.Entities.User.Commands
             var user = GetUserDetails();
 
             _dbService
-                .Setup(s => s.Post<AlpimiAPI.User.User>(It.IsAny<string>(), It.IsAny<object>()))
+                .Setup(s =>
+                    s.Post<AlpimiAPI.Entities.User.User>(It.IsAny<string>(), It.IsAny<object>())
+                )
                 .ReturnsAsync(user);
 
             var createUserCommand = new CreateUserCommand(
@@ -114,7 +120,9 @@ namespace AlpimiTest.Entities.User.Commands
             var user = GetUserDetails();
 
             _dbService
-                .Setup(s => s.Post<AlpimiAPI.User.User>(It.IsAny<string>(), It.IsAny<object>()))
+                .Setup(s =>
+                    s.Post<AlpimiAPI.Entities.User.User>(It.IsAny<string>(), It.IsAny<object>())
+                )
                 .ReturnsAsync(user);
 
             var createUserCommand = new CreateUserCommand(
@@ -149,7 +157,9 @@ namespace AlpimiTest.Entities.User.Commands
             var user = GetUserDetails();
 
             _dbService
-                .Setup(s => s.Post<AlpimiAPI.User.User>(It.IsAny<string>(), It.IsAny<object>()))
+                .Setup(s =>
+                    s.Post<AlpimiAPI.Entities.User.User>(It.IsAny<string>(), It.IsAny<object>())
+                )
                 .ReturnsAsync(user);
 
             var createUserCommand = new CreateUserCommand(
@@ -184,7 +194,9 @@ namespace AlpimiTest.Entities.User.Commands
             var user = GetUserDetails();
 
             _dbService
-                .Setup(s => s.Post<AlpimiAPI.User.User>(It.IsAny<string>(), It.IsAny<object>()))
+                .Setup(s =>
+                    s.Post<AlpimiAPI.Entities.User.User>(It.IsAny<string>(), It.IsAny<object>())
+                )
                 .ReturnsAsync(user);
 
             var createUserCommand = new CreateUserCommand(
@@ -219,7 +231,9 @@ namespace AlpimiTest.Entities.User.Commands
             var user = GetUserDetails();
 
             _dbService
-                .Setup(s => s.Post<AlpimiAPI.User.User>(It.IsAny<string>(), It.IsAny<object>()))
+                .Setup(s =>
+                    s.Post<AlpimiAPI.Entities.User.User>(It.IsAny<string>(), It.IsAny<object>())
+                )
                 .ReturnsAsync(user);
 
             var createUserCommand = new CreateUserCommand(
@@ -254,10 +268,14 @@ namespace AlpimiTest.Entities.User.Commands
             var user = GetUserDetails();
 
             _dbService
-                .Setup(s => s.Post<AlpimiAPI.User.User>(It.IsAny<string>(), It.IsAny<object>()))
+                .Setup(s =>
+                    s.Post<AlpimiAPI.Entities.User.User>(It.IsAny<string>(), It.IsAny<object>())
+                )
                 .ReturnsAsync(user);
             _dbService
-                .Setup(s => s.Get<AlpimiAPI.User.User>(It.IsAny<string>(), It.IsAny<object>()))
+                .Setup(s =>
+                    s.Get<AlpimiAPI.Entities.User.User>(It.IsAny<string>(), It.IsAny<object>())
+                )
                 .ReturnsAsync(user);
 
             var createUserCommand = new CreateUserCommand(

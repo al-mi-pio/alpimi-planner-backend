@@ -1,8 +1,6 @@
 ﻿using System.Security.Cryptography;
-using AlpimiAPI.User.Queries;
-using alpimi_planner_backend.API;
-using alpimi_planner_backend.API.Configuration;
-using alpimi_planner_backend.API.Utilities;
+using AlpimiAPI.Configuration;
+using AlpimiAPI.Entities.User.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -121,9 +119,9 @@ namespace AlpimiAPI.Entities.User.Commands
             byte[] hash = Rfc2898DeriveBytes.Pbkdf2(
                 request.Password,
                 salt,
-                Configuration.GetHashIterations(),
-                Configuration.GetHashAlgorithm(),
-                Configuration.GetKeySize()
+                Utilities.Configuration.GetHashIterations(),
+                Utilities.Configuration.GetHashAlgorithm(),
+                Utilities.Configuration.GetKeySize()
             );
 
             await _dbService.Post<Guid>(

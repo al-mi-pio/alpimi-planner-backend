@@ -1,6 +1,6 @@
-﻿using AlpimiAPI.User.Commands;
-using AlpimiAPI.User.DTO;
-using AlpimiAPI.User.Queries;
+﻿using AlpimiAPI.Entities.User.Commands;
+using AlpimiAPI.Entities.User.DTO;
+using AlpimiAPI.Entities.User.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

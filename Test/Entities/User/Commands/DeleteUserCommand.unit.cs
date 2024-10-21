@@ -1,5 +1,5 @@
-﻿using AlpimiAPI.User.Commands;
-using alpimi_planner_backend.API;
+﻿using AlpimiAPI;
+using AlpimiAPI.Entities.User.Commands;
 using Moq;
 using Xunit;
 

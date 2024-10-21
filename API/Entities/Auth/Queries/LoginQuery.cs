@@ -2,9 +2,7 @@
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using AlpimiAPI.User.Queries;
-using alpimi_planner_backend.API;
-using alpimi_planner_backend.API.Utilities;
+using AlpimiAPI.Entities.User.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -47,9 +45,9 @@ namespace AlpimiAPI.Entities.Auth.Queries
             byte[] inputHash = Rfc2898DeriveBytes.Pbkdf2(
                 request.Password,
                 Convert.FromBase64String(auth.Salt),
-                Configuration.GetHashIterations(),
-                Configuration.GetHashAlgorithm(),
-                Configuration.GetKeySize()
+                Utilities.Configuration.GetHashIterations(),
+                Utilities.Configuration.GetHashAlgorithm(),
+                Utilities.Configuration.GetKeySize()
             );
 
             if (Convert.ToBase64String(inputHash) != auth.Password)
@@ -64,14 +62,18 @@ namespace AlpimiAPI.Entities.Auth.Queries
                 new Claim("userID", $"{auth.UserID}")
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetJWTKey()));
+            var key = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(Utilities.Configuration.GetJWTKey())
+            );
             var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             //TODO DO SMTH
             var expires = DateTime.Now;
-            if (Configuration.GetJWTExpire() != null)
+            if (Utilities.Configuration.GetJWTExpire() != null)
             {
-                expires = DateTime.Now.AddMinutes(Convert.ToDouble(Configuration.GetJWTExpire()));
+                expires = DateTime.Now.AddMinutes(
+                    Convert.ToDouble(Utilities.Configuration.GetJWTExpire())
+                );
             }
             else
             {
@@ -79,8 +81,8 @@ namespace AlpimiAPI.Entities.Auth.Queries
             }
 
             var token = new JwtSecurityToken(
-                Configuration.GetJWTIssuer(),
-                Configuration.GetJWTIssuer(),
+                Utilities.Configuration.GetJWTIssuer(),
+                Utilities.Configuration.GetJWTIssuer(),
                 claims,
                 expires: expires,
                 signingCredentials: cred

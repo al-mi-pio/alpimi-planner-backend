@@ -1,4 +1,4 @@
-﻿using AlpimiAPI.Auth.Queries;
+﻿using AlpimiAPI.Entities.Auth.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace AlpimiAPI.Entities.User.DTO
+﻿namespace AlpimiAPI.Entities.User.DTO
 {
     public class UpdateUserDTO
     {

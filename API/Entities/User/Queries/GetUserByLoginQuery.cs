@@ -1,5 +1,4 @@
-﻿using alpimi_planner_backend.API;
-using MediatR;
+﻿using MediatR;
 
 namespace AlpimiAPI.Entities.User.Queries
 {

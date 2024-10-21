@@ -1,5 +1,5 @@
-﻿using AlpimiAPI.User.Queries;
-using alpimi_planner_backend.API;
+﻿using AlpimiAPI;
+using AlpimiAPI.Entities.User.Queries;
 using Moq;
 using Xunit;
 
@@ -9,9 +9,9 @@ namespace AlpimiTest.Unit.Entities.User.Queres
     {
         private readonly Mock<IDbService> _dbService = new();
 
-        private AlpimiAPI.User.User GetUserDetails()
+        private AlpimiAPI.Entities.User.User GetUserDetails()
         {
-            var user = new AlpimiAPI.User.User()
+            var user = new AlpimiAPI.Entities.User.User()
             {
                 Id = new Guid(),
                 Login = "marek",
@@ -27,7 +27,9 @@ namespace AlpimiTest.Unit.Entities.User.Queres
             var user = GetUserDetails();
 
             _dbService
-                .Setup(s => s.Get<AlpimiAPI.User.User>(It.IsAny<string>(), It.IsAny<object>()))
+                .Setup(s =>
+                    s.Get<AlpimiAPI.Entities.User.User>(It.IsAny<string>(), It.IsAny<object>())
+                )
                 .ReturnsAsync(user);
 
             var getUserCommand = new GetUserQuery(user.Id);
@@ -45,8 +47,10 @@ namespace AlpimiTest.Unit.Entities.User.Queres
             var user = GetUserDetails();
 
             _dbService
-                .Setup(s => s.Get<AlpimiAPI.User.User>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync((AlpimiAPI.User.User?)null);
+                .Setup(s =>
+                    s.Get<AlpimiAPI.Entities.User.User>(It.IsAny<string>(), It.IsAny<object>())
+                )
+                .ReturnsAsync((AlpimiAPI.Entities.User.User?)null);
 
             var getUserCommand = new GetUserQuery(new Guid());
 

@@ -1,4 +1,4 @@
-﻿namespace AlpimiAPI.Configuration
+﻿namespace AlpimiAPI.Settings
 {
     public enum RequiredCharacterTypes
     {

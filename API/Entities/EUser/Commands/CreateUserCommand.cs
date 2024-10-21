@@ -1,6 +1,6 @@
 ﻿using System.Security.Cryptography;
-using AlpimiAPI.Configuration;
 using AlpimiAPI.Entities.EUser.Queries;
+using AlpimiAPI.Settings;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -40,25 +40,25 @@ namespace AlpimiAPI.Entities.EUser.Commands
                 throw new BadHttpRequestException("Login already taken");
             }
 
-            if (request.Password.Length < AuthConfiguration.MinimumPasswordLength)
+            if (request.Password.Length < AuthSettings.MinimumPasswordLength)
             {
                 throw new BadHttpRequestException(
                     "Password cannot be shorter than "
-                        + AuthConfiguration.MinimumPasswordLength
+                        + AuthSettings.MinimumPasswordLength
                         + " characters"
                 );
             }
 
-            if (request.Password.Length > AuthConfiguration.MaximumPasswordLength)
+            if (request.Password.Length > AuthSettings.MaximumPasswordLength)
             {
                 throw new BadHttpRequestException(
                     "Password cannot be longer than "
-                        + AuthConfiguration.MaximumPasswordLength
+                        + AuthSettings.MaximumPasswordLength
                         + " characters"
                 );
             }
 
-            RequiredCharacterTypes[]? requiredCharacterTypes = AuthConfiguration.RequiredCharacters;
+            RequiredCharacterTypes[]? requiredCharacterTypes = AuthSettings.RequiredCharacters;
             if (requiredCharacterTypes != null)
             {
                 if (requiredCharacterTypes.Contains(RequiredCharacterTypes.BigLetter))

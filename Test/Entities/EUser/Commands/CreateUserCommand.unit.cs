@@ -1,7 +1,7 @@
 ﻿using AlpimiAPI;
-using AlpimiAPI.Configuration;
 using AlpimiAPI.Entities.EUser;
 using AlpimiAPI.Entities.EUser.Commands;
+using AlpimiAPI.Settings;
 using Moq;
 using Xunit;
 
@@ -72,7 +72,7 @@ namespace AlpimiTest.Entities.EUser.Commands
             );
             Assert.Equal(
                 "Password cannot be shorter than "
-                    + AuthConfiguration.MinimumPasswordLength
+                    + AuthSettings.MinimumPasswordLength
                     + " characters",
                 result.Message
             );
@@ -103,7 +103,7 @@ namespace AlpimiTest.Entities.EUser.Commands
             );
             Assert.Equal(
                 "Password cannot be longer than "
-                    + AuthConfiguration.MaximumPasswordLength
+                    + AuthSettings.MaximumPasswordLength
                     + " characters",
                 result.Message
             );
@@ -132,7 +132,7 @@ namespace AlpimiTest.Entities.EUser.Commands
                 async () =>
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())
             );
-            var requiredCharacters = AuthConfiguration.RequiredCharacters;
+            var requiredCharacters = AuthSettings.RequiredCharacters;
             if (requiredCharacters == null)
             {
                 requiredCharacters = [RequiredCharacterTypes.SmallLetter];
@@ -167,7 +167,7 @@ namespace AlpimiTest.Entities.EUser.Commands
                 async () =>
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())
             );
-            var requiredCharacters = AuthConfiguration.RequiredCharacters;
+            var requiredCharacters = AuthSettings.RequiredCharacters;
             if (requiredCharacters == null)
             {
                 requiredCharacters = [RequiredCharacterTypes.BigLetter];
@@ -202,7 +202,7 @@ namespace AlpimiTest.Entities.EUser.Commands
                 async () =>
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())
             );
-            var requiredCharacters = AuthConfiguration.RequiredCharacters;
+            var requiredCharacters = AuthSettings.RequiredCharacters;
             if (requiredCharacters == null)
             {
                 requiredCharacters = [RequiredCharacterTypes.Symbol];
@@ -237,7 +237,7 @@ namespace AlpimiTest.Entities.EUser.Commands
                 async () =>
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())
             );
-            var requiredCharacters = AuthConfiguration.RequiredCharacters;
+            var requiredCharacters = AuthSettings.RequiredCharacters;
             if (requiredCharacters == null)
             {
                 requiredCharacters = [RequiredCharacterTypes.Digit];
@@ -275,7 +275,7 @@ namespace AlpimiTest.Entities.EUser.Commands
                 async () =>
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())
             );
-            var requiredCharacters = AuthConfiguration.RequiredCharacters;
+            var requiredCharacters = AuthSettings.RequiredCharacters;
             if (requiredCharacters == null)
             {
                 requiredCharacters = [RequiredCharacterTypes.Symbol];

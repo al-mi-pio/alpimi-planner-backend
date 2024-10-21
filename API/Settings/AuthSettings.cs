@@ -1,6 +1,6 @@
-﻿namespace AlpimiAPI.Configuration
+﻿namespace AlpimiAPI.Settings
 {
-    public class AuthConfiguration
+    public class AuthSettings
     {
         public static int MinimumPasswordLength = 8;
         public static int MaximumPasswordLength = 256;

@@ -4,6 +4,7 @@ using System.Security.Cryptography;
 using System.Text;
 using AlpimiAPI.Entities.EUser;
 using AlpimiAPI.Entities.EUser.Queries;
+using AlpimiAPI.Utilities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -82,8 +83,8 @@ namespace AlpimiAPI.Entities.EAuth.Queries
             }
 
             var token = new JwtSecurityToken(
-                Utilities.Configuration.GetJWTIssuer(),
-                Utilities.Configuration.GetJWTIssuer(),
+                Configuration.GetJWTIssuer(),
+                Configuration.GetJWTIssuer(),
                 claims,
                 expires: expires,
                 signingCredentials: cred

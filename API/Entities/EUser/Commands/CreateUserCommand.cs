@@ -41,6 +41,17 @@ namespace AlpimiAPI.Entities.EUser.Commands
                 throw new BadHttpRequestException("Login already taken");
             }
 
+            var userURL = await _dbService.Get<string>(
+                @"SELECT [CustomURL]
+    FROM [User]
+    WHERE [CustomURL] = @CustomURL;",
+                request
+            );
+            if (userURL != null)
+            {
+                throw new BadHttpRequestException("URL already taken");
+            }
+
             if (request.Password.Length < AuthSettings.MinimumPasswordLength)
             {
                 throw new BadHttpRequestException(

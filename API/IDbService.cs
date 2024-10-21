@@ -1,4 +1,4 @@
-﻿namespace alpimi_planner_backend.API
+﻿namespace AlpimiAPI
 {
     public interface IDbService
     {

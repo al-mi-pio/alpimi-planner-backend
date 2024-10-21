@@ -1,5 +1,4 @@
 ﻿using System.Data;
-using alpimi_planner_backend.API.Utilities;
 using Dapper;
 using MediatR;
 using Microsoft.Data.SqlClient;
@@ -13,7 +12,9 @@ namespace AlpimiAPI.Breed.Queries
         public async Task<Breed> Handle(GetBreedQuery request, CancellationToken cancellationToken)
         {
             using (
-                IDbConnection connection = new SqlConnection(Configuration.GetConnectionString())
+                IDbConnection connection = new SqlConnection(
+                    Utilities.Configuration.GetConnectionString()
+                )
             )
             {
                 var breed = await connection.QueryFirstOrDefaultAsync<Breed>(

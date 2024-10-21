@@ -1,6 +1,4 @@
 ﻿using System.Data;
-using System.Data.Common;
-using alpimi_planner_backend.API.Utilities;
 using Dapper;
 using MediatR;
 using Microsoft.Data.SqlClient;
@@ -14,7 +12,9 @@ namespace AlpimiAPI.Dog.Queries
         public async Task<Dog> Handle(GetDogQuery request, CancellationToken cancellationToken)
         {
             using (
-                IDbConnection connection = new SqlConnection(Configuration.GetConnectionString())
+                IDbConnection connection = new SqlConnection(
+                    Utilities.Configuration.GetConnectionString()
+                )
             )
             {
                 var dog = await connection.QueryAsync<Dog, Breed.Breed, Dog>(

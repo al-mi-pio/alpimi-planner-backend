@@ -1,5 +1,4 @@
 ﻿using System.Data;
-using alpimi_planner_backend.API.Utilities;
 using Dapper;
 using MediatR;
 using Microsoft.Data.SqlClient;
@@ -16,7 +15,9 @@ namespace AlpimiAPI.Breed.Commands
         )
         {
             using (
-                IDbConnection connection = new SqlConnection(Configuration.GetConnectionString())
+                IDbConnection connection = new SqlConnection(
+                    Utilities.Configuration.GetConnectionString()
+                )
             )
             {
                 var insertedId = await connection.QuerySingleOrDefaultAsync<int>(

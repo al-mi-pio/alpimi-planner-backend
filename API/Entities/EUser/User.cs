@@ -1,4 +1,4 @@
-﻿namespace AlpimiAPI.Entities.User
+﻿namespace AlpimiAPI.Entities.EUser
 {
     public class User
     {

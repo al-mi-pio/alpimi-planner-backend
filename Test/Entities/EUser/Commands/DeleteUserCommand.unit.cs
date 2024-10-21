@@ -1,9 +1,9 @@
 ﻿using AlpimiAPI;
-using AlpimiAPI.Entities.User.Commands;
+using AlpimiAPI.Entities.EUser.Commands;
 using Moq;
 using Xunit;
 
-namespace AlpimiTest.Entities.User.Commands
+namespace AlpimiTest.Entities.EUser.Commands
 {
     public class DeleteUserCommandUnit
     {

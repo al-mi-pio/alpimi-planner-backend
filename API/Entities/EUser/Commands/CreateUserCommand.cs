@@ -1,10 +1,10 @@
 ﻿using System.Security.Cryptography;
 using AlpimiAPI.Configuration;
-using AlpimiAPI.Entities.User.Queries;
+using AlpimiAPI.Entities.EUser.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AlpimiAPI.Entities.User.Commands
+namespace AlpimiAPI.Entities.EUser.Commands
 {
     public record CreateUserCommand(
         Guid Id,

@@ -1,23 +1,25 @@
 ﻿using AlpimiAPI;
-using AlpimiAPI.Entities.Auth.Queries;
+using AlpimiAPI.Entities.EAuth;
+using AlpimiAPI.Entities.EAuth.Queries;
+using AlpimiAPI.Entities.EUser;
 using Moq;
 using Xunit;
 
-namespace AlpimiTest.Entities.Auth.Queries
+namespace AlpimiTest.Entities.EAuth.Queries
 {
     public class LoginQueryUnit
     {
         private readonly Mock<IDbService> _dbService = new();
 
-        private AlpimiAPI.Entities.Auth.Auth GetAuthDetails()
+        private Auth GetAuthDetails()
         {
-            var user = new AlpimiAPI.Entities.User.User()
+            var user = new User()
             {
                 Id = new Guid(),
                 Login = "SaltFinal",
                 CustomURL = "44f"
             };
-            var auth = new AlpimiAPI.Entities.Auth.Auth()
+            var auth = new Auth()
             {
                 Password = "RPhZLnao+2lWH4JvwGZRLI/14QI=",
                 Id = new Guid(),
@@ -35,14 +37,10 @@ namespace AlpimiTest.Entities.Auth.Queries
             var auth = GetAuthDetails();
 
             _dbService
-                .Setup(s =>
-                    s.Get<AlpimiAPI.Entities.User.User>(It.IsAny<string>(), It.IsAny<object>())
-                )
+                .Setup(s => s.Get<User>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(auth.User);
             _dbService
-                .Setup(s =>
-                    s.Post<AlpimiAPI.Entities.Auth.Auth>(It.IsAny<string>(), It.IsAny<object>())
-                )
+                .Setup(s => s.Post<Auth>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(auth);
 
             var loginCommand = new LoginQuery(auth.User.Login, "sssSSS1!");
@@ -60,14 +58,10 @@ namespace AlpimiTest.Entities.Auth.Queries
             var auth = GetAuthDetails();
 
             _dbService
-                .Setup(s =>
-                    s.Get<AlpimiAPI.Entities.User.User>(It.IsAny<string>(), It.IsAny<object>())
-                )
-                .ReturnsAsync((AlpimiAPI.Entities.User.User?)null);
+                .Setup(s => s.Get<User>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync((User?)null);
             _dbService
-                .Setup(s =>
-                    s.Post<AlpimiAPI.Entities.Auth.Auth>(It.IsAny<string>(), It.IsAny<object>())
-                )
+                .Setup(s => s.Post<Auth>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(auth);
 
             var loginCommand = new LoginQuery("wrongLogin", "sssSSS1!");
@@ -87,14 +81,10 @@ namespace AlpimiTest.Entities.Auth.Queries
             var auth = GetAuthDetails();
 
             _dbService
-                .Setup(s =>
-                    s.Get<AlpimiAPI.Entities.User.User>(It.IsAny<string>(), It.IsAny<object>())
-                )
+                .Setup(s => s.Get<User>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(auth.User);
             _dbService
-                .Setup(s =>
-                    s.Post<AlpimiAPI.Entities.Auth.Auth>(It.IsAny<string>(), It.IsAny<object>())
-                )
+                .Setup(s => s.Post<Auth>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(auth);
 
             var loginCommand = new LoginQuery(auth.User.Login, "wrongPassword");

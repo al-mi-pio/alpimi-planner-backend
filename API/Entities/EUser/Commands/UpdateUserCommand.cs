@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace AlpimiAPI.Entities.User.Commands
+namespace AlpimiAPI.Entities.EUser.Commands
 {
     public record UpdateUserCommand(Guid Id, string? Login, string? CustomURL) : IRequest<User?>;
 

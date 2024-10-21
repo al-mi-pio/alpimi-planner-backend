@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace AlpimiAPI.Entities.User.Queries
+namespace AlpimiAPI.Entities.EUser.Queries
 {
     public record GetUserByLoginQuery(string Login) : IRequest<User?>;
 

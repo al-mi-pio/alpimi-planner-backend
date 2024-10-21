@@ -1,11 +1,11 @@
-﻿using AlpimiAPI.Entities.User.Commands;
-using AlpimiAPI.Entities.User.DTO;
-using AlpimiAPI.Entities.User.Queries;
+﻿using AlpimiAPI.Entities.EUser.Commands;
+using AlpimiAPI.Entities.EUser.DTO;
+using AlpimiAPI.Entities.EUser.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AlpimiAPI.Entities.User
+namespace AlpimiAPI.Entities.EUser
 {
     [Route("api/[controller]")]
     [ApiController]

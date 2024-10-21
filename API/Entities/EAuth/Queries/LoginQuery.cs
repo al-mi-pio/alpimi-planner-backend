@@ -2,12 +2,13 @@
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using AlpimiAPI.Entities.User.Queries;
+using AlpimiAPI.Entities.EUser;
+using AlpimiAPI.Entities.EUser.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
-namespace AlpimiAPI.Entities.Auth.Queries
+namespace AlpimiAPI.Entities.EAuth.Queries
 {
     public record LoginQuery(string Login, string Password) : IRequest<String>;
 
@@ -31,7 +32,7 @@ namespace AlpimiAPI.Entities.Auth.Queries
 
             GetUserByLoginHandler getUserByLoginHandler = new GetUserByLoginHandler(_dbService);
             GetUserByLoginQuery getUserByLoginQuery = new GetUserByLoginQuery(request.Login);
-            ActionResult<User.User?> user = await getUserByLoginHandler.Handle(
+            ActionResult<User?> user = await getUserByLoginHandler.Handle(
                 getUserByLoginQuery,
                 cancellationToken
             );

@@ -1,4 +1,4 @@
-﻿namespace AlpimiAPI.Entities.User.DTO
+﻿namespace AlpimiAPI.Entities.EUser.DTO
 {
     public class UpdateUserDTO
     {

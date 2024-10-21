@@ -1,17 +1,18 @@
 ﻿using AlpimiAPI;
-using AlpimiAPI.Entities.User.Commands;
+using AlpimiAPI.Entities.EUser;
+using AlpimiAPI.Entities.EUser.Commands;
 using Moq;
 using Xunit;
 
-namespace AlpimiTest.Entities.User.Commands
+namespace AlpimiTest.Entities.EUser.Commands
 {
     public class UpdateUserCommandUnit
     {
         private readonly Mock<IDbService> _dbService = new();
 
-        private AlpimiAPI.Entities.User.User GetUserDetails()
+        private User GetUserDetails()
         {
-            var user = new AlpimiAPI.Entities.User.User()
+            var user = new User()
             {
                 Id = new Guid(),
                 Login = "marek",
@@ -27,9 +28,7 @@ namespace AlpimiTest.Entities.User.Commands
             var user = GetUserDetails();
 
             _dbService
-                .Setup(s =>
-                    s.Update<AlpimiAPI.Entities.User.User>(It.IsAny<string>(), It.IsAny<object>())
-                )
+                .Setup(s => s.Update<User>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(user);
 
             var updateUserCommand = new UpdateUserCommand(user.Id, "marek2", "f44");
@@ -47,10 +46,8 @@ namespace AlpimiTest.Entities.User.Commands
             var user = GetUserDetails();
 
             _dbService
-                .Setup(s =>
-                    s.Update<AlpimiAPI.Entities.User.User>(It.IsAny<string>(), It.IsAny<object>())
-                )
-                .ReturnsAsync((AlpimiAPI.Entities.User.User?)null);
+                .Setup(s => s.Update<User>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync((User?)null);
 
             var updateUserCommand = new UpdateUserCommand(new Guid(), "marek2", "f44");
 

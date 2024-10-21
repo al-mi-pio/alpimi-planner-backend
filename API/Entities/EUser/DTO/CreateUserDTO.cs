@@ -1,11 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace AlpimiAPI.Entities.Auth.DTO
+namespace AlpimiAPI.Entities.EUser.DTO
 {
-    public record LoginDTO
+    public class CreateUserDTO
     {
         [Required]
         public required string Login { get; set; }
+
+        [Required]
+        public required string CustomURL { get; set; }
 
         [Required]
         public required string Password { get; set; }

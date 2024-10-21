@@ -1,9 +1,9 @@
-﻿using AlpimiAPI.Entities.Auth.Queries;
+﻿using AlpimiAPI.Entities.EAuth.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AlpimiAPI.Entities.Auth
+namespace AlpimiAPI.Entities.EAuth
 {
     [Route("api/[controller]")]
     [ApiController]

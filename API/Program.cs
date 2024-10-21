@@ -1,6 +1,6 @@
 using System.Text;
-using alpimi_planner_backend.API;
-using alpimi_planner_backend.API.Utilities;
+using AlpimiAPI;
+using AlpimiAPI.Utilities;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 

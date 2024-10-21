@@ -3,7 +3,7 @@ using alpimi_planner_backend.API.Utilities;
 using Dapper;
 using Microsoft.Data.SqlClient;
 
-namespace alpimi_planner_backend.API
+namespace AlpimiAPI
 {
     public class DbService : IDbService
     {

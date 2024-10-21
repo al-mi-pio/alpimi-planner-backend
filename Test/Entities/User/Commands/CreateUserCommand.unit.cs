@@ -4,7 +4,7 @@ using alpimi_planner_backend.API.Configuration;
 using Moq;
 using Xunit;
 
-namespace alpimi_planner_backend.Unit.Entities.User.Commands
+namespace AlpimiTest.Entities.User.Commands
 {
     public class CreateUserCommandUnit
     {

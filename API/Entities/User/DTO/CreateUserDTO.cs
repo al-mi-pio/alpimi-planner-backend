@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace AlpimiAPI.User.DTO
+namespace AlpimiAPI.Entities.User.DTO
 {
     public class CreateUserDTO
     {

@@ -5,7 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AlpimiAPI.User
+namespace AlpimiAPI.Entities.User
 {
     [Route("api/[controller]")]
     [ApiController]

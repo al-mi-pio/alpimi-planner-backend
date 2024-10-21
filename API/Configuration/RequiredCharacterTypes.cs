@@ -1,4 +1,4 @@
-﻿namespace alpimi_planner_backend.API.Configuration
+﻿namespace AlpimiAPI.Configuration
 {
     public enum RequiredCharacterTypes
     {

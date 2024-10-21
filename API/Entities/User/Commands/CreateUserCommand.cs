@@ -6,7 +6,7 @@ using alpimi_planner_backend.API.Utilities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AlpimiAPI.User.Commands
+namespace AlpimiAPI.Entities.User.Commands
 {
     public record CreateUserCommand(
         Guid Id,

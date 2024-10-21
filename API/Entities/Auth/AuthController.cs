@@ -3,7 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AlpimiAPI.Auth
+namespace AlpimiAPI.Entities.Auth
 {
     [Route("api/[controller]")]
     [ApiController]

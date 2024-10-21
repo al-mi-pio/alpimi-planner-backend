@@ -1,7 +1,7 @@
 ﻿using alpimi_planner_backend.API;
 using MediatR;
 
-namespace AlpimiAPI.User.Commands
+namespace AlpimiAPI.Entities.User.Commands
 {
     public record UpdateUserCommand(Guid Id, string? Login, string? CustomURL) : IRequest<User?>;
 

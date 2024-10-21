@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace AlpimiAPI.Auth.DTO
+namespace AlpimiAPI.Entities.Auth.DTO
 {
     public record LoginDTO
     {

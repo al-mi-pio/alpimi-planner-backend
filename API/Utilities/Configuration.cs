@@ -1,6 +1,6 @@
 ﻿using System.Security.Cryptography;
 
-namespace alpimi_planner_backend.API.Utilities
+namespace AlpimiAPI.Utilities
 {
     public class Configuration
     {

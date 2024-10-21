@@ -3,7 +3,7 @@ using alpimi_planner_backend.API;
 using Moq;
 using Xunit;
 
-namespace alpimi_planner_backend.Unit.Entities.Auth.Queries
+namespace AlpimiTest.Entities.Auth.Queries
 {
     public class LoginQueryUnit
     {

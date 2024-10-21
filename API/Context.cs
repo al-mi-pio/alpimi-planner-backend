@@ -4,7 +4,7 @@ using AlpimiAPI.Dog;
 using AlpimiAPI.User;
 using Microsoft.EntityFrameworkCore;
 
-namespace alpimi_planner_backend.API
+namespace AlpimiAPI
 {
     public class Context : DbContext
     {

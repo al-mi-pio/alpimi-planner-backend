@@ -9,7 +9,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
-namespace AlpimiAPI.Auth.Queries
+namespace AlpimiAPI.Entities.Auth.Queries
 {
     public record LoginQuery(string Login, string Password) : IRequest<String>;
 

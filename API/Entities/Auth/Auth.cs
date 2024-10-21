@@ -1,4 +1,4 @@
-﻿namespace AlpimiAPI.Auth
+﻿namespace AlpimiAPI.Entities.Auth
 {
     public class Auth
     {

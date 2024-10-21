@@ -276,11 +276,37 @@ namespace AlpimiTest.Entities.EUser.Commands
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())
             );
             var requiredCharacters = AuthSettings.RequiredCharacters;
-            if (requiredCharacters == null)
-            {
-                requiredCharacters = [RequiredCharacterTypes.Symbol];
-            }
+
             Assert.Equal("Login already taken", result.Message);
+        }
+
+        [Fact]
+        public async Task ThrowsErrorWhenURLAlreadyExists()
+        {
+            var user = GetUserDetails();
+
+            _dbService
+                .Setup(s => s.Post<User>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(user);
+            _dbService
+                .Setup(s => s.Get<string>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(user.CustomURL);
+            var createUserCommand = new CreateUserCommand(
+                user.Id,
+                new Guid(),
+                user.Login,
+                user.CustomURL,
+                "Randomsmall1"
+            );
+
+            var createUserHandler = new CreateUserHandler(_dbService.Object);
+
+            var result = await Assert.ThrowsAsync<BadHttpRequestException>(
+                async () =>
+                    await createUserHandler.Handle(createUserCommand, new CancellationToken())
+            );
+
+            Assert.Equal("URL already taken", result.Message);
         }
     }
 }

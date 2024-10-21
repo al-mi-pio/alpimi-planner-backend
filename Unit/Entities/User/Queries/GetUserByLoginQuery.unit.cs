@@ -5,7 +5,7 @@ using Xunit;
 
 namespace alpimi_planner_backend.Unit.Entities.User.Queres
 {
-    public class GetUserCommandUnit
+    public class GetUserByLoginCommandUnit
     {
         private readonly Mock<IDbService> _dbService = new();
 
@@ -22,7 +22,7 @@ namespace alpimi_planner_backend.Unit.Entities.User.Queres
         }
 
         [Fact]
-        public async Task IsGetCalledProperly()
+        public async Task IsGetByLoginCalledProperly()
         {
             var user = GetUserDetails();
 
@@ -30,9 +30,9 @@ namespace alpimi_planner_backend.Unit.Entities.User.Queres
                 .Setup(s => s.Get<AlpimiAPI.User.User>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(user);
 
-            var getUserCommand = new GetUserQuery(user.Id);
+            var getUserCommand = new GetUserByLoginQuery(user.Login);
 
-            var getUserHandler = new GetUserHandler(_dbService.Object);
+            var getUserHandler = new GetUserByLoginHandler(_dbService.Object);
 
             var result = await getUserHandler.Handle(getUserCommand, new CancellationToken());
 

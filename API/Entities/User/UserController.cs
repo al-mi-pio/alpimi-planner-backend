@@ -68,6 +68,32 @@ namespace AlpimiAPI.User
             }
         }
 
+        [HttpGet("byLogin/{login}")]
+        public async Task<ActionResult<User>> GetOneByLogin([FromRoute] string login)
+        {
+            var query = new GetUserByLoginQuery(login);
+            try
+            {
+                User? res = await _mediator.Send(query);
+
+                if (res is null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(res);
+            }
+            catch (HttpRequestException ex)
+                when (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            {
+                return Unauthorized();
+            }
+            catch (Exception)
+            {
+                return BadRequest("TODO make a message");
+            }
+        }
+
         [HttpDelete("{id}")]
         [ProducesResponseType(204)]
         public async Task<ActionResult> Delete([FromRoute] Guid id)

@@ -2,9 +2,11 @@
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using AlpimiAPI.User.Queries;
 using alpimi_planner_backend.API;
 using alpimi_planner_backend.API.Utilities;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
 namespace AlpimiAPI.Auth.Queries
@@ -28,18 +30,20 @@ namespace AlpimiAPI.Auth.Queries
                 WHERE [Login] = @Login;",
                 request
             );
-            var user = await _dbService.Post<User.User?>(
-                @"SELECT [Id],[Login],[CustomURL]
-                FROM [User] 
-                WHERE [Login] = @Login;",
-                request
+
+            GetUserByLoginHandler getUserByLoginHandler = new GetUserByLoginHandler(_dbService);
+            GetUserByLoginQuery getUserByLoginQuery = new GetUserByLoginQuery(request.Login);
+            ActionResult<User.User?> user = await getUserByLoginHandler.Handle(
+                getUserByLoginQuery,
+                new CancellationToken()
             );
 
-            if (auth == null || user == null)
+            if (auth == null || user.Value == null)
             {
                 throw new BadHttpRequestException("Invalid login or password");
             }
-            auth.User = user;
+            auth.User = user.Value;
+
             if (
                 auth.Password
                 != Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(request.Password)))

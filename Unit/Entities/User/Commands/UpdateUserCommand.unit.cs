@@ -22,7 +22,7 @@ namespace alpimi_planner_backend.Unit.Entities.User.Commands
         }
 
         [Fact]
-        public async Task IsUpdateCalledProperly()
+        public async Task ReturnsUpdatedUserWhenIdIsCorrect()
         {
             var user = GetUserDetails();
 
@@ -37,6 +37,24 @@ namespace alpimi_planner_backend.Unit.Entities.User.Commands
             var result = await updateUserHandler.Handle(updateUserCommand, new CancellationToken());
 
             Assert.Equal(user, result);
+        }
+
+        [Fact]
+        public async Task ReturnsNullWhenIdIsIncorrect()
+        {
+            var user = GetUserDetails();
+
+            _dbService
+                .Setup(s => s.Update<AlpimiAPI.User.User>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync((AlpimiAPI.User.User?)null);
+
+            var updateUserCommand = new UpdateUserCommand(new Guid(), "marek2", "f44");
+
+            var updateUserHandler = new UpdateUserHandler(_dbService.Object);
+
+            var result = await updateUserHandler.Handle(updateUserCommand, new CancellationToken());
+
+            Assert.Null(result);
         }
     }
 }

@@ -15,6 +15,9 @@ CONNECTION_STRING="put_connection_string_here"
 JWT_KEY="put_key_here"
 JWT_EXPIRE=60
 JWT_ISSUER="https://example.com/"
+HASH_ITERATIONS=10
+HASH_ALGORYIHM=SHA1
+KEY_SIZE=20
 ```
 
 - Install Entity Framework tool globally

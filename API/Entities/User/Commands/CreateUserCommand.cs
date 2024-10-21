@@ -1,9 +1,10 @@
-﻿using System;
-using System.Security.Cryptography;
-using System.Text;
+﻿using System.Security.Cryptography;
+using AlpimiAPI.User.Queries;
 using alpimi_planner_backend.API;
 using alpimi_planner_backend.API.Configuration;
+using alpimi_planner_backend.API.Utilities;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AlpimiAPI.User.Commands
 {
@@ -29,29 +30,37 @@ namespace AlpimiAPI.User.Commands
             CancellationToken cancellationToken
         )
         {
-            var passwordHash = SHA256.HashData(Encoding.UTF8.GetBytes(request.Password));
+            GetUserByLoginHandler getUserByLoginHandler = new GetUserByLoginHandler(_dbService);
+            GetUserByLoginQuery getUserByLoginQuery = new GetUserByLoginQuery(request.Login);
+            ActionResult<User?> user = await getUserByLoginHandler.Handle(
+                getUserByLoginQuery,
+                cancellationToken
+            );
 
-            AuthConfiguration authConfig = new AuthConfiguration();
+            if (user.Value != null)
+            {
+                throw new BadHttpRequestException("Login already taken");
+            }
 
-            if (request.Password.Length < authConfig.GetMinimumPasswordLength())
+            if (request.Password.Length < AuthConfiguration.MinimumPasswordLength)
             {
                 throw new BadHttpRequestException(
                     "Password cannot be shorter than "
-                        + authConfig.GetMinimumPasswordLength()
+                        + AuthConfiguration.MinimumPasswordLength
                         + " characters"
                 );
             }
 
-            if (request.Password.Length > authConfig.GetMaximumPasswordLength())
+            if (request.Password.Length > AuthConfiguration.MaximumPasswordLength)
             {
                 throw new BadHttpRequestException(
                     "Password cannot be longer than "
-                        + authConfig.GetMaximumPasswordLength()
+                        + AuthConfiguration.MaximumPasswordLength
                         + " characters"
                 );
             }
 
-            RequiredCharacterTypes[]? requiredCharacterTypes = authConfig.GetRequiredCharacters();
+            RequiredCharacterTypes[]? requiredCharacterTypes = AuthConfiguration.RequiredCharacters;
             if (requiredCharacterTypes != null)
             {
                 if (requiredCharacterTypes.Contains(RequiredCharacterTypes.BigLetter))
@@ -108,13 +117,23 @@ namespace AlpimiAPI.User.Commands
                     VALUES (@Id,@Login,@CustomURL);",
                 request
             );
+            byte[] salt = RandomNumberGenerator.GetBytes(16);
+            byte[] hash = Rfc2898DeriveBytes.Pbkdf2(
+                request.Password,
+                salt,
+                Configuration.GetHashIterations(),
+                Configuration.GetHashAlgorithm(),
+                Configuration.GetKeySize()
+            );
 
             await _dbService.Post<Guid>(
                 @"
-                    INSERT INTO [Auth] ([Id],[Password],[UserID])
+                    INSERT INTO [Auth] ([Id],[Password],[Salt],[UserID])
                     OUTPUT INSERTED.UserID                    
                     VALUES (@AuthId,'"
-                    + Convert.ToHexString(passwordHash)
+                    + Convert.ToBase64String(hash)
+                    + "','"
+                    + Convert.ToBase64String(salt)
                     + "',@Id);",
                 request
             );

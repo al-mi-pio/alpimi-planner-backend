@@ -25,7 +25,7 @@ namespace AlpimiAPI.Auth.Queries
         public async Task<String> Handle(LoginQuery request, CancellationToken cancellationToken)
         {
             var auth = await _dbService.Post<Auth?>(
-                @"SELECT [Auth].[Id],[Auth].[Password],[Auth].[UserID]
+                @"SELECT [Auth].[Id],[Auth].[Password],[Auth].[Salt],[Auth].[UserID]
                 FROM [User] JOIN [Auth] on [User].[Id]=[Auth].[UserID] 
                 WHERE [Login] = @Login;",
                 request
@@ -35,7 +35,7 @@ namespace AlpimiAPI.Auth.Queries
             GetUserByLoginQuery getUserByLoginQuery = new GetUserByLoginQuery(request.Login);
             ActionResult<User.User?> user = await getUserByLoginHandler.Handle(
                 getUserByLoginQuery,
-                new CancellationToken()
+                cancellationToken
             );
 
             if (auth == null || user.Value == null)
@@ -44,10 +44,15 @@ namespace AlpimiAPI.Auth.Queries
             }
             auth.User = user.Value;
 
-            if (
-                auth.Password
-                != Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(request.Password)))
-            )
+            byte[] inputHash = Rfc2898DeriveBytes.Pbkdf2(
+                request.Password,
+                Convert.FromBase64String(auth.Salt),
+                Configuration.GetHashIterations(),
+                Configuration.GetHashAlgorithm(),
+                Configuration.GetKeySize()
+            );
+
+            if (Convert.ToBase64String(inputHash) != auth.Password)
             {
                 throw new BadHttpRequestException("Invalid password");
             }

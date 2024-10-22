@@ -18,6 +18,16 @@ namespace AlpimiAPI.Entities.EUser.Commands
             CancellationToken cancellationToken
         )
         {
+            var userURL = await _dbService.Get<string>(
+                @"SELECT [CustomURL]
+                FROM [User]
+                WHERE [CustomURL] = @CustomURL;",
+                request
+            );
+            if (userURL != null)
+            {
+                throw new BadHttpRequestException("URL already taken");
+            }
             var user = await _dbService.Update<User?>(
                 @"
                     UPDATE [User] 

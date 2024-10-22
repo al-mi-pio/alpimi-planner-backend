@@ -7,11 +7,6 @@ namespace AlpimiAPI.Utilities
     {
         public static bool CheckOwnership(string authorization, Guid id)
         {
-            if (authorization is null)
-            {
-                return false;
-            }
-
             var token = authorization.ToString().Split(" ").Last();
             var jwtHandler = new JwtSecurityTokenHandler();
             var jwtToken = jwtHandler.ReadJwtToken(token);

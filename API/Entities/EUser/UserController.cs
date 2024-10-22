@@ -1,8 +1,8 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
+﻿using System.Net;
 using AlpimiAPI.Entities.EUser.Commands;
 using AlpimiAPI.Entities.EUser.DTO;
 using AlpimiAPI.Entities.EUser.Queries;
+using AlpimiAPI.Utilities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -45,20 +45,12 @@ namespace AlpimiAPI.Entities.EUser
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetOne([FromRoute] Guid id)
+        public async Task<ActionResult<User>> GetOne(
+            [FromRoute] Guid id,
+            [FromHeader] string Authorization
+        )
         {
-            var token = HttpContext.Request.Headers["Authorization"].ToString().Split(" ").Last();
-
-            if (string.IsNullOrEmpty(token))
-            {
-                return Unauthorized();
-            }
-
-            var jwtHandler = new JwtSecurityTokenHandler();
-            var jwtToken = jwtHandler.ReadJwtToken(token);
-            Claim userIdClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == "userID")!;
-
-            if (Guid.Parse(userIdClaim.Value) != id)
+            if (!Privileges.CheckOwnership(Authorization, id))
             {
                 return Unauthorized();
             }
@@ -87,34 +79,17 @@ namespace AlpimiAPI.Entities.EUser
         }
 
         [HttpGet("byLogin/{login}")]
-        public async Task<ActionResult<User>> GetOneByLogin([FromRoute] string login)
+        public async Task<ActionResult<User>> GetOneByLogin(
+            [FromRoute] string login,
+            [FromHeader] string Authorization
+        )
         {
             var query = new GetUserByLoginQuery(login);
             try
             {
                 User? res = await _mediator.Send(query);
 
-                if (res is null)
-                {
-                    return NotFound();
-                }
-
-                var token = HttpContext
-                    .Request.Headers["Authorization"]
-                    .ToString()
-                    .Split(" ")
-                    .Last();
-
-                if (string.IsNullOrEmpty(token))
-                {
-                    return Unauthorized();
-                }
-
-                var jwtHandler = new JwtSecurityTokenHandler();
-                var jwtToken = jwtHandler.ReadJwtToken(token);
-                Claim userIdClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == "userID")!;
-
-                if (Guid.Parse(userIdClaim.Value) != res.Id)
+                if (res == null || !Privileges.CheckOwnership(Authorization, res.Id))
                 {
                     return Unauthorized();
                 }
@@ -134,20 +109,12 @@ namespace AlpimiAPI.Entities.EUser
 
         [HttpDelete("{id}")]
         [ProducesResponseType(204)]
-        public async Task<ActionResult> Delete([FromRoute] Guid id)
+        public async Task<ActionResult> Delete(
+            [FromRoute] Guid id,
+            [FromHeader] string Authorization
+        )
         {
-            var token = HttpContext.Request.Headers["Authorization"].ToString().Split(" ").Last();
-
-            if (string.IsNullOrEmpty(token))
-            {
-                return Unauthorized();
-            }
-
-            var jwtHandler = new JwtSecurityTokenHandler();
-            var jwtToken = jwtHandler.ReadJwtToken(token);
-            Claim userIdClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == "userID")!;
-
-            if (Guid.Parse(userIdClaim.Value) != id)
+            if (!Privileges.CheckOwnership(Authorization, id))
             {
                 return Unauthorized();
             }
@@ -172,21 +139,11 @@ namespace AlpimiAPI.Entities.EUser
         [HttpPatch("{id}")]
         public async Task<ActionResult<User>> Patch(
             [FromBody] UpdateUserDTO request,
-            [FromRoute] Guid id
+            [FromRoute] Guid id,
+            [FromHeader] string Authorization
         )
         {
-            var token = HttpContext.Request.Headers["Authorization"].ToString().Split(" ").Last();
-
-            if (string.IsNullOrEmpty(token))
-            {
-                return Unauthorized();
-            }
-
-            var jwtHandler = new JwtSecurityTokenHandler();
-            var jwtToken = jwtHandler.ReadJwtToken(token);
-            Claim userIdClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == "userID")!;
-
-            if (Guid.Parse(userIdClaim.Value) != id)
+            if (!Privileges.CheckOwnership(Authorization, id))
             {
                 return Unauthorized();
             }

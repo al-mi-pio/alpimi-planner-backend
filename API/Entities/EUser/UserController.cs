@@ -1,4 +1,6 @@
-﻿using AlpimiAPI.Entities.EUser.Commands;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using AlpimiAPI.Entities.EUser.Commands;
 using AlpimiAPI.Entities.EUser.DTO;
 using AlpimiAPI.Entities.EUser.Queries;
 using MediatR;
@@ -45,6 +47,22 @@ namespace AlpimiAPI.Entities.EUser
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetOne([FromRoute] Guid id)
         {
+            var token = HttpContext.Request.Headers["Authorization"].ToString().Split(" ").Last();
+
+            if (string.IsNullOrEmpty(token))
+            {
+                return Unauthorized();
+            }
+
+            var jwtHandler = new JwtSecurityTokenHandler();
+            var jwtToken = jwtHandler.ReadJwtToken(token);
+            Claim userIdClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == "userID")!;
+
+            if (Guid.Parse(userIdClaim.Value) != id)
+            {
+                return Unauthorized();
+            }
+
             var query = new GetUserQuery(id);
             try
             {
@@ -81,6 +99,26 @@ namespace AlpimiAPI.Entities.EUser
                     return NotFound();
                 }
 
+                var token = HttpContext
+                    .Request.Headers["Authorization"]
+                    .ToString()
+                    .Split(" ")
+                    .Last();
+
+                if (string.IsNullOrEmpty(token))
+                {
+                    return Unauthorized();
+                }
+
+                var jwtHandler = new JwtSecurityTokenHandler();
+                var jwtToken = jwtHandler.ReadJwtToken(token);
+                Claim userIdClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == "userID")!;
+
+                if (Guid.Parse(userIdClaim.Value) != res.Id)
+                {
+                    return Unauthorized();
+                }
+
                 return Ok(res);
             }
             catch (HttpRequestException ex)
@@ -98,6 +136,21 @@ namespace AlpimiAPI.Entities.EUser
         [ProducesResponseType(204)]
         public async Task<ActionResult> Delete([FromRoute] Guid id)
         {
+            var token = HttpContext.Request.Headers["Authorization"].ToString().Split(" ").Last();
+
+            if (string.IsNullOrEmpty(token))
+            {
+                return Unauthorized();
+            }
+
+            var jwtHandler = new JwtSecurityTokenHandler();
+            var jwtToken = jwtHandler.ReadJwtToken(token);
+            Claim userIdClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == "userID")!;
+
+            if (Guid.Parse(userIdClaim.Value) != id)
+            {
+                return Unauthorized();
+            }
             var command = new DeleteUserCommand(id);
             try
             {
@@ -122,6 +175,21 @@ namespace AlpimiAPI.Entities.EUser
             [FromRoute] Guid id
         )
         {
+            var token = HttpContext.Request.Headers["Authorization"].ToString().Split(" ").Last();
+
+            if (string.IsNullOrEmpty(token))
+            {
+                return Unauthorized();
+            }
+
+            var jwtHandler = new JwtSecurityTokenHandler();
+            var jwtToken = jwtHandler.ReadJwtToken(token);
+            Claim userIdClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == "userID")!;
+
+            if (Guid.Parse(userIdClaim.Value) != id)
+            {
+                return Unauthorized();
+            }
             var command = new UpdateUserCommand(id, request.Login, request.CustomURL);
             try
             {
@@ -136,6 +204,10 @@ namespace AlpimiAPI.Entities.EUser
                 when (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
                 return Unauthorized();
+            }
+            catch (BadHttpRequestException ex)
+            {
+                return BadRequest(ex.Message);
             }
             catch (Exception)
             {

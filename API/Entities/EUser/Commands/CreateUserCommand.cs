@@ -43,8 +43,8 @@ namespace AlpimiAPI.Entities.EUser.Commands
 
             var userURL = await _dbService.Get<string>(
                 @"SELECT [CustomURL]
-    FROM [User]
-    WHERE [CustomURL] = @CustomURL;",
+                FROM [User]
+                WHERE [CustomURL] = @CustomURL;",
                 request
             );
             if (userURL != null)

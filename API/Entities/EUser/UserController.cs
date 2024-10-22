@@ -1,6 +1,8 @@
-﻿using AlpimiAPI.Entities.EUser.Commands;
+﻿using System.Net;
+using AlpimiAPI.Entities.EUser.Commands;
 using AlpimiAPI.Entities.EUser.DTO;
 using AlpimiAPI.Entities.EUser.Queries;
+using AlpimiAPI.Utilities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -43,8 +45,16 @@ namespace AlpimiAPI.Entities.EUser
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetOne([FromRoute] Guid id)
+        public async Task<ActionResult<User>> GetOne(
+            [FromRoute] Guid id,
+            [FromHeader] string Authorization
+        )
         {
+            if (!Privileges.CheckOwnership(Authorization, id))
+            {
+                return Unauthorized();
+            }
+
             var query = new GetUserQuery(id);
             try
             {
@@ -69,16 +79,19 @@ namespace AlpimiAPI.Entities.EUser
         }
 
         [HttpGet("byLogin/{login}")]
-        public async Task<ActionResult<User>> GetOneByLogin([FromRoute] string login)
+        public async Task<ActionResult<User>> GetOneByLogin(
+            [FromRoute] string login,
+            [FromHeader] string Authorization
+        )
         {
             var query = new GetUserByLoginQuery(login);
             try
             {
                 User? res = await _mediator.Send(query);
 
-                if (res is null)
+                if (res == null || !Privileges.CheckOwnership(Authorization, res.Id))
                 {
-                    return NotFound();
+                    return Unauthorized();
                 }
 
                 return Ok(res);
@@ -96,8 +109,15 @@ namespace AlpimiAPI.Entities.EUser
 
         [HttpDelete("{id}")]
         [ProducesResponseType(204)]
-        public async Task<ActionResult> Delete([FromRoute] Guid id)
+        public async Task<ActionResult> Delete(
+            [FromRoute] Guid id,
+            [FromHeader] string Authorization
+        )
         {
+            if (!Privileges.CheckOwnership(Authorization, id))
+            {
+                return Unauthorized();
+            }
             var command = new DeleteUserCommand(id);
             try
             {
@@ -119,9 +139,14 @@ namespace AlpimiAPI.Entities.EUser
         [HttpPatch("{id}")]
         public async Task<ActionResult<User>> Patch(
             [FromBody] UpdateUserDTO request,
-            [FromRoute] Guid id
+            [FromRoute] Guid id,
+            [FromHeader] string Authorization
         )
         {
+            if (!Privileges.CheckOwnership(Authorization, id))
+            {
+                return Unauthorized();
+            }
             var command = new UpdateUserCommand(id, request.Login, request.CustomURL);
             try
             {
@@ -136,6 +161,10 @@ namespace AlpimiAPI.Entities.EUser
                 when (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
                 return Unauthorized();
+            }
+            catch (BadHttpRequestException ex)
+            {
+                return BadRequest(ex.Message);
             }
             catch (Exception)
             {

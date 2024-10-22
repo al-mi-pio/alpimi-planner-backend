@@ -57,5 +57,29 @@ namespace AlpimiTest.Entities.EUser.Commands
 
             Assert.Null(result);
         }
+
+        [Fact]
+        public async Task ThrowsErrorWhenURLAlreadyExists()
+        {
+            var user = GetUserDetails();
+
+            _dbService
+                .Setup(s => s.Update<User>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(user);
+            _dbService
+                .Setup(s => s.Get<string>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(user.CustomURL);
+
+            var updateUserCommand = new UpdateUserCommand(user.Id, user.Login, user.CustomURL);
+
+            var updateUserHandler = new UpdateUserHandler(_dbService.Object);
+
+            var result = await Assert.ThrowsAsync<BadHttpRequestException>(
+                async () =>
+                    await updateUserHandler.Handle(updateUserCommand, new CancellationToken())
+            );
+
+            Assert.Equal("URL already taken", result.Message);
+        }
     }
 }

@@ -10,7 +10,7 @@ namespace AlpimiAPI
     {
         private static readonly IDbService _dbService = new DbService();
 
-        public static async void StartupBase()
+        public static async Task StartupBase()
         {
             var admins = await _dbService.Get<string>(
                 "SELECT [Role] FROM [Auth] WHERE [Role] = 'Admin';",

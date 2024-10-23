@@ -99,10 +99,12 @@ try
 catch (Exception ex) when (ex.Message == "Connection String")
 {
     Console.WriteLine("Cannot connect to the database. Is connection string correct?");
-    Console.ReadLine();
+    Console.WriteLine("Press any key to exit...");
+    Console.ReadKey();
 }
 catch (Exception)
 {
     Console.WriteLine("Problem with Database");
-    Console.ReadLine();
+    Console.WriteLine("Press any key to exit...");
+    Console.ReadKey();
 }

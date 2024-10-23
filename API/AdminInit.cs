@@ -76,7 +76,6 @@ To start using the API service you need to create an Administrator account first
                         Console.WriteLine("Repeat Password:");
                         password2 = Console.ReadLine();
                     } while (password1 != password2 || password1 == "");
-                    Console.WriteLine("Success!");
 
                     var userID = await _dbService.Post<Guid>(
                         @"
@@ -113,6 +112,7 @@ To start using the API service you need to create an Administrator account first
                             + "');",
                         ""
                     );
+                    Console.WriteLine("Success!");
                 }
                 catch (Exception)
                 {

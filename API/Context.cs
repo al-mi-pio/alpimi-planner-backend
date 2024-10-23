@@ -15,7 +15,7 @@ namespace AlpimiAPI
         #endregion
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(Utilities.Configuration.GetConnectionString());
+            optionsBuilder.UseSqlServer(Configuration.GetConnectionString());
         }
     }
 }

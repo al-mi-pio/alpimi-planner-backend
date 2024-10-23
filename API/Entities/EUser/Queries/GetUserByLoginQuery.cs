@@ -2,7 +2,7 @@
 
 namespace AlpimiAPI.Entities.EUser.Queries
 {
-    public record GetUserByLoginQuery(string Login) : IRequest<User?>;
+    public record GetUserByLoginQuery(string Login, Guid? FilterID) : IRequest<User?>;
 
     public class GetUserByLoginHandler : IRequestHandler<GetUserByLoginQuery, User?>
     {
@@ -18,10 +18,21 @@ namespace AlpimiAPI.Entities.EUser.Queries
             CancellationToken cancellationToken
         )
         {
-            var user = await _dbService.Get<User?>(
-                "SELECT [Id], [Login], [CustomURL] FROM [User] WHERE [Login] = @Login;",
-                request
-            );
+            User? user;
+            if (request.FilterID == null)
+            {
+                user = await _dbService.Get<User?>(
+                    "SELECT [Id], [Login], [CustomURL] FROM [User] WHERE [Login] = @Login;",
+                    request
+                );
+            }
+            else
+            {
+                user = await _dbService.Get<User?>(
+                    "SELECT [Id], [Login], [CustomURL] FROM [User] WHERE [Login] = @Login AND [Id] = @FilterID;",
+                    request
+                );
+            }
             return user;
         }
     }

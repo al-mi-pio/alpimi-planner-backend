@@ -31,7 +31,7 @@ namespace AlpimiTest.Entities.EUser.Queres
                 .Setup(s => s.Get<User>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(user);
 
-            var getUserCommand = new GetUserByLoginQuery(user.Login);
+            var getUserCommand = new GetUserByLoginQuery(user.Login, null);
 
             var getUserHandler = new GetUserByLoginHandler(_dbService.Object);
 
@@ -49,7 +49,25 @@ namespace AlpimiTest.Entities.EUser.Queres
                 .Setup(s => s.Get<User>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync((User?)null);
 
-            var getUserCommand = new GetUserByLoginQuery("NieMarek");
+            var getUserCommand = new GetUserByLoginQuery("NieMarek", null);
+
+            var getUserHandler = new GetUserByLoginHandler(_dbService.Object);
+
+            var result = await getUserHandler.Handle(getUserCommand, new CancellationToken());
+
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public async Task ReturnsNullWhenWrongUserGetsDetails()
+        {
+            var user = GetUserDetails();
+
+            _dbService
+                .Setup(s => s.Get<User>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync((User?)null);
+
+            var getUserCommand = new GetUserByLoginQuery(user.Login, new Guid());
 
             var getUserHandler = new GetUserByLoginHandler(_dbService.Object);
 

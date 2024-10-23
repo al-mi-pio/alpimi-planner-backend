@@ -4,6 +4,6 @@
     {
         public Guid Id { get; set; }
         public required string Login { get; set; }
-        public required string CustomURL { get; set; }
+        public string? CustomURL { get; set; } = null;
     }
 }

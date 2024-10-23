@@ -24,6 +24,7 @@ namespace AlpimiTest.Entities.EAuth.Queries
                 Password = "RPhZLnao+2lWH4JvwGZRLI/14QI=",
                 Id = new Guid(),
                 Salt = "zr+8L0dX4IBdGUgvHDM1Zw==",
+                Role = "Admin",
                 UserID = user.Id,
                 User = user
             };

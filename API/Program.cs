@@ -72,13 +72,9 @@ try
             };
         });
     var app = builder.Build();
-<<<<<<< HEAD
 
     await AdminInit.StartupBase();
 
-=======
-    await AdminInit.StartupBase();
->>>>>>> 51362c7 (moved git init down)
     //app.UseSwagger();
     app.UseSwagger(c =>
     {

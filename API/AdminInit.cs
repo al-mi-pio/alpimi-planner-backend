@@ -14,6 +14,7 @@ namespace AlpimiAPI
         public static async Task StartupBase()
         {
             string? admins = "1";
+
             try
             {
                 admins = await _dbService.Get<string>(

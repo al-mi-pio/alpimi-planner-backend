@@ -8,8 +8,6 @@ var builder = WebApplication.CreateBuilder(args);
 DotNetEnv.Env.Load();
 try
 {
-    await AdminInit.StartupBase();
-
     builder.Services.AddControllers();
     builder.Services.AddMediatR(cfg =>
         cfg.RegisterServicesFromAssemblies(typeof(Program).Assembly)
@@ -74,6 +72,8 @@ try
             };
         });
     var app = builder.Build();
+
+    await AdminInit.StartupBase();
 
     //app.UseSwagger();
     app.UseSwagger(c =>

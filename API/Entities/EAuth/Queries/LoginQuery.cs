@@ -47,9 +47,9 @@ namespace AlpimiAPI.Entities.EAuth.Queries
             byte[] inputHash = Rfc2898DeriveBytes.Pbkdf2(
                 request.Password,
                 Convert.FromBase64String(auth.Salt),
-                Utilities.Configuration.GetHashIterations(),
-                Utilities.Configuration.GetHashAlgorithm(),
-                Utilities.Configuration.GetKeySize()
+                Configuration.GetHashIterations(),
+                Configuration.GetHashAlgorithm(),
+                Configuration.GetKeySize()
             );
 
             if (Convert.ToBase64String(inputHash) != auth.Password)
@@ -73,18 +73,14 @@ namespace AlpimiAPI.Entities.EAuth.Queries
                     break;
             }
 
-            var key = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(Utilities.Configuration.GetJWTKey())
-            );
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetJWTKey()));
             var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             //TODO DO SMTH
             var expires = DateTime.Now;
-            if (Utilities.Configuration.GetJWTExpire() != null)
+            if (Configuration.GetJWTExpire() != null)
             {
-                expires = DateTime.Now.AddMinutes(
-                    Convert.ToDouble(Utilities.Configuration.GetJWTExpire())
-                );
+                expires = DateTime.Now.AddMinutes(Convert.ToDouble(Configuration.GetJWTExpire()));
             }
             else
             {

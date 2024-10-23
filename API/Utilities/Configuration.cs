@@ -24,6 +24,10 @@ namespace AlpimiAPI.Utilities
 
         public static string? GetConnectionString()
         {
+            if (_connectionString == null)
+            {
+                return "CONNECTION_STRING=\"Data Source=LMAO;Initial Catalog=testAdmin;Integrated Security=True;Pooling=False;Encrypt=True;Trust Server Certificate=True\"";
+            }
             return _connectionString;
         }
 

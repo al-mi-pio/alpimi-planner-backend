@@ -57,7 +57,10 @@ To start using the API service you need to create an Administrator account first
                         GetUserByLoginHandler getUserByLoginHandler = new GetUserByLoginHandler(
                             _dbService
                         );
-                        GetUserByLoginQuery getUserByLoginQuery = new GetUserByLoginQuery(login!);
+                        GetUserByLoginQuery getUserByLoginQuery = new GetUserByLoginQuery(
+                            login!,
+                            null
+                        );
                         user = await getUserByLoginHandler.Handle(
                             getUserByLoginQuery,
                             new CancellationToken()

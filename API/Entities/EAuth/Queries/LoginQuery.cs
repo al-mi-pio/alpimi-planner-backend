@@ -32,7 +32,7 @@ namespace AlpimiAPI.Entities.EAuth.Queries
             );
 
             GetUserByLoginHandler getUserByLoginHandler = new GetUserByLoginHandler(_dbService);
-            GetUserByLoginQuery getUserByLoginQuery = new GetUserByLoginQuery(request.Login);
+            GetUserByLoginQuery getUserByLoginQuery = new GetUserByLoginQuery(request.Login, null);
             ActionResult<User?> user = await getUserByLoginHandler.Handle(
                 getUserByLoginQuery,
                 cancellationToken

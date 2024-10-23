@@ -36,7 +36,7 @@ namespace AlpimiTest.Entities.EUser.Commands
                 user.Id,
                 new Guid(),
                 user.Login,
-                user.CustomURL,
+                user.CustomURL!,
                 "RandomPassword!1"
             );
 
@@ -60,7 +60,7 @@ namespace AlpimiTest.Entities.EUser.Commands
                 user.Id,
                 new Guid(),
                 user.Login,
-                user.CustomURL,
+                user.CustomURL!,
                 "Random"
             );
 
@@ -91,7 +91,7 @@ namespace AlpimiTest.Entities.EUser.Commands
                 user.Id,
                 new Guid(),
                 user.Login,
-                user.CustomURL,
+                user.CustomURL!,
                 "RandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandom"
             );
 
@@ -122,7 +122,7 @@ namespace AlpimiTest.Entities.EUser.Commands
                 user.Id,
                 new Guid(),
                 user.Login,
-                user.CustomURL,
+                user.CustomURL!,
                 "RANDOMBIG1!"
             );
 
@@ -157,7 +157,7 @@ namespace AlpimiTest.Entities.EUser.Commands
                 user.Id,
                 new Guid(),
                 user.Login,
-                user.CustomURL,
+                user.CustomURL!,
                 "randomsmall1!"
             );
 
@@ -192,7 +192,7 @@ namespace AlpimiTest.Entities.EUser.Commands
                 user.Id,
                 new Guid(),
                 user.Login,
-                user.CustomURL,
+                user.CustomURL!,
                 "Randomsmall1"
             );
 
@@ -227,7 +227,7 @@ namespace AlpimiTest.Entities.EUser.Commands
                 user.Id,
                 new Guid(),
                 user.Login,
-                user.CustomURL,
+                user.CustomURL!,
                 "Randomsmall!"
             );
 
@@ -265,7 +265,7 @@ namespace AlpimiTest.Entities.EUser.Commands
                 user.Id,
                 new Guid(),
                 user.Login,
-                user.CustomURL,
+                user.CustomURL!,
                 "Randomsmall1"
             );
 
@@ -295,7 +295,7 @@ namespace AlpimiTest.Entities.EUser.Commands
                 user.Id,
                 new Guid(),
                 user.Login,
-                user.CustomURL,
+                user.CustomURL!,
                 "Randomsmall1"
             );
 

@@ -18,8 +18,8 @@ namespace AlpimiAPI.Entities.EUser
 
         public UserController(IMediator mediator) => _mediator = mediator;
 
-        [AllowAnonymous]
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Guid>> Post([FromBody] CreateUserDTO request)
         {
             var command = new CreateUserCommand(
@@ -108,16 +108,13 @@ namespace AlpimiAPI.Entities.EUser
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(204)]
         public async Task<ActionResult> Delete(
             [FromRoute] Guid id,
             [FromHeader] string Authorization
         )
         {
-            if (!Privileges.CheckOwnership(Authorization, id))
-            {
-                return Unauthorized();
-            }
             var command = new DeleteUserCommand(id);
             try
             {

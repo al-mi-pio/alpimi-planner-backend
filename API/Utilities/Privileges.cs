@@ -20,7 +20,7 @@ namespace AlpimiAPI.Utilities
             var token = authorization.ToString().Split(" ").Last();
             var jwtHandler = new JwtSecurityTokenHandler();
             var jwtToken = jwtHandler.ReadJwtToken(token);
-            Claim RoleClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == "Role")!;
+            Claim RoleClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)!;
 
             return (RoleClaim.Value);
         }

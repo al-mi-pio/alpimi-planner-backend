@@ -9,9 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AlpimiAPI.Entities.EUser
 {
-    /// <summary>
     ///
-    /// </summary>
+
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
@@ -90,11 +89,6 @@ namespace AlpimiAPI.Entities.EUser
 
                 return Ok(res);
             }
-            catch (HttpRequestException ex)
-                when (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-            {
-                return Unauthorized();
-            }
             catch (Exception)
             {
                 return BadRequest("TODO make a message");
@@ -125,11 +119,6 @@ namespace AlpimiAPI.Entities.EUser
                 User? res = await _mediator.Send(query);
 
                 return Ok(res);
-            }
-            catch (HttpRequestException ex)
-                when (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-            {
-                return Unauthorized();
             }
             catch (Exception)
             {
@@ -200,11 +189,6 @@ namespace AlpimiAPI.Entities.EUser
                     return NotFound();
                 }
                 return Ok(res);
-            }
-            catch (HttpRequestException ex)
-                when (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-            {
-                return Unauthorized();
             }
             catch (BadHttpRequestException ex)
             {

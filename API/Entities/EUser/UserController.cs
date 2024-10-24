@@ -163,7 +163,7 @@ namespace AlpimiAPI.Entities.EUser
         }
 
         /// <summary>
-        /// Updates a user
+        /// Updates a User
         /// </summary>
         /// <remarks>
         /// JWT token is required

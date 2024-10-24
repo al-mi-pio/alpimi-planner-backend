@@ -23,7 +23,7 @@ namespace AlpimiAPI.Entities.EUser
         public UserController(IMediator mediator) => _mediator = mediator;
 
         /// <summary>
-        /// Creates a user
+        /// Creates a User
         /// </summary>
         /// <remarks>
         /// Admin role is required

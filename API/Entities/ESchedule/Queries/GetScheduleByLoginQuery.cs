@@ -33,7 +33,7 @@ namespace AlpimiAPI.Entities.ESchedule.Queries
                     break;
                 default:
                     schedule = await _dbService.Get<Schedule?>(
-                        "SELECT [Id], [Name], [SchoolHour], [UserID] FROM [Schedule] WHERE [Name] = @Name AND [UserId] = @FilterID;",
+                        "SELECT [Id], [Name], [SchoolHour], [UserID] FROM [Schedule] WHERE [Name] = @Name AND [UserId] = @FilteredID;",
                         request
                     );
                     break;

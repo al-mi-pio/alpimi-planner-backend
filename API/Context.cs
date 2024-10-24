@@ -1,5 +1,6 @@
 ﻿using AlpimiAPI.Entities.EAuth;
 using AlpimiAPI.Entities.EUser;
+using AlpimiAPI.Utilities;
 using Microsoft.EntityFrameworkCore;
 
 namespace AlpimiAPI
@@ -15,7 +16,7 @@ namespace AlpimiAPI
         #endregion
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(Utilities.Configuration.GetConnectionString());
+            optionsBuilder.UseSqlServer(Configuration.GetConnectionString());
         }
     }
 }

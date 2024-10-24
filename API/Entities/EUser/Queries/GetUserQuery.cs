@@ -2,7 +2,7 @@
 
 namespace AlpimiAPI.Entities.EUser.Queries
 {
-    public record GetUserQuery(Guid Id, Guid? FilterID) : IRequest<User?>;
+    public record GetUserQuery(Guid Id, Guid FilteredID, string Role) : IRequest<User?>;
 
     public class GetUserHandler : IRequestHandler<GetUserQuery, User?>
     {
@@ -16,19 +16,20 @@ namespace AlpimiAPI.Entities.EUser.Queries
         public async Task<User?> Handle(GetUserQuery request, CancellationToken cancellationToken)
         {
             User? user;
-            if (request.FilterID == null)
+            switch (request.Role)
             {
-                user = await _dbService.Get<User?>(
-                    "SELECT [Id], [Login], [CustomURL] FROM [User] WHERE [Id] = @Id;",
-                    request
-                );
-            }
-            else
-            {
-                user = await _dbService.Get<User?>(
-                    "SELECT [Id], [Login], [CustomURL] FROM [User] WHERE [Id] = @Id AND [Id] = @FilterID;",
-                    request
-                );
+                case "Admin":
+                    user = await _dbService.Get<User?>(
+                        "SELECT [Id], [Login], [CustomURL] FROM [User] WHERE [Id] = @Id;",
+                        request
+                    );
+                    break;
+                default:
+                    user = await _dbService.Get<User?>(
+                        "SELECT [Id], [Login], [CustomURL] FROM [User] WHERE [Id] = @Id AND [Id] = @FilterID;",
+                        request
+                    );
+                    break;
             }
             return user;
         }

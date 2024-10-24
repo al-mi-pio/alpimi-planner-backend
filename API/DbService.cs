@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using AlpimiAPI.Utilities;
 using Dapper;
 using Microsoft.Data.SqlClient;
 
@@ -10,7 +11,7 @@ namespace AlpimiAPI
 
         public DbService()
         {
-            _db = new SqlConnection(Utilities.Configuration.GetConnectionString());
+            _db = new SqlConnection(Configuration.GetConnectionString());
         }
 
         public async Task<T?> Get<T>(string command, object parms)

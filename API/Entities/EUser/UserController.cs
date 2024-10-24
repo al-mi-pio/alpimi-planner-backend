@@ -50,17 +50,10 @@ namespace AlpimiAPI.Entities.EUser
             [FromHeader] string Authorization
         )
         {
-            Guid? FilterID;
-            if (Privileges.GetUserRoleFromToken(Authorization) == "Admin")
-            {
-                FilterID = null;
-            }
-            else
-            {
-                FilterID = Privileges.GetUserIDFromToken(Authorization);
-            }
+            Guid filteredID = Privileges.GetUserIDFromToken(Authorization);
+            string privileges = Privileges.GetUserRoleFromToken(Authorization);
 
-            var query = new GetUserQuery(id, FilterID);
+            var query = new GetUserQuery(id, filteredID, privileges);
             try
             {
                 User? res = await _mediator.Send(query);
@@ -89,16 +82,10 @@ namespace AlpimiAPI.Entities.EUser
             [FromHeader] string Authorization
         )
         {
-            Guid? FilterID;
-            if (Privileges.GetUserRoleFromToken(Authorization) == "Admin")
-            {
-                FilterID = null;
-            }
-            else
-            {
-                FilterID = Privileges.GetUserIDFromToken(Authorization);
-            }
-            var query = new GetUserByLoginQuery(login, FilterID);
+            Guid filteredID = Privileges.GetUserIDFromToken(Authorization);
+            string privileges = Privileges.GetUserRoleFromToken(Authorization);
+
+            var query = new GetUserByLoginQuery(login, filteredID, privileges);
             try
             {
                 User? res = await _mediator.Send(query);
@@ -131,11 +118,6 @@ namespace AlpimiAPI.Entities.EUser
 
                 return NoContent();
             }
-            catch (HttpRequestException ex)
-                when (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-            {
-                return Unauthorized();
-            }
             catch (Exception ex)
             {
                 return BadRequest(ex);
@@ -149,17 +131,16 @@ namespace AlpimiAPI.Entities.EUser
             [FromHeader] string Authorization
         )
         {
-            Guid? FilterID;
-            if (Privileges.GetUserRoleFromToken(Authorization) == "Admin")
-            {
-                FilterID = null;
-            }
-            else
-            {
-                FilterID = Privileges.GetUserIDFromToken(Authorization);
-            }
+            Guid filteredID = Privileges.GetUserIDFromToken(Authorization);
+            string privileges = Privileges.GetUserRoleFromToken(Authorization);
 
-            var command = new UpdateUserCommand(id, request.Login, request.CustomURL, FilterID);
+            var command = new UpdateUserCommand(
+                id,
+                request.Login,
+                request.CustomURL,
+                filteredID,
+                privileges
+            );
             try
             {
                 User? res = await _mediator.Send(command);

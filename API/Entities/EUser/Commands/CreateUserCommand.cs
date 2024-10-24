@@ -30,7 +30,11 @@ namespace AlpimiAPI.Entities.EUser.Commands
         )
         {
             GetUserByLoginHandler getUserByLoginHandler = new GetUserByLoginHandler(_dbService);
-            GetUserByLoginQuery getUserByLoginQuery = new GetUserByLoginQuery(request.Login, null);
+            GetUserByLoginQuery getUserByLoginQuery = new GetUserByLoginQuery(
+                request.Login,
+                new Guid(),
+                "Admin"
+            );
             ActionResult<User?> user = await getUserByLoginHandler.Handle(
                 getUserByLoginQuery,
                 cancellationToken

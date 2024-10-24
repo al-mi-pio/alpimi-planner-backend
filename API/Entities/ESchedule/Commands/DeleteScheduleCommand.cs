@@ -2,7 +2,7 @@
 
 namespace AlpimiAPI.Entities.ESchedule.Commands
 {
-    public record DeleteScheduleCommand(Guid Id) : IRequest;
+    public record DeleteScheduleCommand(Guid Id, Guid FilteredID, string Role) : IRequest;
 
     public class DeleteScheduleHandler : IRequestHandler<DeleteScheduleCommand>
     {
@@ -15,7 +15,18 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
 
         public async Task Handle(DeleteScheduleCommand request, CancellationToken cancellationToken)
         {
-            await _dbService.Delete("DELETE [Schedule] WHERE [Id] = @Id;", request);
+            switch (request.Role)
+            {
+                case "Admin":
+                    await _dbService.Delete("DELETE [Schedule] WHERE [Id] = @Id;", request);
+                    break;
+                default:
+                    await _dbService.Delete(
+                        "DELETE [Schedule] WHERE [Id] = @Id and [UserID]=@FilteredID;",
+                        request
+                    );
+                    break;
+            }
         }
     }
 }

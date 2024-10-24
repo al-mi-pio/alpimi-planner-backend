@@ -9,8 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AlpimiAPI.Entities.EUser
 {
-    ///
-
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
@@ -20,7 +18,6 @@ namespace AlpimiAPI.Entities.EUser
     {
         private readonly IMediator _mediator;
 
-        ///
         public UserController(IMediator mediator) => _mediator = mediator;
 
         /// <summary>

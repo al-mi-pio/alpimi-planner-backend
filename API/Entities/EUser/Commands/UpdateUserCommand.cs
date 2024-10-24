@@ -58,7 +58,7 @@ namespace AlpimiAPI.Entities.EUser.Commands
                     SET [Login]=CASE WHEN @Login IS NOT NULL THEN @Login 
                     ELSE [Login] END,[CustomURL]=CASE WHEN @CustomURL IS NOT NULL THEN @CustomURL ELSE [CustomURL] END 
                     OUTPUT INSERTED.[Id], INSERTED.[Login], INSERTED.[CustomURL]
-                    WHERE [Id]=@Id AND [Id] = @FilterID;",
+                    WHERE [Id]=@Id AND [Id] = @FilteredID;",
                         request
                     );
                     break;

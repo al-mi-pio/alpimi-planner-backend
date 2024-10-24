@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AlpimiAPI.Entities.EUser
 {
+    /// <summary>
+    ///
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
@@ -16,10 +19,20 @@ namespace AlpimiAPI.Entities.EUser
     {
         private readonly IMediator _mediator;
 
+        ///
         public UserController(IMediator mediator) => _mediator = mediator;
 
+        /// <summary>
+        /// Creates a user
+        /// </summary>
+        /// <remarks>
+        /// Admin role is required
+        /// </remarks>
         [HttpPost]
         [Authorize(Roles = "Admin")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<ActionResult<Guid>> Post([FromBody] CreateUserDTO request)
         {
             var command = new CreateUserCommand(
@@ -44,7 +57,16 @@ namespace AlpimiAPI.Entities.EUser
             }
         }
 
+        /// <summary>
+        /// Gets a user by Id
+        /// </summary>
+        /// <remarks>
+        /// JWT token is required
+        /// </remarks>
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<User>> GetOne(
             [FromRoute] Guid id,
             [FromHeader] string Authorization
@@ -76,7 +98,16 @@ namespace AlpimiAPI.Entities.EUser
             }
         }
 
+        /// <summary>
+        /// Gets a user by Login
+        /// </summary>
+        /// <remarks>
+        /// JWT token is required
+        /// </remarks>
         [HttpGet("byLogin/{login}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<User>> GetOneByLogin(
             [FromRoute] string login,
             [FromHeader] string Authorization
@@ -103,9 +134,16 @@ namespace AlpimiAPI.Entities.EUser
             }
         }
 
+        /// <summary>
+        /// Deltes a User
+        /// </summary>
+        /// <remarks>
+        /// Admin role is required
+        /// </remarks>
         [HttpDelete("{id}")]
         [Authorize(Roles = "Admin")]
         [ProducesResponseType(204)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<ActionResult> Delete(
             [FromRoute] Guid id,
             [FromHeader] string Authorization
@@ -124,7 +162,16 @@ namespace AlpimiAPI.Entities.EUser
             }
         }
 
+        /// <summary>
+        /// Updates a user
+        /// </summary>
+        /// <remarks>
+        /// JWT token is required
+        /// </remarks>
         [HttpPatch("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<User>> Patch(
             [FromBody] UpdateUserDTO request,
             [FromRoute] Guid id,

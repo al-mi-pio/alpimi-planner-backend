@@ -24,7 +24,7 @@ namespace AlpimiAPI.Entities.EAuth
         [AllowAnonymous]
         [HttpPost]
         [Route("login")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<string>> Login([FromBody] DTO.LoginDTO request)
         {

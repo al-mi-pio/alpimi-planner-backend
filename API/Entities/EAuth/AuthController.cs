@@ -20,6 +20,9 @@ namespace AlpimiAPI.Entities.EAuth
         /// <summary>
         /// Returns JWT token after entering correct Login and Password
         /// </summary>
+        /// <remarks>
+        /// To authenticate API requests provide given token inside the header of Authorization with the prefix Bearer
+        /// </remarks>
 
         [AllowAnonymous]
         [HttpPost]

@@ -15,6 +15,8 @@ namespace AlpimiAPI.Entities.EUser
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
+    [Consumes("application/json")]
+    [Produces("application/json")]
     public class UserController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -26,7 +28,8 @@ namespace AlpimiAPI.Entities.EUser
         /// Creates a user
         /// </summary>
         /// <remarks>
-        /// Admin role is required
+        /// - Admin role is required
+        /// - JWT token is required
         /// </remarks>
         [HttpPost]
         [Authorize(Roles = "Admin")]
@@ -61,7 +64,7 @@ namespace AlpimiAPI.Entities.EUser
         /// Gets a user by Id
         /// </summary>
         /// <remarks>
-        /// JWT token is required
+        /// - JWT token is required
         /// </remarks>
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -102,7 +105,7 @@ namespace AlpimiAPI.Entities.EUser
         /// Gets a user by Login
         /// </summary>
         /// <remarks>
-        /// JWT token is required
+        /// - JWT token is required
         /// </remarks>
         [HttpGet("byLogin/{login}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -138,7 +141,8 @@ namespace AlpimiAPI.Entities.EUser
         /// Deltes a User
         /// </summary>
         /// <remarks>
-        /// Admin role is required
+        /// - Admin role is required
+        /// - JWT is required
         /// </remarks>
         [HttpDelete("{id}")]
         [Authorize(Roles = "Admin")]
@@ -166,7 +170,7 @@ namespace AlpimiAPI.Entities.EUser
         /// Updates a user
         /// </summary>
         /// <remarks>
-        /// JWT token is required
+        /// - JWT token is required
         /// </remarks>
         [HttpPatch("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]

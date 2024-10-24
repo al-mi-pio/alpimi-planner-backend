@@ -31,7 +31,13 @@ namespace AlpimiTest.Entities.EUser.Commands
                 .Setup(s => s.Update<User>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(user);
 
-            var updateUserCommand = new UpdateUserCommand(user.Id, "marek2", "f44", null);
+            var updateUserCommand = new UpdateUserCommand(
+                user.Id,
+                "marek2",
+                "f44",
+                new Guid(),
+                "Admin"
+            );
 
             var updateUserHandler = new UpdateUserHandler(_dbService.Object);
 
@@ -49,7 +55,13 @@ namespace AlpimiTest.Entities.EUser.Commands
                 .Setup(s => s.Update<User>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync((User?)null);
 
-            var updateUserCommand = new UpdateUserCommand(new Guid(), "marek2", "f44", null);
+            var updateUserCommand = new UpdateUserCommand(
+                new Guid(),
+                "marek2",
+                "f44",
+                new Guid(),
+                "Admin"
+            );
 
             var updateUserHandler = new UpdateUserHandler(_dbService.Object);
 
@@ -67,7 +79,13 @@ namespace AlpimiTest.Entities.EUser.Commands
                 .Setup(s => s.Update<User>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync((User?)null);
 
-            var updateUserCommand = new UpdateUserCommand(user.Id, "marek2", "f44", new Guid());
+            var updateUserCommand = new UpdateUserCommand(
+                user.Id,
+                "marek2",
+                "f44",
+                new Guid(),
+                "User"
+            );
 
             var updateUserHandler = new UpdateUserHandler(_dbService.Object);
 
@@ -92,7 +110,8 @@ namespace AlpimiTest.Entities.EUser.Commands
                 user.Id,
                 user.Login,
                 user.CustomURL,
-                null
+                new Guid(),
+                "Admin"
             );
 
             var updateUserHandler = new UpdateUserHandler(_dbService.Object);

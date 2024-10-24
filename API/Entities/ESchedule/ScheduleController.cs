@@ -11,8 +11,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AlpimiAPI.Entities.ESchedule
 {
-    ///
-
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
@@ -22,7 +20,6 @@ namespace AlpimiAPI.Entities.ESchedule
     {
         private readonly IMediator _mediator;
 
-        ///
         public ScheduleController(IMediator mediator) => _mediator = mediator;
 
         /// <summary>
@@ -148,7 +145,9 @@ namespace AlpimiAPI.Entities.ESchedule
             [FromHeader] string Authorization
         )
         {
-            var command = new DeleteScheduleCommand(id);
+            Guid filteredID = Privileges.GetUserIDFromToken(Authorization);
+            string privileges = Privileges.GetUserRoleFromToken(Authorization);
+            var command = new DeleteScheduleCommand(id, filteredID, privileges);
             try
             {
                 await _mediator.Send(command);

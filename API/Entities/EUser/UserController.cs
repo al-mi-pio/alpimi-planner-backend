@@ -58,7 +58,7 @@ namespace AlpimiAPI.Entities.EUser
         }
 
         /// <summary>
-        /// Gets a user by Id
+        /// Gets a User
         /// </summary>
         /// <remarks>
         /// JWT token is required

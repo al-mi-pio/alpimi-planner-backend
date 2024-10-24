@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Text;
 using AlpimiAPI;
 using AlpimiAPI.Utilities;
@@ -17,38 +18,40 @@ try
 
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
-    builder.Services.AddSwaggerGen(options =>
+    if (builder.Environment.IsDevelopment())
     {
-        options.AddSecurityDefinition(
-            "Bearer",
-            new OpenApiSecurityScheme
-            {
-                In = ParameterLocation.Header,
-                Description = "Authentication token",
-                Name = "Authorization",
-                Type = SecuritySchemeType.Http,
-                BearerFormat = "JWT",
-                Scheme = "bearer"
-            }
-        );
-        options.AddSecurityRequirement(
-            new OpenApiSecurityRequirement
-            {
+        builder.Services.AddSwaggerGen(options =>
+        {
+            options.AddSecurityDefinition(
+                "Bearer",
+                new OpenApiSecurityScheme
                 {
-                    new OpenApiSecurityScheme
-                    {
-                        Reference = new OpenApiReference
-                        {
-                            Type = ReferenceType.SecurityScheme,
-                            Id = "Bearer"
-                        }
-                    },
-                    new String[] { }
+                    In = ParameterLocation.Header,
+                    Description = "Authentication token",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    BearerFormat = "JWT",
+                    Scheme = "bearer"
                 }
-            }
-        );
-    });
-
+            );
+            options.AddSecurityRequirement(
+                new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        new String[] { }
+                    }
+                }
+            );
+        });
+    }
     builder
         .Services.AddAuthentication(option =>
         {
@@ -71,6 +74,15 @@ try
                 ),
             };
         });
+
+    builder.Services.AddSwaggerGen(c =>
+    {
+        c.SwaggerDoc("v1", new OpenApiInfo { Title = "Alpimi planner API", Version = "v1" });
+        var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+        var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+        c.IncludeXmlComments(xmlPath);
+    });
+
     var app = builder.Build();
 
     await AdminInit.StartupBase();
@@ -85,6 +97,10 @@ try
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/api/v1/swagger.json", "API V1");
+        if (app.Environment.IsProduction())
+        {
+            c.SupportedSubmitMethods();
+        }
         c.RoutePrefix = "api";
     });
 

@@ -99,7 +99,7 @@ namespace AlpimiAPI.Entities.EUser
         }
 
         /// <summary>
-        /// Gets a user by Login
+        /// Gets a User by Login
         /// </summary>
         /// <remarks>
         /// JWT token is required

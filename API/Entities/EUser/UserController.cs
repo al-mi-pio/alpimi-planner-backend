@@ -135,7 +135,7 @@ namespace AlpimiAPI.Entities.EUser
         }
 
         /// <summary>
-        /// Deltes a User
+        /// Deletes a User
         /// </summary>
         /// <remarks>
         /// Admin role is required

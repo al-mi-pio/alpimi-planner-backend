@@ -5,18 +5,28 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AlpimiAPI.Entities.EAuth
 {
+    ///
     [Route("api/[controller]")]
     [ApiController]
+    [Consumes("application/json")]
+    [Produces("application/json")]
     public class AuthController : ControllerBase
     {
         private readonly IMediator _mediator;
 
+        ///
         public AuthController(IMediator mediator) => _mediator = mediator;
+
+        /// <summary>
+        /// Returns JWT token after entering correct Login and Password
+        /// </summary>
 
         [AllowAnonymous]
         [HttpPost]
         [Route("login")]
-        public async Task<ActionResult<String>> Login([FromBody] DTO.LoginDTO request)
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<string>> Login([FromBody] DTO.LoginDTO request)
         {
             var query = new LoginQuery(request.Login, request.Password);
             try

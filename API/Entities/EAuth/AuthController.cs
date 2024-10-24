@@ -18,7 +18,7 @@ namespace AlpimiAPI.Entities.EAuth
         public AuthController(IMediator mediator) => _mediator = mediator;
 
         /// <summary>
-        /// Returns JWT token after entering correct Login and Password
+        /// Returns a JWT token
         /// </summary>
 
         [AllowAnonymous]

@@ -19,7 +19,7 @@ namespace AlpimiAPI
             return await _db.QuerySingleOrDefaultAsync<T>(command, parms);
         }
 
-        public async Task<List<T>> GetAll<T>(string command, object parms)
+        public async Task<IEnumerable<T>?> GetAll<T>(string command, object parms)
         {
             return (await _db.QueryAsync<T>(command, parms)).ToList();
         }

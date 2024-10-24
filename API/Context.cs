@@ -1,5 +1,6 @@
 ﻿using AlpimiAPI.Entities.EAuth;
 using AlpimiAPI.Entities.EUser;
+using AlpimiAPI.Utilities;
 using Microsoft.EntityFrameworkCore;
 
 namespace AlpimiAPI

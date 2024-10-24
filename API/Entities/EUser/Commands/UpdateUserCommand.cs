@@ -2,8 +2,13 @@
 
 namespace AlpimiAPI.Entities.EUser.Commands
 {
-    public record UpdateUserCommand(Guid Id, string? Login, string? CustomURL, Guid? FilterID)
-        : IRequest<User?>;
+    public record UpdateUserCommand(
+        Guid Id,
+        string? Login,
+        string? CustomURL,
+        Guid FilteredID,
+        string Role
+    ) : IRequest<User?>;
 
     public class UpdateUserHandler : IRequestHandler<UpdateUserCommand, User?>
     {
@@ -30,29 +35,30 @@ namespace AlpimiAPI.Entities.EUser.Commands
                 throw new BadHttpRequestException("URL already taken");
             }
             User? user;
-            if (request.FilterID == null)
+            switch (request.Role)
             {
-                user = await _dbService.Update<User?>(
-                    @"
+                case "Admin":
+                    user = await _dbService.Update<User?>(
+                        @"
                     UPDATE [User] 
                     SET [Login]=CASE WHEN @Login IS NOT NULL THEN @Login 
                     ELSE [Login] END,[CustomURL]=CASE WHEN @CustomURL IS NOT NULL THEN @CustomURL ELSE [CustomURL] END 
                     OUTPUT INSERTED.[Id], INSERTED.[Login], INSERTED.[CustomURL]
                     WHERE [Id]=@Id;",
-                    request
-                );
-            }
-            else
-            {
-                user = await _dbService.Update<User?>(
-                    @"
+                        request
+                    );
+                    break;
+                default:
+                    user = await _dbService.Update<User?>(
+                        @"
                     UPDATE [User] 
                     SET [Login]=CASE WHEN @Login IS NOT NULL THEN @Login 
                     ELSE [Login] END,[CustomURL]=CASE WHEN @CustomURL IS NOT NULL THEN @CustomURL ELSE [CustomURL] END 
                     OUTPUT INSERTED.[Id], INSERTED.[Login], INSERTED.[CustomURL]
                     WHERE [Id]=@Id AND [Id] = @FilterID;",
-                    request
-                );
+                        request
+                    );
+                    break;
             }
             return user;
         }

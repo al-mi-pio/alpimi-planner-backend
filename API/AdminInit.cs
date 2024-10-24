@@ -59,7 +59,8 @@ To start using the API service you need to create an Administrator account first
                         );
                         GetUserByLoginQuery getUserByLoginQuery = new GetUserByLoginQuery(
                             login!,
-                            null
+                            new Guid(),
+                            "Admin"
                         );
                         user = await getUserByLoginHandler.Handle(
                             getUserByLoginQuery,

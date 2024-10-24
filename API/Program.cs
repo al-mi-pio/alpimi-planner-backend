@@ -77,7 +77,7 @@ try
 
     builder.Services.AddSwaggerGen(c =>
     {
-        c.SwaggerDoc("1.0.0", new OpenApiInfo { Title = "Alpimi planner API", Version = "1.0.0" });
+        c.SwaggerDoc("v1", new OpenApiInfo { Title = "Alpimi planner API", Version = "v1" });
         var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
         var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
         c.IncludeXmlComments(xmlPath);

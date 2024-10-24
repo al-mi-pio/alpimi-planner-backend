@@ -25,7 +25,7 @@ namespace AlpimiAPI.Entities.EUser
         public UserController(IMediator mediator) => _mediator = mediator;
 
         /// <summary>
-        /// Creates a user
+        /// Creates a User
         /// </summary>
         /// <remarks>
         /// - Admin role is required
@@ -61,7 +61,7 @@ namespace AlpimiAPI.Entities.EUser
         }
 
         /// <summary>
-        /// Gets a user by Id
+        /// Gets a User
         /// </summary>
         /// <remarks>
         /// - JWT token is required
@@ -102,7 +102,7 @@ namespace AlpimiAPI.Entities.EUser
         }
 
         /// <summary>
-        /// Gets a user by Login
+        /// Gets a User by Login
         /// </summary>
         /// <remarks>
         /// - JWT token is required
@@ -138,7 +138,7 @@ namespace AlpimiAPI.Entities.EUser
         }
 
         /// <summary>
-        /// Deltes a User
+        /// Deletes a User
         /// </summary>
         /// <remarks>
         /// - Admin role is required
@@ -167,7 +167,7 @@ namespace AlpimiAPI.Entities.EUser
         }
 
         /// <summary>
-        /// Updates a user
+        /// Updates a User
         /// </summary>
         /// <remarks>
         /// - JWT token is required

@@ -1,50 +1,58 @@
 ﻿using System.Net;
+using AlpimiAPI.Entities.ESchedule.Commands;
+using AlpimiAPI.Entities.ESchedule.DTO;
+using AlpimiAPI.Entities.ESchedule.Queries;
+using AlpimiAPI.Entities.EUser;
 using AlpimiAPI.Entities.EUser.Commands;
-using AlpimiAPI.Entities.EUser.DTO;
-using AlpimiAPI.Entities.EUser.Queries;
 using AlpimiAPI.Utilities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AlpimiAPI.Entities.EUser
+namespace AlpimiAPI.Entities.ESchedule
 {
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
     [Consumes("application/json")]
     [Produces("application/json")]
-    public class UserController : ControllerBase
+    public class ScheduleController : ControllerBase
     {
         private readonly IMediator _mediator;
 
-        public UserController(IMediator mediator) => _mediator = mediator;
+        public ScheduleController(IMediator mediator) => _mediator = mediator;
 
         /// <summary>
-        /// Creates a User
+        /// Creates a Schedule
         /// </summary>
         /// <remarks>
-        /// - Admin role is required
         /// - JWT token is required
         /// </remarks>
         [HttpPost]
-        [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<ActionResult<Guid>> Post([FromBody] CreateUserDTO request)
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<ActionResult<Guid>> Post(
+            [FromBody] CreateScheduleDTO request,
+            [FromHeader] string Authorization
+        )
         {
-            var command = new CreateUserCommand(
+            Guid UserID = Privileges.GetUserIDFromToken(Authorization);
+
+            var command = new CreateScheduleCommand(
                 Guid.NewGuid(),
-                Guid.NewGuid(),
-                request.Login,
-                request.CustomURL,
-                request.Password
+                UserID,
+                request.Name,
+                request.SchoolHour
             );
             try
             {
                 var res = await _mediator.Send(command);
                 return Ok(res);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized();
             }
             catch (BadHttpRequestException ex)
             {
@@ -57,7 +65,7 @@ namespace AlpimiAPI.Entities.EUser
         }
 
         /// <summary>
-        /// Gets a User
+        /// Gets a Schedule
         /// </summary>
         /// <remarks>
         /// - JWT token is required
@@ -66,7 +74,7 @@ namespace AlpimiAPI.Entities.EUser
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<User>> GetOne(
+        public async Task<ActionResult<Schedule>> GetOne(
             [FromRoute] Guid id,
             [FromHeader] string Authorization
         )
@@ -74,10 +82,10 @@ namespace AlpimiAPI.Entities.EUser
             Guid filteredID = Privileges.GetUserIDFromToken(Authorization);
             string privileges = Privileges.GetUserRoleFromToken(Authorization);
 
-            var query = new GetUserQuery(id, filteredID, privileges);
+            var query = new GetScheduleQuery(id, filteredID, privileges);
             try
             {
-                User? res = await _mediator.Send(query);
+                Schedule? res = await _mediator.Send(query);
 
                 if (res is null)
                 {
@@ -93,27 +101,27 @@ namespace AlpimiAPI.Entities.EUser
         }
 
         /// <summary>
-        /// Gets a User by Login
+        /// Gets a Schedule by Name
         /// </summary>
         /// <remarks>
         /// - JWT token is required
         /// </remarks>
-        [HttpGet("byLogin/{login}")]
+        [HttpGet("byName/{name}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<User>> GetOneByLogin(
-            [FromRoute] string login,
+        public async Task<ActionResult<User>> GetOneByName(
+            [FromRoute] string name,
             [FromHeader] string Authorization
         )
         {
             Guid filteredID = Privileges.GetUserIDFromToken(Authorization);
             string privileges = Privileges.GetUserRoleFromToken(Authorization);
 
-            var query = new GetUserByLoginQuery(login, filteredID, privileges);
+            var query = new GetScheduleByNameQuery(name, filteredID, privileges);
             try
             {
-                User? res = await _mediator.Send(query);
+                Schedule? res = await _mediator.Send(query);
 
                 return Ok(res);
             }
@@ -124,22 +132,22 @@ namespace AlpimiAPI.Entities.EUser
         }
 
         /// <summary>
-        /// Deletes a User
+        /// Deletes a Schedule
         /// </summary>
         /// <remarks>
-        /// - Admin role is required
         /// - JWT is required
         /// </remarks>
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin")]
         [ProducesResponseType(204)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult> Delete(
             [FromRoute] Guid id,
             [FromHeader] string Authorization
         )
         {
-            var command = new DeleteUserCommand(id);
+            Guid filteredID = Privileges.GetUserIDFromToken(Authorization);
+            string privileges = Privileges.GetUserRoleFromToken(Authorization);
+            var command = new DeleteScheduleCommand(id, filteredID, privileges);
             try
             {
                 await _mediator.Send(command);
@@ -153,7 +161,7 @@ namespace AlpimiAPI.Entities.EUser
         }
 
         /// <summary>
-        /// Updates a User
+        /// Updates a Schedule
         /// </summary>
         /// <remarks>
         /// - JWT token is required
@@ -163,7 +171,7 @@ namespace AlpimiAPI.Entities.EUser
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<User>> Patch(
-            [FromBody] UpdateUserDTO request,
+            [FromBody] UpdateScheduleDTO request,
             [FromRoute] Guid id,
             [FromHeader] string Authorization
         )
@@ -171,16 +179,16 @@ namespace AlpimiAPI.Entities.EUser
             Guid filteredID = Privileges.GetUserIDFromToken(Authorization);
             string privileges = Privileges.GetUserRoleFromToken(Authorization);
 
-            var command = new UpdateUserCommand(
+            var command = new UpdateScheduleCommand(
                 id,
-                request.Login,
-                request.CustomURL,
+                request.Name,
+                request.SchoolHour,
                 filteredID,
                 privileges
             );
             try
             {
-                User? res = await _mediator.Send(command);
+                Schedule? res = await _mediator.Send(command);
                 if (res is null)
                 {
                     return NotFound();
@@ -190,6 +198,34 @@ namespace AlpimiAPI.Entities.EUser
             catch (BadHttpRequestException ex)
             {
                 return BadRequest(ex.Message);
+            }
+            catch (Exception)
+            {
+                return BadRequest("TODO make a message");
+            }
+        }
+
+        /// <summary>
+        /// Gets all Schedule
+        /// </summary>
+        /// <remarks>
+        /// - JWT token is required
+        /// </remarks>
+        [HttpGet("all")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<ActionResult<User>> GetAll([FromHeader] string Authorization)
+        {
+            Guid filteredID = Privileges.GetUserIDFromToken(Authorization);
+            string privileges = Privileges.GetUserRoleFromToken(Authorization);
+
+            var query = new GetSchedulesQuery(filteredID, privileges);
+            try
+            {
+                IEnumerable<Schedule>? res = await _mediator.Send(query);
+
+                return Ok(res);
             }
             catch (Exception)
             {

@@ -29,7 +29,7 @@ namespace AlpimiAPI.Entities.EUser.Queries
                     break;
                 default:
                     user = await _dbService.Get<User?>(
-                        "SELECT [Id], [Login], [CustomURL] FROM [User] WHERE [Login] = @Login AND [Id] = @FilterID;",
+                        "SELECT [Id], [Login], [CustomURL] FROM [User] WHERE [Login] = @Login AND [Id] = @FilteredID;",
                         request
                     );
                     break;

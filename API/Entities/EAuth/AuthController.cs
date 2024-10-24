@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AlpimiAPI.Entities.EAuth
 {
-    ///
     [Route("api/[controller]")]
     [ApiController]
     [Consumes("application/json")]
@@ -14,7 +13,6 @@ namespace AlpimiAPI.Entities.EAuth
     {
         private readonly IMediator _mediator;
 
-        ///
         public AuthController(IMediator mediator) => _mediator = mediator;
 
         /// <summary>

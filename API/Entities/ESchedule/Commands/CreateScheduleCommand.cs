@@ -1,4 +1,5 @@
-﻿using AlpimiAPI.Entities.ESchedule.Queries;
+﻿using AlpimiAPI.Database;
+using AlpimiAPI.Entities.ESchedule.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

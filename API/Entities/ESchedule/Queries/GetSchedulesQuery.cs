@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using AlpimiAPI.Database;
 using AlpimiAPI.Entities.EUser;
 using AlpimiAPI.Entities.EUser.Queries;
 using MediatR;

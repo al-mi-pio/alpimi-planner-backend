@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using AlpimiAPI.Database;
+using MediatR;
 
 namespace AlpimiAPI.Entities.ESchedule.Commands
 {

@@ -1,4 +1,4 @@
-﻿using AlpimiAPI;
+﻿using AlpimiAPI.Database;
 using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Entities.ESchedule.Commands;
 using AlpimiAPI.Entities.EUser;

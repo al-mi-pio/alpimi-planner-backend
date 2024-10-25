@@ -1,4 +1,4 @@
-﻿using AlpimiAPI;
+﻿using AlpimiAPI.Database;
 using AlpimiAPI.Entities.ESchedule.Commands;
 using Moq;
 using Xunit;

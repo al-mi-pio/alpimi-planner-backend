@@ -4,7 +4,7 @@ using AlpimiAPI.Entities.EUser;
 using AlpimiAPI.Utilities;
 using Microsoft.EntityFrameworkCore;
 
-namespace AlpimiAPI
+namespace AlpimiAPI.Database
 {
     public class Context : DbContext
     {

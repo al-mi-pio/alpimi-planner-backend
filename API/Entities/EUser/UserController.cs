@@ -1,5 +1,4 @@
-﻿using System.Net;
-using AlpimiAPI.Entities.EUser.Commands;
+﻿using AlpimiAPI.Entities.EUser.Commands;
 using AlpimiAPI.Entities.EUser.DTO;
 using AlpimiAPI.Entities.EUser.Queries;
 using AlpimiAPI.Utilities;

@@ -1,4 +1,5 @@
 ﻿using System.Security.Cryptography;
+using AlpimiAPI.Database;
 using AlpimiAPI.Entities.EUser.Queries;
 using AlpimiAPI.Settings;
 using AlpimiAPI.Utilities;

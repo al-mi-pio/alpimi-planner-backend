@@ -1,9 +1,7 @@
-﻿using System.Net;
-using AlpimiAPI.Entities.ESchedule.Commands;
+﻿using AlpimiAPI.Entities.ESchedule.Commands;
 using AlpimiAPI.Entities.ESchedule.DTO;
 using AlpimiAPI.Entities.ESchedule.Queries;
 using AlpimiAPI.Entities.EUser;
-using AlpimiAPI.Entities.EUser.Commands;
 using AlpimiAPI.Utilities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;

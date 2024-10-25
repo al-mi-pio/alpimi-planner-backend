@@ -3,7 +3,7 @@ using AlpimiAPI.Utilities;
 using Dapper;
 using Microsoft.Data.SqlClient;
 
-namespace AlpimiAPI
+namespace AlpimiAPI.Database
 {
     public class DbService : IDbService
     {

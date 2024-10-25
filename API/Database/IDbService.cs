@@ -1,4 +1,4 @@
-﻿namespace AlpimiAPI
+﻿namespace AlpimiAPI.Database
 {
     public interface IDbService
     {

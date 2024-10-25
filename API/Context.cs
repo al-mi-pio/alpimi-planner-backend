@@ -10,8 +10,7 @@ namespace AlpimiAPI
     {
         #region Entities
 
-        public DbSet<AlpimiAPI.Breed.Breed> Breed { get; set; }
-        public DbSet<AlpimiAPI.Dog.Dog> Dog { get; set; }
+
         public DbSet<User> User { get; set; }
         public DbSet<Auth> Auth { get; set; }
         public DbSet<Schedule> Schedule { get; set; }

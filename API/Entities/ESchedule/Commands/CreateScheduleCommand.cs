@@ -1,8 +1,4 @@
-﻿using System.Security.Cryptography;
-using AlpimiAPI.Entities.ESchedule.Queries;
-using AlpimiAPI.Entities.EUser.Queries;
-using AlpimiAPI.Settings;
-using AlpimiAPI.Utilities;
+﻿using AlpimiAPI.Entities.ESchedule.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

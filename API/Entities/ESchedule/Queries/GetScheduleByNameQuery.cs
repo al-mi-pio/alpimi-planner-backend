@@ -1,4 +1,5 @@
-﻿using AlpimiAPI.Entities.EUser;
+﻿using AlpimiAPI.Database;
+using AlpimiAPI.Entities.EUser;
 using AlpimiAPI.Entities.EUser.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

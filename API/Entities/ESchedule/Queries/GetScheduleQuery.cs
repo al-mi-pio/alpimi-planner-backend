@@ -1,5 +1,4 @@
-﻿using AlpimiAPI;
-using AlpimiAPI.Entities.ESchedule;
+﻿using AlpimiAPI.Database;
 using AlpimiAPI.Entities.EUser;
 using AlpimiAPI.Entities.EUser.Queries;
 using MediatR;

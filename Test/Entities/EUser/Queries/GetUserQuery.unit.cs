@@ -1,4 +1,4 @@
-﻿using AlpimiAPI;
+﻿using AlpimiAPI.Database;
 using AlpimiAPI.Entities.EUser;
 using AlpimiAPI.Entities.EUser.Queries;
 using Moq;

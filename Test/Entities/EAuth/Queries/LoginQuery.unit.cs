@@ -1,4 +1,4 @@
-﻿using AlpimiAPI;
+﻿using AlpimiAPI.Database;
 using AlpimiAPI.Entities.EAuth;
 using AlpimiAPI.Entities.EAuth.Queries;
 using AlpimiAPI.Entities.EUser;

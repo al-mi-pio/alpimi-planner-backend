@@ -2,7 +2,6 @@
 using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Entities.ESchedule.Commands;
 using AlpimiAPI.Entities.EUser;
-using AlpimiAPI.Entities.EUser.Commands;
 using Moq;
 using Xunit;
 

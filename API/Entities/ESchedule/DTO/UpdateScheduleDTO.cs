@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace AlpimiAPI.Entities.ESchedule.DTO
+﻿namespace AlpimiAPI.Entities.ESchedule.DTO
 {
     public class UpdateScheduleDTO
     {

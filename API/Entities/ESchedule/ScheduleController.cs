@@ -209,7 +209,7 @@ namespace AlpimiAPI.Entities.ESchedule
         /// <remarks>
         /// - JWT token is required
         /// </remarks>
-        [HttpGet("all")]
+        [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]

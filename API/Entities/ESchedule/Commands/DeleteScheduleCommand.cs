@@ -3,7 +3,7 @@ using MediatR;
 
 namespace AlpimiAPI.Entities.ESchedule.Commands
 {
-    public record DeleteScheduleCommand(Guid Id, Guid FilteredID, string Role) : IRequest;
+    public record DeleteScheduleCommand(Guid Id, Guid FilteredId, string Role) : IRequest;
 
     public class DeleteScheduleHandler : IRequestHandler<DeleteScheduleCommand>
     {
@@ -23,7 +23,7 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
                     break;
                 default:
                     await _dbService.Delete(
-                        "DELETE [Schedule] WHERE [Id] = @Id and [UserID]=@FilteredID;",
+                        "DELETE [Schedule] WHERE [Id] = @Id and [UserId]=@FilteredId;",
                         request
                     );
                     break;

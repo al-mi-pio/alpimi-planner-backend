@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AlpimiAPI.Entities.ESchedule.Queries
 {
-    public record GetSchedulesQuery(Guid FilteredID, string Role)
+    public record GetSchedulesQuery(Guid FilteredId, string Role)
         : IRequest<IEnumerable<Schedule>?>;
 
     public class GetSchedulesHandler : IRequestHandler<GetSchedulesQuery, IEnumerable<Schedule>?>
@@ -28,19 +28,19 @@ namespace AlpimiAPI.Entities.ESchedule.Queries
             {
                 case "Admin":
                     schedules = await _dbService.GetAll<Schedule>(
-                        "SELECT [Id], [Name], [SchoolHour], [UserID] FROM [Schedule];",
+                        "SELECT [Id], [Name], [SchoolHour], [UserId] FROM [Schedule];",
                         request
                     );
                     break;
                 default:
                     schedules = await _dbService.GetAll<Schedule>(
-                        "SELECT [Id], [Name], [SchoolHour], [UserID] FROM [Schedule] where [UserId] = @FilteredID;",
+                        "SELECT [Id], [Name], [SchoolHour], [UserId] FROM [Schedule] where [UserId] = @FilteredId;",
                         request
                     );
                     break;
             }
             GetUserHandler getUserHandler = new GetUserHandler(_dbService);
-            GetUserQuery getUserQuery = new GetUserQuery(request.FilteredID, new Guid(), "Admin");
+            GetUserQuery getUserQuery = new GetUserQuery(request.FilteredId, new Guid(), "Admin");
             ActionResult<User?> user = await getUserHandler.Handle(getUserQuery, cancellationToken);
             if (schedules != null)
             {

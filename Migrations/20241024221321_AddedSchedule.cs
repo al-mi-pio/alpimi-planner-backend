@@ -34,7 +34,7 @@ namespace alpimi_planner_backend.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Schedule_UserID",
                 table: "Schedule",
-                column: "UserID");
+                column: "UserId");
         }
 
         /// <inheritdoc />

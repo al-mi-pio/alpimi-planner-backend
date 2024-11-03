@@ -70,10 +70,10 @@ namespace AlpimiAPI.Entities.EUser
             [FromHeader] string Authorization
         )
         {
-            Guid filteredID = Privileges.GetUserIDFromToken(Authorization);
+            Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
             string privileges = Privileges.GetUserRoleFromToken(Authorization);
 
-            var query = new GetUserQuery(id, filteredID, privileges);
+            var query = new GetUserQuery(id, filteredId, privileges);
             try
             {
                 User? res = await _mediator.Send(query);
@@ -106,10 +106,10 @@ namespace AlpimiAPI.Entities.EUser
             [FromHeader] string Authorization
         )
         {
-            Guid filteredID = Privileges.GetUserIDFromToken(Authorization);
+            Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
             string privileges = Privileges.GetUserRoleFromToken(Authorization);
 
-            var query = new GetUserByLoginQuery(login, filteredID, privileges);
+            var query = new GetUserByLoginQuery(login, filteredId, privileges);
             try
             {
                 User? res = await _mediator.Send(query);
@@ -167,14 +167,14 @@ namespace AlpimiAPI.Entities.EUser
             [FromHeader] string Authorization
         )
         {
-            Guid filteredID = Privileges.GetUserIDFromToken(Authorization);
+            Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
             string privileges = Privileges.GetUserRoleFromToken(Authorization);
 
             var command = new UpdateUserCommand(
                 id,
                 request.Login,
                 request.CustomURL,
-                filteredID,
+                filteredId,
                 privileges
             );
             try

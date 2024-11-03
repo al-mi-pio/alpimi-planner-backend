@@ -26,8 +26,8 @@ namespace AlpimiAPI.Entities.EAuth.Queries
         public async Task<String> Handle(LoginQuery request, CancellationToken cancellationToken)
         {
             var auth = await _dbService.Post<Auth?>(
-                @"SELECT [Auth].[Id],[Auth].[Password],[Auth].[Salt],[Auth].[Role],[Auth].[UserID]
-                FROM [User] JOIN [Auth] on [User].[Id]=[Auth].[UserID] 
+                @"SELECT [Auth].[Id],[Auth].[Password],[Auth].[Salt],[Auth].[Role],[Auth].[UserId]
+                FROM [User] JOIN [Auth] on [User].[Id]=[Auth].[UserId] 
                 WHERE [Login] = @Login;",
                 request
             );
@@ -64,9 +64,9 @@ namespace AlpimiAPI.Entities.EAuth.Queries
 
             var claims = new List<Claim>()
             {
-                new Claim(ClaimTypes.NameIdentifier, auth.UserID.ToString()),
+                new Claim(ClaimTypes.NameIdentifier, auth.UserId.ToString()),
                 new Claim("login", $"{auth.User.Login}"),
-                new Claim("userID", $"{auth.UserID}")
+                new Claim("userId", $"{auth.UserId}")
             };
             switch (auth.Role)
             {

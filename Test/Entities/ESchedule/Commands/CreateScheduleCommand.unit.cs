@@ -30,7 +30,7 @@ namespace AlpimiTest.Entities.ESchedule.Commands
                 Id = new Guid(),
                 Name = "Plan_Marka",
                 SchoolHour = 60,
-                UserID = new Guid(),
+                UserId = new Guid(),
                 User = GetUserDetails()
             };
 
@@ -48,7 +48,7 @@ namespace AlpimiTest.Entities.ESchedule.Commands
 
             var createScheduleCommand = new CreateScheduleCommand(
                 schedule.Id,
-                schedule.UserID,
+                schedule.UserId,
                 schedule.Name,
                 schedule.SchoolHour
             );
@@ -77,7 +77,7 @@ namespace AlpimiTest.Entities.ESchedule.Commands
 
             var createScheduleCommand = new CreateScheduleCommand(
                 schedule.Id,
-                schedule.UserID,
+                schedule.UserId,
                 "TakenName",
                 schedule.SchoolHour
             );

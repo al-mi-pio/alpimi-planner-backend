@@ -143,8 +143,8 @@ namespace AlpimiAPI.Entities.EUser.Commands
 
             await _dbService.Post<Guid>(
                 @"
-                    INSERT INTO [Auth] ([Id],[Password],[Salt],[Role],[UserID])
-                    OUTPUT INSERTED.UserID                    
+                    INSERT INTO [Auth] ([Id],[Password],[Salt],[Role],[UserId])
+                    OUTPUT INSERTED.UserId                    
                     VALUES (@AuthId,'"
                     + Convert.ToBase64String(hash)
                     + "','"

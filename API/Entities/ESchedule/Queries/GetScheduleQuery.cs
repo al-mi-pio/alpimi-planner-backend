@@ -38,11 +38,15 @@ namespace AlpimiAPI.Entities.ESchedule.Queries
                     );
                     break;
             }
-            GetUserHandler getUserHandler = new GetUserHandler(_dbService);
-            GetUserQuery getUserQuery = new GetUserQuery(request.FilteredID, new Guid(), "Admin");
-            ActionResult<User?> user = await getUserHandler.Handle(getUserQuery, cancellationToken);
+
             if (schedule != null)
             {
+                GetUserHandler getUserHandler = new GetUserHandler(_dbService);
+                GetUserQuery getUserQuery = new GetUserQuery(schedule.UserId, new Guid(), "Admin");
+                ActionResult<User?> user = await getUserHandler.Handle(
+                    getUserQuery,
+                    cancellationToken
+                );
                 schedule.User = user.Value!;
             }
             return schedule;

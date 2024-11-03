@@ -27,8 +27,8 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
             );
             GetScheduleByNameQuery getScheduleByNameQuery = new GetScheduleByNameQuery(
                 request.Name,
-                new Guid(),
-                "Admin"
+                request.UserId,
+                "User"
             );
             ActionResult<Schedule?> scheduleName = await getScheduleByNameHandler.Handle(
                 getScheduleByNameQuery,

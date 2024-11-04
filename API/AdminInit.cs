@@ -68,11 +68,11 @@ To start using the API service you need to create an Administrator account first
                         );
                     } while (user.Value != null || login == "");
 
-                    string? password = "temp0w349t5uj0";
+                    string? password = null;
 
                     do
                     {
-                        if (password != "temp0w349t5uj0")
+                        if (password != null)
                         {
                             Console.WriteLine("Paswords don't match, try again\n");
                         }

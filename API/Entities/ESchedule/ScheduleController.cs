@@ -216,17 +216,38 @@ namespace AlpimiAPI.Entities.ESchedule
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<Schedule>> GetAll([FromHeader] string Authorization)
+        public async Task<ActionResult<IEnumerable<Schedule>>> GetAll(
+            [FromHeader] string Authorization,
+            [FromQuery] int perPage = 20,
+            [FromQuery] int page = 1,
+            [FromQuery] string sortBy = "Id",
+            [FromQuery] string sortOrder = "ASC"
+        )
         {
             Guid filteredID = Privileges.GetUserIdFromToken(Authorization);
             string privileges = Privileges.GetUserRoleFromToken(Authorization);
 
-            var query = new GetSchedulesQuery(filteredID, privileges);
+            var query = new GetSchedulesQuery(
+                filteredID,
+                privileges,
+                perPage,
+                (page - 1) * perPage,
+                sortBy,
+                sortOrder
+            );
             try
             {
-                IEnumerable<Schedule>? result = await _mediator.Send(query);
-
-                return Ok(result);
+                (IEnumerable<Schedule>?, int) result = await _mediator.Send(query);
+                var response = new ApiGetAllResponse<IEnumerable<Schedule>>(
+                    result.Item1!,
+                    new Pagination(result.Item2, perPage, page, sortBy, sortOrder),
+                    DateTime.UtcNow
+                );
+                return Ok(response);
+            }
+            catch (BadHttpRequestException ex)
+            {
+                return BadRequest(ex.Message);
             }
             catch (Exception)
             {

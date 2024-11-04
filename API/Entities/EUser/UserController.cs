@@ -1,10 +1,12 @@
 ﻿using AlpimiAPI.Entities.EUser.Commands;
 using AlpimiAPI.Entities.EUser.DTO;
 using AlpimiAPI.Entities.EUser.Queries;
+using AlpimiAPI.Responses;
 using AlpimiAPI.Utilities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Sprache;
 
 namespace AlpimiAPI.Entities.EUser
 {
@@ -42,8 +44,9 @@ namespace AlpimiAPI.Entities.EUser
             );
             try
             {
-                var res = await _mediator.Send(command);
-                return Ok(res);
+                var result = await _mediator.Send(command);
+                var response = new ApiGetResponse<Guid>(result, DateTime.UtcNow);
+                return Ok(response);
             }
             catch (BadHttpRequestException ex)
             {
@@ -76,14 +79,14 @@ namespace AlpimiAPI.Entities.EUser
             var query = new GetUserQuery(id, filteredId, privileges);
             try
             {
-                User? res = await _mediator.Send(query);
+                User? result = await _mediator.Send(query);
 
-                if (res is null)
+                if (result == null)
                 {
                     return NotFound();
                 }
-
-                return Ok(res);
+                var response = new ApiGetResponse<User>(result, DateTime.UtcNow);
+                return Ok(response);
             }
             catch (Exception)
             {
@@ -112,9 +115,13 @@ namespace AlpimiAPI.Entities.EUser
             var query = new GetUserByLoginQuery(login, filteredId, privileges);
             try
             {
-                User? res = await _mediator.Send(query);
-
-                return Ok(res);
+                User? result = await _mediator.Send(query);
+                if (result == null)
+                {
+                    return NotFound();
+                }
+                var response = new ApiGetResponse<User>(result, DateTime.UtcNow);
+                return Ok(response);
             }
             catch (Exception)
             {
@@ -179,12 +186,13 @@ namespace AlpimiAPI.Entities.EUser
             );
             try
             {
-                User? res = await _mediator.Send(command);
-                if (res is null)
+                User? result = await _mediator.Send(command);
+                if (result == null)
                 {
                     return NotFound();
                 }
-                return Ok(res);
+                var response = new ApiGetResponse<User>(result, DateTime.UtcNow);
+                return Ok(response);
             }
             catch (BadHttpRequestException ex)
             {

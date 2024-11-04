@@ -1,9 +1,9 @@
 ﻿namespace AlpimiAPI.Settings
 {
-    public class AuthSettings
+    public static class AuthSettings
     {
-        public static int MinimumPasswordLength = 8;
-        public static int MaximumPasswordLength = 256;
+        public const int MinimumPasswordLength = 8;
+        public const int MaximumPasswordLength = 256;
         public static RequiredCharacterTypes[]? RequiredCharacters =
         [
             RequiredCharacterTypes.SmallLetter,

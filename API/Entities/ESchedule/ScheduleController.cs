@@ -3,6 +3,7 @@ using AlpimiAPI.Entities.ESchedule.DTO;
 using AlpimiAPI.Entities.ESchedule.Queries;
 using AlpimiAPI.Responses;
 using AlpimiAPI.Utilities;
+using alpimi_planner_backend.API.Settings;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -218,10 +219,10 @@ namespace AlpimiAPI.Entities.ESchedule
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<IEnumerable<Schedule>>> GetAll(
             [FromHeader] string Authorization,
-            [FromQuery] int perPage = 20,
-            [FromQuery] int page = 1,
-            [FromQuery] string sortBy = "Id",
-            [FromQuery] string sortOrder = "ASC"
+            [FromQuery] int perPage = PaginationSettings.perPage,
+            [FromQuery] int page = PaginationSettings.page,
+            [FromQuery] string sortBy = PaginationSettings.sortBy,
+            [FromQuery] string sortOrder = PaginationSettings.sortOrder
         )
         {
             Guid filteredID = Privileges.GetUserIdFromToken(Authorization);
@@ -230,10 +231,7 @@ namespace AlpimiAPI.Entities.ESchedule
             var query = new GetSchedulesQuery(
                 filteredID,
                 privileges,
-                perPage,
-                (page - 1) * perPage,
-                sortBy,
-                sortOrder
+                new PaginationParams(perPage, (page - 1) * perPage, sortBy, sortOrder)
             );
             try
             {

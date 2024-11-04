@@ -2,6 +2,7 @@
 using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Entities.ESchedule.Queries;
 using AlpimiAPI.Entities.EUser;
+using AlpimiAPI.Responses;
 using Moq;
 using Xunit;
 
@@ -57,10 +58,7 @@ namespace alpimi_planner_backend.Test.Entities.ESchedule.Queries
             var getSchedulesCommand = new GetSchedulesQuery(
                 new Guid(),
                 "Admin",
-                20,
-                0,
-                "Id",
-                "ASC"
+                new PaginationParams(20, 0, "Id", "ASC")
             );
 
             var getSchedulesHandler = new GetSchedulesHandler(_dbService.Object);
@@ -85,10 +83,7 @@ namespace alpimi_planner_backend.Test.Entities.ESchedule.Queries
             var getSchedulesCommand = new GetSchedulesQuery(
                 new Guid(),
                 "Admin",
-                20,
-                0,
-                "Id",
-                "ASC"
+                new PaginationParams(20, 0, "Id", "ASC")
             );
             var getSchedulesHandler = new GetSchedulesHandler(_dbService.Object);
 
@@ -112,10 +107,7 @@ namespace alpimi_planner_backend.Test.Entities.ESchedule.Queries
             var getSchedulesCommand = new GetSchedulesQuery(
                 new Guid(),
                 "Admin",
-                -20,
-                0,
-                "Id",
-                "ASC"
+                new PaginationParams(-20, 0, "Id", "ASC")
             );
             var getSchedulesHandler = new GetSchedulesHandler(_dbService.Object);
 
@@ -139,10 +131,7 @@ namespace alpimi_planner_backend.Test.Entities.ESchedule.Queries
             var getSchedulesCommand = new GetSchedulesQuery(
                 new Guid(),
                 "Admin",
-                20,
-                -1,
-                "Id",
-                "ASC"
+                new PaginationParams(20, -1, "Id", "ASC")
             );
             var getSchedulesHandler = new GetSchedulesHandler(_dbService.Object);
 
@@ -166,10 +155,7 @@ namespace alpimi_planner_backend.Test.Entities.ESchedule.Queries
             var getSchedulesCommand = new GetSchedulesQuery(
                 new Guid(),
                 "Admin",
-                20,
-                0,
-                "wrong",
-                "ASC"
+                new PaginationParams(20, 0, "wrong", "ASC")
             );
             var getSchedulesHandler = new GetSchedulesHandler(_dbService.Object);
 
@@ -193,10 +179,7 @@ namespace alpimi_planner_backend.Test.Entities.ESchedule.Queries
             var getSchedulesCommand = new GetSchedulesQuery(
                 new Guid(),
                 "Admin",
-                20,
-                0,
-                "Id",
-                "wrong"
+                new PaginationParams(20, 0, "Id", "wrong")
             );
             var getSchedulesHandler = new GetSchedulesHandler(_dbService.Object);
 

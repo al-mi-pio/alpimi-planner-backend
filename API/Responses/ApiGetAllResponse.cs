@@ -6,11 +6,11 @@
         public Pagination Pagination { get; set; }
         public DateTime Timestamp { get; set; }
 
-        public ApiGetAllResponse(Type content, Pagination pagination, DateTime timeStamp)
+        public ApiGetAllResponse(Type content, Pagination pagination)
         {
             Content = content;
             Pagination = pagination;
-            Timestamp = timeStamp;
+            Timestamp = DateTime.UtcNow;
         }
     }
 }

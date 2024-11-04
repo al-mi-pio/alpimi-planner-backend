@@ -6,10 +6,10 @@
 
         public DateTime Timestamp { get; set; }
 
-        public ApiGetResponse(Type content, DateTime time)
+        public ApiGetResponse(Type content)
         {
             Content = content;
-            Timestamp = time;
+            Timestamp = DateTime.UtcNow;
         }
     }
 }

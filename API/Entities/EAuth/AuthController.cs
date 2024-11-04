@@ -38,7 +38,7 @@ namespace AlpimiAPI.Entities.EAuth
                 {
                     return NotFound();
                 }
-                var response = new ApiGetResponse<String>(result, DateTime.UtcNow);
+                var response = new ApiGetResponse<String>(result);
                 return Ok(response);
             }
             catch (BadHttpRequestException ex)

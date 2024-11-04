@@ -47,7 +47,7 @@ namespace AlpimiAPI.Entities.ESchedule
             try
             {
                 var result = await _mediator.Send(command);
-                var response = new ApiGetResponse<Guid>(result, DateTime.UtcNow);
+                var response = new ApiGetResponse<Guid>(result);
                 return Ok(response);
             }
             catch (BadHttpRequestException ex)
@@ -86,7 +86,7 @@ namespace AlpimiAPI.Entities.ESchedule
                 {
                     return NotFound();
                 }
-                var response = new ApiGetResponse<Schedule>(result, DateTime.UtcNow);
+                var response = new ApiGetResponse<Schedule>(result);
 
                 return Ok(response);
             }
@@ -122,7 +122,7 @@ namespace AlpimiAPI.Entities.ESchedule
                 {
                     return NotFound();
                 }
-                var response = new ApiGetResponse<Schedule>(result, DateTime.UtcNow);
+                var response = new ApiGetResponse<Schedule>(result);
                 return Ok(response);
             }
             catch (Exception)
@@ -193,7 +193,7 @@ namespace AlpimiAPI.Entities.ESchedule
                 {
                     return NotFound();
                 }
-                var response = new ApiGetResponse<Schedule>(result, DateTime.UtcNow);
+                var response = new ApiGetResponse<Schedule>(result);
                 return Ok(response);
             }
             catch (BadHttpRequestException ex)
@@ -240,8 +240,7 @@ namespace AlpimiAPI.Entities.ESchedule
                 (IEnumerable<Schedule>?, int) result = await _mediator.Send(query);
                 var response = new ApiGetAllResponse<IEnumerable<Schedule>>(
                     result.Item1!,
-                    new Pagination(result.Item2, perPage, page, sortBy, sortOrder),
-                    DateTime.UtcNow
+                    new Pagination(result.Item2, perPage, page, sortBy, sortOrder)
                 );
                 return Ok(response);
             }

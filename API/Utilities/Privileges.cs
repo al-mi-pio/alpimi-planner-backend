@@ -5,12 +5,12 @@ namespace AlpimiAPI.Utilities
 {
     public static class Privileges
     {
-        public static Guid GetUserIDFromToken(string authorization)
+        public static Guid GetUserIdFromToken(string authorization)
         {
             var token = authorization.ToString().Split(" ").Last();
             var jwtHandler = new JwtSecurityTokenHandler();
             var jwtToken = jwtHandler.ReadJwtToken(token);
-            Claim userIdClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == "userID")!;
+            Claim userIdClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == "userId")!;
 
             return Guid.Parse(userIdClaim.Value);
         }

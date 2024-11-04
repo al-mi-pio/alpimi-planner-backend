@@ -35,11 +35,11 @@ namespace AlpimiAPI.Entities.ESchedule
             [FromHeader] string Authorization
         )
         {
-            Guid UserID = Privileges.GetUserIDFromToken(Authorization);
+            Guid UserId = Privileges.GetUserIdFromToken(Authorization);
 
             var command = new CreateScheduleCommand(
                 Guid.NewGuid(),
-                UserID,
+                UserId,
                 request.Name,
                 request.SchoolHour
             );
@@ -77,7 +77,7 @@ namespace AlpimiAPI.Entities.ESchedule
             [FromHeader] string Authorization
         )
         {
-            Guid filteredID = Privileges.GetUserIDFromToken(Authorization);
+            Guid filteredID = Privileges.GetUserIdFromToken(Authorization);
             string privileges = Privileges.GetUserRoleFromToken(Authorization);
 
             var query = new GetScheduleQuery(id, filteredID, privileges);
@@ -113,7 +113,7 @@ namespace AlpimiAPI.Entities.ESchedule
             [FromHeader] string Authorization
         )
         {
-            Guid filteredID = Privileges.GetUserIDFromToken(Authorization);
+            Guid filteredID = Privileges.GetUserIdFromToken(Authorization);
             string privileges = Privileges.GetUserRoleFromToken(Authorization);
 
             var query = new GetScheduleByNameQuery(name, filteredID, privileges);
@@ -143,7 +143,7 @@ namespace AlpimiAPI.Entities.ESchedule
             [FromHeader] string Authorization
         )
         {
-            Guid filteredID = Privileges.GetUserIDFromToken(Authorization);
+            Guid filteredID = Privileges.GetUserIdFromToken(Authorization);
             string privileges = Privileges.GetUserRoleFromToken(Authorization);
             var command = new DeleteScheduleCommand(id, filteredID, privileges);
             try
@@ -174,7 +174,7 @@ namespace AlpimiAPI.Entities.ESchedule
             [FromHeader] string Authorization
         )
         {
-            Guid filteredID = Privileges.GetUserIDFromToken(Authorization);
+            Guid filteredID = Privileges.GetUserIdFromToken(Authorization);
             string privileges = Privileges.GetUserRoleFromToken(Authorization);
 
             var command = new UpdateScheduleCommand(
@@ -209,13 +209,13 @@ namespace AlpimiAPI.Entities.ESchedule
         /// <remarks>
         /// - JWT token is required
         /// </remarks>
-        [HttpGet("all")]
+        [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<User>> GetAll([FromHeader] string Authorization)
         {
-            Guid filteredID = Privileges.GetUserIDFromToken(Authorization);
+            Guid filteredID = Privileges.GetUserIdFromToken(Authorization);
             string privileges = Privileges.GetUserRoleFromToken(Authorization);
 
             var query = new GetSchedulesQuery(filteredID, privileges);

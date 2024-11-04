@@ -30,7 +30,7 @@ namespace AlpimiTest.Entities.ESchedule.Commands
                 Id = new Guid(),
                 Name = "Plan_Marka",
                 SchoolHour = 60,
-                UserID = new Guid(),
+                UserId = new Guid(),
                 User = GetUserDetails()
             };
 

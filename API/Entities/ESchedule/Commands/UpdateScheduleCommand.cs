@@ -11,7 +11,7 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
         Guid Id,
         string? Name,
         int? SchoolHour,
-        Guid FilteredID,
+        Guid FilteredId,
         string Role
     ) : IRequest<Schedule?>;
 
@@ -36,8 +36,8 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
                 );
                 GetScheduleByNameQuery getScheduleByNameQuery = new GetScheduleByNameQuery(
                     request.Name,
-                    new Guid(),
-                    "Admin"
+                    request.FilteredId,
+                    "User"
                 );
                 ActionResult<Schedule?> scheduleName = await getScheduleByNameHandler.Handle(
                     getScheduleByNameQuery,
@@ -71,19 +71,19 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
                     SET [Name]=CASE WHEN @Name IS NOT NULL THEN @Name 
                     ELSE [Name] END,[SchoolHour]=CASE WHEN @SchoolHour IS NOT NULL THEN @SchoolHour ELSE [SchoolHour] END 
                     OUTPUT INSERTED.[Id], INSERTED.[Name], INSERTED.[SchoolHour]
-                    WHERE [Id]=@Id and [UserID]=@FilteredID;",
+                    WHERE [Id]=@Id and [UserId]=@FilteredId;",
                         request
                     );
                     break;
             }
 
             GetUserHandler getUserHandler = new GetUserHandler(_dbService);
-            GetUserQuery getUserQuery = new GetUserQuery(request.FilteredID, new Guid(), "Admin");
+            GetUserQuery getUserQuery = new GetUserQuery(request.FilteredId, new Guid(), "Admin");
             ActionResult<User?> user = await getUserHandler.Handle(getUserQuery, cancellationToken);
             if (schedule != null)
             {
                 schedule.User = user.Value!;
-                schedule.UserID = request.FilteredID;
+                schedule.UserId = request.FilteredId;
             }
             return schedule;
         }

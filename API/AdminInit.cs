@@ -68,21 +68,20 @@ To start using the API service you need to create an Administrator account first
                         );
                     } while (user.Value != null || login == "");
 
-                    string? password1 = "temp";
-                    string? password2 = "temp";
+                    string? password = null;
+
                     do
                     {
-                        if (password1 != password2)
+                        if (password != null)
                         {
-                            Console.WriteLine("Pasword don't match, try again\nPassword:");
+                            Console.WriteLine("Paswords don't match, try again\n");
                         }
                         Console.WriteLine("Password");
-                        password1 = Console.ReadLine();
+                        password = Console.ReadLine();
                         Console.WriteLine("Repeat Password:");
-                        password2 = Console.ReadLine();
-                    } while (password1 != password2 || password1 == "");
+                    } while (password != Console.ReadLine() || password == "");
 
-                    var userID = await _dbService.Post<Guid>(
+                    var userId = await _dbService.Post<Guid>(
                         @"
                     INSERT INTO [User] ([Id],[Login],[CustomURL])
                     OUTPUT INSERTED.Id                    
@@ -95,7 +94,7 @@ To start using the API service you need to create an Administrator account first
                     );
                     byte[] salt = RandomNumberGenerator.GetBytes(16);
                     byte[] hash = Rfc2898DeriveBytes.Pbkdf2(
-                        password1!,
+                        password!,
                         salt,
                         Configuration.GetHashIterations(),
                         Configuration.GetHashAlgorithm(),
@@ -104,8 +103,8 @@ To start using the API service you need to create an Administrator account first
 
                     await _dbService.Post<Guid>(
                         @"
-                    INSERT INTO [Auth] ([Id],[Password],[Salt],[Role],[UserID])
-                    OUTPUT INSERTED.UserID                    
+                    INSERT INTO [Auth] ([Id],[Password],[Salt],[Role],[UserId])
+                    OUTPUT INSERTED.UserId                    
                     VALUES ('"
                             + Guid.NewGuid()
                             + "','"
@@ -113,7 +112,7 @@ To start using the API service you need to create an Administrator account first
                             + "','"
                             + Convert.ToBase64String(salt)
                             + "','Admin','"
-                            + userID
+                            + userId
                             + "');",
                         ""
                     );

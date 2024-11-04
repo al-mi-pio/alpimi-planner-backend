@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AlpimiAPI.Entities.ESchedule.Commands
 {
-    public record CreateScheduleCommand(Guid Id, Guid UserID, string Name, int SchoolHour)
+    public record CreateScheduleCommand(Guid Id, Guid UserId, string Name, int SchoolHour)
         : IRequest<Guid>;
 
     public class CreateScheduleHandler : IRequestHandler<CreateScheduleCommand, Guid>
@@ -27,8 +27,8 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
             );
             GetScheduleByNameQuery getScheduleByNameQuery = new GetScheduleByNameQuery(
                 request.Name,
-                new Guid(),
-                "Admin"
+                request.UserId,
+                "User"
             );
             ActionResult<Schedule?> scheduleName = await getScheduleByNameHandler.Handle(
                 getScheduleByNameQuery,
@@ -42,9 +42,9 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
 
             var insertedId = await _dbService.Post<Guid>(
                 @"
-                    INSERT INTO [Schedule] ([Id],[Name],[SchoolHour],[UserID])
+                    INSERT INTO [Schedule] ([Id],[Name],[SchoolHour],[UserId])
                     OUTPUT INSERTED.Id                    
-                    VALUES (@Id,@Name,@SchoolHour,@UserID);",
+                    VALUES (@Id,@Name,@SchoolHour,@UserId);",
                 request
             );
 

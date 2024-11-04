@@ -30,7 +30,7 @@ namespace alpimi_planner_backend.Test.Entities.ESchedule.Queries
                 Id = new Guid(),
                 Name = "Plan_Marka",
                 SchoolHour = 60,
-                UserID = new Guid(),
+                UserId = new Guid(),
                 User = GetUserDetails()
             };
 

@@ -21,7 +21,7 @@ namespace AlpimiAPI.Entities.EAuth
         /// Returns a JWT token
         /// </summary>
         /// <remarks>
-        /// To authenticate API requests provide given token inside the header of Authorization with the prefix Bearer
+        /// Provide a valid token inside the Authorization header with the 'Bearer' prefix
         /// </remarks>
 
         [AllowAnonymous]
@@ -53,10 +53,10 @@ namespace AlpimiAPI.Entities.EAuth
         }
 
         /// <summary>
-        /// Returns a JWT token
+        /// Refreshes a JWT token
         /// </summary>
         /// <remarks>
-        /// To authenticate API requests provide given token inside the header of Authorization with the prefix Bearer
+        /// Takes a valid token from Authorization header and returns another one with a new expiration date
         /// </remarks>
         [Authorize]
         [HttpGet]

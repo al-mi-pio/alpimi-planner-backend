@@ -41,8 +41,12 @@ namespace AlpimiAPI.Utilities
             return _jwtIssuer;
         }
 
-        public static double? GetJWTExpire()
+        public static double GetJWTExpire()
         {
+            if (_jwtExpire == null)
+            {
+                return 5.0;
+            }
             return Convert.ToDouble(_jwtExpire);
         }
 

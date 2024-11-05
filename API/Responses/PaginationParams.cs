@@ -12,7 +12,7 @@ namespace AlpimiAPI.Responses
 
         public PaginationParams(int? perPage, int? offset, string? sortBy, string? sortOrder)
         {
-            PerPage = perPage ?? 20;
+            PerPage = perPage ?? PaginationSettings.perPage;
 
             Offset = offset ?? (PaginationSettings.page - 1) * PerPage;
             SortBy = sortBy ?? PaginationSettings.sortBy;

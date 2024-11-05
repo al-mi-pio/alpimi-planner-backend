@@ -1,4 +1,5 @@
 ﻿using System.Security.Cryptography;
+using AlpimiAPI.Settings;
 
 namespace AlpimiAPI.Utilities
 {
@@ -31,18 +32,26 @@ namespace AlpimiAPI.Utilities
         {
             if (_jwtKey == null)
             {
-                return "KeyNotFoundButThisMustBeLongEnough";
+                return AuthSettings.JWTKey;
             }
             return _jwtKey;
         }
 
-        public static string? GetJWTIssuer()
+        public static string GetJWTIssuer()
         {
+            if (_jwtIssuer == null)
+            {
+                return AuthSettings.JWTIssuer;
+            }
             return _jwtIssuer;
         }
 
-        public static double? GetJWTExpire()
+        public static double GetJWTExpire()
         {
+            if (_jwtExpire == null)
+            {
+                return AuthSettings.JWTExpire;
+            }
             return Convert.ToDouble(_jwtExpire);
         }
 
@@ -50,7 +59,7 @@ namespace AlpimiAPI.Utilities
         {
             if (_hashIterations == null)
             {
-                return 10;
+                return AuthSettings.HashIterations;
             }
             return Convert.ToInt32(_hashIterations);
         }
@@ -59,7 +68,7 @@ namespace AlpimiAPI.Utilities
         {
             if (_keySize == null)
             {
-                return 20;
+                return AuthSettings.KeySize;
             }
             return Convert.ToInt32(_keySize);
         }
@@ -68,7 +77,7 @@ namespace AlpimiAPI.Utilities
         {
             if (_hashAlgorithm == null)
             {
-                return HashAlgorithmName.SHA1;
+                return new HashAlgorithmName(AuthSettings.HashAlgorithm);
             }
             return new HashAlgorithmName(_hashAlgorithm);
         }

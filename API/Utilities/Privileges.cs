@@ -24,5 +24,15 @@ namespace AlpimiAPI.Utilities
 
             return (RoleClaim.Value);
         }
+
+        public static string GetUserLoginFromToken(string authorization)
+        {
+            var token = authorization.ToString().Split(" ").Last();
+            var jwtHandler = new JwtSecurityTokenHandler();
+            var jwtToken = jwtHandler.ReadJwtToken(token);
+            Claim RoleClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == "login")!;
+
+            return (RoleClaim.Value);
+        }
     }
 }

@@ -64,7 +64,6 @@ namespace AlpimiAPI.Entities.EAuth.Queries
 
             var claims = new List<Claim>()
             {
-                new Claim(ClaimTypes.NameIdentifier, auth.UserId.ToString()),
                 new Claim("login", $"{auth.User.Login}"),
                 new Claim("userId", $"{auth.UserId}")
             };
@@ -81,16 +80,7 @@ namespace AlpimiAPI.Entities.EAuth.Queries
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetJWTKey()));
             var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            //TODO DO SMTH
-            var expires = DateTime.Now;
-            if (Configuration.GetJWTExpire() != null)
-            {
-                expires = DateTime.Now.AddMinutes(Convert.ToDouble(Configuration.GetJWTExpire()));
-            }
-            else
-            {
-                expires = DateTime.Now.AddMinutes(1000.0);
-            }
+            var expires = DateTime.Now.AddMinutes(Configuration.GetJWTExpire());
 
             var token = new JwtSecurityToken(
                 Configuration.GetJWTIssuer(),

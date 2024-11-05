@@ -12,19 +12,25 @@ namespace AlpimiTest.Entities.EAuth.Queries
         private readonly Mock<IDbService> _dbService = new();
 
         [Fact]
-        public async Task GivesTokenIfLoginAndPasswordAreCorrect()
+        public async Task GivesRefreshedToken()
         {
-            _dbService
-                .Setup(s => s.Get<String>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync("Token");
+            await Task.Run(() =>
+            {
+                _dbService
+                    .Setup(s => s.Get<String>(It.IsAny<string>(), It.IsAny<object>()))
+                    .ReturnsAsync("Token");
 
-            var refreshTokenCommand = new RefreshTokenQuery("string", new Guid(), "string");
+                var refreshTokenCommand = new RefreshTokenQuery("string", new Guid(), "string");
 
-            var refreshTokenHandler = new RefreshTokenHandler();
+                var refreshTokenHandler = new RefreshTokenHandler();
 
-            var result = refreshTokenHandler.Handle(refreshTokenCommand, new CancellationToken());
+                var result = refreshTokenHandler.Handle(
+                    refreshTokenCommand,
+                    new CancellationToken()
+                );
 
-            Assert.IsType<String>(result);
+                Assert.IsType<String>(result);
+            });
         }
     }
 }

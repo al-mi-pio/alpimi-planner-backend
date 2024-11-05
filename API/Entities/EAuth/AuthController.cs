@@ -1,5 +1,6 @@
 ﻿using AlpimiAPI.Entities.EAuth.Queries;
 using AlpimiAPI.Responses;
+using AlpimiAPI.Utilities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -49,6 +50,30 @@ namespace AlpimiAPI.Entities.EAuth
             {
                 return BadRequest("TODO make a message");
             }
+        }
+
+        /// <summary>
+        /// Returns a JWT token
+        /// </summary>
+        /// <remarks>
+        /// To authenticate API requests provide given token inside the header of Authorization with the prefix Bearer
+        /// </remarks>
+        [Authorize]
+        [HttpGet]
+        [Route("refresh")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult<string> Refresh([FromHeader] string Authorization)
+        {
+            var query = new RefreshTokenQuery(
+                Privileges.GetUserLoginFromToken(Authorization),
+                Privileges.GetUserIdFromToken(Authorization),
+                Privileges.GetUserRoleFromToken(Authorization)
+            );
+            var refreshTokenHandler = new RefreshTokenHandler();
+            string result = refreshTokenHandler.Handle(query, new CancellationToken());
+
+            var response = new ApiGetResponse<String>(result);
+            return Ok(response);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using AlpimiAPI.Entities.EAuth.Queries;
+using AlpimiAPI.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -32,8 +33,13 @@ namespace AlpimiAPI.Entities.EAuth
             var query = new LoginQuery(request.Login, request.Password);
             try
             {
-                string res = await _mediator.Send(query);
-                return Ok(res);
+                string result = await _mediator.Send(query);
+                if (result == null)
+                {
+                    return NotFound();
+                }
+                var response = new ApiGetResponse<String>(result);
+                return Ok(response);
             }
             catch (BadHttpRequestException ex)
             {

@@ -33,7 +33,7 @@ namespace AlpimiAPI.Entities.EUser
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<ActionResult<Guid>> Post([FromBody] CreateUserDTO request)
+        public async Task<ActionResult<ApiGetResponse<Guid>>> Post([FromBody] CreateUserDTO request)
         {
             var command = new CreateUserCommand(
                 Guid.NewGuid(),
@@ -68,7 +68,7 @@ namespace AlpimiAPI.Entities.EUser
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<User>> GetOne(
+        public async Task<ActionResult<ApiGetResponse<User>>> GetOne(
             [FromRoute] Guid id,
             [FromHeader] string Authorization
         )
@@ -104,7 +104,7 @@ namespace AlpimiAPI.Entities.EUser
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<User>> GetOneByLogin(
+        public async Task<ActionResult<ApiGetResponse<User>>> GetOneByLogin(
             [FromRoute] string login,
             [FromHeader] string Authorization
         )
@@ -168,7 +168,7 @@ namespace AlpimiAPI.Entities.EUser
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<User>> Patch(
+        public async Task<ActionResult<ApiGetResponse<User>>> Patch(
             [FromBody] UpdateUserDTO request,
             [FromRoute] Guid id,
             [FromHeader] string Authorization

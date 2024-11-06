@@ -5,6 +5,7 @@ using System.Text;
 using AlpimiAPI.Database;
 using AlpimiAPI.Entities.EUser;
 using AlpimiAPI.Entities.EUser.Queries;
+using AlpimiAPI.Responses;
 using AlpimiAPI.Utilities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -45,7 +46,7 @@ namespace AlpimiAPI.Entities.EAuth.Queries
 
             if (auth == null || user.Value == null)
             {
-                throw new BadHttpRequestException("Invalid login or password");
+                throw new ApiErrorException([new ErrorObject("Invalid login or password")]);
             }
             auth.User = user.Value;
 
@@ -59,7 +60,7 @@ namespace AlpimiAPI.Entities.EAuth.Queries
 
             if (Convert.ToBase64String(inputHash) != auth.Password)
             {
-                throw new BadHttpRequestException("Invalid password");
+                throw new ApiErrorException([new ErrorObject("Invalid password")]);
             }
 
             var claims = new List<Claim>()

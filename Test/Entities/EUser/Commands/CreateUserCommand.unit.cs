@@ -5,7 +5,6 @@ using AlpimiAPI.Responses;
 using AlpimiAPI.Settings;
 using Moq;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace AlpimiTest.Entities.EUser.Commands
@@ -152,10 +151,6 @@ namespace AlpimiTest.Entities.EUser.Commands
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())
             );
             var requiredCharacters = AuthSettings.RequiredCharacters;
-            if (requiredCharacters == null)
-            {
-                requiredCharacters = [RequiredCharacterTypes.SmallLetter];
-            }
 
             Assert.Equal(
                 JsonConvert.SerializeObject(
@@ -163,7 +158,7 @@ namespace AlpimiTest.Entities.EUser.Commands
                     {
                         new ErrorObject(
                             "Password must contain at least one of the following: "
-                                + string.Join(", ", requiredCharacters)
+                                + string.Join(", ", requiredCharacters!)
                         )
                     }
                 ),
@@ -195,10 +190,6 @@ namespace AlpimiTest.Entities.EUser.Commands
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())
             );
             var requiredCharacters = AuthSettings.RequiredCharacters;
-            if (requiredCharacters == null)
-            {
-                requiredCharacters = [RequiredCharacterTypes.BigLetter];
-            }
 
             Assert.Equal(
                 JsonConvert.SerializeObject(
@@ -206,7 +197,7 @@ namespace AlpimiTest.Entities.EUser.Commands
                     {
                         new ErrorObject(
                             "Password must contain at least one of the following: "
-                                + string.Join(", ", requiredCharacters)
+                                + string.Join(", ", requiredCharacters!)
                         )
                     }
                 ),
@@ -238,10 +229,6 @@ namespace AlpimiTest.Entities.EUser.Commands
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())
             );
             var requiredCharacters = AuthSettings.RequiredCharacters;
-            if (requiredCharacters == null)
-            {
-                requiredCharacters = [RequiredCharacterTypes.Symbol];
-            }
 
             Assert.Equal(
                 JsonConvert.SerializeObject(
@@ -249,7 +236,7 @@ namespace AlpimiTest.Entities.EUser.Commands
                     {
                         new ErrorObject(
                             "Password must contain at least one of the following: "
-                                + string.Join(", ", requiredCharacters)
+                                + string.Join(", ", requiredCharacters!)
                         )
                     }
                 ),
@@ -281,10 +268,6 @@ namespace AlpimiTest.Entities.EUser.Commands
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())
             );
             var requiredCharacters = AuthSettings.RequiredCharacters;
-            if (requiredCharacters == null)
-            {
-                requiredCharacters = [RequiredCharacterTypes.Digit];
-            }
 
             Assert.Equal(
                 JsonConvert.SerializeObject(
@@ -292,7 +275,7 @@ namespace AlpimiTest.Entities.EUser.Commands
                     {
                         new ErrorObject(
                             "Password must contain at least one of the following: "
-                                + string.Join(", ", requiredCharacters)
+                                + string.Join(", ", requiredCharacters!)
                         )
                     }
                 ),
@@ -365,6 +348,50 @@ namespace AlpimiTest.Entities.EUser.Commands
             Assert.Equal(
                 JsonConvert.SerializeObject(
                     new ErrorObject[] { new ErrorObject("URL already taken") }
+                ),
+                JsonConvert.SerializeObject(result.errors)
+            );
+        }
+
+        [Fact]
+        public async Task ThrowsMultipleErrorMessages()
+        {
+            var user = GetUserDetails();
+
+            _dbService
+                .Setup(s => s.Post<User>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(user);
+
+            var createUserCommand = new CreateUserCommand(
+                user.Id,
+                new Guid(),
+                user.Login,
+                user.CustomURL!,
+                "R1!"
+            );
+
+            var createUserHandler = new CreateUserHandler(_dbService.Object);
+
+            var result = await Assert.ThrowsAsync<ApiErrorException>(
+                async () =>
+                    await createUserHandler.Handle(createUserCommand, new CancellationToken())
+            );
+            var requiredCharacters = AuthSettings.RequiredCharacters;
+
+            Assert.Equal(
+                JsonConvert.SerializeObject(
+                    new ErrorObject[]
+                    {
+                        new ErrorObject(
+                            "Password cannot be shorter than "
+                                + AuthSettings.MinimumPasswordLength
+                                + " characters"
+                        ),
+                        new ErrorObject(
+                            "Password must contain at least one of the following: "
+                                + string.Join(", ", requiredCharacters!)
+                        )
+                    }
                 ),
                 JsonConvert.SerializeObject(result.errors)
             );

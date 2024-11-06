@@ -203,5 +203,38 @@ namespace alpimi_planner_backend.Test.Entities.ESchedule.Queries
                 JsonConvert.SerializeObject(result.errors)
             );
         }
+
+        [Fact]
+        public async Task ThrowsMultipleErrorMessages()
+        {
+            IEnumerable<Schedule> schedules = Enumerable.Empty<Schedule>();
+
+            _dbService
+                .Setup(s => s.GetAll<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(schedules);
+
+            var getSchedulesCommand = new GetSchedulesQuery(
+                new Guid(),
+                "Admin",
+                new PaginationParams(20, 0, "wrong", "wrong")
+            );
+            var getSchedulesHandler = new GetSchedulesHandler(_dbService.Object);
+
+            var result = await Assert.ThrowsAsync<ApiErrorException>(
+                async () =>
+                    await getSchedulesHandler.Handle(getSchedulesCommand, new CancellationToken())
+            );
+
+            Assert.Equal(
+                JsonConvert.SerializeObject(
+                    new ErrorObject[]
+                    {
+                        new ErrorObject("Bad SortOrder"),
+                        new ErrorObject("Bad SortBy")
+                    }
+                ),
+                JsonConvert.SerializeObject(result.errors)
+            );
+        }
     }
 }

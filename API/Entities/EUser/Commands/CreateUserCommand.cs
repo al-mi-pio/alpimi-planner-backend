@@ -54,11 +54,11 @@ namespace AlpimiAPI.Entities.EUser.Commands
                 WHERE [CustomURL] = @CustomURL;",
                 request
             );
+
             if (userURL != null)
             {
                 errors.Add(new ErrorObject("URL already taken"));
             }
-
             if (request.Password.Length < AuthSettings.MinimumPasswordLength)
             {
                 errors.Add(
@@ -81,42 +81,29 @@ namespace AlpimiAPI.Entities.EUser.Commands
                 );
             }
             RequiredCharacterTypes[]? requiredCharacterTypes = AuthSettings.RequiredCharacters;
+            bool requiredCharactersError = false;
+
             if (requiredCharacterTypes != null)
             {
                 if (requiredCharacterTypes.Contains(RequiredCharacterTypes.BigLetter))
                 {
                     if (!request.Password.Any(char.IsUpper))
                     {
-                        errors.Add(
-                            new ErrorObject(
-                                "Password must contain at least one of the following: "
-                                    + string.Join(", ", requiredCharacterTypes)
-                            )
-                        );
+                        requiredCharactersError = true;
                     }
                 }
                 if (requiredCharacterTypes.Contains(RequiredCharacterTypes.SmallLetter))
                 {
                     if (!request.Password.Any(char.IsLower))
                     {
-                        errors.Add(
-                            new ErrorObject(
-                                "Password must contain at least one of the following: "
-                                    + string.Join(", ", requiredCharacterTypes)
-                            )
-                        );
+                        requiredCharactersError = true;
                     }
                 }
                 if (requiredCharacterTypes.Contains(RequiredCharacterTypes.Digit))
                 {
                     if (!request.Password.Any(char.IsDigit))
                     {
-                        errors.Add(
-                            new ErrorObject(
-                                "Password must contain at least one of the following: "
-                                    + string.Join(", ", requiredCharacterTypes)
-                            )
-                        );
+                        requiredCharactersError = true;
                     }
                 }
                 if (requiredCharacterTypes.Contains(RequiredCharacterTypes.Symbol))
@@ -128,14 +115,19 @@ namespace AlpimiAPI.Entities.EUser.Commands
                         )
                     )
                     {
-                        errors.Add(
-                            new ErrorObject(
-                                "Password must contain at least one of the following: "
-                                    + string.Join(", ", requiredCharacterTypes)
-                            )
-                        );
+                        requiredCharactersError = true;
                     }
                 }
+            }
+
+            if (requiredCharactersError)
+            {
+                errors.Add(
+                    new ErrorObject(
+                        "Password must contain at least one of the following: "
+                            + string.Join(", ", requiredCharacterTypes!)
+                    )
+                );
             }
 
             if (errors.Count != 0)

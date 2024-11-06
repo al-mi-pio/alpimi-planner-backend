@@ -32,7 +32,7 @@ namespace AlpimiAPI.Entities.ESchedule
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<Guid>> Post(
+        public async Task<ActionResult<ApiGetResponse<Guid>>> Post(
             [FromBody] CreateScheduleDTO request,
             [FromHeader] string Authorization
         )
@@ -71,7 +71,7 @@ namespace AlpimiAPI.Entities.ESchedule
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<Schedule>> GetOne(
+        public async Task<ActionResult<ApiGetResponse<Schedule>>> GetOne(
             [FromRoute] Guid id,
             [FromHeader] string Authorization
         )
@@ -107,7 +107,7 @@ namespace AlpimiAPI.Entities.ESchedule
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<Schedule>> GetOneByName(
+        public async Task<ActionResult<ApiGetResponse<Schedule>>> GetOneByName(
             [FromRoute] string name,
             [FromHeader] string Authorization
         )
@@ -171,7 +171,7 @@ namespace AlpimiAPI.Entities.ESchedule
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<Schedule>> Patch(
+        public async Task<ActionResult<ApiGetResponse<Schedule>>> Patch(
             [FromBody] UpdateScheduleDTO request,
             [FromRoute] Guid id,
             [FromHeader] string Authorization
@@ -217,7 +217,7 @@ namespace AlpimiAPI.Entities.ESchedule
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<IEnumerable<Schedule>>> GetAll(
+        public async Task<ActionResult<ApiGetAllResponse<IEnumerable<Schedule>>>> GetAll(
             [FromHeader] string Authorization,
             [FromQuery] int perPage = PaginationSettings.perPage,
             [FromQuery] int page = PaginationSettings.page,

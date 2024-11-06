@@ -29,7 +29,9 @@ namespace AlpimiAPI.Entities.EAuth
         [Route("login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<string>> Login([FromBody] DTO.LoginDTO request)
+        public async Task<ActionResult<ApiGetResponse<string>>> Login(
+            [FromBody] DTO.LoginDTO request
+        )
         {
             var query = new LoginQuery(request.Login, request.Password);
             try
@@ -64,7 +66,7 @@ namespace AlpimiAPI.Entities.EAuth
         [HttpGet]
         [Route("refresh")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<string> Refresh([FromHeader] string Authorization)
+        public ActionResult<ApiGetResponse<string>> Refresh([FromHeader] string Authorization)
         {
             var query = new RefreshTokenQuery(
                 Privileges.GetUserLoginFromToken(Authorization),

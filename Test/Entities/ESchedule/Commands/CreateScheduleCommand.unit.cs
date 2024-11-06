@@ -2,7 +2,9 @@
 using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Entities.ESchedule.Commands;
 using AlpimiAPI.Entities.EUser;
+using AlpimiAPI.Responses;
 using Moq;
+using Newtonsoft.Json;
 using Xunit;
 
 namespace AlpimiTest.Entities.ESchedule.Commands
@@ -84,7 +86,7 @@ namespace AlpimiTest.Entities.ESchedule.Commands
 
             var createScheduleHandler = new CreateScheduleHandler(_dbService.Object);
 
-            var result = await Assert.ThrowsAsync<BadHttpRequestException>(
+            var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createScheduleHandler.Handle(
                         createScheduleCommand,
@@ -92,7 +94,12 @@ namespace AlpimiTest.Entities.ESchedule.Commands
                     )
             );
 
-            Assert.Equal("Name already taken", result.Message);
+            Assert.Equal(
+                JsonConvert.SerializeObject(
+                    new ErrorObject[] { new ErrorObject("Name already taken") }
+                ),
+                JsonConvert.SerializeObject(result.errors)
+            );
         }
     }
 }

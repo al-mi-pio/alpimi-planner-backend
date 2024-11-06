@@ -1,8 +1,11 @@
 ﻿using AlpimiAPI.Database;
 using AlpimiAPI.Entities.EUser;
 using AlpimiAPI.Entities.EUser.Commands;
+using AlpimiAPI.Responses;
 using AlpimiAPI.Settings;
 using Moq;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace AlpimiTest.Entities.EUser.Commands
@@ -61,20 +64,28 @@ namespace AlpimiTest.Entities.EUser.Commands
                 new Guid(),
                 user.Login,
                 user.CustomURL!,
-                "Random"
+                "Rand1!"
             );
 
             var createUserHandler = new CreateUserHandler(_dbService.Object);
 
-            var result = await Assert.ThrowsAsync<BadHttpRequestException>(
+            var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())
             );
+
             Assert.Equal(
-                "Password cannot be shorter than "
-                    + AuthSettings.MinimumPasswordLength
-                    + " characters",
-                result.Message
+                JsonConvert.SerializeObject(
+                    new ErrorObject[]
+                    {
+                        new ErrorObject(
+                            "Password cannot be shorter than "
+                                + AuthSettings.MinimumPasswordLength
+                                + " characters"
+                        )
+                    }
+                ),
+                JsonConvert.SerializeObject(result.errors)
             );
         }
 
@@ -92,20 +103,28 @@ namespace AlpimiTest.Entities.EUser.Commands
                 new Guid(),
                 user.Login,
                 user.CustomURL!,
-                "RandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandom"
+                "RandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandom1!"
             );
 
             var createUserHandler = new CreateUserHandler(_dbService.Object);
 
-            var result = await Assert.ThrowsAsync<BadHttpRequestException>(
+            var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())
             );
+
             Assert.Equal(
-                "Password cannot be longer than "
-                    + AuthSettings.MaximumPasswordLength
-                    + " characters",
-                result.Message
+                JsonConvert.SerializeObject(
+                    new ErrorObject[]
+                    {
+                        new ErrorObject(
+                            "Password cannot be longer than "
+                                + AuthSettings.MaximumPasswordLength
+                                + " characters"
+                        )
+                    }
+                ),
+                JsonConvert.SerializeObject(result.errors)
             );
         }
 
@@ -128,7 +147,7 @@ namespace AlpimiTest.Entities.EUser.Commands
 
             var createUserHandler = new CreateUserHandler(_dbService.Object);
 
-            var result = await Assert.ThrowsAsync<BadHttpRequestException>(
+            var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())
             );
@@ -137,10 +156,18 @@ namespace AlpimiTest.Entities.EUser.Commands
             {
                 requiredCharacters = [RequiredCharacterTypes.SmallLetter];
             }
+
             Assert.Equal(
-                "Password must contain at least one of the following: "
-                    + string.Join(", ", requiredCharacters),
-                result.Message
+                JsonConvert.SerializeObject(
+                    new ErrorObject[]
+                    {
+                        new ErrorObject(
+                            "Password must contain at least one of the following: "
+                                + string.Join(", ", requiredCharacters)
+                        )
+                    }
+                ),
+                JsonConvert.SerializeObject(result.errors)
             );
         }
 
@@ -163,7 +190,7 @@ namespace AlpimiTest.Entities.EUser.Commands
 
             var createUserHandler = new CreateUserHandler(_dbService.Object);
 
-            var result = await Assert.ThrowsAsync<BadHttpRequestException>(
+            var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())
             );
@@ -172,10 +199,18 @@ namespace AlpimiTest.Entities.EUser.Commands
             {
                 requiredCharacters = [RequiredCharacterTypes.BigLetter];
             }
+
             Assert.Equal(
-                "Password must contain at least one of the following: "
-                    + string.Join(", ", requiredCharacters),
-                result.Message
+                JsonConvert.SerializeObject(
+                    new ErrorObject[]
+                    {
+                        new ErrorObject(
+                            "Password must contain at least one of the following: "
+                                + string.Join(", ", requiredCharacters)
+                        )
+                    }
+                ),
+                JsonConvert.SerializeObject(result.errors)
             );
         }
 
@@ -198,7 +233,7 @@ namespace AlpimiTest.Entities.EUser.Commands
 
             var createUserHandler = new CreateUserHandler(_dbService.Object);
 
-            var result = await Assert.ThrowsAsync<BadHttpRequestException>(
+            var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())
             );
@@ -207,10 +242,18 @@ namespace AlpimiTest.Entities.EUser.Commands
             {
                 requiredCharacters = [RequiredCharacterTypes.Symbol];
             }
+
             Assert.Equal(
-                "Password must contain at least one of the following: "
-                    + string.Join(", ", requiredCharacters),
-                result.Message
+                JsonConvert.SerializeObject(
+                    new ErrorObject[]
+                    {
+                        new ErrorObject(
+                            "Password must contain at least one of the following: "
+                                + string.Join(", ", requiredCharacters)
+                        )
+                    }
+                ),
+                JsonConvert.SerializeObject(result.errors)
             );
         }
 
@@ -233,7 +276,7 @@ namespace AlpimiTest.Entities.EUser.Commands
 
             var createUserHandler = new CreateUserHandler(_dbService.Object);
 
-            var result = await Assert.ThrowsAsync<BadHttpRequestException>(
+            var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())
             );
@@ -242,10 +285,18 @@ namespace AlpimiTest.Entities.EUser.Commands
             {
                 requiredCharacters = [RequiredCharacterTypes.Digit];
             }
+
             Assert.Equal(
-                "Password must contain at least one of the following: "
-                    + string.Join(", ", requiredCharacters),
-                result.Message
+                JsonConvert.SerializeObject(
+                    new ErrorObject[]
+                    {
+                        new ErrorObject(
+                            "Password must contain at least one of the following: "
+                                + string.Join(", ", requiredCharacters)
+                        )
+                    }
+                ),
+                JsonConvert.SerializeObject(result.errors)
             );
         }
 
@@ -266,18 +317,23 @@ namespace AlpimiTest.Entities.EUser.Commands
                 new Guid(),
                 user.Login,
                 user.CustomURL!,
-                "Randomsmall1"
+                "Randomsmall1!"
             );
 
             var createUserHandler = new CreateUserHandler(_dbService.Object);
 
-            var result = await Assert.ThrowsAsync<BadHttpRequestException>(
+            var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())
             );
             var requiredCharacters = AuthSettings.RequiredCharacters;
 
-            Assert.Equal("Login already taken", result.Message);
+            Assert.Equal(
+                JsonConvert.SerializeObject(
+                    new ErrorObject[] { new ErrorObject("Login already taken") }
+                ),
+                JsonConvert.SerializeObject(result.errors)
+            );
         }
 
         [Fact]
@@ -296,17 +352,22 @@ namespace AlpimiTest.Entities.EUser.Commands
                 new Guid(),
                 user.Login,
                 user.CustomURL!,
-                "Randomsmall1"
+                "Randomsmall1!"
             );
 
             var createUserHandler = new CreateUserHandler(_dbService.Object);
 
-            var result = await Assert.ThrowsAsync<BadHttpRequestException>(
+            var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())
             );
 
-            Assert.Equal("URL already taken", result.Message);
+            Assert.Equal(
+                JsonConvert.SerializeObject(
+                    new ErrorObject[] { new ErrorObject("URL already taken") }
+                ),
+                JsonConvert.SerializeObject(result.errors)
+            );
         }
     }
 }

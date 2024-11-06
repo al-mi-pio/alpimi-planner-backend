@@ -1,4 +1,5 @@
 ﻿using AlpimiAPI.Database;
+using AlpimiAPI.Responses;
 using MediatR;
 
 namespace AlpimiAPI.Entities.EUser.Commands
@@ -35,7 +36,7 @@ namespace AlpimiAPI.Entities.EUser.Commands
                 );
                 if (userURL != null)
                 {
-                    throw new BadHttpRequestException("URL already taken");
+                    throw new ApiErrorException([new ErrorObject("URL taken")]);
                 }
             }
             User? user;

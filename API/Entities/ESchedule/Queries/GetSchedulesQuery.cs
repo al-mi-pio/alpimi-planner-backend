@@ -4,6 +4,7 @@ using AlpimiAPI.Entities.EUser.Queries;
 using AlpimiAPI.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualBasic;
 
 namespace AlpimiAPI.Entities.ESchedule.Queries
 {
@@ -25,20 +26,21 @@ namespace AlpimiAPI.Entities.ESchedule.Queries
             CancellationToken cancellationToken
         )
         {
+            List<ErrorObject> errors = new List<ErrorObject>();
             if (request.Pagination.PerPage < 0)
             {
-                throw new BadHttpRequestException("Bad PerPage");
+                errors.Add(new ErrorObject("Bad PerPage"));
             }
             if (request.Pagination.Offset < 0)
             {
-                throw new BadHttpRequestException("Bad Page");
+                errors.Add(new ErrorObject("Bad Page"));
             }
             if (
                 request.Pagination.SortOrder.ToLower() != "asc"
                 && request.Pagination.SortOrder.ToLower() != "desc"
             )
             {
-                throw new BadHttpRequestException("Bad SortOrder");
+                errors.Add(new ErrorObject("Bad SortOrder"));
             }
             if (
                 request.Pagination.SortBy.ToLower() != "id"
@@ -47,8 +49,14 @@ namespace AlpimiAPI.Entities.ESchedule.Queries
                 && request.Pagination.SortBy.ToLower() != "userid"
             )
             {
-                throw new BadHttpRequestException("Bad SortBy");
+                errors.Add(new ErrorObject("Bad SortBy"));
             }
+
+            if (errors.Count != 0)
+            {
+                throw new ApiErrorException(errors);
+            }
+
             IEnumerable<Schedule>? schedules;
             int count;
             switch (request.Role)

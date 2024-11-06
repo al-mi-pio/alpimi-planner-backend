@@ -1,7 +1,9 @@
 ﻿using AlpimiAPI.Database;
 using AlpimiAPI.Entities.EUser;
 using AlpimiAPI.Entities.EUser.Commands;
+using AlpimiAPI.Responses;
 using Moq;
+using Newtonsoft.Json;
 using Xunit;
 
 namespace AlpimiTest.Entities.EUser.Commands
@@ -116,12 +118,15 @@ namespace AlpimiTest.Entities.EUser.Commands
 
             var updateUserHandler = new UpdateUserHandler(_dbService.Object);
 
-            var result = await Assert.ThrowsAsync<BadHttpRequestException>(
+            var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateUserHandler.Handle(updateUserCommand, new CancellationToken())
             );
 
-            Assert.Equal("URL already taken", result.Message);
+            Assert.Equal(
+                JsonConvert.SerializeObject(new ErrorObject[] { new ErrorObject("URL taken") }),
+                JsonConvert.SerializeObject(result.errors)
+            );
         }
     }
 }

@@ -30,9 +30,9 @@ namespace AlpimiAPI.Entities.ESchedule
         /// </remarks>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<Guid>> Post(
+        [ProducesResponseType(typeof(ApiErrorResponse), 400)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 401)]
+        public async Task<ActionResult<ApiGetResponse<Guid>>> Post(
             [FromBody] CreateScheduleDTO request,
             [FromHeader] string Authorization
         )
@@ -51,13 +51,15 @@ namespace AlpimiAPI.Entities.ESchedule
                 var response = new ApiGetResponse<Guid>(result);
                 return Ok(response);
             }
-            catch (BadHttpRequestException ex)
+            catch (ApiErrorException ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new ApiErrorResponse(400, ex.errors));
             }
             catch (Exception)
             {
-                return BadRequest("TODO make a message");
+                return BadRequest(
+                    new ApiErrorResponse(400, [new ErrorObject("TODO make a message")])
+                );
             }
         }
 
@@ -69,9 +71,10 @@ namespace AlpimiAPI.Entities.ESchedule
         /// </remarks>
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<Schedule>> GetOne(
+        [ProducesResponseType(typeof(ApiErrorResponse), 400)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 401)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 404)]
+        public async Task<ActionResult<ApiGetResponse<Schedule>>> GetOne(
             [FromRoute] Guid id,
             [FromHeader] string Authorization
         )
@@ -85,7 +88,7 @@ namespace AlpimiAPI.Entities.ESchedule
                 Schedule? result = await _mediator.Send(query);
                 if (result == null)
                 {
-                    return NotFound();
+                    return NotFound(new ApiErrorResponse(404, [new ErrorObject("Not found")]));
                 }
                 var response = new ApiGetResponse<Schedule>(result);
 
@@ -93,7 +96,9 @@ namespace AlpimiAPI.Entities.ESchedule
             }
             catch (Exception)
             {
-                return BadRequest("TODO make a message");
+                return BadRequest(
+                    new ApiErrorResponse(400, [new ErrorObject("TODO make a message")])
+                );
             }
         }
 
@@ -105,9 +110,10 @@ namespace AlpimiAPI.Entities.ESchedule
         /// </remarks>
         [HttpGet("byName/{name}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<Schedule>> GetOneByName(
+        [ProducesResponseType(typeof(ApiErrorResponse), 400)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 401)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 404)]
+        public async Task<ActionResult<ApiGetResponse<Schedule>>> GetOneByName(
             [FromRoute] string name,
             [FromHeader] string Authorization
         )
@@ -121,14 +127,16 @@ namespace AlpimiAPI.Entities.ESchedule
                 Schedule? result = await _mediator.Send(query);
                 if (result == null)
                 {
-                    return NotFound();
+                    return NotFound(new ApiErrorResponse(404, [new ErrorObject("Not found")]));
                 }
                 var response = new ApiGetResponse<Schedule>(result);
                 return Ok(response);
             }
             catch (Exception)
             {
-                return BadRequest("TODO make a message");
+                return BadRequest(
+                    new ApiErrorResponse(400, [new ErrorObject("TODO make a message")])
+                );
             }
         }
 
@@ -140,7 +148,7 @@ namespace AlpimiAPI.Entities.ESchedule
         /// </remarks>
         [HttpDelete("{id}")]
         [ProducesResponseType(204)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 401)]
         public async Task<ActionResult> Delete(
             [FromRoute] Guid id,
             [FromHeader] string Authorization
@@ -155,9 +163,11 @@ namespace AlpimiAPI.Entities.ESchedule
 
                 return NoContent();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return BadRequest(ex);
+                return BadRequest(
+                    new ApiErrorResponse(400, [new ErrorObject("TODO make a message")])
+                );
             }
         }
 
@@ -169,9 +179,10 @@ namespace AlpimiAPI.Entities.ESchedule
         /// </remarks>
         [HttpPatch("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<Schedule>> Patch(
+        [ProducesResponseType(typeof(ApiErrorResponse), 400)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 401)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 404)]
+        public async Task<ActionResult<ApiGetResponse<Schedule>>> Patch(
             [FromBody] UpdateScheduleDTO request,
             [FromRoute] Guid id,
             [FromHeader] string Authorization
@@ -192,18 +203,20 @@ namespace AlpimiAPI.Entities.ESchedule
                 Schedule? result = await _mediator.Send(command);
                 if (result == null)
                 {
-                    return NotFound();
+                    return NotFound(new ApiErrorResponse(404, [new ErrorObject("Not found")]));
                 }
                 var response = new ApiGetResponse<Schedule>(result);
                 return Ok(response);
             }
-            catch (BadHttpRequestException ex)
+            catch (ApiErrorException ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new ApiErrorResponse(400, ex.errors));
             }
             catch (Exception)
             {
-                return BadRequest("TODO make a message");
+                return NotFound(
+                    new ApiErrorResponse(400, [new ErrorObject("TODO make a message")])
+                );
             }
         }
 
@@ -215,9 +228,9 @@ namespace AlpimiAPI.Entities.ESchedule
         /// </remarks>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<IEnumerable<Schedule>>> GetAll(
+        [ProducesResponseType(typeof(ApiErrorResponse), 400)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 401)]
+        public async Task<ActionResult<ApiGetAllResponse<IEnumerable<Schedule>>>> GetAll(
             [FromHeader] string Authorization,
             [FromQuery] int perPage = PaginationSettings.perPage,
             [FromQuery] int page = PaginationSettings.page,
@@ -242,13 +255,15 @@ namespace AlpimiAPI.Entities.ESchedule
                 );
                 return Ok(response);
             }
-            catch (BadHttpRequestException ex)
+            catch (ApiErrorException ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new ApiErrorResponse(400, ex.errors));
             }
             catch (Exception)
             {
-                return BadRequest("TODO make a message");
+                return NotFound(
+                    new ApiErrorResponse(400, [new ErrorObject("TODO make a message")])
+                );
             }
         }
     }

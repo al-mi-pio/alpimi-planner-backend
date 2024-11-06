@@ -28,27 +28,27 @@ namespace AlpimiAPI.Entities.EAuth
         [HttpPost]
         [Route("login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<string>> Login([FromBody] DTO.LoginDTO request)
+        [ProducesResponseType(typeof(ApiErrorResponse), 400)]
+        public async Task<ActionResult<ApiGetResponse<string>>> Login(
+            [FromBody] DTO.LoginDTO request
+        )
         {
             var query = new LoginQuery(request.Login, request.Password);
             try
             {
                 string result = await _mediator.Send(query);
-                if (result == null)
-                {
-                    return NotFound();
-                }
                 var response = new ApiGetResponse<String>(result);
                 return Ok(response);
             }
-            catch (BadHttpRequestException ex)
+            catch (ApiErrorException ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new ApiErrorResponse(400, ex.errors));
             }
             catch (Exception)
             {
-                return BadRequest("TODO make a message");
+                return BadRequest(
+                    new ApiErrorResponse(400, [new ErrorObject("TODO make a message")])
+                );
             }
         }
 
@@ -64,7 +64,8 @@ namespace AlpimiAPI.Entities.EAuth
         [HttpGet]
         [Route("refresh")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<string> Refresh([FromHeader] string Authorization)
+        [ProducesResponseType(typeof(ApiErrorResponse), 401)]
+        public ActionResult<ApiGetResponse<string>> Refresh([FromHeader] string Authorization)
         {
             var query = new RefreshTokenQuery(
                 Privileges.GetUserLoginFromToken(Authorization),

@@ -2,9 +2,13 @@ using System.Reflection;
 using System.Text;
 using AlpimiAPI;
 using AlpimiAPI.Database;
+using AlpimiAPI.Responses;
 using AlpimiAPI.Utilities;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Xunit.Sdk;
 
 var builder = WebApplication.CreateBuilder(args);
 DotNetEnv.Env.Load();
@@ -74,6 +78,21 @@ try
                     Encoding.UTF8.GetBytes(Configuration.GetJWTKey())
                 ),
             };
+            cfg.Events = new Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerEvents
+            {
+                OnChallenge = context =>
+                {
+                    context.HandleResponse();
+
+                    context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                    context.Response.ContentType = "application/json";
+                    var jsonResponse = System.Text.Json.JsonSerializer.Serialize(
+                        new ApiErrorResponse(401, [new ErrorObject("TODO authorize")])
+                    );
+
+                    return context.Response.WriteAsync(jsonResponse);
+                }
+            };
         });
 
     builder.Services.AddSwaggerGen(c =>
@@ -83,6 +102,22 @@ try
         var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
         c.IncludeXmlComments(xmlPath);
     });
+    builder
+        .Services.AddControllers()
+        .ConfigureApiBehaviorOptions(options =>
+        {
+            options.InvalidModelStateResponseFactory = context =>
+            {
+                var errors = context
+                    .ModelState.Values.SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage)
+                    .ToArray();
+
+                return new BadRequestObjectResult(
+                    new ApiErrorResponse(400, [new ErrorObject(errors[0])!])
+                );
+            };
+        });
 
     var app = builder.Build();
 

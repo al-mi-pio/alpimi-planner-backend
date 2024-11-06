@@ -1,6 +1,7 @@
 ﻿using System.Security.Cryptography;
 using AlpimiAPI.Database;
 using AlpimiAPI.Entities.EUser.Queries;
+using AlpimiAPI.Responses;
 using AlpimiAPI.Settings;
 using AlpimiAPI.Utilities;
 using MediatR;
@@ -41,9 +42,10 @@ namespace AlpimiAPI.Entities.EUser.Commands
                 cancellationToken
             );
 
+            List<ErrorObject> errors = new List<ErrorObject>();
             if (user.Value != null)
             {
-                throw new BadHttpRequestException("Login already taken");
+                errors.Add(new ErrorObject("Login already taken"));
             }
 
             var userURL = await _dbService.Get<string>(
@@ -54,27 +56,30 @@ namespace AlpimiAPI.Entities.EUser.Commands
             );
             if (userURL != null)
             {
-                throw new BadHttpRequestException("URL already taken");
+                errors.Add(new ErrorObject("URL already taken"));
             }
 
             if (request.Password.Length < AuthSettings.MinimumPasswordLength)
             {
-                throw new BadHttpRequestException(
-                    "Password cannot be shorter than "
-                        + AuthSettings.MinimumPasswordLength
-                        + " characters"
+                errors.Add(
+                    new ErrorObject(
+                        "Password cannot be shorter than "
+                            + AuthSettings.MinimumPasswordLength
+                            + " characters"
+                    )
                 );
             }
 
             if (request.Password.Length > AuthSettings.MaximumPasswordLength)
             {
-                throw new BadHttpRequestException(
-                    "Password cannot be longer than "
-                        + AuthSettings.MaximumPasswordLength
-                        + " characters"
+                errors.Add(
+                    new ErrorObject(
+                        "Password cannot be longer than "
+                            + AuthSettings.MaximumPasswordLength
+                            + " characters"
+                    )
                 );
             }
-
             RequiredCharacterTypes[]? requiredCharacterTypes = AuthSettings.RequiredCharacters;
             if (requiredCharacterTypes != null)
             {
@@ -82,9 +87,11 @@ namespace AlpimiAPI.Entities.EUser.Commands
                 {
                     if (!request.Password.Any(char.IsUpper))
                     {
-                        throw new BadHttpRequestException(
-                            "Password must contain at least one of the following: "
-                                + string.Join(", ", requiredCharacterTypes)
+                        errors.Add(
+                            new ErrorObject(
+                                "Password must contain at least one of the following: "
+                                    + string.Join(", ", requiredCharacterTypes)
+                            )
                         );
                     }
                 }
@@ -92,9 +99,11 @@ namespace AlpimiAPI.Entities.EUser.Commands
                 {
                     if (!request.Password.Any(char.IsLower))
                     {
-                        throw new BadHttpRequestException(
-                            "Password must contain at least one of the following: "
-                                + string.Join(", ", requiredCharacterTypes)
+                        errors.Add(
+                            new ErrorObject(
+                                "Password must contain at least one of the following: "
+                                    + string.Join(", ", requiredCharacterTypes)
+                            )
                         );
                     }
                 }
@@ -102,9 +111,11 @@ namespace AlpimiAPI.Entities.EUser.Commands
                 {
                     if (!request.Password.Any(char.IsDigit))
                     {
-                        throw new BadHttpRequestException(
-                            "Password must contain at least one of the following: "
-                                + string.Join(", ", requiredCharacterTypes)
+                        errors.Add(
+                            new ErrorObject(
+                                "Password must contain at least one of the following: "
+                                    + string.Join(", ", requiredCharacterTypes)
+                            )
                         );
                     }
                 }
@@ -117,12 +128,19 @@ namespace AlpimiAPI.Entities.EUser.Commands
                         )
                     )
                     {
-                        throw new BadHttpRequestException(
-                            "Password must contain at least one of the following: "
-                                + string.Join(", ", requiredCharacterTypes)
+                        errors.Add(
+                            new ErrorObject(
+                                "Password must contain at least one of the following: "
+                                    + string.Join(", ", requiredCharacterTypes)
+                            )
                         );
                     }
                 }
+            }
+
+            if (errors.Count != 0)
+            {
+                throw new ApiErrorException(errors);
             }
 
             var insertedId = await _dbService.Post<Guid>(

@@ -2,7 +2,9 @@
 using AlpimiAPI.Entities.EAuth;
 using AlpimiAPI.Entities.EAuth.Queries;
 using AlpimiAPI.Entities.EUser;
+using AlpimiAPI.Responses;
 using Moq;
+using Newtonsoft.Json;
 using Xunit;
 
 namespace AlpimiTest.Entities.EAuth.Queries
@@ -69,11 +71,16 @@ namespace AlpimiTest.Entities.EAuth.Queries
 
             var loginHandler = new LoginHandler(_dbService.Object);
 
-            var result = await Assert.ThrowsAsync<BadHttpRequestException>(
+            var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () => await loginHandler.Handle(loginCommand, new CancellationToken())
             );
 
-            Assert.Equal("Invalid login or password", result.Message);
+            Assert.Equal(
+                JsonConvert.SerializeObject(
+                    new ErrorObject[] { new ErrorObject("Invalid login or password") }
+                ),
+                JsonConvert.SerializeObject(result.errors)
+            );
         }
 
         [Fact]
@@ -92,11 +99,16 @@ namespace AlpimiTest.Entities.EAuth.Queries
 
             var loginHandler = new LoginHandler(_dbService.Object);
 
-            var result = await Assert.ThrowsAsync<BadHttpRequestException>(
+            var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () => await loginHandler.Handle(loginCommand, new CancellationToken())
             );
 
-            Assert.Equal("Invalid password", result.Message);
+            Assert.Equal(
+                JsonConvert.SerializeObject(
+                    new ErrorObject[] { new ErrorObject("Invalid password") }
+                ),
+                JsonConvert.SerializeObject(result.errors)
+            );
         }
     }
 }

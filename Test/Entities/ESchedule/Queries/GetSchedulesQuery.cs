@@ -4,6 +4,7 @@ using AlpimiAPI.Entities.ESchedule.Queries;
 using AlpimiAPI.Entities.EUser;
 using AlpimiAPI.Responses;
 using Moq;
+using Newtonsoft.Json;
 using Xunit;
 
 namespace alpimi_planner_backend.Test.Entities.ESchedule.Queries
@@ -111,12 +112,15 @@ namespace alpimi_planner_backend.Test.Entities.ESchedule.Queries
             );
             var getSchedulesHandler = new GetSchedulesHandler(_dbService.Object);
 
-            var result = await Assert.ThrowsAsync<BadHttpRequestException>(
+            var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await getSchedulesHandler.Handle(getSchedulesCommand, new CancellationToken())
             );
 
-            Assert.Equal("Bad PerPage", result.Message);
+            Assert.Equal(
+                JsonConvert.SerializeObject(new ErrorObject[] { new ErrorObject("Bad PerPage") }),
+                JsonConvert.SerializeObject(result.errors)
+            );
         }
 
         [Fact]
@@ -135,12 +139,15 @@ namespace alpimi_planner_backend.Test.Entities.ESchedule.Queries
             );
             var getSchedulesHandler = new GetSchedulesHandler(_dbService.Object);
 
-            var result = await Assert.ThrowsAsync<BadHttpRequestException>(
+            var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await getSchedulesHandler.Handle(getSchedulesCommand, new CancellationToken())
             );
 
-            Assert.Equal("Bad Page", result.Message);
+            Assert.Equal(
+                JsonConvert.SerializeObject(new ErrorObject[] { new ErrorObject("Bad Page") }),
+                JsonConvert.SerializeObject(result.errors)
+            );
         }
 
         [Fact]
@@ -159,12 +166,15 @@ namespace alpimi_planner_backend.Test.Entities.ESchedule.Queries
             );
             var getSchedulesHandler = new GetSchedulesHandler(_dbService.Object);
 
-            var result = await Assert.ThrowsAsync<BadHttpRequestException>(
+            var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await getSchedulesHandler.Handle(getSchedulesCommand, new CancellationToken())
             );
 
-            Assert.Equal("Bad SortBy", result.Message);
+            Assert.Equal(
+                JsonConvert.SerializeObject(new ErrorObject[] { new ErrorObject("Bad SortBy") }),
+                JsonConvert.SerializeObject(result.errors)
+            );
         }
 
         [Fact]
@@ -183,12 +193,15 @@ namespace alpimi_planner_backend.Test.Entities.ESchedule.Queries
             );
             var getSchedulesHandler = new GetSchedulesHandler(_dbService.Object);
 
-            var result = await Assert.ThrowsAsync<BadHttpRequestException>(
+            var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await getSchedulesHandler.Handle(getSchedulesCommand, new CancellationToken())
             );
 
-            Assert.Equal("Bad SortOrder", result.Message);
+            Assert.Equal(
+                JsonConvert.SerializeObject(new ErrorObject[] { new ErrorObject("Bad SortOrder") }),
+                JsonConvert.SerializeObject(result.errors)
+            );
         }
     }
 }

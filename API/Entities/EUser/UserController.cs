@@ -31,8 +31,8 @@ namespace AlpimiAPI.Entities.EUser
         [HttpPost]
         [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 400)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 403)]
         public async Task<ActionResult<ApiGetResponse<Guid>>> Post([FromBody] CreateUserDTO request)
         {
             var command = new CreateUserCommand(
@@ -48,9 +48,9 @@ namespace AlpimiAPI.Entities.EUser
                 var response = new ApiGetResponse<Guid>(result);
                 return Ok(response);
             }
-            catch (BadHttpRequestException ex)
+            catch (ApiErrorException ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new ApiErrorResponse(400, ex.errors));
             }
             catch (Exception)
             {
@@ -66,8 +66,9 @@ namespace AlpimiAPI.Entities.EUser
         /// </remarks>
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 400)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 401)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 404)]
         public async Task<ActionResult<ApiGetResponse<User>>> GetOne(
             [FromRoute] Guid id,
             [FromHeader] string Authorization
@@ -83,14 +84,16 @@ namespace AlpimiAPI.Entities.EUser
 
                 if (result == null)
                 {
-                    return NotFound();
+                    return NotFound(new ApiErrorResponse(404, [new ErrorObject("Not found")]));
                 }
                 var response = new ApiGetResponse<User>(result);
                 return Ok(response);
             }
             catch (Exception)
             {
-                return BadRequest("TODO make a message");
+                return BadRequest(
+                    new ApiErrorResponse(400, [new ErrorObject("TODO make a message")])
+                );
             }
         }
 
@@ -102,8 +105,9 @@ namespace AlpimiAPI.Entities.EUser
         /// </remarks>
         [HttpGet("byLogin/{login}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 400)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 401)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 404)]
         public async Task<ActionResult<ApiGetResponse<User>>> GetOneByLogin(
             [FromRoute] string login,
             [FromHeader] string Authorization
@@ -118,14 +122,16 @@ namespace AlpimiAPI.Entities.EUser
                 User? result = await _mediator.Send(query);
                 if (result == null)
                 {
-                    return NotFound();
+                    return NotFound(new ApiErrorResponse(404, [new ErrorObject("Not found")]));
                 }
                 var response = new ApiGetResponse<User>(result);
                 return Ok(response);
             }
             catch (Exception)
             {
-                return BadRequest("TODO make a message");
+                return BadRequest(
+                    new ApiErrorResponse(400, [new ErrorObject("TODO make a message")])
+                );
             }
         }
 
@@ -139,7 +145,7 @@ namespace AlpimiAPI.Entities.EUser
         [HttpDelete("{id}")]
         [Authorize(Roles = "Admin")]
         [ProducesResponseType(204)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 403)]
         public async Task<ActionResult> Delete(
             [FromRoute] Guid id,
             [FromHeader] string Authorization
@@ -152,9 +158,11 @@ namespace AlpimiAPI.Entities.EUser
 
                 return NoContent();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return BadRequest(ex);
+                return BadRequest(
+                    new ApiErrorResponse(400, [new ErrorObject("TODO make a message")])
+                );
             }
         }
 
@@ -166,8 +174,9 @@ namespace AlpimiAPI.Entities.EUser
         /// </remarks>
         [HttpPatch("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 400)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 401)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 404)]
         public async Task<ActionResult<ApiGetResponse<User>>> Patch(
             [FromBody] UpdateUserDTO request,
             [FromRoute] Guid id,
@@ -189,18 +198,20 @@ namespace AlpimiAPI.Entities.EUser
                 User? result = await _mediator.Send(command);
                 if (result == null)
                 {
-                    return NotFound();
+                    return NotFound(new ApiErrorResponse(404, [new ErrorObject("Not found")]));
                 }
                 var response = new ApiGetResponse<User>(result);
                 return Ok(response);
             }
-            catch (BadHttpRequestException ex)
+            catch (ApiErrorException ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new ApiErrorResponse(400, ex.errors));
             }
             catch (Exception)
             {
-                return BadRequest("TODO make a message");
+                return BadRequest(
+                    new ApiErrorResponse(400, [new ErrorObject("TODO make a message")])
+                );
             }
         }
     }

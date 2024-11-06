@@ -2,6 +2,7 @@
 using AlpimiAPI.Entities.ESchedule.Queries;
 using AlpimiAPI.Entities.EUser;
 using AlpimiAPI.Entities.EUser.Queries;
+using AlpimiAPI.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -46,7 +47,7 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
 
                 if (scheduleName.Value != null)
                 {
-                    throw new BadHttpRequestException("Name already taken");
+                    throw new ApiErrorException([new ErrorObject("Name already taken")]);
                 }
             }
 

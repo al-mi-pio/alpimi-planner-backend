@@ -3,11 +3,12 @@ using AlpimiAPI.Entities.ESchedule.DTO;
 using AlpimiAPI.Entities.ESchedule.Queries;
 using AlpimiAPI.Responses;
 using AlpimiAPI.Utilities;
+using alpimi_planner_backend.API.Locales;
 using alpimi_planner_backend.API.Settings;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Sprache;
+using Microsoft.Extensions.Localization;
 
 namespace AlpimiAPI.Entities.ESchedule
 {
@@ -19,8 +20,13 @@ namespace AlpimiAPI.Entities.ESchedule
     public class ScheduleController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly IStringLocalizer<Errors> _str;
 
-        public ScheduleController(IMediator mediator) => _mediator = mediator;
+        public ScheduleController(IMediator mediator, IStringLocalizer<Errors> str)
+        {
+            _mediator = mediator;
+            _str = str;
+        }
 
         /// <summary>
         /// Creates a Schedule
@@ -58,7 +64,7 @@ namespace AlpimiAPI.Entities.ESchedule
             catch (Exception)
             {
                 return BadRequest(
-                    new ApiErrorResponse(400, [new ErrorObject("TODO make a message")])
+                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError"])])
                 );
             }
         }
@@ -88,7 +94,9 @@ namespace AlpimiAPI.Entities.ESchedule
                 Schedule? result = await _mediator.Send(query);
                 if (result == null)
                 {
-                    return NotFound(new ApiErrorResponse(404, [new ErrorObject("Not found")]));
+                    return NotFound(
+                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "Schedule"])])
+                    );
                 }
                 var response = new ApiGetResponse<Schedule>(result);
 
@@ -97,7 +105,7 @@ namespace AlpimiAPI.Entities.ESchedule
             catch (Exception)
             {
                 return BadRequest(
-                    new ApiErrorResponse(400, [new ErrorObject("TODO make a message")])
+                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError"])])
                 );
             }
         }
@@ -127,7 +135,9 @@ namespace AlpimiAPI.Entities.ESchedule
                 Schedule? result = await _mediator.Send(query);
                 if (result == null)
                 {
-                    return NotFound(new ApiErrorResponse(404, [new ErrorObject("Not found")]));
+                    return NotFound(
+                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "Schedule"])])
+                    );
                 }
                 var response = new ApiGetResponse<Schedule>(result);
                 return Ok(response);
@@ -135,7 +145,7 @@ namespace AlpimiAPI.Entities.ESchedule
             catch (Exception)
             {
                 return BadRequest(
-                    new ApiErrorResponse(400, [new ErrorObject("TODO make a message")])
+                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError"])])
                 );
             }
         }
@@ -166,7 +176,7 @@ namespace AlpimiAPI.Entities.ESchedule
             catch (Exception)
             {
                 return BadRequest(
-                    new ApiErrorResponse(400, [new ErrorObject("TODO make a message")])
+                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError"])])
                 );
             }
         }
@@ -203,7 +213,9 @@ namespace AlpimiAPI.Entities.ESchedule
                 Schedule? result = await _mediator.Send(command);
                 if (result == null)
                 {
-                    return NotFound(new ApiErrorResponse(404, [new ErrorObject("Not found")]));
+                    return NotFound(
+                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "Schedule"])])
+                    );
                 }
                 var response = new ApiGetResponse<Schedule>(result);
                 return Ok(response);
@@ -214,8 +226,8 @@ namespace AlpimiAPI.Entities.ESchedule
             }
             catch (Exception)
             {
-                return NotFound(
-                    new ApiErrorResponse(400, [new ErrorObject("TODO make a message")])
+                return BadRequest(
+                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError"])])
                 );
             }
         }
@@ -261,8 +273,8 @@ namespace AlpimiAPI.Entities.ESchedule
             }
             catch (Exception)
             {
-                return NotFound(
-                    new ApiErrorResponse(400, [new ErrorObject("TODO make a message")])
+                return BadRequest(
+                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError"])])
                 );
             }
         }

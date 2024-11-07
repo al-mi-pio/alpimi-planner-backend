@@ -3,15 +3,23 @@ using AlpimiAPI.Database;
 using AlpimiAPI.Entities.EUser;
 using AlpimiAPI.Entities.EUser.Queries;
 using AlpimiAPI.Utilities;
+using alpimi_planner_backend.API.Locales;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 
 namespace AlpimiAPI
 {
-    public static class AdminInit
+    public class AdminInit
     {
         private static readonly IDbService _dbService = new DbService();
+        private readonly IStringLocalizer<General> _str;
 
-        public static async Task StartupBase()
+        public AdminInit(IStringLocalizer<General> str)
+        {
+            _str = str;
+        }
+
+        public async Task StartupBase()
         {
             string? admins = "1";
 
@@ -24,34 +32,20 @@ namespace AlpimiAPI
             }
             catch (Exception)
             {
-                throw new Exception("Connection String");
+                throw new Exception(_str["connectionError"]);
             }
 
             if (admins == null)
             {
-                Console.Write(
-                    @"
-           _       _           _            _                             
-     /\   | |     (_)         (_)          | |                            
-    /  \  | |_ __  _ _ __ ___  _      _ __ | | __ _ _ __  _ __   ___ _ __ 
-   / /\ \ | | '_ \| | '_ ` _ \| |    | '_ \| |/ _` | '_ \| '_ \ / _ \ '__|
-  / ____ \| | |_) | | | | | | | |    | |_) | | (_| | | | | | | |  __/ |   
- /_/    \_\_| .__/|_|_| |_| |_|_|    | .__/|_|\__,_|_| |_|_| |_|\___|_|   
-            | |                      | |                                  
-            |_|                      |_|                                  
-
-Welcome to Alpimi Planner!
-To start using the API service you need to create an Administrator account first.
-
-"
-                );
+                Console.Write(_str["alpimiLogo"]);
+                Console.WriteLine(_str["welcomeMsg"]);
                 ActionResult<User?> user;
                 string? login;
                 try
                 {
                     do
                     {
-                        System.Console.WriteLine("Login:");
+                        System.Console.WriteLine(_str["login"]);
                         login = Console.ReadLine();
 
                         GetUserByLoginHandler getUserByLoginHandler = new GetUserByLoginHandler(
@@ -74,11 +68,11 @@ To start using the API service you need to create an Administrator account first
                     {
                         if (password != null)
                         {
-                            Console.WriteLine("Paswords don't match, try again\n");
+                            Console.WriteLine(_str["passwordsDontMatch"]);
                         }
-                        Console.WriteLine("Password");
+                        Console.WriteLine(_str["password"]);
                         password = Console.ReadLine();
-                        Console.WriteLine("Repeat Password:");
+                        Console.WriteLine(_str["repeatPassword"]);
                     } while (password != Console.ReadLine() || password == "");
 
                     var userId = await _dbService.Post<Guid>(
@@ -116,7 +110,7 @@ To start using the API service you need to create an Administrator account first
                             + "');",
                         ""
                     );
-                    Console.WriteLine("Success!");
+                    Console.WriteLine(_str["success"]);
                 }
                 catch (Exception)
                 {

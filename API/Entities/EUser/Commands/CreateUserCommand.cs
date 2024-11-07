@@ -4,8 +4,10 @@ using AlpimiAPI.Entities.EUser.Queries;
 using AlpimiAPI.Responses;
 using AlpimiAPI.Settings;
 using AlpimiAPI.Utilities;
+using alpimi_planner_backend.API.Locales;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 
 namespace AlpimiAPI.Entities.EUser.Commands
 {
@@ -20,10 +22,12 @@ namespace AlpimiAPI.Entities.EUser.Commands
     public class CreateUserHandler : IRequestHandler<CreateUserCommand, Guid>
     {
         private readonly IDbService _dbService;
+        private readonly IStringLocalizer<Errors> _str;
 
-        public CreateUserHandler(IDbService dbService)
+        public CreateUserHandler(IDbService dbService, IStringLocalizer<Errors> str)
         {
             _dbService = dbService;
+            _str = str;
         }
 
         public async Task<Guid> Handle(
@@ -45,7 +49,7 @@ namespace AlpimiAPI.Entities.EUser.Commands
             List<ErrorObject> errors = new List<ErrorObject>();
             if (user.Value != null)
             {
-                errors.Add(new ErrorObject("Login already taken"));
+                errors.Add(new ErrorObject(_str["alreadyExists", "User", request.Login]));
             }
 
             var userURL = await _dbService.Get<string>(
@@ -57,27 +61,19 @@ namespace AlpimiAPI.Entities.EUser.Commands
 
             if (userURL != null)
             {
-                errors.Add(new ErrorObject("URL already taken"));
+                errors.Add(new ErrorObject(_str["alreadyExists", "URL", request.CustomURL]));
             }
             if (request.Password.Length < AuthSettings.MinimumPasswordLength)
             {
                 errors.Add(
-                    new ErrorObject(
-                        "Password cannot be shorter than "
-                            + AuthSettings.MinimumPasswordLength
-                            + " characters"
-                    )
+                    new ErrorObject(_str["shortPassword", AuthSettings.MinimumPasswordLength])
                 );
             }
 
             if (request.Password.Length > AuthSettings.MaximumPasswordLength)
             {
                 errors.Add(
-                    new ErrorObject(
-                        "Password cannot be longer than "
-                            + AuthSettings.MaximumPasswordLength
-                            + " characters"
-                    )
+                    new ErrorObject(_str["longPassword", AuthSettings.MaximumPasswordLength])
                 );
             }
             RequiredCharacterTypes[]? requiredCharacterTypes = AuthSettings.RequiredCharacters;
@@ -124,8 +120,7 @@ namespace AlpimiAPI.Entities.EUser.Commands
             {
                 errors.Add(
                     new ErrorObject(
-                        "Password must contain at least one of the following: "
-                            + string.Join(", ", requiredCharacterTypes!)
+                        _str["passwordMustContain", string.Join(", ", requiredCharacterTypes!)]
                     )
                 );
             }

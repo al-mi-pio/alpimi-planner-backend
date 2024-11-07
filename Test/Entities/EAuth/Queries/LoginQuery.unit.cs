@@ -3,6 +3,9 @@ using AlpimiAPI.Entities.EAuth;
 using AlpimiAPI.Entities.EAuth.Queries;
 using AlpimiAPI.Entities.EUser;
 using AlpimiAPI.Responses;
+using AlpimiTest.TestUtilities;
+using alpimi_planner_backend.API.Locales;
+using Microsoft.Extensions.Localization;
 using Moq;
 using Newtonsoft.Json;
 using Xunit;
@@ -38,6 +41,7 @@ namespace AlpimiTest.Entities.EAuth.Queries
         public async Task GivesTokenIfLoginAndPasswordAreCorrect()
         {
             var auth = GetAuthDetails();
+            Mock<IStringLocalizer<Errors>> _str = await ResourceSetup.Setup();
 
             _dbService
                 .Setup(s => s.Get<User>(It.IsAny<string>(), It.IsAny<object>()))
@@ -48,7 +52,7 @@ namespace AlpimiTest.Entities.EAuth.Queries
 
             var loginCommand = new LoginQuery(auth.User.Login, "sssSSS1!");
 
-            var loginHandler = new LoginHandler(_dbService.Object);
+            var loginHandler = new LoginHandler(_dbService.Object, _str.Object);
 
             var result = await loginHandler.Handle(loginCommand, new CancellationToken());
 
@@ -59,6 +63,7 @@ namespace AlpimiTest.Entities.EAuth.Queries
         public async Task ThrowsErrorWhenIncorrectLoginIsGiven()
         {
             var auth = GetAuthDetails();
+            Mock<IStringLocalizer<Errors>> _str = await ResourceSetup.Setup();
 
             _dbService
                 .Setup(s => s.Get<User>(It.IsAny<string>(), It.IsAny<object>()))
@@ -69,7 +74,7 @@ namespace AlpimiTest.Entities.EAuth.Queries
 
             var loginCommand = new LoginQuery("wrongLogin", "sssSSS1!");
 
-            var loginHandler = new LoginHandler(_dbService.Object);
+            var loginHandler = new LoginHandler(_dbService.Object, _str.Object);
 
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () => await loginHandler.Handle(loginCommand, new CancellationToken())
@@ -87,6 +92,7 @@ namespace AlpimiTest.Entities.EAuth.Queries
         public async Task ThrowsErrorWhenIncorrectPasswordIsGiven()
         {
             var auth = GetAuthDetails();
+            Mock<IStringLocalizer<Errors>> _str = await ResourceSetup.Setup();
 
             _dbService
                 .Setup(s => s.Get<User>(It.IsAny<string>(), It.IsAny<object>()))
@@ -97,7 +103,7 @@ namespace AlpimiTest.Entities.EAuth.Queries
 
             var loginCommand = new LoginQuery(auth.User.Login, "wrongPassword");
 
-            var loginHandler = new LoginHandler(_dbService.Object);
+            var loginHandler = new LoginHandler(_dbService.Object, _str.Object);
 
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () => await loginHandler.Handle(loginCommand, new CancellationToken())

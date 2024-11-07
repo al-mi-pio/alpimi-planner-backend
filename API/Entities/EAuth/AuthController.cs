@@ -1,9 +1,11 @@
 ﻿using AlpimiAPI.Entities.EAuth.Queries;
 using AlpimiAPI.Responses;
 using AlpimiAPI.Utilities;
+using alpimi_planner_backend.API.Locales;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 
 namespace AlpimiAPI.Entities.EAuth
 {
@@ -15,7 +17,13 @@ namespace AlpimiAPI.Entities.EAuth
     {
         private readonly IMediator _mediator;
 
-        public AuthController(IMediator mediator) => _mediator = mediator;
+        private readonly IStringLocalizer<Errors> _str;
+
+        public AuthController(IMediator mediator, IStringLocalizer<Errors> str)
+        {
+            _mediator = mediator;
+            _str = str;
+        }
 
         /// <summary>
         /// Returns a JWT token
@@ -47,7 +55,7 @@ namespace AlpimiAPI.Entities.EAuth
             catch (Exception)
             {
                 return BadRequest(
-                    new ApiErrorResponse(400, [new ErrorObject("TODO make a message")])
+                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError"])])
                 );
             }
         }

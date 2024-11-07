@@ -3,6 +3,9 @@ using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Entities.ESchedule.Commands;
 using AlpimiAPI.Entities.EUser;
 using AlpimiAPI.Responses;
+using AlpimiTest.TestUtilities;
+using alpimi_planner_backend.API.Locales;
+using Microsoft.Extensions.Localization;
 using Moq;
 using Newtonsoft.Json;
 using Xunit;
@@ -43,6 +46,7 @@ namespace AlpimiTest.Entities.ESchedule.Commands
         public async Task CreatesSchedule()
         {
             var schedule = GetScheduleDetails();
+            Mock<IStringLocalizer<Errors>> _str = await ResourceSetup.Setup();
 
             _dbService
                 .Setup(s => s.Post<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
@@ -55,7 +59,7 @@ namespace AlpimiTest.Entities.ESchedule.Commands
                 schedule.SchoolHour
             );
 
-            var createScheduleHandler = new CreateScheduleHandler(_dbService.Object);
+            var createScheduleHandler = new CreateScheduleHandler(_dbService.Object, _str.Object);
 
             var result = await createScheduleHandler.Handle(
                 createScheduleCommand,
@@ -69,6 +73,7 @@ namespace AlpimiTest.Entities.ESchedule.Commands
         public async Task ThrowsErrorWheNameIsTaken()
         {
             var schedule = GetScheduleDetails();
+            Mock<IStringLocalizer<Errors>> _str = await ResourceSetup.Setup();
 
             _dbService
                 .Setup(s => s.Post<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
@@ -84,7 +89,7 @@ namespace AlpimiTest.Entities.ESchedule.Commands
                 schedule.SchoolHour
             );
 
-            var createScheduleHandler = new CreateScheduleHandler(_dbService.Object);
+            var createScheduleHandler = new CreateScheduleHandler(_dbService.Object, _str.Object);
 
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
@@ -96,7 +101,10 @@ namespace AlpimiTest.Entities.ESchedule.Commands
 
             Assert.Equal(
                 JsonConvert.SerializeObject(
-                    new ErrorObject[] { new ErrorObject("Name already taken") }
+                    new ErrorObject[]
+                    {
+                        new ErrorObject("There is already a Schedule with the name TakenName")
+                    }
                 ),
                 JsonConvert.SerializeObject(result.errors)
             );

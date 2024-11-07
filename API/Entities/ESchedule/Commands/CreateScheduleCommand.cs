@@ -1,8 +1,10 @@
 ﻿using AlpimiAPI.Database;
 using AlpimiAPI.Entities.ESchedule.Queries;
 using AlpimiAPI.Responses;
+using alpimi_planner_backend.API.Locales;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 
 namespace AlpimiAPI.Entities.ESchedule.Commands
 {
@@ -12,10 +14,12 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
     public class CreateScheduleHandler : IRequestHandler<CreateScheduleCommand, Guid>
     {
         private readonly IDbService _dbService;
+        private readonly IStringLocalizer<Errors> _str;
 
-        public CreateScheduleHandler(IDbService dbService)
+        public CreateScheduleHandler(IDbService dbService, IStringLocalizer<Errors> str)
         {
             _dbService = dbService;
+            _str = str;
         }
 
         public async Task<Guid> Handle(
@@ -38,7 +42,9 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
 
             if (scheduleName.Value != null)
             {
-                throw new ApiErrorException([new ErrorObject("Name already taken")]);
+                throw new ApiErrorException(
+                    [new ErrorObject(_str["alreadyExists", "Schedule", request.Name])]
+                );
             }
 
             var insertedId = await _dbService.Post<Guid>(

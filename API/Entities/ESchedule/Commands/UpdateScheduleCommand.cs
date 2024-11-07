@@ -3,8 +3,10 @@ using AlpimiAPI.Entities.ESchedule.Queries;
 using AlpimiAPI.Entities.EUser;
 using AlpimiAPI.Entities.EUser.Queries;
 using AlpimiAPI.Responses;
+using alpimi_planner_backend.API.Locales;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 
 namespace AlpimiAPI.Entities.ESchedule.Commands
 {
@@ -19,10 +21,12 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
     public class UpdateScheduleHandler : IRequestHandler<UpdateScheduleCommand, Schedule?>
     {
         private readonly IDbService _dbService;
+        private readonly IStringLocalizer<Errors> _str;
 
-        public UpdateScheduleHandler(IDbService dbService)
+        public UpdateScheduleHandler(IDbService dbService, IStringLocalizer<Errors> str)
         {
             _dbService = dbService;
+            _str = str;
         }
 
         public async Task<Schedule?> Handle(
@@ -47,7 +51,9 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
 
                 if (scheduleName.Value != null)
                 {
-                    throw new ApiErrorException([new ErrorObject("Name already taken")]);
+                    throw new ApiErrorException(
+                        [new ErrorObject(_str["alreadyExists", "Schedule", request.Name])]
+                    );
                 }
             }
 
@@ -78,13 +84,15 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
                     break;
             }
 
-            GetUserHandler getUserHandler = new GetUserHandler(_dbService);
-            GetUserQuery getUserQuery = new GetUserQuery(request.FilteredId, new Guid(), "Admin");
-            ActionResult<User?> user = await getUserHandler.Handle(getUserQuery, cancellationToken);
             if (schedule != null)
             {
+                GetUserHandler getUserHandler = new GetUserHandler(_dbService);
+                GetUserQuery getUserQuery = new GetUserQuery(schedule.UserId, new Guid(), "Admin");
+                ActionResult<User?> user = await getUserHandler.Handle(
+                    getUserQuery,
+                    cancellationToken
+                );
                 schedule.User = user.Value!;
-                schedule.UserId = request.FilteredId;
             }
             return schedule;
         }

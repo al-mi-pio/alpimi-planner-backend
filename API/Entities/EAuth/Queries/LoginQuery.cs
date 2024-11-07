@@ -7,8 +7,10 @@ using AlpimiAPI.Entities.EUser;
 using AlpimiAPI.Entities.EUser.Queries;
 using AlpimiAPI.Responses;
 using AlpimiAPI.Utilities;
+using alpimi_planner_backend.API.Locales;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using Microsoft.IdentityModel.Tokens;
 
 namespace AlpimiAPI.Entities.EAuth.Queries
@@ -19,9 +21,12 @@ namespace AlpimiAPI.Entities.EAuth.Queries
     {
         private readonly IDbService _dbService;
 
-        public LoginHandler(IDbService dbService)
+        private readonly IStringLocalizer<Errors> _str;
+
+        public LoginHandler(IDbService dbService, IStringLocalizer<Errors> str)
         {
             _dbService = dbService;
+            _str = str;
         }
 
         public async Task<String> Handle(LoginQuery request, CancellationToken cancellationToken)
@@ -46,7 +51,7 @@ namespace AlpimiAPI.Entities.EAuth.Queries
 
             if (auth == null || user.Value == null)
             {
-                throw new ApiErrorException([new ErrorObject("Invalid login or password")]);
+                throw new ApiErrorException([new ErrorObject(_str["invalidLoginOrPassword"])]);
             }
             auth.User = user.Value;
 
@@ -60,7 +65,7 @@ namespace AlpimiAPI.Entities.EAuth.Queries
 
             if (Convert.ToBase64String(inputHash) != auth.Password)
             {
-                throw new ApiErrorException([new ErrorObject("Invalid password")]);
+                throw new ApiErrorException([new ErrorObject(_str["invalidPassword"])]);
             }
 
             var claims = new List<Claim>()

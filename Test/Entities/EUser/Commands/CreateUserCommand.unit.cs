@@ -3,6 +3,9 @@ using AlpimiAPI.Entities.EUser;
 using AlpimiAPI.Entities.EUser.Commands;
 using AlpimiAPI.Responses;
 using AlpimiAPI.Settings;
+using AlpimiTest.TestUtilities;
+using alpimi_planner_backend.API.Locales;
+using Microsoft.Extensions.Localization;
 using Moq;
 using Newtonsoft.Json;
 using Xunit;
@@ -12,13 +15,14 @@ namespace AlpimiTest.Entities.EUser.Commands
     public class CreateUserCommandUnit
     {
         private readonly Mock<IDbService> _dbService = new();
+        private Mock<IStringLocalizer<Errors>> _str = new();
 
         private User GetUserDetails()
         {
             var user = new User()
             {
                 Id = new Guid(),
-                Login = "marek",
+                Login = "Marek",
                 CustomURL = "44f"
             };
 
@@ -42,7 +46,7 @@ namespace AlpimiTest.Entities.EUser.Commands
                 "RandomPassword!1"
             );
 
-            var createUserHandler = new CreateUserHandler(_dbService.Object);
+            var createUserHandler = new CreateUserHandler(_dbService.Object, _str.Object);
 
             var result = await createUserHandler.Handle(createUserCommand, new CancellationToken());
 
@@ -53,7 +57,7 @@ namespace AlpimiTest.Entities.EUser.Commands
         public async Task ThrowsErrorWhenPasswordIsTooShort()
         {
             var user = GetUserDetails();
-
+            _str = ResourceSetup.Setup();
             _dbService
                 .Setup(s => s.Post<User>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(user);
@@ -66,7 +70,7 @@ namespace AlpimiTest.Entities.EUser.Commands
                 "Rand1!"
             );
 
-            var createUserHandler = new CreateUserHandler(_dbService.Object);
+            var createUserHandler = new CreateUserHandler(_dbService.Object, _str.Object);
 
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
@@ -92,7 +96,7 @@ namespace AlpimiTest.Entities.EUser.Commands
         public async Task ThrowsErrorWhenPasswordIsTooLong()
         {
             var user = GetUserDetails();
-
+            _str = ResourceSetup.Setup();
             _dbService
                 .Setup(s => s.Post<User>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(user);
@@ -105,7 +109,7 @@ namespace AlpimiTest.Entities.EUser.Commands
                 "RandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandom1!"
             );
 
-            var createUserHandler = new CreateUserHandler(_dbService.Object);
+            var createUserHandler = new CreateUserHandler(_dbService.Object, _str.Object);
 
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
@@ -131,7 +135,7 @@ namespace AlpimiTest.Entities.EUser.Commands
         public async Task ThrowsErrorWhenPasswordDosentContainSmallLetters()
         {
             var user = GetUserDetails();
-
+            _str = ResourceSetup.Setup();
             _dbService
                 .Setup(s => s.Post<User>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(user);
@@ -144,7 +148,7 @@ namespace AlpimiTest.Entities.EUser.Commands
                 "RANDOMBIG1!"
             );
 
-            var createUserHandler = new CreateUserHandler(_dbService.Object);
+            var createUserHandler = new CreateUserHandler(_dbService.Object, _str.Object);
 
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
@@ -170,7 +174,7 @@ namespace AlpimiTest.Entities.EUser.Commands
         public async Task ThrowsErrorWhenPasswordDosentContainBigLetters()
         {
             var user = GetUserDetails();
-
+            _str = ResourceSetup.Setup();
             _dbService
                 .Setup(s => s.Post<User>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(user);
@@ -183,7 +187,7 @@ namespace AlpimiTest.Entities.EUser.Commands
                 "randomsmall1!"
             );
 
-            var createUserHandler = new CreateUserHandler(_dbService.Object);
+            var createUserHandler = new CreateUserHandler(_dbService.Object, _str.Object);
 
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
@@ -209,7 +213,7 @@ namespace AlpimiTest.Entities.EUser.Commands
         public async Task ThrowsErrorWhenPasswordDosentContainSymbols()
         {
             var user = GetUserDetails();
-
+            _str = ResourceSetup.Setup();
             _dbService
                 .Setup(s => s.Post<User>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(user);
@@ -222,7 +226,7 @@ namespace AlpimiTest.Entities.EUser.Commands
                 "Randomsmall1"
             );
 
-            var createUserHandler = new CreateUserHandler(_dbService.Object);
+            var createUserHandler = new CreateUserHandler(_dbService.Object, _str.Object);
 
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
@@ -248,7 +252,7 @@ namespace AlpimiTest.Entities.EUser.Commands
         public async Task ThrowsErrorWhenPasswordDosentContainDigits()
         {
             var user = GetUserDetails();
-
+            _str = ResourceSetup.Setup();
             _dbService
                 .Setup(s => s.Post<User>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(user);
@@ -261,7 +265,7 @@ namespace AlpimiTest.Entities.EUser.Commands
                 "Randomsmall!"
             );
 
-            var createUserHandler = new CreateUserHandler(_dbService.Object);
+            var createUserHandler = new CreateUserHandler(_dbService.Object, _str.Object);
 
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
@@ -287,7 +291,7 @@ namespace AlpimiTest.Entities.EUser.Commands
         public async Task ThrowsErrorWhenLoginAlreadyExists()
         {
             var user = GetUserDetails();
-
+            _str = ResourceSetup.Setup();
             _dbService
                 .Setup(s => s.Post<User>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(user);
@@ -303,7 +307,7 @@ namespace AlpimiTest.Entities.EUser.Commands
                 "Randomsmall1!"
             );
 
-            var createUserHandler = new CreateUserHandler(_dbService.Object);
+            var createUserHandler = new CreateUserHandler(_dbService.Object, _str.Object);
 
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
@@ -313,7 +317,10 @@ namespace AlpimiTest.Entities.EUser.Commands
 
             Assert.Equal(
                 JsonConvert.SerializeObject(
-                    new ErrorObject[] { new ErrorObject("Login already taken") }
+                    new ErrorObject[]
+                    {
+                        new ErrorObject("There is already a User with the name Marek")
+                    }
                 ),
                 JsonConvert.SerializeObject(result.errors)
             );
@@ -323,7 +330,7 @@ namespace AlpimiTest.Entities.EUser.Commands
         public async Task ThrowsErrorWhenURLAlreadyExists()
         {
             var user = GetUserDetails();
-
+            _str = ResourceSetup.Setup();
             _dbService
                 .Setup(s => s.Post<User>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(user);
@@ -338,7 +345,7 @@ namespace AlpimiTest.Entities.EUser.Commands
                 "Randomsmall1!"
             );
 
-            var createUserHandler = new CreateUserHandler(_dbService.Object);
+            var createUserHandler = new CreateUserHandler(_dbService.Object, _str.Object);
 
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
@@ -347,7 +354,10 @@ namespace AlpimiTest.Entities.EUser.Commands
 
             Assert.Equal(
                 JsonConvert.SerializeObject(
-                    new ErrorObject[] { new ErrorObject("URL already taken") }
+                    new ErrorObject[]
+                    {
+                        new ErrorObject("There is already a URL with the name 44f")
+                    }
                 ),
                 JsonConvert.SerializeObject(result.errors)
             );
@@ -357,7 +367,7 @@ namespace AlpimiTest.Entities.EUser.Commands
         public async Task ThrowsMultipleErrorMessages()
         {
             var user = GetUserDetails();
-
+            _str = ResourceSetup.Setup();
             _dbService
                 .Setup(s => s.Post<User>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(user);
@@ -370,7 +380,7 @@ namespace AlpimiTest.Entities.EUser.Commands
                 "R1!"
             );
 
-            var createUserHandler = new CreateUserHandler(_dbService.Object);
+            var createUserHandler = new CreateUserHandler(_dbService.Object, _str.Object);
 
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>

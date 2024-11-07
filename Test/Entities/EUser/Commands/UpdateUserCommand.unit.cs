@@ -14,7 +14,6 @@ namespace AlpimiTest.Entities.EUser.Commands
     public class UpdateUserCommandUnit
     {
         private readonly Mock<IDbService> _dbService = new();
-        private Mock<IStringLocalizer<Errors>> _str = new();
 
         private User GetUserDetails()
         {
@@ -32,6 +31,7 @@ namespace AlpimiTest.Entities.EUser.Commands
         public async Task ReturnsUpdatedUserWhenIdIsCorrect()
         {
             var user = GetUserDetails();
+            Mock<IStringLocalizer<Errors>> _str = await ResourceSetup.Setup();
 
             _dbService
                 .Setup(s => s.Update<User>(It.IsAny<string>(), It.IsAny<object>()))
@@ -56,6 +56,7 @@ namespace AlpimiTest.Entities.EUser.Commands
         public async Task ReturnsNullWhenIdIsIncorrect()
         {
             var user = GetUserDetails();
+            Mock<IStringLocalizer<Errors>> _str = await ResourceSetup.Setup();
 
             _dbService
                 .Setup(s => s.Update<User>(It.IsAny<string>(), It.IsAny<object>()))
@@ -80,6 +81,7 @@ namespace AlpimiTest.Entities.EUser.Commands
         public async Task ReturnsNullWhenWrongUserGetsDetails()
         {
             var user = GetUserDetails();
+            Mock<IStringLocalizer<Errors>> _str = await ResourceSetup.Setup();
 
             _dbService
                 .Setup(s => s.Update<User>(It.IsAny<string>(), It.IsAny<object>()))
@@ -104,7 +106,8 @@ namespace AlpimiTest.Entities.EUser.Commands
         public async Task ThrowsErrorWhenURLAlreadyExists()
         {
             var user = GetUserDetails();
-            _str = ResourceSetup.Setup();
+            Mock<IStringLocalizer<Errors>> _str = await ResourceSetup.Setup();
+
             _dbService
                 .Setup(s => s.Update<User>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(user);

@@ -15,7 +15,6 @@ namespace AlpimiTest.Entities.ESchedule.Commands
     public class CreateScheduleCommandUnit
     {
         private readonly Mock<IDbService> _dbService = new();
-        private Mock<IStringLocalizer<Errors>> _str = new();
 
         private User GetUserDetails()
         {
@@ -47,6 +46,7 @@ namespace AlpimiTest.Entities.ESchedule.Commands
         public async Task CreatesSchedule()
         {
             var schedule = GetScheduleDetails();
+            Mock<IStringLocalizer<Errors>> _str = await ResourceSetup.Setup();
 
             _dbService
                 .Setup(s => s.Post<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
@@ -73,7 +73,8 @@ namespace AlpimiTest.Entities.ESchedule.Commands
         public async Task ThrowsErrorWheNameIsTaken()
         {
             var schedule = GetScheduleDetails();
-            _str = ResourceSetup.Setup();
+            Mock<IStringLocalizer<Errors>> _str = await ResourceSetup.Setup();
+
             _dbService
                 .Setup(s => s.Post<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(schedule);

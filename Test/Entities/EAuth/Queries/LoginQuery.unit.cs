@@ -15,7 +15,6 @@ namespace AlpimiTest.Entities.EAuth.Queries
     public class LoginQueryUnit
     {
         private readonly Mock<IDbService> _dbService = new();
-        private Mock<IStringLocalizer<Errors>> _str = new();
 
         private Auth GetAuthDetails()
         {
@@ -42,6 +41,7 @@ namespace AlpimiTest.Entities.EAuth.Queries
         public async Task GivesTokenIfLoginAndPasswordAreCorrect()
         {
             var auth = GetAuthDetails();
+            Mock<IStringLocalizer<Errors>> _str = await ResourceSetup.Setup();
 
             _dbService
                 .Setup(s => s.Get<User>(It.IsAny<string>(), It.IsAny<object>()))
@@ -63,7 +63,8 @@ namespace AlpimiTest.Entities.EAuth.Queries
         public async Task ThrowsErrorWhenIncorrectLoginIsGiven()
         {
             var auth = GetAuthDetails();
-            _str = ResourceSetup.Setup();
+            Mock<IStringLocalizer<Errors>> _str = await ResourceSetup.Setup();
+
             _dbService
                 .Setup(s => s.Get<User>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync((User?)null);
@@ -91,7 +92,8 @@ namespace AlpimiTest.Entities.EAuth.Queries
         public async Task ThrowsErrorWhenIncorrectPasswordIsGiven()
         {
             var auth = GetAuthDetails();
-            _str = ResourceSetup.Setup();
+            Mock<IStringLocalizer<Errors>> _str = await ResourceSetup.Setup();
+
             _dbService
                 .Setup(s => s.Get<User>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(auth.User);

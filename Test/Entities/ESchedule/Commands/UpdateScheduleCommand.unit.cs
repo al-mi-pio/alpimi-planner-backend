@@ -15,7 +15,6 @@ namespace AlpimiTest.Entities.ESchedule.Commands
     public class UpdateScheduleCommandUnit
     {
         private readonly Mock<IDbService> _dbService = new();
-        private Mock<IStringLocalizer<Errors>> _str = new();
 
         private User GetUserDetails()
         {
@@ -47,6 +46,7 @@ namespace AlpimiTest.Entities.ESchedule.Commands
         public async Task ReturnsUpdatedUserWhenIdIsCorrect()
         {
             var schedule = GetScheduleDetails();
+            Mock<IStringLocalizer<Errors>> _str = await ResourceSetup.Setup();
 
             _dbService
                 .Setup(s => s.Update<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
@@ -74,6 +74,7 @@ namespace AlpimiTest.Entities.ESchedule.Commands
         public async Task ReturnsNullWhenIdIsIncorrect()
         {
             var schedule = GetScheduleDetails();
+            Mock<IStringLocalizer<Errors>> _str = await ResourceSetup.Setup();
 
             _dbService
                 .Setup(s => s.Update<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
@@ -101,6 +102,7 @@ namespace AlpimiTest.Entities.ESchedule.Commands
         public async Task ReturnsNullWhenWrongUserGetsDetails()
         {
             var schedule = GetScheduleDetails();
+            Mock<IStringLocalizer<Errors>> _str = await ResourceSetup.Setup();
 
             _dbService
                 .Setup(s => s.Update<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
@@ -128,7 +130,8 @@ namespace AlpimiTest.Entities.ESchedule.Commands
         public async Task ThrowsErrorWhenURLAlreadyExists()
         {
             var schedule = GetScheduleDetails();
-            _str = ResourceSetup.Setup();
+            Mock<IStringLocalizer<Errors>> _str = await ResourceSetup.Setup();
+
             _dbService
                 .Setup(s => s.Update<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(schedule);

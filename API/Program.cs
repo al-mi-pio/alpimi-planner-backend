@@ -1,10 +1,15 @@
+using System.Globalization;
 using System.Reflection;
 using System.Text;
 using AlpimiAPI;
 using AlpimiAPI.Database;
 using AlpimiAPI.Responses;
 using AlpimiAPI.Utilities;
+using alpimi_planner_backend.API.Locales;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Localization.Routing;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
@@ -85,7 +90,7 @@ try
                     context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                     context.Response.ContentType = "application/json";
                     var jsonResponse = System.Text.Json.JsonSerializer.Serialize(
-                        new ApiErrorResponse(401, [new ErrorObject("TODO authorize")])
+                        new ApiErrorResponse(401, [new ErrorObject("You are not authenticated")])
                     );
 
                     return context.Response.WriteAsync(jsonResponse);
@@ -95,7 +100,10 @@ try
                     context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                     context.Response.ContentType = "application/json";
                     var jsonResponse = System.Text.Json.JsonSerializer.Serialize(
-                        new ApiErrorResponse(403, [new ErrorObject("TODO get better role")])
+                        new ApiErrorResponse(
+                            403,
+                            [new ErrorObject("You have no permission to access this resource")]
+                        )
                     );
 
                     return context.Response.WriteAsync(jsonResponse);
@@ -127,14 +135,20 @@ try
             };
         });
 
-    builder.Services.AddLocalization(options =>
+    builder.Services.AddLocalization();
+
+    builder.Services.Configure<RequestLocalizationOptions>(options =>
     {
-        options.ResourcesPath = "Resources";
+        var supportedCultures = new List<CultureInfo>
+        {
+            new CultureInfo("en-US"),
+            new CultureInfo("pl-PL")
+        };
     });
 
     var app = builder.Build();
-
-    await AdminInit.StartupBase();
+    var adminInit = new AdminInit(app.Services.GetService<IStringLocalizer<General>>()!);
+    await adminInit.StartupBase();
 
     //app.UseSwagger();
     app.UseSwagger(c =>

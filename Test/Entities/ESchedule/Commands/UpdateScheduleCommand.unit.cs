@@ -3,6 +3,9 @@ using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Entities.ESchedule.Commands;
 using AlpimiAPI.Entities.EUser;
 using AlpimiAPI.Responses;
+using AlpimiTest.TestUtilities;
+using alpimi_planner_backend.API.Locales;
+using Microsoft.Extensions.Localization;
 using Moq;
 using Newtonsoft.Json;
 using Xunit;
@@ -12,6 +15,7 @@ namespace AlpimiTest.Entities.ESchedule.Commands
     public class UpdateScheduleCommandUnit
     {
         private readonly Mock<IDbService> _dbService = new();
+        private Mock<IStringLocalizer<Errors>> _str = new();
 
         private User GetUserDetails()
         {
@@ -56,7 +60,7 @@ namespace AlpimiTest.Entities.ESchedule.Commands
                 "Admin"
             );
 
-            var updateScheduleHandler = new UpdateScheduleHandler(_dbService.Object);
+            var updateScheduleHandler = new UpdateScheduleHandler(_dbService.Object, _str.Object);
 
             var result = await updateScheduleHandler.Handle(
                 updateScheduleCommand,
@@ -83,7 +87,7 @@ namespace AlpimiTest.Entities.ESchedule.Commands
                 "Admin"
             );
 
-            var updateScheduleHandler = new UpdateScheduleHandler(_dbService.Object);
+            var updateScheduleHandler = new UpdateScheduleHandler(_dbService.Object, _str.Object);
 
             var result = await updateScheduleHandler.Handle(
                 updateScheduleCommand,
@@ -110,7 +114,7 @@ namespace AlpimiTest.Entities.ESchedule.Commands
                 "User"
             );
 
-            var updateScheduleHandler = new UpdateScheduleHandler(_dbService.Object);
+            var updateScheduleHandler = new UpdateScheduleHandler(_dbService.Object, _str.Object);
 
             var result = await updateScheduleHandler.Handle(
                 updateScheduleCommand,
@@ -124,7 +128,7 @@ namespace AlpimiTest.Entities.ESchedule.Commands
         public async Task ThrowsErrorWhenURLAlreadyExists()
         {
             var schedule = GetScheduleDetails();
-
+            _str = ResourceSetup.Setup();
             _dbService
                 .Setup(s => s.Update<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(schedule);
@@ -140,7 +144,7 @@ namespace AlpimiTest.Entities.ESchedule.Commands
                 "Admin"
             );
 
-            var updateScheduleHandler = new UpdateScheduleHandler(_dbService.Object);
+            var updateScheduleHandler = new UpdateScheduleHandler(_dbService.Object, _str.Object);
 
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
@@ -152,7 +156,10 @@ namespace AlpimiTest.Entities.ESchedule.Commands
 
             Assert.Equal(
                 JsonConvert.SerializeObject(
-                    new ErrorObject[] { new ErrorObject("Name already taken") }
+                    new ErrorObject[]
+                    {
+                        new ErrorObject("There is already a Schedule with the name Plan_Marka")
+                    }
                 ),
                 JsonConvert.SerializeObject(result.errors)
             );

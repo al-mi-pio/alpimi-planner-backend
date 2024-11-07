@@ -1,6 +1,8 @@
 ﻿using AlpimiAPI.Database;
 using AlpimiAPI.Responses;
+using alpimi_planner_backend.API.Locales;
 using MediatR;
+using Microsoft.Extensions.Localization;
 
 namespace AlpimiAPI.Entities.EUser.Commands
 {
@@ -15,10 +17,12 @@ namespace AlpimiAPI.Entities.EUser.Commands
     public class UpdateUserHandler : IRequestHandler<UpdateUserCommand, User?>
     {
         private readonly IDbService _dbService;
+        private readonly IStringLocalizer<Errors> _str;
 
-        public UpdateUserHandler(IDbService dbService)
+        public UpdateUserHandler(IDbService dbService, IStringLocalizer<Errors> str)
         {
             _dbService = dbService;
+            _str = str;
         }
 
         public async Task<User?> Handle(
@@ -36,7 +40,9 @@ namespace AlpimiAPI.Entities.EUser.Commands
                 );
                 if (userURL != null)
                 {
-                    throw new ApiErrorException([new ErrorObject("URL taken")]);
+                    throw new ApiErrorException(
+                        [new ErrorObject(_str["alreadyExists", "URL", request.CustomURL])]
+                    );
                 }
             }
             User? user;

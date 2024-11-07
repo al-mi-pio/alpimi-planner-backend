@@ -3,9 +3,11 @@ using AlpimiAPI.Entities.EUser.DTO;
 using AlpimiAPI.Entities.EUser.Queries;
 using AlpimiAPI.Responses;
 using AlpimiAPI.Utilities;
+using alpimi_planner_backend.API.Locales;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using Sprache;
 
 namespace AlpimiAPI.Entities.EUser
@@ -19,7 +21,13 @@ namespace AlpimiAPI.Entities.EUser
     {
         private readonly IMediator _mediator;
 
-        public UserController(IMediator mediator) => _mediator = mediator;
+        private readonly IStringLocalizer<Errors> _str;
+
+        public UserController(IMediator mediator, IStringLocalizer<Errors> str)
+        {
+            _mediator = mediator;
+            _str = str;
+        }
 
         /// <summary>
         /// Creates a User
@@ -54,7 +62,9 @@ namespace AlpimiAPI.Entities.EUser
             }
             catch (Exception)
             {
-                return BadRequest("TODO make a message");
+                return BadRequest(
+                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError"])])
+                );
             }
         }
 
@@ -84,7 +94,9 @@ namespace AlpimiAPI.Entities.EUser
 
                 if (result == null)
                 {
-                    return NotFound(new ApiErrorResponse(404, [new ErrorObject("Not found")]));
+                    return NotFound(
+                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "User"])])
+                    );
                 }
                 var response = new ApiGetResponse<User>(result);
                 return Ok(response);
@@ -92,7 +104,7 @@ namespace AlpimiAPI.Entities.EUser
             catch (Exception)
             {
                 return BadRequest(
-                    new ApiErrorResponse(400, [new ErrorObject("TODO make a message")])
+                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError"])])
                 );
             }
         }
@@ -122,7 +134,9 @@ namespace AlpimiAPI.Entities.EUser
                 User? result = await _mediator.Send(query);
                 if (result == null)
                 {
-                    return NotFound(new ApiErrorResponse(404, [new ErrorObject("Not found")]));
+                    return NotFound(
+                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "User"])])
+                    );
                 }
                 var response = new ApiGetResponse<User>(result);
                 return Ok(response);
@@ -130,7 +144,7 @@ namespace AlpimiAPI.Entities.EUser
             catch (Exception)
             {
                 return BadRequest(
-                    new ApiErrorResponse(400, [new ErrorObject("TODO make a message")])
+                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError"])])
                 );
             }
         }
@@ -161,7 +175,7 @@ namespace AlpimiAPI.Entities.EUser
             catch (Exception)
             {
                 return BadRequest(
-                    new ApiErrorResponse(400, [new ErrorObject("TODO make a message")])
+                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError"])])
                 );
             }
         }
@@ -198,7 +212,9 @@ namespace AlpimiAPI.Entities.EUser
                 User? result = await _mediator.Send(command);
                 if (result == null)
                 {
-                    return NotFound(new ApiErrorResponse(404, [new ErrorObject("Not found")]));
+                    return NotFound(
+                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "User"])])
+                    );
                 }
                 var response = new ApiGetResponse<User>(result);
                 return Ok(response);
@@ -210,7 +226,7 @@ namespace AlpimiAPI.Entities.EUser
             catch (Exception)
             {
                 return BadRequest(
-                    new ApiErrorResponse(400, [new ErrorObject("TODO make a message")])
+                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError"])])
                 );
             }
         }

@@ -5,10 +5,8 @@ using AlpimiAPI.Database;
 using AlpimiAPI.Responses;
 using AlpimiAPI.Utilities;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Xunit.Sdk;
 
 var builder = WebApplication.CreateBuilder(args);
 DotNetEnv.Env.Load();
@@ -91,6 +89,16 @@ try
                     );
 
                     return context.Response.WriteAsync(jsonResponse);
+                },
+                OnForbidden = context =>
+                {
+                    context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                    context.Response.ContentType = "application/json";
+                    var jsonResponse = System.Text.Json.JsonSerializer.Serialize(
+                        new ApiErrorResponse(403, [new ErrorObject("TODO get better role")])
+                    );
+
+                    return context.Response.WriteAsync(jsonResponse);
                 }
             };
         });
@@ -118,6 +126,11 @@ try
                 );
             };
         });
+
+    builder.Services.AddLocalization(options =>
+    {
+        options.ResourcesPath = "Resources";
+    });
 
     var app = builder.Build();
 

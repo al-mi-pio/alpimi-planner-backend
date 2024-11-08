@@ -16,36 +16,10 @@ namespace AlpimiTest.Entities.ESchedule.Commands
     {
         private readonly Mock<IDbService> _dbService = new();
 
-        private User GetUserDetails()
-        {
-            var user = new User()
-            {
-                Id = new Guid(),
-                Login = "marek",
-                CustomURL = "44f"
-            };
-
-            return user;
-        }
-
-        private Schedule GetScheduleDetails()
-        {
-            var schedule = new Schedule()
-            {
-                Id = new Guid(),
-                Name = "Plan_Marka",
-                SchoolHour = 60,
-                UserId = new Guid(),
-                User = GetUserDetails()
-            };
-
-            return schedule;
-        }
-
         [Fact]
         public async Task ReturnsUpdatedUserWhenIdIsCorrect()
         {
-            var schedule = GetScheduleDetails();
+            var schedule = MockData.GetScheduleDetails();
             Mock<IStringLocalizer<Errors>> _str = await ResourceSetup.Setup();
 
             _dbService
@@ -73,7 +47,7 @@ namespace AlpimiTest.Entities.ESchedule.Commands
         [Fact]
         public async Task ReturnsNullWhenIdIsIncorrect()
         {
-            var schedule = GetScheduleDetails();
+            var schedule = MockData.GetScheduleDetails();
             Mock<IStringLocalizer<Errors>> _str = await ResourceSetup.Setup();
 
             _dbService
@@ -101,7 +75,7 @@ namespace AlpimiTest.Entities.ESchedule.Commands
         [Fact]
         public async Task ReturnsNullWhenWrongUserGetsDetails()
         {
-            var schedule = GetScheduleDetails();
+            var schedule = MockData.GetScheduleDetails();
             Mock<IStringLocalizer<Errors>> _str = await ResourceSetup.Setup();
 
             _dbService
@@ -129,7 +103,7 @@ namespace AlpimiTest.Entities.ESchedule.Commands
         [Fact]
         public async Task ThrowsErrorWhenURLAlreadyExists()
         {
-            var schedule = GetScheduleDetails();
+            var schedule = MockData.GetScheduleDetails();
             Mock<IStringLocalizer<Errors>> _str = await ResourceSetup.Setup();
 
             _dbService

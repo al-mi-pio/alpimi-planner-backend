@@ -15,22 +15,10 @@ namespace AlpimiTest.Entities.EUser.Commands
     {
         private readonly Mock<IDbService> _dbService = new();
 
-        private User GetUserDetails()
-        {
-            var user = new User()
-            {
-                Id = new Guid(),
-                Login = "marek",
-                CustomURL = "44f"
-            };
-
-            return user;
-        }
-
         [Fact]
         public async Task ReturnsUpdatedUserWhenIdIsCorrect()
         {
-            var user = GetUserDetails();
+            var user = MockData.GetUserDetails();
             Mock<IStringLocalizer<Errors>> _str = await ResourceSetup.Setup();
 
             _dbService
@@ -55,7 +43,7 @@ namespace AlpimiTest.Entities.EUser.Commands
         [Fact]
         public async Task ReturnsNullWhenIdIsIncorrect()
         {
-            var user = GetUserDetails();
+            var user = MockData.GetUserDetails();
             Mock<IStringLocalizer<Errors>> _str = await ResourceSetup.Setup();
 
             _dbService
@@ -80,7 +68,7 @@ namespace AlpimiTest.Entities.EUser.Commands
         [Fact]
         public async Task ReturnsNullWhenWrongUserGetsDetails()
         {
-            var user = GetUserDetails();
+            var user = MockData.GetUserDetails();
             Mock<IStringLocalizer<Errors>> _str = await ResourceSetup.Setup();
 
             _dbService
@@ -105,7 +93,7 @@ namespace AlpimiTest.Entities.EUser.Commands
         [Fact]
         public async Task ThrowsErrorWhenURLAlreadyExists()
         {
-            var user = GetUserDetails();
+            var user = MockData.GetUserDetails();
             Mock<IStringLocalizer<Errors>> _str = await ResourceSetup.Setup();
 
             _dbService

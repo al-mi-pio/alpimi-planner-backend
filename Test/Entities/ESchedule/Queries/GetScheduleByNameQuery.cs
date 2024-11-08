@@ -2,6 +2,7 @@
 using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Entities.ESchedule.Queries;
 using AlpimiAPI.Entities.EUser;
+using AlpimiTest.TestUtilities;
 using Moq;
 using Xunit;
 
@@ -11,36 +12,10 @@ namespace alpimi_planner_backend.Test.Entities.ESchedule.Queries
     {
         private readonly Mock<IDbService> _dbService = new();
 
-        private User GetUserDetails()
-        {
-            var user = new User()
-            {
-                Id = new Guid(),
-                Login = "marek",
-                CustomURL = "44f"
-            };
-
-            return user;
-        }
-
-        private Schedule GetScheduleDetails()
-        {
-            var schedule = new Schedule()
-            {
-                Id = new Guid(),
-                Name = "Plan_Marka",
-                SchoolHour = 60,
-                UserId = new Guid(),
-                User = GetUserDetails()
-            };
-
-            return schedule;
-        }
-
         [Fact]
         public async Task GetsScheduleWhenNameIsCorrect()
         {
-            var schedule = GetScheduleDetails();
+            var schedule = MockData.GetScheduleDetails();
 
             _dbService
                 .Setup(s => s.Get<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
@@ -65,7 +40,7 @@ namespace alpimi_planner_backend.Test.Entities.ESchedule.Queries
         [Fact]
         public async Task ReturnsNullWhenNameIsIncorrect()
         {
-            var schedule = GetScheduleDetails();
+            var schedule = MockData.GetScheduleDetails();
 
             _dbService
                 .Setup(s => s.Get<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
@@ -90,7 +65,7 @@ namespace alpimi_planner_backend.Test.Entities.ESchedule.Queries
         [Fact]
         public async Task ReturnsNullWhenWrongUserGetsDetails()
         {
-            var schedule = GetScheduleDetails();
+            var schedule = MockData.GetScheduleDetails();
 
             _dbService
                 .Setup(s => s.Get<Schedule>(It.IsAny<string>(), It.IsAny<object>()))

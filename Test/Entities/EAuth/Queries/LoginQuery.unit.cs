@@ -4,6 +4,7 @@ using AlpimiAPI.Entities.EAuth.Queries;
 using AlpimiAPI.Entities.EUser;
 using AlpimiAPI.Responses;
 using AlpimiTest.TestUtilities;
+using AlpimiTest.TestUtilities;
 using alpimi_planner_backend.API.Locales;
 using Microsoft.Extensions.Localization;
 using Moq;
@@ -16,31 +17,10 @@ namespace AlpimiTest.Entities.EAuth.Queries
     {
         private readonly Mock<IDbService> _dbService = new();
 
-        private Auth GetAuthDetails()
-        {
-            var user = new User()
-            {
-                Id = new Guid(),
-                Login = "SaltFinal",
-                CustomURL = "44f"
-            };
-            var auth = new Auth()
-            {
-                Password = "RPhZLnao+2lWH4JvwGZRLI/14QI=",
-                Id = new Guid(),
-                Salt = "zr+8L0dX4IBdGUgvHDM1Zw==",
-                Role = "Admin",
-                UserId = user.Id,
-                User = user
-            };
-
-            return auth;
-        }
-
         [Fact]
         public async Task GivesTokenIfLoginAndPasswordAreCorrect()
         {
-            var auth = GetAuthDetails();
+            var auth = MockData.GetAuthDetails();
             Mock<IStringLocalizer<Errors>> _str = await ResourceSetup.Setup();
 
             _dbService
@@ -62,7 +42,7 @@ namespace AlpimiTest.Entities.EAuth.Queries
         [Fact]
         public async Task ThrowsErrorWhenIncorrectLoginIsGiven()
         {
-            var auth = GetAuthDetails();
+            var auth = MockData.GetAuthDetails();
             Mock<IStringLocalizer<Errors>> _str = await ResourceSetup.Setup();
 
             _dbService
@@ -91,7 +71,7 @@ namespace AlpimiTest.Entities.EAuth.Queries
         [Fact]
         public async Task ThrowsErrorWhenIncorrectPasswordIsGiven()
         {
-            var auth = GetAuthDetails();
+            var auth = MockData.GetAuthDetails();
             Mock<IStringLocalizer<Errors>> _str = await ResourceSetup.Setup();
 
             _dbService

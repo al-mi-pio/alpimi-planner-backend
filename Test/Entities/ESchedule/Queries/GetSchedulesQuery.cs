@@ -3,6 +3,7 @@ using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Entities.ESchedule.Queries;
 using AlpimiAPI.Entities.EUser;
 using AlpimiAPI.Responses;
+using AlpimiTest.TestUtilities;
 using Moq;
 using Newtonsoft.Json;
 using Xunit;
@@ -13,44 +14,10 @@ namespace alpimi_planner_backend.Test.Entities.ESchedule.Queries
     {
         private readonly Mock<IDbService> _dbService = new();
 
-        private User GetUserDetails()
-        {
-            var user = new User()
-            {
-                Id = new Guid(),
-                Login = "marek",
-                CustomURL = "44f"
-            };
-
-            return user;
-        }
-
-        private IEnumerable<Schedule> GetSchedulesDetails()
-        {
-            var schedule1 = new Schedule()
-            {
-                Id = new Guid(),
-                Name = "Plan_Marka",
-                SchoolHour = 60,
-                UserId = new Guid(),
-                User = GetUserDetails()
-            };
-            var schedule2 = new Schedule()
-            {
-                Id = new Guid(),
-                Name = "Plan_Marka",
-                SchoolHour = 60,
-                UserId = new Guid(),
-                User = GetUserDetails()
-            };
-
-            return [schedule1, schedule2];
-        }
-
         [Fact]
         public async Task GetsSchedules()
         {
-            var schedules = GetSchedulesDetails();
+            var schedules = MockData.GetSchedulesDetails();
 
             _dbService
                 .Setup(s => s.GetAll<Schedule>(It.IsAny<string>(), It.IsAny<object>()))

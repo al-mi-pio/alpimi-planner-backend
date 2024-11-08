@@ -1,6 +1,7 @@
 ﻿using AlpimiAPI.Database;
 using AlpimiAPI.Entities.EUser;
 using AlpimiAPI.Entities.EUser.Queries;
+using AlpimiTest.TestUtilities;
 using Moq;
 using Xunit;
 
@@ -10,22 +11,10 @@ namespace AlpimiTest.Entities.WUser.Queres
     {
         private readonly Mock<IDbService> _dbService = new();
 
-        private User GetUserDetails()
-        {
-            var user = new User()
-            {
-                Id = new Guid(),
-                Login = "marek",
-                CustomURL = "44f"
-            };
-
-            return user;
-        }
-
         [Fact]
         public async Task GetsUserWhenIdIsCorrect()
         {
-            var user = GetUserDetails();
+            var user = MockData.GetUserDetails();
 
             _dbService
                 .Setup(s => s.Get<User>(It.IsAny<string>(), It.IsAny<object>()))
@@ -43,7 +32,7 @@ namespace AlpimiTest.Entities.WUser.Queres
         [Fact]
         public async Task ReturnsNullWhenIdIsIncorrect()
         {
-            var user = GetUserDetails();
+            var user = MockData.GetUserDetails();
 
             _dbService
                 .Setup(s => s.Get<User>(It.IsAny<string>(), It.IsAny<object>()))
@@ -61,7 +50,7 @@ namespace AlpimiTest.Entities.WUser.Queres
         [Fact]
         public async Task ReturnsNullWhenWrongUserGetsDetails()
         {
-            var user = GetUserDetails();
+            var user = MockData.GetUserDetails();
 
             _dbService
                 .Setup(s => s.Get<User>(It.IsAny<string>(), It.IsAny<object>()))

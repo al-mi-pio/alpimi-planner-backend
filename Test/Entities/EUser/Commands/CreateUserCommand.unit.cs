@@ -16,22 +16,10 @@ namespace AlpimiTest.Entities.EUser.Commands
     {
         private readonly Mock<IDbService> _dbService = new();
 
-        private User GetUserDetails()
-        {
-            var user = new User()
-            {
-                Id = new Guid(),
-                Login = "Marek",
-                CustomURL = "44f"
-            };
-
-            return user;
-        }
-
         [Fact]
         public async Task CreatesUserWhenPaswordIsCorrect()
         {
-            var user = GetUserDetails();
+            var user = MockData.GetUserDetails();
             Mock<IStringLocalizer<Errors>> _str = await ResourceSetup.Setup();
             _dbService
                 .Setup(s => s.Post<User>(It.IsAny<string>(), It.IsAny<object>()))
@@ -55,7 +43,7 @@ namespace AlpimiTest.Entities.EUser.Commands
         [Fact]
         public async Task ThrowsErrorWhenPasswordIsTooShort()
         {
-            var user = GetUserDetails();
+            var user = MockData.GetUserDetails();
             Mock<IStringLocalizer<Errors>> _str = await ResourceSetup.Setup();
 
             _dbService
@@ -95,7 +83,7 @@ namespace AlpimiTest.Entities.EUser.Commands
         [Fact]
         public async Task ThrowsErrorWhenPasswordIsTooLong()
         {
-            var user = GetUserDetails();
+            var user = MockData.GetUserDetails();
             Mock<IStringLocalizer<Errors>> _str = await ResourceSetup.Setup();
 
             _dbService
@@ -135,7 +123,7 @@ namespace AlpimiTest.Entities.EUser.Commands
         [Fact]
         public async Task ThrowsErrorWhenPasswordDosentContainSmallLetters()
         {
-            var user = GetUserDetails();
+            var user = MockData.GetUserDetails();
             Mock<IStringLocalizer<Errors>> _str = await ResourceSetup.Setup();
 
             _dbService
@@ -175,7 +163,7 @@ namespace AlpimiTest.Entities.EUser.Commands
         [Fact]
         public async Task ThrowsErrorWhenPasswordDosentContainBigLetters()
         {
-            var user = GetUserDetails();
+            var user = MockData.GetUserDetails();
             Mock<IStringLocalizer<Errors>> _str = await ResourceSetup.Setup();
 
             _dbService
@@ -215,7 +203,7 @@ namespace AlpimiTest.Entities.EUser.Commands
         [Fact]
         public async Task ThrowsErrorWhenPasswordDosentContainSymbols()
         {
-            var user = GetUserDetails();
+            var user = MockData.GetUserDetails();
             Mock<IStringLocalizer<Errors>> _str = await ResourceSetup.Setup();
 
             _dbService
@@ -255,7 +243,7 @@ namespace AlpimiTest.Entities.EUser.Commands
         [Fact]
         public async Task ThrowsErrorWhenPasswordDosentContainDigits()
         {
-            var user = GetUserDetails();
+            var user = MockData.GetUserDetails();
             Mock<IStringLocalizer<Errors>> _str = await ResourceSetup.Setup();
 
             _dbService
@@ -295,7 +283,7 @@ namespace AlpimiTest.Entities.EUser.Commands
         [Fact]
         public async Task ThrowsErrorWhenLoginAlreadyExists()
         {
-            var user = GetUserDetails();
+            var user = MockData.GetUserDetails();
             Mock<IStringLocalizer<Errors>> _str = await ResourceSetup.Setup();
 
             _dbService
@@ -335,7 +323,7 @@ namespace AlpimiTest.Entities.EUser.Commands
         [Fact]
         public async Task ThrowsErrorWhenURLAlreadyExists()
         {
-            var user = GetUserDetails();
+            var user = MockData.GetUserDetails();
             Mock<IStringLocalizer<Errors>> _str = await ResourceSetup.Setup();
 
             _dbService
@@ -373,7 +361,7 @@ namespace AlpimiTest.Entities.EUser.Commands
         [Fact]
         public async Task ThrowsMultipleErrorMessages()
         {
-            var user = GetUserDetails();
+            var user = MockData.GetUserDetails();
             Mock<IStringLocalizer<Errors>> _str = await ResourceSetup.Setup();
 
             _dbService

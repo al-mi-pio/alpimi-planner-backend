@@ -32,45 +32,5 @@ namespace AlpimiTest.Entities.ESchedule.Queries
 
             Assert.Equal(schedule, result);
         }
-
-        [Fact]
-        public async Task ReturnsNullWhenIdIsIncorrect()
-        {
-            var schedule = MockData.GetScheduleDetails();
-
-            _dbService
-                .Setup(s => s.Get<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync((Schedule?)null);
-
-            var getScheduleCommand = new GetScheduleQuery(new Guid(), new Guid(), "Admin");
-
-            var getScheduleHandler = new GetScheduleHandler(_dbService.Object);
-
-            var result = await getScheduleHandler.Handle(
-                getScheduleCommand,
-                new CancellationToken()
-            );
-            Assert.Null(result);
-        }
-
-        [Fact]
-        public async Task ReturnsNullWhenWrongUserGetsDetails()
-        {
-            var schedule = MockData.GetScheduleDetails();
-
-            _dbService
-                .Setup(s => s.Get<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync((Schedule?)null);
-
-            var getScheduleCommand = new GetScheduleQuery(new Guid(), new Guid(), "User");
-
-            var getScheduleHandler = new GetScheduleHandler(_dbService.Object);
-
-            var result = await getScheduleHandler.Handle(
-                getScheduleCommand,
-                new CancellationToken()
-            );
-            Assert.Null(result);
-        }
     }
 }

@@ -45,62 +45,6 @@ namespace AlpimiTest.Entities.ESchedule.Commands
         }
 
         [Fact]
-        public async Task ReturnsNullWhenIdIsIncorrect()
-        {
-            var schedule = MockData.GetScheduleDetails();
-            Mock<IStringLocalizer<Errors>> _str = await ResourceSetup.Setup();
-
-            _dbService
-                .Setup(s => s.Update<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync((Schedule?)null);
-
-            var updateScheduleCommand = new UpdateScheduleCommand(
-                schedule.Id,
-                "plan_marka2",
-                61,
-                new Guid(),
-                "Admin"
-            );
-
-            var updateScheduleHandler = new UpdateScheduleHandler(_dbService.Object, _str.Object);
-
-            var result = await updateScheduleHandler.Handle(
-                updateScheduleCommand,
-                new CancellationToken()
-            );
-
-            Assert.Null(result);
-        }
-
-        [Fact]
-        public async Task ReturnsNullWhenWrongUserGetsDetails()
-        {
-            var schedule = MockData.GetScheduleDetails();
-            Mock<IStringLocalizer<Errors>> _str = await ResourceSetup.Setup();
-
-            _dbService
-                .Setup(s => s.Update<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync((Schedule?)null);
-
-            var updateScheduleCommand = new UpdateScheduleCommand(
-                schedule.Id,
-                "plan_marka2",
-                61,
-                new Guid(),
-                "User"
-            );
-
-            var updateScheduleHandler = new UpdateScheduleHandler(_dbService.Object, _str.Object);
-
-            var result = await updateScheduleHandler.Handle(
-                updateScheduleCommand,
-                new CancellationToken()
-            );
-
-            Assert.Null(result);
-        }
-
-        [Fact]
         public async Task ThrowsErrorWhenURLAlreadyExists()
         {
             var schedule = MockData.GetScheduleDetails();

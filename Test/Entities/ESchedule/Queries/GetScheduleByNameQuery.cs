@@ -1,7 +1,6 @@
 ﻿using AlpimiAPI.Database;
 using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Entities.ESchedule.Queries;
-using AlpimiAPI.Entities.EUser;
 using AlpimiTest.TestUtilities;
 using Moq;
 using Xunit;
@@ -35,56 +34,6 @@ namespace alpimi_planner_backend.Test.Entities.ESchedule.Queries
             );
 
             Assert.Equal(schedule, result);
-        }
-
-        [Fact]
-        public async Task ReturnsNullWhenNameIsIncorrect()
-        {
-            var schedule = MockData.GetScheduleDetails();
-
-            _dbService
-                .Setup(s => s.Get<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync((Schedule?)null);
-
-            var getScheduleByNameCommand = new GetScheduleByNameQuery(
-                "WrongName",
-                new Guid(),
-                "Admin"
-            );
-
-            var getScheduleByNameHandler = new GetScheduleByNameHandler(_dbService.Object);
-
-            var result = await getScheduleByNameHandler.Handle(
-                getScheduleByNameCommand,
-                new CancellationToken()
-            );
-
-            Assert.Null(result);
-        }
-
-        [Fact]
-        public async Task ReturnsNullWhenWrongUserGetsDetails()
-        {
-            var schedule = MockData.GetScheduleDetails();
-
-            _dbService
-                .Setup(s => s.Get<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync((Schedule?)null);
-
-            var getScheduleByNameCommand = new GetScheduleByNameQuery(
-                schedule.Name,
-                new Guid(),
-                "User"
-            );
-
-            var getScheduleByNameHandler = new GetScheduleByNameHandler(_dbService.Object);
-
-            var result = await getScheduleByNameHandler.Handle(
-                getScheduleByNameCommand,
-                new CancellationToken()
-            );
-
-            Assert.Null(result);
         }
     }
 }

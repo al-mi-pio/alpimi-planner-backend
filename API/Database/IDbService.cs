@@ -1,4 +1,6 @@
-﻿namespace AlpimiAPI.Database
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace AlpimiAPI.Database
 {
     public interface IDbService
     {

@@ -4,7 +4,6 @@ using AlpimiAPI.Entities.EAuth.Queries;
 using AlpimiAPI.Entities.EUser;
 using AlpimiAPI.Responses;
 using AlpimiTest.TestUtilities;
-using AlpimiTest.TestUtilities;
 using alpimi_planner_backend.API.Locales;
 using Microsoft.Extensions.Localization;
 using Moq;

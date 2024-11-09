@@ -80,11 +80,20 @@ namespace AlpimiAPI.Entities.EAuth
                 Privileges.GetUserIdFromToken(Authorization),
                 Privileges.GetUserRoleFromToken(Authorization)
             );
-            var refreshTokenHandler = new RefreshTokenHandler();
-            string result = refreshTokenHandler.Handle(query, new CancellationToken());
+            try
+            {
+                var refreshTokenHandler = new RefreshTokenHandler();
+                string result = refreshTokenHandler.Handle(query, new CancellationToken());
 
-            var response = new ApiGetResponse<String>(result);
-            return Ok(response);
+                var response = new ApiGetResponse<String>(result);
+                return Ok(response);
+            }
+            catch (Exception)
+            {
+                return BadRequest(
+                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError"])])
+                );
+            }
         }
     }
 }

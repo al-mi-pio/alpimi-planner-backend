@@ -1,6 +1,8 @@
 ﻿using AlpimiAPI.Entities.EAuth;
 using AlpimiAPI.Entities.ESchedule;
+using AlpimiAPI.Entities.ESchedule.DTO;
 using AlpimiAPI.Entities.EUser;
+using AlpimiAPI.Entities.EUser.DTO;
 
 namespace AlpimiTest.TestUtilities
 {
@@ -59,6 +61,52 @@ namespace AlpimiTest.TestUtilities
             };
 
             return auth;
+        }
+
+        public static CreateUserDTO GetCreateUserDTODetails()
+        {
+            var user = GetUserDetails();
+            return new CreateUserDTO()
+            {
+                Login = user.Login,
+                CustomURL = user.CustomURL!,
+                Password = "sssSSS1!"
+            };
+        }
+
+        public static UpdateUserDTO GetUpdateUserDTODetails()
+        {
+            return new UpdateUserDTO() { Login = "Updated_Marek", CustomURL = "Updated_URL" };
+        }
+
+        public static CreateScheduleDTO GetCreateScheduleDTODetails()
+        {
+            var schedule = GetScheduleDetails();
+            return new CreateScheduleDTO()
+            {
+                Name = schedule.Name,
+                SchoolHour = schedule.SchoolHour
+            };
+        }
+
+        public static UpdateScheduleDTO GetUpdateScheduleDTODetails()
+        {
+            return new UpdateScheduleDTO() { Name = "Updated_plan", SchoolHour = 409 };
+        }
+
+        public static CreateScheduleDTO GetCreateSecondScheduleDTODetails()
+        {
+            return new CreateScheduleDTO() { Name = "Second_Name", SchoolHour = 431 };
+        }
+
+        public static CreateUserDTO GetCreateSecondUserDTODetails()
+        {
+            return new CreateUserDTO()
+            {
+                Login = "Second_User",
+                CustomURL = "Second_URL",
+                Password = "sssSSS1!"
+            };
         }
     }
 }

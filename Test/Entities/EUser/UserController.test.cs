@@ -97,7 +97,7 @@ namespace AlpimiTest.Entities.EUser
         {
             var userUpdateRequest = MockData.GetUpdateUserDTODetails();
 
-            var userId = await DbHelper.SetupUser(_client);
+            var userId = await DbHelper.SetupUser(_client, MockData.GetCreateUserDTODetails());
 
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
@@ -117,7 +117,7 @@ namespace AlpimiTest.Entities.EUser
         {
             var userUpdateRequest = MockData.GetUpdateUserDTODetails();
 
-            var userId = await DbHelper.SetupUser(_client);
+            var userId = await DbHelper.SetupUser(_client, MockData.GetCreateUserDTODetails());
 
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
@@ -139,7 +139,7 @@ namespace AlpimiTest.Entities.EUser
         {
             var userUpdateRequest = MockData.GetUpdateUserDTODetails();
 
-            var userId = await DbHelper.SetupUser(_client);
+            var userId = await DbHelper.SetupUser(_client, MockData.GetCreateUserDTODetails());
 
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
@@ -158,7 +158,7 @@ namespace AlpimiTest.Entities.EUser
         {
             var userUpdateRequest = MockData.GetUpdateUserDTODetails();
 
-            var userId = await DbHelper.SetupUser(_client);
+            var userId = await DbHelper.SetupUser(_client, MockData.GetCreateUserDTODetails());
 
             _client.DefaultRequestHeaders.Authorization = null;
             var response = await _client.PatchAsJsonAsync($"/api/User/{userId}", userUpdateRequest);
@@ -174,7 +174,7 @@ namespace AlpimiTest.Entities.EUser
         {
             var userRequest = MockData.GetCreateUserDTODetails();
 
-            var userId = await DbHelper.SetupUser(_client);
+            var userId = await DbHelper.SetupUser(_client, userRequest);
 
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
@@ -192,7 +192,7 @@ namespace AlpimiTest.Entities.EUser
         [Fact]
         public async Task GetUserThrowsNotFoundErrorWhenWrongUserAttemptsGet()
         {
-            var userId = await DbHelper.SetupUser(_client);
+            var userId = await DbHelper.SetupUser(_client, MockData.GetCreateUserDTODetails());
 
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
@@ -208,7 +208,7 @@ namespace AlpimiTest.Entities.EUser
         [Fact]
         public async Task GetUserThrowsNotFoundErrorWhenWhenWrongIdIsGiven()
         {
-            var userId = await DbHelper.SetupUser(_client);
+            var userId = await DbHelper.SetupUser(_client, MockData.GetCreateUserDTODetails());
 
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
@@ -224,7 +224,7 @@ namespace AlpimiTest.Entities.EUser
         [Fact]
         public async Task GetUserThrowsThrowsUnothorizedErrorWhenNoTokenIsGiven()
         {
-            var userId = await DbHelper.SetupUser(_client);
+            var userId = await DbHelper.SetupUser(_client, MockData.GetCreateUserDTODetails());
 
             _client.DefaultRequestHeaders.Authorization = null;
             var response = await _client.GetAsync($"/api/User/{userId}");
@@ -239,7 +239,7 @@ namespace AlpimiTest.Entities.EUser
         {
             var userRequest = MockData.GetCreateUserDTODetails();
 
-            var userId = await DbHelper.SetupUser(_client);
+            var userId = await DbHelper.SetupUser(_client, userRequest);
 
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
@@ -259,7 +259,7 @@ namespace AlpimiTest.Entities.EUser
         {
             var userRequest = MockData.GetCreateUserDTODetails();
 
-            var userId = await DbHelper.SetupUser(_client);
+            var userId = await DbHelper.SetupUser(_client, userRequest);
 
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
@@ -275,7 +275,7 @@ namespace AlpimiTest.Entities.EUser
         [Fact]
         public async Task GetUserByLoginThrowsNotFoundErrorWhenWhenWrongLoginIsGiven()
         {
-            var userId = await DbHelper.SetupUser(_client);
+            var userId = await DbHelper.SetupUser(_client, MockData.GetCreateUserDTODetails());
 
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
@@ -293,7 +293,7 @@ namespace AlpimiTest.Entities.EUser
         {
             var userRequest = MockData.GetCreateUserDTODetails();
 
-            var userId = await DbHelper.SetupUser(_client);
+            var userId = await DbHelper.SetupUser(_client, userRequest);
 
             _client.DefaultRequestHeaders.Authorization = null;
             var response = await _client.GetAsync($"/api/User/byLogin/{userRequest.Login}");

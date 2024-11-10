@@ -46,7 +46,7 @@ namespace AlpimiTest.Entities.ESchedule
         {
             var scheduleRequest = MockData.GetCreateScheduleDTODetails();
 
-            var userId = await DbHelper.SetupUser(_client);
+            var userId = await DbHelper.SetupUser(_client, MockData.GetCreateUserDTODetails());
 
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
@@ -64,7 +64,7 @@ namespace AlpimiTest.Entities.ESchedule
         {
             var scheduleRequest = MockData.GetCreateScheduleDTODetails();
 
-            var userId = await DbHelper.SetupUser(_client);
+            var userId = await DbHelper.SetupUser(_client, MockData.GetCreateUserDTODetails());
 
             _client.DefaultRequestHeaders.Authorization = null;
             var response = await _client.PostAsJsonAsync("/api/Schedule", scheduleRequest);
@@ -79,8 +79,12 @@ namespace AlpimiTest.Entities.ESchedule
         {
             var scheduleUpdateRequest = MockData.GetUpdateScheduleDTODetails();
 
-            var userId = await DbHelper.SetupUser(_client);
-            var scheduleId = await DbHelper.SetupSchedule(_client, userId);
+            var userId = await DbHelper.SetupUser(_client, MockData.GetCreateUserDTODetails());
+            var scheduleId = await DbHelper.SetupSchedule(
+                _client,
+                userId,
+                MockData.GetCreateScheduleDTODetails()
+            );
 
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
@@ -104,8 +108,12 @@ namespace AlpimiTest.Entities.ESchedule
         {
             var scheduleUpdateRequest = MockData.GetUpdateScheduleDTODetails();
 
-            var userId = await DbHelper.SetupUser(_client);
-            var scheduleId = await DbHelper.SetupSchedule(_client, userId);
+            var userId = await DbHelper.SetupUser(_client, MockData.GetCreateUserDTODetails());
+            var scheduleId = await DbHelper.SetupSchedule(
+                _client,
+                userId,
+                MockData.GetCreateScheduleDTODetails()
+            );
 
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
@@ -128,8 +136,12 @@ namespace AlpimiTest.Entities.ESchedule
         {
             var scheduleUpdateRequest = MockData.GetUpdateScheduleDTODetails();
 
-            var userId = await DbHelper.SetupUser(_client);
-            var scheduleId = await DbHelper.SetupSchedule(_client, userId);
+            var userId = await DbHelper.SetupUser(_client, MockData.GetCreateUserDTODetails());
+            var scheduleId = await DbHelper.SetupSchedule(
+                _client,
+                userId,
+                MockData.GetCreateScheduleDTODetails()
+            );
 
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
@@ -152,8 +164,12 @@ namespace AlpimiTest.Entities.ESchedule
         {
             var scheduleUpdateRequest = MockData.GetUpdateScheduleDTODetails();
 
-            var userId = await DbHelper.SetupUser(_client);
-            var scheduleId = await DbHelper.SetupSchedule(_client, userId);
+            var userId = await DbHelper.SetupUser(_client, MockData.GetCreateUserDTODetails());
+            var scheduleId = await DbHelper.SetupSchedule(
+                _client,
+                userId,
+                MockData.GetCreateScheduleDTODetails()
+            );
 
             _client.DefaultRequestHeaders.Authorization = null;
             var response = await _client.PatchAsJsonAsync(
@@ -173,8 +189,8 @@ namespace AlpimiTest.Entities.ESchedule
         {
             var scheduleRequest = MockData.GetCreateScheduleDTODetails();
 
-            var userId = await DbHelper.SetupUser(_client);
-            await DbHelper.SetupSchedule(_client, userId);
+            var userId = await DbHelper.SetupUser(_client, MockData.GetCreateUserDTODetails());
+            await DbHelper.SetupSchedule(_client, userId, scheduleRequest);
 
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
@@ -194,8 +210,8 @@ namespace AlpimiTest.Entities.ESchedule
         {
             var scheduleRequest = MockData.GetCreateScheduleDTODetails();
 
-            var userId = await DbHelper.SetupUser(_client);
-            await DbHelper.SetupSchedule(_client, userId);
+            var userId = await DbHelper.SetupUser(_client, MockData.GetCreateUserDTODetails());
+            await DbHelper.SetupSchedule(_client, userId, scheduleRequest);
 
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
@@ -213,8 +229,8 @@ namespace AlpimiTest.Entities.ESchedule
         {
             var scheduleRequest = MockData.GetCreateScheduleDTODetails();
 
-            var userId = await DbHelper.SetupUser(_client);
-            await DbHelper.SetupSchedule(_client, userId);
+            var userId = await DbHelper.SetupUser(_client, MockData.GetCreateUserDTODetails());
+            await DbHelper.SetupSchedule(_client, userId, scheduleRequest);
 
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
@@ -233,8 +249,8 @@ namespace AlpimiTest.Entities.ESchedule
         {
             var scheduleRequest = MockData.GetCreateScheduleDTODetails();
 
-            var userId = await DbHelper.SetupUser(_client);
-            await DbHelper.SetupSchedule(_client, userId);
+            var userId = await DbHelper.SetupUser(_client, MockData.GetCreateUserDTODetails());
+            await DbHelper.SetupSchedule(_client, userId, scheduleRequest);
 
             _client.DefaultRequestHeaders.Authorization = null;
             var response = await _client.GetAsync($"/api/Schedule/byName/{scheduleRequest.Name}");
@@ -250,8 +266,8 @@ namespace AlpimiTest.Entities.ESchedule
         {
             var scheduleRequest = MockData.GetCreateScheduleDTODetails();
 
-            var userId = await DbHelper.SetupUser(_client);
-            var scheduleId = await DbHelper.SetupSchedule(_client, userId);
+            var userId = await DbHelper.SetupUser(_client, MockData.GetCreateUserDTODetails());
+            var scheduleId = await DbHelper.SetupSchedule(_client, userId, scheduleRequest);
 
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
@@ -269,8 +285,12 @@ namespace AlpimiTest.Entities.ESchedule
         [Fact]
         public async Task GetScheduleThrowsUnothorizedErrorWhenNoTokenIsGiven()
         {
-            var userId = await DbHelper.SetupUser(_client);
-            var scheduleId = await DbHelper.SetupSchedule(_client, userId);
+            var userId = await DbHelper.SetupUser(_client, MockData.GetCreateUserDTODetails());
+            var scheduleId = await DbHelper.SetupSchedule(
+                _client,
+                userId,
+                MockData.GetCreateScheduleDTODetails()
+            );
 
             _client.DefaultRequestHeaders.Authorization = null;
             var response = await _client.GetAsync($"/api/Schedule/{scheduleId}");
@@ -283,8 +303,12 @@ namespace AlpimiTest.Entities.ESchedule
         [Fact]
         public async Task GetScheduleThrowsNotFoundErrorWhenWrongUserAttemptsGet()
         {
-            var userId = await DbHelper.SetupUser(_client);
-            var scheduleId = await DbHelper.SetupSchedule(_client, userId);
+            var userId = await DbHelper.SetupUser(_client, MockData.GetCreateUserDTODetails());
+            var scheduleId = await DbHelper.SetupSchedule(
+                _client,
+                userId,
+                MockData.GetCreateScheduleDTODetails()
+            );
 
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
@@ -300,8 +324,8 @@ namespace AlpimiTest.Entities.ESchedule
         [Fact]
         public async Task GetScheduleThrowsNotFoundErrorWhenWrongIdIsGiven()
         {
-            var userId = await DbHelper.SetupUser(_client);
-            await DbHelper.SetupSchedule(_client, userId);
+            var userId = await DbHelper.SetupUser(_client, MockData.GetCreateUserDTODetails());
+            await DbHelper.SetupSchedule(_client, userId, MockData.GetCreateScheduleDTODetails());
 
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
@@ -320,11 +344,14 @@ namespace AlpimiTest.Entities.ESchedule
             var scheduleRequest1 = MockData.GetCreateScheduleDTODetails();
             var scheduleRequest2 = MockData.GetCreateSecondScheduleDTODetails();
 
-            var userId1 = await DbHelper.SetupUser(_client);
-            var userId2 = await DbHelper.SetupSecondUser(_client);
+            var userId1 = await DbHelper.SetupUser(_client, MockData.GetCreateUserDTODetails());
+            var userId2 = await DbHelper.SetupUser(
+                _client,
+                MockData.GetCreateSecondUserDTODetails()
+            );
 
-            await DbHelper.SetupSchedule(_client, userId1);
-            await DbHelper.SetupSecondSchedule(_client, userId2);
+            await DbHelper.SetupSchedule(_client, userId1, scheduleRequest1);
+            await DbHelper.SetupSchedule(_client, userId2, scheduleRequest2);
 
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
@@ -346,11 +373,14 @@ namespace AlpimiTest.Entities.ESchedule
             var scheduleRequest1 = MockData.GetCreateScheduleDTODetails();
             var scheduleRequest2 = MockData.GetCreateSecondScheduleDTODetails();
 
-            var userId1 = await DbHelper.SetupUser(_client);
-            var userId2 = await DbHelper.SetupSecondUser(_client);
+            var userId1 = await DbHelper.SetupUser(_client, MockData.GetCreateUserDTODetails());
+            var userId2 = await DbHelper.SetupUser(
+                _client,
+                MockData.GetCreateSecondUserDTODetails()
+            );
 
-            await DbHelper.SetupSchedule(_client, userId1);
-            await DbHelper.SetupSecondSchedule(_client, userId2);
+            await DbHelper.SetupSchedule(_client, userId1, scheduleRequest1);
+            await DbHelper.SetupSchedule(_client, userId2, scheduleRequest2);
 
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
@@ -372,11 +402,14 @@ namespace AlpimiTest.Entities.ESchedule
             var scheduleRequest1 = MockData.GetCreateScheduleDTODetails();
             var scheduleRequest2 = MockData.GetCreateSecondScheduleDTODetails();
 
-            var userId1 = await DbHelper.SetupUser(_client);
-            var userId2 = await DbHelper.SetupSecondUser(_client);
+            var userId1 = await DbHelper.SetupUser(_client, MockData.GetCreateUserDTODetails());
+            var userId2 = await DbHelper.SetupUser(
+                _client,
+                MockData.GetCreateSecondUserDTODetails()
+            );
 
-            await DbHelper.SetupSchedule(_client, userId1);
-            await DbHelper.SetupSecondSchedule(_client, userId2);
+            await DbHelper.SetupSchedule(_client, userId1, scheduleRequest1);
+            await DbHelper.SetupSchedule(_client, userId2, scheduleRequest2);
 
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
@@ -395,11 +428,18 @@ namespace AlpimiTest.Entities.ESchedule
         [Fact]
         public async Task ThrowsUnothorizedErrorWhenNoTokenIsGiven()
         {
-            var userId1 = await DbHelper.SetupUser(_client);
-            var userId2 = await DbHelper.SetupSecondUser(_client);
+            var userId1 = await DbHelper.SetupUser(_client, MockData.GetCreateUserDTODetails());
+            var userId2 = await DbHelper.SetupUser(
+                _client,
+                MockData.GetCreateSecondUserDTODetails()
+            );
 
-            await DbHelper.SetupSchedule(_client, userId1);
-            await DbHelper.SetupSecondSchedule(_client, userId2);
+            await DbHelper.SetupSchedule(_client, userId1, MockData.GetCreateScheduleDTODetails());
+            await DbHelper.SetupSchedule(
+                _client,
+                userId2,
+                MockData.GetCreateSecondScheduleDTODetails()
+            );
 
             _client.DefaultRequestHeaders.Authorization = null;
             var response = await _client.GetAsync("/api/Schedule");

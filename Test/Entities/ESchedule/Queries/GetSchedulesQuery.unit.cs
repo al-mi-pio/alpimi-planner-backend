@@ -1,16 +1,15 @@
 ﻿using AlpimiAPI.Database;
 using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Entities.ESchedule.Queries;
-using AlpimiAPI.Entities.EUser;
 using AlpimiAPI.Responses;
 using AlpimiTest.TestUtilities;
 using Moq;
 using Newtonsoft.Json;
 using Xunit;
 
-namespace alpimi_planner_backend.Test.Entities.ESchedule.Queries
+namespace AlpimiTest.Entities.ESchedule.Queries
 {
-    public class GetScheduleCommandUnit
+    public class GetSchedulesCommandUnit
     {
         private readonly Mock<IDbService> _dbService = new();
 

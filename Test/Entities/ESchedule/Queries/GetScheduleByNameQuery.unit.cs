@@ -5,7 +5,7 @@ using AlpimiTest.TestUtilities;
 using Moq;
 using Xunit;
 
-namespace alpimi_planner_backend.Test.Entities.ESchedule.Queries
+namespace AlpimiTest.Entities.ESchedule.Queries
 {
     public class GetScheduleByNameCommandUnit
     {

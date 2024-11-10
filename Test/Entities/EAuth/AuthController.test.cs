@@ -1,22 +1,6 @@
-﻿using System.IO;
-using System.Net;
+﻿using System.Net;
 using System.Net.Http.Headers;
-using System.Net.Http.Json;
-using AlpimiAPI.Database;
-using AlpimiAPI.Entities.EAuth;
-using AlpimiAPI.Entities.EAuth.Queries;
-using AlpimiAPI.Entities.ESchedule.Commands;
-using AlpimiAPI.Entities.ESchedule.DTO;
-using AlpimiAPI.Entities.EUser;
-using AlpimiAPI.Entities.EUser.DTO;
-using AlpimiAPI.Responses;
 using AlpimiTest.TestUtilities;
-using Azure;
-using Azure.Core;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace AlpimiTest.Entities.EAuth

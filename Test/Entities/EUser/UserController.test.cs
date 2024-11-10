@@ -4,7 +4,6 @@ using AlpimiAPI.Entities.EUser;
 using AlpimiAPI.Entities.EUser.DTO;
 using AlpimiAPI.Responses;
 using AlpimiTest.TestUtilities;
-using Sprache;
 using Xunit;
 
 namespace AlpimiTest.Entities.EUser
@@ -24,10 +23,9 @@ namespace AlpimiTest.Entities.EUser
         [Fact]
         public async Task DeleteUserReturnsNoContentStatusCode()
         {
-            var user = MockData.GetUserDetails();
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
-                TestAuthorization.GetToken("Admin", user.Login, user.Id)
+                TestAuthorization.GetToken("Admin", "User", new Guid())
             );
             var response = await _client.DeleteAsync(
                 "/api/User/b70eda99-ed0a-4c06-bc65-44166ce58bb0"
@@ -38,10 +36,9 @@ namespace AlpimiTest.Entities.EUser
         [Fact]
         public async Task DeleteUserThrowsForbiddenErrorWhenNoTokenIsGiven()
         {
-            var user = MockData.GetUserDetails();
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
-                TestAuthorization.GetToken("User", user.Login, user.Id)
+                TestAuthorization.GetToken("User", "User", new Guid())
             );
             var response = await _client.DeleteAsync(
                 "/api/User/b70eda99-ed0a-4c06-bc65-44166ce58bb0"

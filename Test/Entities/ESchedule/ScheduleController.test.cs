@@ -1,12 +1,8 @@
 ﻿using System.Net;
 using System.Net.Http.Headers;
 using AlpimiAPI.Entities.ESchedule;
-using AlpimiAPI.Entities.ESchedule.DTO;
-using AlpimiAPI.Entities.EUser;
-using AlpimiAPI.Entities.EUser.DTO;
 using AlpimiAPI.Responses;
 using AlpimiTest.TestUtilities;
-using Sprache;
 using Xunit;
 
 namespace AlpimiTest.Entities.ESchedule
@@ -26,10 +22,9 @@ namespace AlpimiTest.Entities.ESchedule
         [Fact]
         public async Task DeleteScheduleReturnsNoContentStatusCode()
         {
-            var user = MockData.GetUserDetails();
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
-                TestAuthorization.GetToken("Admin", user.Login, user.Id)
+                TestAuthorization.GetToken("Admin", "User", new Guid())
             );
             var response = await _client.DeleteAsync(
                 "/api/Schedule/b70eda99-ed0a-4c06-bc65-44166ce58bb0"
@@ -40,8 +35,6 @@ namespace AlpimiTest.Entities.ESchedule
         [Fact]
         public async Task DeleteScheduleThrowsUnothorizedErrorWhenNoTokenIsGiven()
         {
-            var user = MockData.GetUserDetails();
-
             var response = await _client.DeleteAsync(
                 "/api/Schedule/b70eda99-ed0a-4c06-bc65-44166ce58bb0"
             );

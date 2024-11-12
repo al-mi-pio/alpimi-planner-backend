@@ -22,10 +22,18 @@ namespace AlpimiAPI.Utilities
             "HASH_ALGORITHM"
         );
         private static readonly string? _keySize = Environment.GetEnvironmentVariable("KEY_SIZE");
+        private static readonly string? _testConnectionString = Environment.GetEnvironmentVariable(
+            "TEST_CONNECTION_STRING"
+        );
 
         public static string? GetConnectionString()
         {
             return _connectionString;
+        }
+
+        public static string? GetTestConnectionString()
+        {
+            return _testConnectionString;
         }
 
         public static string GetJWTKey()

@@ -2,6 +2,7 @@
 using AlpimiAPI.Entities.EUser;
 using AlpimiAPI.Entities.EUser.Commands;
 using AlpimiAPI.Responses;
+using AlpimiTest.TestSetup;
 using AlpimiTest.TestUtilities;
 using alpimi_planner_backend.API.Locales;
 using Microsoft.Extensions.Localization;
@@ -14,12 +15,17 @@ namespace AlpimiTest.Entities.EUser.Commands
     public class UpdateUserCommandUnit
     {
         private readonly Mock<IDbService> _dbService = new();
+        private readonly Mock<IStringLocalizer<Errors>> _str;
+
+        public UpdateUserCommandUnit()
+        {
+            _str = ResourceSetup.Setup();
+        }
 
         [Fact]
         public async Task ReturnsUpdatedUserWhenIdIsCorrect()
         {
             var user = MockData.GetUserDetails();
-            Mock<IStringLocalizer<Errors>> _str = await ResourceSetup.Setup();
 
             _dbService
                 .Setup(s => s.Update<User>(It.IsAny<string>(), It.IsAny<object>()))
@@ -44,7 +50,6 @@ namespace AlpimiTest.Entities.EUser.Commands
         public async Task ThrowsErrorWhenURLAlreadyExists()
         {
             var user = MockData.GetUserDetails();
-            Mock<IStringLocalizer<Errors>> _str = await ResourceSetup.Setup();
 
             _dbService
                 .Setup(s => s.Update<User>(It.IsAny<string>(), It.IsAny<object>()))

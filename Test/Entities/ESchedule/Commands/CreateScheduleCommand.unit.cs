@@ -1,8 +1,8 @@
 ﻿using AlpimiAPI.Database;
 using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Entities.ESchedule.Commands;
-using AlpimiAPI.Entities.EUser;
 using AlpimiAPI.Responses;
+using AlpimiTest.TestSetup;
 using AlpimiTest.TestUtilities;
 using alpimi_planner_backend.API.Locales;
 using Microsoft.Extensions.Localization;
@@ -15,12 +15,17 @@ namespace AlpimiTest.Entities.ESchedule.Commands
     public class CreateScheduleCommandUnit
     {
         private readonly Mock<IDbService> _dbService = new();
+        private readonly Mock<IStringLocalizer<Errors>> _str;
+
+        public CreateScheduleCommandUnit()
+        {
+            _str = ResourceSetup.Setup();
+        }
 
         [Fact]
         public async Task CreatesSchedule()
         {
             var schedule = MockData.GetScheduleDetails();
-            Mock<IStringLocalizer<Errors>> _str = await ResourceSetup.Setup();
 
             _dbService
                 .Setup(s => s.Post<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
@@ -47,7 +52,6 @@ namespace AlpimiTest.Entities.ESchedule.Commands
         public async Task ThrowsErrorWheNameIsTaken()
         {
             var schedule = MockData.GetScheduleDetails();
-            Mock<IStringLocalizer<Errors>> _str = await ResourceSetup.Setup();
 
             _dbService
                 .Setup(s => s.Post<Schedule>(It.IsAny<string>(), It.IsAny<object>()))

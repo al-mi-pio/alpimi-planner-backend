@@ -1,5 +1,8 @@
 ﻿using System.Net;
 using System.Net.Http.Headers;
+using AlpimiAPI.Entities.EAuth.Queries;
+using AlpimiAPI.Entities.ESchedule;
+using AlpimiAPI.Responses;
 using AlpimiTest.TestUtilities;
 using Xunit;
 
@@ -32,6 +35,19 @@ namespace AlpimiTest.Entities.EAuth
                 TestAuthorization.GetToken("Admin", "Random", new Guid())
             );
             var response = await _client.GetAsync("/api/Auth/refresh");
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task LoginReturnOKStatusCode()
+        {
+            var userId = await DbHelper.SetupUser(_client, MockData.GetCreateUserDTODetails());
+            var loginRequest = MockData.GetLoginDTODetails();
+
+            var response = await _client.PostAsJsonAsync("/api/Auth/login", loginRequest);
+
+            await DbHelper.UserCleaner(_client, userId);
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }

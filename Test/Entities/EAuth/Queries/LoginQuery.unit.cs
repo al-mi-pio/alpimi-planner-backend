@@ -3,6 +3,7 @@ using AlpimiAPI.Entities.EAuth;
 using AlpimiAPI.Entities.EAuth.Queries;
 using AlpimiAPI.Entities.EUser;
 using AlpimiAPI.Responses;
+using AlpimiTest.TestSetup;
 using AlpimiTest.TestUtilities;
 using alpimi_planner_backend.API.Locales;
 using Microsoft.Extensions.Localization;
@@ -15,34 +16,17 @@ namespace AlpimiTest.Entities.EAuth.Queries
     public class LoginQueryUnit
     {
         private readonly Mock<IDbService> _dbService = new();
+        private readonly Mock<IStringLocalizer<Errors>> _str;
 
-        [Fact]
-        public async Task GivesTokenIfLoginAndPasswordAreCorrect()
+        public LoginQueryUnit()
         {
-            var auth = MockData.GetAuthDetails();
-            Mock<IStringLocalizer<Errors>> _str = await ResourceSetup.Setup();
-
-            _dbService
-                .Setup(s => s.Get<User>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(auth.User);
-            _dbService
-                .Setup(s => s.Post<Auth>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(auth);
-
-            var loginCommand = new LoginQuery(auth.User.Login, "sssSSS1!");
-
-            var loginHandler = new LoginHandler(_dbService.Object, _str.Object);
-
-            var result = await loginHandler.Handle(loginCommand, new CancellationToken());
-
-            Assert.IsType<String>(result);
+            _str = ResourceSetup.Setup();
         }
 
         [Fact]
         public async Task ThrowsErrorWhenIncorrectLoginIsGiven()
         {
             var auth = MockData.GetAuthDetails();
-            Mock<IStringLocalizer<Errors>> _str = await ResourceSetup.Setup();
 
             _dbService
                 .Setup(s => s.Get<User>(It.IsAny<string>(), It.IsAny<object>()))
@@ -71,7 +55,6 @@ namespace AlpimiTest.Entities.EAuth.Queries
         public async Task ThrowsErrorWhenIncorrectPasswordIsGiven()
         {
             var auth = MockData.GetAuthDetails();
-            Mock<IStringLocalizer<Errors>> _str = await ResourceSetup.Setup();
 
             _dbService
                 .Setup(s => s.Get<User>(It.IsAny<string>(), It.IsAny<object>()))

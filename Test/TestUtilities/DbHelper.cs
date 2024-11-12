@@ -1,21 +1,32 @@
 ﻿using System.Net.Http.Headers;
+using AlpimiAPI.Database;
 using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Entities.ESchedule.DTO;
 using AlpimiAPI.Entities.EUser;
 using AlpimiAPI.Entities.EUser.DTO;
 using AlpimiAPI.Responses;
+using AlpimiAPI.Utilities;
+using Microsoft.Data.SqlClient;
 
 namespace AlpimiTest.TestUtilities
 {
     public static class DbHelper
     {
-        public static async Task<bool> UserCleaner(HttpClient _client, Guid toDeleteUserId)
+        public static async Task<bool> UserCleaner(HttpClient _client)
         {
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "Bob", new Guid())
             );
-            await _client.DeleteAsync($"/api/User/{toDeleteUserId}");
+            var query = "SELECT [Id] FROM [User]";
+            var _dbService = new DbService(
+                new SqlConnection(Configuration.GetTestConnectionString())
+            );
+            var userIds = await _dbService.GetAll<Guid>(query, "");
+            foreach (var userId in userIds!)
+            {
+                await _client.DeleteAsync($"/api/User/{userId}");
+            }
             return true;
         }
 

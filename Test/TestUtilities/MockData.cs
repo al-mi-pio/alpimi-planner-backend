@@ -1,4 +1,5 @@
 ﻿using AlpimiAPI.Entities.EAuth;
+using AlpimiAPI.Entities.EAuth.DTO;
 using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Entities.ESchedule.DTO;
 using AlpimiAPI.Entities.EUser;
@@ -52,10 +53,10 @@ namespace AlpimiTest.TestUtilities
         {
             var auth = new Auth()
             {
-                Password = "RPhZLnao+2lWH4JvwGZRLI/14QI=",
+                Password = "sssSSS1!",
                 Id = new Guid(),
-                Salt = "zr+8L0dX4IBdGUgvHDM1Zw==",
-                Role = "Admin",
+                Salt = "cSnOW17u464QVvXSjMr0wQ==",
+                Role = "User",
                 UserId = new Guid(),
                 User = GetUserDetails(),
             };
@@ -107,6 +108,12 @@ namespace AlpimiTest.TestUtilities
                 CustomURL = "Second_URL",
                 Password = "sssSSS1!"
             };
+        }
+
+        public static LoginDTO GetLoginDTODetails()
+        {
+            var auth = MockData.GetAuthDetails();
+            return new LoginDTO() { Login = auth.User.Login, Password = auth.Password };
         }
     }
 }

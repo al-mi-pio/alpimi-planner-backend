@@ -47,7 +47,7 @@ namespace AlpimiTest.Entities.EAuth
 
             var response = await _client.PostAsJsonAsync("/api/Auth/login", loginRequest);
 
-            await DbHelper.UserCleaner(_client, userId);
+            await DbHelper.UserCleaner(_client);
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }

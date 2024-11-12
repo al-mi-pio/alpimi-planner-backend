@@ -54,7 +54,7 @@ namespace AlpimiTest.Entities.ESchedule
             );
             var response = await _client.PostAsJsonAsync("/api/Schedule", scheduleRequest);
 
-            await DbHelper.UserCleaner(_client, userId);
+            await DbHelper.UserCleaner(_client);
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
@@ -64,12 +64,12 @@ namespace AlpimiTest.Entities.ESchedule
         {
             var scheduleRequest = MockData.GetCreateScheduleDTODetails();
 
-            var userId = await DbHelper.SetupUser(_client, MockData.GetCreateUserDTODetails());
+            await DbHelper.SetupUser(_client, MockData.GetCreateUserDTODetails());
 
             _client.DefaultRequestHeaders.Authorization = null;
             var response = await _client.PostAsJsonAsync("/api/Schedule", scheduleRequest);
 
-            await DbHelper.UserCleaner(_client, userId);
+            await DbHelper.UserCleaner(_client);
 
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         }
@@ -97,7 +97,7 @@ namespace AlpimiTest.Entities.ESchedule
 
             var jsonResponse = await response.Content.ReadFromJsonAsync<ApiGetResponse<Schedule>>();
 
-            await DbHelper.UserCleaner(_client, userId);
+            await DbHelper.UserCleaner(_client);
 
             Assert.Equal(scheduleUpdateRequest.Name, jsonResponse!.Content.Name);
             Assert.Equal(scheduleUpdateRequest.SchoolHour, jsonResponse!.Content.SchoolHour);
@@ -126,7 +126,7 @@ namespace AlpimiTest.Entities.ESchedule
 
             var jsonResponse = await response.Content.ReadFromJsonAsync<ApiGetResponse<Schedule>>();
 
-            await DbHelper.UserCleaner(_client, userId);
+            await DbHelper.UserCleaner(_client);
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
@@ -154,7 +154,7 @@ namespace AlpimiTest.Entities.ESchedule
 
             var jsonResponse = await response.Content.ReadFromJsonAsync<ApiGetResponse<Schedule>>();
 
-            await DbHelper.UserCleaner(_client, userId);
+            await DbHelper.UserCleaner(_client);
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
@@ -179,7 +179,7 @@ namespace AlpimiTest.Entities.ESchedule
 
             var jsonResponse = await response.Content.ReadFromJsonAsync<ApiGetResponse<Schedule>>();
 
-            await DbHelper.UserCleaner(_client, userId);
+            await DbHelper.UserCleaner(_client);
 
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         }
@@ -199,7 +199,7 @@ namespace AlpimiTest.Entities.ESchedule
             var response = await _client.GetAsync($"/api/Schedule/byName/{scheduleRequest.Name}");
             var jsonResponse = await response.Content.ReadFromJsonAsync<ApiGetResponse<Schedule>>();
 
-            await DbHelper.UserCleaner(_client, userId);
+            await DbHelper.UserCleaner(_client);
 
             Assert.Equal(scheduleRequest.Name, jsonResponse!.Content.Name);
             Assert.Equal(scheduleRequest.SchoolHour, jsonResponse!.Content.SchoolHour);
@@ -219,7 +219,7 @@ namespace AlpimiTest.Entities.ESchedule
             );
             var response = await _client.GetAsync($"/api/Schedule/byName/{scheduleRequest.Name}");
 
-            await DbHelper.UserCleaner(_client, userId);
+            await DbHelper.UserCleaner(_client);
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
@@ -239,7 +239,7 @@ namespace AlpimiTest.Entities.ESchedule
             var response = await _client.GetAsync($"/api/Schedule/byName/WrongName");
             var jsonResponse = await response.Content.ReadFromJsonAsync<ApiGetResponse<Schedule>>();
 
-            await DbHelper.UserCleaner(_client, userId);
+            await DbHelper.UserCleaner(_client);
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
@@ -256,7 +256,7 @@ namespace AlpimiTest.Entities.ESchedule
             var response = await _client.GetAsync($"/api/Schedule/byName/{scheduleRequest.Name}");
             var jsonResponse = await response.Content.ReadFromJsonAsync<ApiGetResponse<Schedule>>();
 
-            await DbHelper.UserCleaner(_client, userId);
+            await DbHelper.UserCleaner(_client);
 
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         }
@@ -276,7 +276,7 @@ namespace AlpimiTest.Entities.ESchedule
             var response = await _client.GetAsync($"/api/Schedule/{scheduleId}");
             var jsonResponse = await response.Content.ReadFromJsonAsync<ApiGetResponse<Schedule>>();
 
-            await DbHelper.UserCleaner(_client, userId);
+            await DbHelper.UserCleaner(_client);
 
             Assert.Equal(scheduleRequest.Name, jsonResponse!.Content.Name);
             Assert.Equal(scheduleRequest.SchoolHour, jsonResponse!.Content.SchoolHour);
@@ -295,7 +295,7 @@ namespace AlpimiTest.Entities.ESchedule
             _client.DefaultRequestHeaders.Authorization = null;
             var response = await _client.GetAsync($"/api/Schedule/{scheduleId}");
 
-            await DbHelper.UserCleaner(_client, userId);
+            await DbHelper.UserCleaner(_client);
 
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         }
@@ -316,7 +316,7 @@ namespace AlpimiTest.Entities.ESchedule
             );
             var response = await _client.GetAsync($"/api/Schedule/{scheduleId}");
 
-            await DbHelper.UserCleaner(_client, userId);
+            await DbHelper.UserCleaner(_client);
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
@@ -333,7 +333,7 @@ namespace AlpimiTest.Entities.ESchedule
             );
             var response = await _client.GetAsync($"/api/Schedule/{new Guid()}");
 
-            await DbHelper.UserCleaner(_client, userId);
+            await DbHelper.UserCleaner(_client);
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
@@ -360,8 +360,7 @@ namespace AlpimiTest.Entities.ESchedule
             var response = await _client.GetAsync("/api/Schedule");
             var stringResponse = await response.Content.ReadAsStringAsync();
 
-            await DbHelper.UserCleaner(_client, userId1);
-            await DbHelper.UserCleaner(_client, userId2);
+            await DbHelper.UserCleaner(_client);
 
             Assert.Contains(scheduleRequest1.Name, stringResponse);
             Assert.Contains(scheduleRequest2.Name, stringResponse);
@@ -389,8 +388,7 @@ namespace AlpimiTest.Entities.ESchedule
             var response = await _client.GetAsync("/api/Schedule");
             var stringResponse = await response.Content.ReadAsStringAsync();
 
-            await DbHelper.UserCleaner(_client, userId1);
-            await DbHelper.UserCleaner(_client, userId2);
+            await DbHelper.UserCleaner(_client);
 
             Assert.DoesNotContain(scheduleRequest1.Name, stringResponse);
             Assert.DoesNotContain(scheduleRequest2.Name, stringResponse);
@@ -418,8 +416,7 @@ namespace AlpimiTest.Entities.ESchedule
             var response = await _client.GetAsync("/api/Schedule");
             var stringResponse = await response.Content.ReadAsStringAsync();
 
-            await DbHelper.UserCleaner(_client, userId1);
-            await DbHelper.UserCleaner(_client, userId2);
+            await DbHelper.UserCleaner(_client);
 
             Assert.Contains(scheduleRequest1.Name, stringResponse);
             Assert.DoesNotContain(scheduleRequest2.Name, stringResponse);
@@ -444,8 +441,7 @@ namespace AlpimiTest.Entities.ESchedule
             _client.DefaultRequestHeaders.Authorization = null;
             var response = await _client.GetAsync("/api/Schedule");
 
-            await DbHelper.UserCleaner(_client, userId1);
-            await DbHelper.UserCleaner(_client, userId2);
+            await DbHelper.UserCleaner(_client);
 
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         }

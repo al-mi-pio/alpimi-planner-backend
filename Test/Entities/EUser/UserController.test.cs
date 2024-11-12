@@ -106,7 +106,7 @@ namespace AlpimiTest.Entities.EUser
             var response = await _client.PatchAsJsonAsync($"/api/User/{userId}", userUpdateRequest);
             var jsonResponse = await response.Content.ReadFromJsonAsync<ApiGetResponse<User>>();
 
-            await DbHelper.UserCleaner(_client, userId);
+            await DbHelper.UserCleaner(_client);
 
             Assert.Equal(userUpdateRequest.Login, jsonResponse!.Content.Login);
             Assert.Equal(userUpdateRequest.CustomURL, jsonResponse!.Content.CustomURL);
@@ -117,7 +117,7 @@ namespace AlpimiTest.Entities.EUser
         {
             var userUpdateRequest = MockData.GetUpdateUserDTODetails();
 
-            var userId = await DbHelper.SetupUser(_client, MockData.GetCreateUserDTODetails());
+            await DbHelper.SetupUser(_client, MockData.GetCreateUserDTODetails());
 
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
@@ -127,9 +127,9 @@ namespace AlpimiTest.Entities.EUser
                 $"/api/User/{new Guid()}",
                 userUpdateRequest
             );
-            var jsonResponse = await response.Content.ReadFromJsonAsync<ApiGetResponse<User>>();
+            await response.Content.ReadFromJsonAsync<ApiGetResponse<User>>();
 
-            await DbHelper.UserCleaner(_client, userId);
+            await DbHelper.UserCleaner(_client);
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
@@ -148,7 +148,7 @@ namespace AlpimiTest.Entities.EUser
             var response = await _client.PatchAsJsonAsync($"/api/User/{userId}", userUpdateRequest);
             var jsonResponse = await response.Content.ReadFromJsonAsync<ApiGetResponse<User>>();
 
-            await DbHelper.UserCleaner(_client, userId);
+            await DbHelper.UserCleaner(_client);
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
@@ -164,7 +164,7 @@ namespace AlpimiTest.Entities.EUser
             var response = await _client.PatchAsJsonAsync($"/api/User/{userId}", userUpdateRequest);
             var jsonResponse = await response.Content.ReadFromJsonAsync<ApiGetResponse<User>>();
 
-            await DbHelper.UserCleaner(_client, userId);
+            await DbHelper.UserCleaner(_client);
 
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         }
@@ -183,7 +183,7 @@ namespace AlpimiTest.Entities.EUser
             var response = await _client.GetAsync($"/api/User/{userId}");
             var jsonResponse = await response.Content.ReadFromJsonAsync<ApiGetResponse<User>>();
 
-            await DbHelper.UserCleaner(_client, userId);
+            await DbHelper.UserCleaner(_client);
 
             Assert.Equal(userRequest.Login, jsonResponse!.Content.Login);
             Assert.Equal(userRequest.CustomURL, jsonResponse!.Content.CustomURL);
@@ -200,7 +200,7 @@ namespace AlpimiTest.Entities.EUser
             );
             var response = await _client.GetAsync($"/api/User/{userId}");
 
-            await DbHelper.UserCleaner(_client, userId);
+            await DbHelper.UserCleaner(_client);
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
@@ -208,7 +208,7 @@ namespace AlpimiTest.Entities.EUser
         [Fact]
         public async Task GetUserThrowsNotFoundErrorWhenWhenWrongIdIsGiven()
         {
-            var userId = await DbHelper.SetupUser(_client, MockData.GetCreateUserDTODetails());
+            await DbHelper.SetupUser(_client, MockData.GetCreateUserDTODetails());
 
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
@@ -216,7 +216,7 @@ namespace AlpimiTest.Entities.EUser
             );
             var response = await _client.GetAsync($"/api/User/{new Guid()}");
 
-            await DbHelper.UserCleaner(_client, userId);
+            await DbHelper.UserCleaner(_client);
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
@@ -229,7 +229,7 @@ namespace AlpimiTest.Entities.EUser
             _client.DefaultRequestHeaders.Authorization = null;
             var response = await _client.GetAsync($"/api/User/{userId}");
 
-            await DbHelper.UserCleaner(_client, userId);
+            await DbHelper.UserCleaner(_client);
 
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         }
@@ -239,7 +239,7 @@ namespace AlpimiTest.Entities.EUser
         {
             var userRequest = MockData.GetCreateUserDTODetails();
 
-            var userId = await DbHelper.SetupUser(_client, userRequest);
+            await DbHelper.SetupUser(_client, userRequest);
 
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
@@ -248,7 +248,7 @@ namespace AlpimiTest.Entities.EUser
             var response = await _client.GetAsync($"/api/User/byLogin/{userRequest.Login}");
             var jsonResponse = await response.Content.ReadFromJsonAsync<ApiGetResponse<User>>();
 
-            await DbHelper.UserCleaner(_client, userId);
+            await DbHelper.UserCleaner(_client);
 
             Assert.Equal(userRequest.Login, jsonResponse!.Content.Login);
             Assert.Equal(userRequest.CustomURL, jsonResponse!.Content.CustomURL);
@@ -259,7 +259,7 @@ namespace AlpimiTest.Entities.EUser
         {
             var userRequest = MockData.GetCreateUserDTODetails();
 
-            var userId = await DbHelper.SetupUser(_client, userRequest);
+            await DbHelper.SetupUser(_client, userRequest);
 
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
@@ -267,7 +267,7 @@ namespace AlpimiTest.Entities.EUser
             );
             var response = await _client.GetAsync($"/api/User/byLogin/{userRequest.Login}");
 
-            await DbHelper.UserCleaner(_client, userId);
+            await DbHelper.UserCleaner(_client);
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
@@ -275,7 +275,7 @@ namespace AlpimiTest.Entities.EUser
         [Fact]
         public async Task GetUserByLoginThrowsNotFoundErrorWhenWhenWrongLoginIsGiven()
         {
-            var userId = await DbHelper.SetupUser(_client, MockData.GetCreateUserDTODetails());
+            await DbHelper.SetupUser(_client, MockData.GetCreateUserDTODetails());
 
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
@@ -283,7 +283,7 @@ namespace AlpimiTest.Entities.EUser
             );
             var response = await _client.GetAsync($"/api/User/byLogin/WrongLogin");
 
-            await DbHelper.UserCleaner(_client, userId);
+            await DbHelper.UserCleaner(_client);
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
@@ -293,12 +293,12 @@ namespace AlpimiTest.Entities.EUser
         {
             var userRequest = MockData.GetCreateUserDTODetails();
 
-            var userId = await DbHelper.SetupUser(_client, userRequest);
+            await DbHelper.SetupUser(_client, userRequest);
 
             _client.DefaultRequestHeaders.Authorization = null;
             var response = await _client.GetAsync($"/api/User/byLogin/{userRequest.Login}");
 
-            await DbHelper.UserCleaner(_client, userId);
+            await DbHelper.UserCleaner(_client);
 
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         }

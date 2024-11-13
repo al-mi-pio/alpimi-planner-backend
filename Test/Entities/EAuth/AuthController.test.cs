@@ -2,6 +2,7 @@
 using System.Net.Http.Headers;
 using AlpimiAPI.Entities.EAuth.Queries;
 using AlpimiAPI.Entities.ESchedule;
+using AlpimiAPI.Entities.EUser;
 using AlpimiAPI.Responses;
 using AlpimiTest.TestUtilities;
 using Xunit;
@@ -9,10 +10,11 @@ using Xunit;
 namespace AlpimiTest.Entities.EAuth
 {
     [Collection("Sequential Tests")]
-    public class AuthControllerTest
+    public class AuthControllerTest : IAsyncLifetime
     {
         CustomWebApplicationFactory<Program> _factory;
         HttpClient _client;
+        Guid userId;
 
         public AuthControllerTest()
         {
@@ -20,9 +22,24 @@ namespace AlpimiTest.Entities.EAuth
             _client = _factory.CreateClient();
         }
 
+        public async Task InitializeAsync()
+        {
+            DotNetEnv.Env.Load(
+                Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..", ".env")
+            );
+            await DbHelper.UserCleaner(_client);
+            userId = await DbHelper.SetupUser(_client, MockData.GetCreateUserDTODetails());
+        }
+
+        public async Task DisposeAsync()
+        {
+            await DbHelper.UserCleaner(_client);
+        }
+
         [Fact]
         public async Task RefreshTokenThrowsUnothorizedErrorWhenNoJWTTokenIsGiven()
         {
+            _client.DefaultRequestHeaders.Authorization = null;
             var response = await _client.GetAsync("/api/Auth/refresh");
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         }
@@ -42,12 +59,9 @@ namespace AlpimiTest.Entities.EAuth
         [Fact]
         public async Task LoginReturnOKStatusCode()
         {
-            var userId = await DbHelper.SetupUser(_client, MockData.GetCreateUserDTODetails());
             var loginRequest = MockData.GetLoginDTODetails();
 
             var response = await _client.PostAsJsonAsync("/api/Auth/login", loginRequest);
-
-            await DbHelper.UserCleaner(_client);
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }

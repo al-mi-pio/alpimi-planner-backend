@@ -9,7 +9,7 @@ using Xunit;
 namespace AlpimiTest.Entities.EUser
 {
     [Collection("Sequential Tests")]
-    public class UserControllerTest
+    public class UserControllerTest : IAsyncLifetime
     {
         CustomWebApplicationFactory<Program> _factory;
         HttpClient _client;
@@ -18,6 +18,19 @@ namespace AlpimiTest.Entities.EUser
         {
             _factory = new CustomWebApplicationFactory<Program>();
             _client = _factory.CreateClient();
+        }
+
+        public async Task InitializeAsync()
+        {
+            DotNetEnv.Env.Load(
+                Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..", ".env")
+            );
+            await DbHelper.UserCleaner(_client);
+        }
+
+        public async Task DisposeAsync()
+        {
+            await DbHelper.UserCleaner(_client);
         }
 
         [Fact]
@@ -66,8 +79,6 @@ namespace AlpimiTest.Entities.EUser
             var response = await _client.PostAsJsonAsync("/api/User", userRequest);
             var jsonId = await response.Content.ReadFromJsonAsync<ApiGetResponse<Guid>>();
 
-            await _client.DeleteAsync($"/api/User/{jsonId!.Content}");
-
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
@@ -106,8 +117,6 @@ namespace AlpimiTest.Entities.EUser
             var response = await _client.PatchAsJsonAsync($"/api/User/{userId}", userUpdateRequest);
             var jsonResponse = await response.Content.ReadFromJsonAsync<ApiGetResponse<User>>();
 
-            await DbHelper.UserCleaner(_client);
-
             Assert.Equal(userUpdateRequest.Login, jsonResponse!.Content.Login);
             Assert.Equal(userUpdateRequest.CustomURL, jsonResponse!.Content.CustomURL);
         }
@@ -129,8 +138,6 @@ namespace AlpimiTest.Entities.EUser
             );
             await response.Content.ReadFromJsonAsync<ApiGetResponse<User>>();
 
-            await DbHelper.UserCleaner(_client);
-
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
@@ -148,8 +155,6 @@ namespace AlpimiTest.Entities.EUser
             var response = await _client.PatchAsJsonAsync($"/api/User/{userId}", userUpdateRequest);
             var jsonResponse = await response.Content.ReadFromJsonAsync<ApiGetResponse<User>>();
 
-            await DbHelper.UserCleaner(_client);
-
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
@@ -163,8 +168,6 @@ namespace AlpimiTest.Entities.EUser
             _client.DefaultRequestHeaders.Authorization = null;
             var response = await _client.PatchAsJsonAsync($"/api/User/{userId}", userUpdateRequest);
             var jsonResponse = await response.Content.ReadFromJsonAsync<ApiGetResponse<User>>();
-
-            await DbHelper.UserCleaner(_client);
 
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         }
@@ -183,8 +186,6 @@ namespace AlpimiTest.Entities.EUser
             var response = await _client.GetAsync($"/api/User/{userId}");
             var jsonResponse = await response.Content.ReadFromJsonAsync<ApiGetResponse<User>>();
 
-            await DbHelper.UserCleaner(_client);
-
             Assert.Equal(userRequest.Login, jsonResponse!.Content.Login);
             Assert.Equal(userRequest.CustomURL, jsonResponse!.Content.CustomURL);
         }
@@ -200,8 +201,6 @@ namespace AlpimiTest.Entities.EUser
             );
             var response = await _client.GetAsync($"/api/User/{userId}");
 
-            await DbHelper.UserCleaner(_client);
-
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
@@ -216,8 +215,6 @@ namespace AlpimiTest.Entities.EUser
             );
             var response = await _client.GetAsync($"/api/User/{new Guid()}");
 
-            await DbHelper.UserCleaner(_client);
-
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
@@ -228,8 +225,6 @@ namespace AlpimiTest.Entities.EUser
 
             _client.DefaultRequestHeaders.Authorization = null;
             var response = await _client.GetAsync($"/api/User/{userId}");
-
-            await DbHelper.UserCleaner(_client);
 
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         }
@@ -248,8 +243,6 @@ namespace AlpimiTest.Entities.EUser
             var response = await _client.GetAsync($"/api/User/byLogin/{userRequest.Login}");
             var jsonResponse = await response.Content.ReadFromJsonAsync<ApiGetResponse<User>>();
 
-            await DbHelper.UserCleaner(_client);
-
             Assert.Equal(userRequest.Login, jsonResponse!.Content.Login);
             Assert.Equal(userRequest.CustomURL, jsonResponse!.Content.CustomURL);
         }
@@ -267,8 +260,6 @@ namespace AlpimiTest.Entities.EUser
             );
             var response = await _client.GetAsync($"/api/User/byLogin/{userRequest.Login}");
 
-            await DbHelper.UserCleaner(_client);
-
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
@@ -283,8 +274,6 @@ namespace AlpimiTest.Entities.EUser
             );
             var response = await _client.GetAsync($"/api/User/byLogin/WrongLogin");
 
-            await DbHelper.UserCleaner(_client);
-
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
@@ -297,8 +286,6 @@ namespace AlpimiTest.Entities.EUser
 
             _client.DefaultRequestHeaders.Authorization = null;
             var response = await _client.GetAsync($"/api/User/byLogin/{userRequest.Login}");
-
-            await DbHelper.UserCleaner(_client);
 
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         }

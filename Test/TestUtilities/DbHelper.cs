@@ -1,8 +1,6 @@
 ﻿using System.Net.Http.Headers;
 using AlpimiAPI.Database;
-using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Entities.ESchedule.DTO;
-using AlpimiAPI.Entities.EUser;
 using AlpimiAPI.Entities.EUser.DTO;
 using AlpimiAPI.Responses;
 using AlpimiAPI.Utilities;
@@ -12,7 +10,7 @@ namespace AlpimiTest.TestUtilities
 {
     public static class DbHelper
     {
-        public static async Task<bool> UserCleaner(HttpClient _client)
+        public static async Task UserCleaner(HttpClient _client)
         {
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
@@ -27,7 +25,6 @@ namespace AlpimiTest.TestUtilities
             {
                 await _client.DeleteAsync($"/api/User/{userId}");
             }
-            return true;
         }
 
         public static async Task<Guid> SetupUser(HttpClient _client, CreateUserDTO userRequest)

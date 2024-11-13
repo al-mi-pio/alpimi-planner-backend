@@ -5,8 +5,9 @@ using AlpimiTest.TestUtilities;
 using Moq;
 using Xunit;
 
-namespace AlpimiTest.Entities.WUser.Queres
+namespace AlpimiTest.Entities.EUser.Queres
 {
+    [Collection("Sequential Tests")]
     public class GetUserCommandUnit
     {
         private readonly Mock<IDbService> _dbService = new();

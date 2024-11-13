@@ -12,6 +12,7 @@ using Xunit;
 
 namespace AlpimiTest.Entities.ESchedule.Commands
 {
+    [Collection("Sequential Tests")]
     public class CreateScheduleCommandUnit
     {
         private readonly Mock<IDbService> _dbService = new();

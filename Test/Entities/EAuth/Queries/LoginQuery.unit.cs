@@ -13,6 +13,7 @@ using Xunit;
 
 namespace AlpimiTest.Entities.EAuth.Queries
 {
+    [Collection("Sequential Tests")]
     public class LoginQueryUnit
     {
         private readonly Mock<IDbService> _dbService = new();

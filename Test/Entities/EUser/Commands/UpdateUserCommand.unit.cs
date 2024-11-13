@@ -12,6 +12,7 @@ using Xunit;
 
 namespace AlpimiTest.Entities.EUser.Commands
 {
+    [Collection("Sequential Tests")]
     public class UpdateUserCommandUnit
     {
         private readonly Mock<IDbService> _dbService = new();

@@ -1,7 +1,6 @@
 ﻿using AlpimiAPI.Database;
 using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Entities.ESchedule.Commands;
-using AlpimiAPI.Entities.EUser;
 using AlpimiAPI.Responses;
 using AlpimiTest.TestSetup;
 using AlpimiTest.TestUtilities;
@@ -13,6 +12,7 @@ using Xunit;
 
 namespace AlpimiTest.Entities.ESchedule.Commands
 {
+    [Collection("Sequential Tests")]
     public class UpdateScheduleCommandUnit
     {
         private readonly Mock<IDbService> _dbService = new();

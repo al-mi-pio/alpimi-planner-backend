@@ -7,6 +7,7 @@ using Xunit;
 
 namespace AlpimiTest.Entities.EUser.Queres
 {
+    [Collection("Sequential Tests")]
     public class GetUserByLoginCommandUnit
     {
         private readonly Mock<IDbService> _dbService = new();

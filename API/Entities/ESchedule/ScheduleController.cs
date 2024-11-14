@@ -61,10 +61,10 @@ namespace AlpimiAPI.Entities.ESchedule
             {
                 return BadRequest(new ApiErrorResponse(400, ex.errors));
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return BadRequest(
-                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError"])])
+                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError", ex])])
                 );
             }
         }
@@ -102,10 +102,10 @@ namespace AlpimiAPI.Entities.ESchedule
 
                 return Ok(response);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return BadRequest(
-                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError"])])
+                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError", ex])])
                 );
             }
         }
@@ -142,10 +142,10 @@ namespace AlpimiAPI.Entities.ESchedule
                 var response = new ApiGetResponse<Schedule>(result);
                 return Ok(response);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return BadRequest(
-                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError"])])
+                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError", ex])])
                 );
             }
         }
@@ -173,10 +173,10 @@ namespace AlpimiAPI.Entities.ESchedule
 
                 return NoContent();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return BadRequest(
-                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError"])])
+                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError", ex])])
                 );
             }
         }
@@ -224,10 +224,10 @@ namespace AlpimiAPI.Entities.ESchedule
             {
                 return BadRequest(new ApiErrorResponse(400, ex.errors));
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return BadRequest(
-                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError"])])
+                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError", ex])])
                 );
             }
         }
@@ -271,10 +271,10 @@ namespace AlpimiAPI.Entities.ESchedule
             {
                 return BadRequest(new ApiErrorResponse(400, ex.errors));
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return BadRequest(
-                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError"])])
+                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError", ex])])
                 );
             }
         }

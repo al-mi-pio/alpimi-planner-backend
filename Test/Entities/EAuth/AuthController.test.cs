@@ -28,7 +28,7 @@ namespace AlpimiTest.Entities.EAuth
                 Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..", ".env")
             );
             await DbHelper.UserCleaner(_client);
-            userId = await DbHelper.SetupUser(_client, MockData.GetCreateUserDTODetails());
+            await DbHelper.SetupUser(_client, MockData.GetCreateUserDTODetails());
         }
 
         public async Task DisposeAsync()

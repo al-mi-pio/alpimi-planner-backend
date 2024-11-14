@@ -2,12 +2,11 @@
 using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Entities.EUser;
 using AlpimiAPI.Utilities;
-using Castle.Components.DictionaryAdapter.Xml;
 using Microsoft.EntityFrameworkCore;
 
 namespace AlpimiAPI.Database
 {
-    public class Context(DbContextOptions<Context> options) : DbContext(options)
+    public class Context : DbContext
     {
         #region Entities
 
@@ -16,5 +15,9 @@ namespace AlpimiAPI.Database
         public DbSet<Auth> Auth { get; set; }
         public DbSet<Schedule> Schedule { get; set; }
         #endregion
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlServer(Configuration.GetConnectionString());
+        }
     }
 }

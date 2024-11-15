@@ -7,6 +7,7 @@ using alpimi_planner_backend.API.Locales;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Localization;
 using Sprache;
 
@@ -17,6 +18,8 @@ namespace AlpimiAPI.Entities.EUser
     [Authorize]
     [Consumes("application/json")]
     [Produces("application/json")]
+    [ProducesResponseType(typeof(ApiErrorResponse), 429)]
+    [EnableRateLimiting("FixedWindow")]
     public class UserController : ControllerBase
     {
         private readonly IMediator _mediator;

@@ -51,7 +51,7 @@ jobs:
         run: dotnet csharpier --check .
 
   test:
-    name: Unit tests
+    name: Tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -66,5 +66,19 @@ jobs:
           dotnet restore
           dotnet tool restore
 
-      - name: Test
+      - name: Install EF Core CLI
+        run: dotnet tool install dotnet-ef --global
+
+      - name: Install SQL Server
+        uses: Particular/install-sql-server-action@v1.2.0
+        with:
+          catalog: alpimi
+          connection-string-env-var: TEST_CONNECTION_STRING
+
+      - name: Database migration
+        run: |
+          dotnet ef migrations script --idempotent -o tmp/db.sql
+          sqlcmd -d "alpimi" -i tmp/db.sql
+
+      - name: Run unit and integration tests
         run: dotnet test --verbosity normal

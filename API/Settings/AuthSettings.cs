@@ -1,6 +1,4 @@
-﻿using System.Security.Cryptography;
-
-namespace AlpimiAPI.Settings
+﻿namespace AlpimiAPI.Settings
 {
     public static class AuthSettings
     {

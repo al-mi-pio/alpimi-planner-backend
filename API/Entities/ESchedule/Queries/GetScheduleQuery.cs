@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AlpimiAPI.Entities.ESchedule.Queries
 {
-    public record GetScheduleQuery(Guid Id, Guid FilteredID, string Role) : IRequest<Schedule?>;
+    public record GetScheduleQuery(Guid Id, Guid FilteredId, string Role) : IRequest<Schedule?>;
 
     public class GetScheduleHandler : IRequestHandler<GetScheduleQuery, Schedule?>
     {

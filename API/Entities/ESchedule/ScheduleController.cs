@@ -61,10 +61,10 @@ namespace AlpimiAPI.Entities.ESchedule
             {
                 return BadRequest(new ApiErrorResponse(400, ex.errors));
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return BadRequest(
-                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError"])])
+                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError", ex])])
                 );
             }
         }
@@ -85,10 +85,10 @@ namespace AlpimiAPI.Entities.ESchedule
             [FromHeader] string Authorization
         )
         {
-            Guid filteredID = Privileges.GetUserIdFromToken(Authorization);
+            Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
             string privileges = Privileges.GetUserRoleFromToken(Authorization);
 
-            var query = new GetScheduleQuery(id, filteredID, privileges);
+            var query = new GetScheduleQuery(id, filteredId, privileges);
             try
             {
                 Schedule? result = await _mediator.Send(query);
@@ -102,10 +102,10 @@ namespace AlpimiAPI.Entities.ESchedule
 
                 return Ok(response);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return BadRequest(
-                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError"])])
+                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError", ex])])
                 );
             }
         }
@@ -126,10 +126,10 @@ namespace AlpimiAPI.Entities.ESchedule
             [FromHeader] string Authorization
         )
         {
-            Guid filteredID = Privileges.GetUserIdFromToken(Authorization);
+            Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
             string privileges = Privileges.GetUserRoleFromToken(Authorization);
 
-            var query = new GetScheduleByNameQuery(name, filteredID, privileges);
+            var query = new GetScheduleByNameQuery(name, filteredId, privileges);
             try
             {
                 Schedule? result = await _mediator.Send(query);
@@ -142,10 +142,10 @@ namespace AlpimiAPI.Entities.ESchedule
                 var response = new ApiGetResponse<Schedule>(result);
                 return Ok(response);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return BadRequest(
-                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError"])])
+                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError", ex])])
                 );
             }
         }
@@ -164,19 +164,19 @@ namespace AlpimiAPI.Entities.ESchedule
             [FromHeader] string Authorization
         )
         {
-            Guid filteredID = Privileges.GetUserIdFromToken(Authorization);
+            Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
             string privileges = Privileges.GetUserRoleFromToken(Authorization);
-            var command = new DeleteScheduleCommand(id, filteredID, privileges);
+            var command = new DeleteScheduleCommand(id, filteredId, privileges);
             try
             {
                 await _mediator.Send(command);
 
                 return NoContent();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return BadRequest(
-                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError"])])
+                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError", ex])])
                 );
             }
         }
@@ -198,14 +198,14 @@ namespace AlpimiAPI.Entities.ESchedule
             [FromHeader] string Authorization
         )
         {
-            Guid filteredID = Privileges.GetUserIdFromToken(Authorization);
+            Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
             string privileges = Privileges.GetUserRoleFromToken(Authorization);
 
             var command = new UpdateScheduleCommand(
                 id,
                 request.Name,
                 request.SchoolHour,
-                filteredID,
+                filteredId,
                 privileges
             );
             try
@@ -224,10 +224,10 @@ namespace AlpimiAPI.Entities.ESchedule
             {
                 return BadRequest(new ApiErrorResponse(400, ex.errors));
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return BadRequest(
-                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError"])])
+                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError", ex])])
                 );
             }
         }
@@ -250,11 +250,11 @@ namespace AlpimiAPI.Entities.ESchedule
             [FromQuery] string sortOrder = PaginationSettings.sortOrder
         )
         {
-            Guid filteredID = Privileges.GetUserIdFromToken(Authorization);
+            Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
             string privileges = Privileges.GetUserRoleFromToken(Authorization);
 
             var query = new GetSchedulesQuery(
-                filteredID,
+                filteredId,
                 privileges,
                 new PaginationParams(perPage, (page - 1) * perPage, sortBy, sortOrder)
             );
@@ -271,10 +271,10 @@ namespace AlpimiAPI.Entities.ESchedule
             {
                 return BadRequest(new ApiErrorResponse(400, ex.errors));
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return BadRequest(
-                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError"])])
+                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError", ex])])
                 );
             }
         }

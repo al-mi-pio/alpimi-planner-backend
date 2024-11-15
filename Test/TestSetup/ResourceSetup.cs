@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Localization;
 using Moq;
 
-namespace AlpimiTest.TestUtilities
+namespace AlpimiTest.TestSetup
 {
     public static class ResourceSetup
     {
@@ -60,25 +60,23 @@ namespace AlpimiTest.TestUtilities
             }
         };
 
-        public static async Task<Mock<IStringLocalizer<Errors>>> Setup()
+        public static Mock<IStringLocalizer<Errors>> Setup()
         {
-            await Task.Run(() =>
-            {
-                _str.Setup(localizer => localizer[It.IsAny<string>(), It.IsAny<object[]>()])
-                    .Returns(
-                        (string key, object[] args) =>
-                        {
-                            return localizedErrorsWithoutArgs[key](args);
-                        }
-                    );
-                _str.Setup(localizer => localizer[It.IsAny<string>()])
-                    .Returns(
-                        (string key) =>
-                        {
-                            return new LocalizedString(key, localizedErrorsWithArgs[key]);
-                        }
-                    );
-            });
+            _str.Setup(localizer => localizer[It.IsAny<string>(), It.IsAny<object[]>()])
+                .Returns(
+                    (string key, object[] args) =>
+                    {
+                        return localizedErrorsWithoutArgs[key](args);
+                    }
+                );
+            _str.Setup(localizer => localizer[It.IsAny<string>()])
+                .Returns(
+                    (string key) =>
+                    {
+                        return new LocalizedString(key, localizedErrorsWithArgs[key]);
+                    }
+                );
+
             return _str;
         }
     }

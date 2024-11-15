@@ -52,10 +52,10 @@ namespace AlpimiAPI.Entities.EAuth
             {
                 return BadRequest(new ApiErrorResponse(400, ex.errors));
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return BadRequest(
-                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError"])])
+                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError", ex])])
                 );
             }
         }
@@ -80,11 +80,20 @@ namespace AlpimiAPI.Entities.EAuth
                 Privileges.GetUserIdFromToken(Authorization),
                 Privileges.GetUserRoleFromToken(Authorization)
             );
-            var refreshTokenHandler = new RefreshTokenHandler();
-            string result = refreshTokenHandler.Handle(query, new CancellationToken());
+            try
+            {
+                var refreshTokenHandler = new RefreshTokenHandler();
+                string result = refreshTokenHandler.Handle(query, new CancellationToken());
 
-            var response = new ApiGetResponse<String>(result);
-            return Ok(response);
+                var response = new ApiGetResponse<String>(result);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(
+                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError", ex])])
+                );
+            }
         }
     }
 }

@@ -12,6 +12,7 @@ A WEP API created in .NET for the Alpimi planner
 - Create a `.env` file inside the root of the project containing:
 ```
 CONNECTION_STRING="put_connection_string_here"
+TEST_CONNECTION_STRING="put_test_server_connection_string_here"
 JWT_KEY="put_key_here"
 JWT_EXPIRE=60
 JWT_ISSUER="https://example.com/"

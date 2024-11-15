@@ -1,3 +1,4 @@
+using System.Data;
 using System.Globalization;
 using System.Reflection;
 using System.Text;
@@ -6,21 +7,25 @@ using AlpimiAPI.Database;
 using AlpimiAPI.Responses;
 using AlpimiAPI.Utilities;
 using alpimi_planner_backend.API.Locales;
-using Microsoft.AspNetCore.Localization;
-using Microsoft.AspNetCore.Localization.Routing;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Localization;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 DotNetEnv.Env.Load();
+
 try
 {
     builder.Services.AddControllers();
     builder.Services.AddMediatR(cfg =>
         cfg.RegisterServicesFromAssemblies(typeof(Program).Assembly)
     );
+
+    builder.Services.AddScoped<IDbConnection>(sp => new SqlConnection(
+        Configuration.GetConnectionString()
+    ));
 
     builder.Services.AddScoped<IDbService, DbService>();
 
@@ -97,7 +102,7 @@ try
                 },
                 OnForbidden = context =>
                 {
-                    context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                    context.Response.StatusCode = StatusCodes.Status403Forbidden;
                     context.Response.ContentType = "application/json";
                     var jsonResponse = System.Text.Json.JsonSerializer.Serialize(
                         new ApiErrorResponse(
@@ -148,9 +153,12 @@ try
 
     var app = builder.Build();
     var adminInit = new AdminInit(app.Services.GetService<IStringLocalizer<General>>()!);
-    await adminInit.StartupBase();
 
-    //app.UseSwagger();
+    if (!app.Environment.IsEnvironment("Testing"))
+    {
+        await adminInit.StartupBase();
+    }
+
     app.UseSwagger(c =>
     {
         c.RouteTemplate = "api/{documentname}/swagger.json";
@@ -170,6 +178,8 @@ try
     app.UseHttpsRedirection();
 
     app.UseAuthorization();
+
+    app.UseRequestLocalization();
 
     app.MapControllers();
 

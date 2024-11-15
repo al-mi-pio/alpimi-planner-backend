@@ -5,13 +5,16 @@ using AlpimiAPI.Entities.EUser.Queries;
 using AlpimiAPI.Utilities;
 using alpimi_planner_backend.API.Locales;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Localization;
 
 namespace AlpimiAPI
 {
     public class AdminInit
     {
-        private static readonly IDbService _dbService = new DbService();
+        private static readonly DbService _dbService = new DbService(
+            new SqlConnection(Configuration.GetConnectionString())
+        );
         private readonly IStringLocalizer<General> _str;
 
         public AdminInit(IStringLocalizer<General> str)
@@ -32,7 +35,7 @@ namespace AlpimiAPI
             }
             catch (Exception)
             {
-                throw new Exception(_str["connectionError"]);
+                throw new Exception("Connection String");
             }
 
             if (admins == null)

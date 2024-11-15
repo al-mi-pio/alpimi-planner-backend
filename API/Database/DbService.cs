@@ -2,6 +2,7 @@
 using AlpimiAPI.Utilities;
 using Dapper;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 
 namespace AlpimiAPI.Database
 {
@@ -9,9 +10,9 @@ namespace AlpimiAPI.Database
     {
         private readonly IDbConnection _db;
 
-        public DbService()
+        public DbService(IDbConnection dbConnection)
         {
-            _db = new SqlConnection(Configuration.GetConnectionString());
+            _db = dbConnection;
         }
 
         public async Task<T?> Get<T>(string command, object parms)

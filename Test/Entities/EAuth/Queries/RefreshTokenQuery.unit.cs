@@ -1,12 +1,11 @@
 ﻿using AlpimiAPI.Database;
-using AlpimiAPI.Entities.EAuth;
 using AlpimiAPI.Entities.EAuth.Queries;
-using AlpimiAPI.Entities.EUser;
 using Moq;
 using Xunit;
 
 namespace AlpimiTest.Entities.EAuth.Queries
 {
+    [Collection("Sequential Tests")]
     public class RefreshTokenQueryUnit
     {
         private readonly Mock<IDbService> _dbService = new();

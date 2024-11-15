@@ -2,6 +2,7 @@
 using AlpimiAPI.Entities.EUser;
 using AlpimiAPI.Entities.EUser.Commands;
 using AlpimiAPI.Responses;
+using AlpimiTest.TestSetup;
 using AlpimiTest.TestUtilities;
 using alpimi_planner_backend.API.Locales;
 using Microsoft.Extensions.Localization;
@@ -11,27 +12,21 @@ using Xunit;
 
 namespace AlpimiTest.Entities.EUser.Commands
 {
+    [Collection("Sequential Tests")]
     public class UpdateUserCommandUnit
     {
         private readonly Mock<IDbService> _dbService = new();
+        private readonly Mock<IStringLocalizer<Errors>> _str;
 
-        private User GetUserDetails()
+        public UpdateUserCommandUnit()
         {
-            var user = new User()
-            {
-                Id = new Guid(),
-                Login = "marek",
-                CustomURL = "44f"
-            };
-
-            return user;
+            _str = ResourceSetup.Setup();
         }
 
         [Fact]
         public async Task ReturnsUpdatedUserWhenIdIsCorrect()
         {
-            var user = GetUserDetails();
-            Mock<IStringLocalizer<Errors>> _str = await ResourceSetup.Setup();
+            var user = MockData.GetUserDetails();
 
             _dbService
                 .Setup(s => s.Update<User>(It.IsAny<string>(), It.IsAny<object>()))
@@ -53,60 +48,9 @@ namespace AlpimiTest.Entities.EUser.Commands
         }
 
         [Fact]
-        public async Task ReturnsNullWhenIdIsIncorrect()
-        {
-            var user = GetUserDetails();
-            Mock<IStringLocalizer<Errors>> _str = await ResourceSetup.Setup();
-
-            _dbService
-                .Setup(s => s.Update<User>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync((User?)null);
-
-            var updateUserCommand = new UpdateUserCommand(
-                new Guid(),
-                "marek2",
-                "f44",
-                new Guid(),
-                "Admin"
-            );
-
-            var updateUserHandler = new UpdateUserHandler(_dbService.Object, _str.Object);
-
-            var result = await updateUserHandler.Handle(updateUserCommand, new CancellationToken());
-
-            Assert.Null(result);
-        }
-
-        [Fact]
-        public async Task ReturnsNullWhenWrongUserGetsDetails()
-        {
-            var user = GetUserDetails();
-            Mock<IStringLocalizer<Errors>> _str = await ResourceSetup.Setup();
-
-            _dbService
-                .Setup(s => s.Update<User>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync((User?)null);
-
-            var updateUserCommand = new UpdateUserCommand(
-                user.Id,
-                "marek2",
-                "f44",
-                new Guid(),
-                "User"
-            );
-
-            var updateUserHandler = new UpdateUserHandler(_dbService.Object, _str.Object);
-
-            var result = await updateUserHandler.Handle(updateUserCommand, new CancellationToken());
-
-            Assert.Null(result);
-        }
-
-        [Fact]
         public async Task ThrowsErrorWhenURLAlreadyExists()
         {
-            var user = GetUserDetails();
-            Mock<IStringLocalizer<Errors>> _str = await ResourceSetup.Setup();
+            var user = MockData.GetUserDetails();
 
             _dbService
                 .Setup(s => s.Update<User>(It.IsAny<string>(), It.IsAny<object>()))

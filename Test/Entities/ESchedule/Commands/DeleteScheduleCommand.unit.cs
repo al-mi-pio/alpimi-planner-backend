@@ -5,6 +5,7 @@ using Xunit;
 
 namespace AlpimiTest.Entities.ESchedule.Commands
 {
+    [Collection("Sequential Tests")]
     public class DeleteScheduleCommandUnit
     {
         private readonly Mock<IDbService> _dbService = new();

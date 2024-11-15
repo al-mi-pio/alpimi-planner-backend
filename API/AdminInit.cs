@@ -3,15 +3,26 @@ using AlpimiAPI.Database;
 using AlpimiAPI.Entities.EUser;
 using AlpimiAPI.Entities.EUser.Queries;
 using AlpimiAPI.Utilities;
+using alpimi_planner_backend.API.Locales;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Localization;
 
 namespace AlpimiAPI
 {
-    public static class AdminInit
+    public class AdminInit
     {
-        private static readonly IDbService _dbService = new DbService();
+        private static readonly DbService _dbService = new DbService(
+            new SqlConnection(Configuration.GetConnectionString())
+        );
+        private readonly IStringLocalizer<General> _str;
 
-        public static async Task StartupBase()
+        public AdminInit(IStringLocalizer<General> str)
+        {
+            _str = str;
+        }
+
+        public async Task StartupBase()
         {
             string? admins = "1";
 
@@ -29,29 +40,15 @@ namespace AlpimiAPI
 
             if (admins == null)
             {
-                Console.Write(
-                    @"
-           _       _           _            _                             
-     /\   | |     (_)         (_)          | |                            
-    /  \  | |_ __  _ _ __ ___  _      _ __ | | __ _ _ __  _ __   ___ _ __ 
-   / /\ \ | | '_ \| | '_ ` _ \| |    | '_ \| |/ _` | '_ \| '_ \ / _ \ '__|
-  / ____ \| | |_) | | | | | | | |    | |_) | | (_| | | | | | | |  __/ |   
- /_/    \_\_| .__/|_|_| |_| |_|_|    | .__/|_|\__,_|_| |_|_| |_|\___|_|   
-            | |                      | |                                  
-            |_|                      |_|                                  
-
-Welcome to Alpimi Planner!
-To start using the API service you need to create an Administrator account first.
-
-"
-                );
+                Console.Write(_str["alpimiLogo"]);
+                Console.WriteLine(_str["welcomeMsg"]);
                 ActionResult<User?> user;
                 string? login;
                 try
                 {
                     do
                     {
-                        System.Console.WriteLine("Login:");
+                        System.Console.WriteLine(_str["login"]);
                         login = Console.ReadLine();
 
                         GetUserByLoginHandler getUserByLoginHandler = new GetUserByLoginHandler(
@@ -68,21 +65,20 @@ To start using the API service you need to create an Administrator account first
                         );
                     } while (user.Value != null || login == "");
 
-                    string? password1 = "temp";
-                    string? password2 = "temp";
+                    string? password = null;
+
                     do
                     {
-                        if (password1 != password2)
+                        if (password != null)
                         {
-                            Console.WriteLine("Pasword don't match, try again\nPassword:");
+                            Console.WriteLine(_str["passwordsDontMatch"]);
                         }
-                        Console.WriteLine("Password");
-                        password1 = Console.ReadLine();
-                        Console.WriteLine("Repeat Password:");
-                        password2 = Console.ReadLine();
-                    } while (password1 != password2 || password1 == "");
+                        Console.WriteLine(_str["password"]);
+                        password = Console.ReadLine();
+                        Console.WriteLine(_str["repeatPassword"]);
+                    } while (password != Console.ReadLine() || password == "");
 
-                    var userID = await _dbService.Post<Guid>(
+                    var userId = await _dbService.Post<Guid>(
                         @"
                     INSERT INTO [User] ([Id],[Login],[CustomURL])
                     OUTPUT INSERTED.Id                    
@@ -95,7 +91,7 @@ To start using the API service you need to create an Administrator account first
                     );
                     byte[] salt = RandomNumberGenerator.GetBytes(16);
                     byte[] hash = Rfc2898DeriveBytes.Pbkdf2(
-                        password1!,
+                        password!,
                         salt,
                         Configuration.GetHashIterations(),
                         Configuration.GetHashAlgorithm(),
@@ -104,8 +100,8 @@ To start using the API service you need to create an Administrator account first
 
                     await _dbService.Post<Guid>(
                         @"
-                    INSERT INTO [Auth] ([Id],[Password],[Salt],[Role],[UserID])
-                    OUTPUT INSERTED.UserID                    
+                    INSERT INTO [Auth] ([Id],[Password],[Salt],[Role],[UserId])
+                    OUTPUT INSERTED.UserId                    
                     VALUES ('"
                             + Guid.NewGuid()
                             + "','"
@@ -113,11 +109,11 @@ To start using the API service you need to create an Administrator account first
                             + "','"
                             + Convert.ToBase64String(salt)
                             + "','Admin','"
-                            + userID
+                            + userId
                             + "');",
                         ""
                     );
-                    Console.WriteLine("Success!");
+                    Console.WriteLine(_str["success"]);
                 }
                 catch (Exception)
                 {

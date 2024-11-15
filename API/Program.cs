@@ -1,19 +1,33 @@
+using System.Data;
+using System.Globalization;
 using System.Reflection;
 using System.Text;
 using AlpimiAPI;
 using AlpimiAPI.Database;
+using AlpimiAPI.Responses;
+using AlpimiAPI.Settings;
 using AlpimiAPI.Utilities;
+using alpimi_planner_backend.API.Locales;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Localization;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 DotNetEnv.Env.Load();
+
 try
 {
     builder.Services.AddControllers();
     builder.Services.AddMediatR(cfg =>
         cfg.RegisterServicesFromAssemblies(typeof(Program).Assembly)
     );
+
+    builder.Services.AddScoped<IDbConnection>(sp => new SqlConnection(
+        Configuration.GetConnectionString()
+    ));
 
     builder.Services.AddScoped<IDbService, DbService>();
 
@@ -74,6 +88,34 @@ try
                     Encoding.UTF8.GetBytes(Configuration.GetJWTKey())
                 ),
             };
+            cfg.Events = new Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerEvents
+            {
+                OnChallenge = context =>
+                {
+                    context.HandleResponse();
+
+                    context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                    context.Response.ContentType = "application/json";
+                    var jsonResponse = System.Text.Json.JsonSerializer.Serialize(
+                        new ApiErrorResponse(401, [new ErrorObject("You are not authenticated")])
+                    );
+
+                    return context.Response.WriteAsync(jsonResponse);
+                },
+                OnForbidden = context =>
+                {
+                    context.Response.StatusCode = StatusCodes.Status403Forbidden;
+                    context.Response.ContentType = "application/json";
+                    var jsonResponse = System.Text.Json.JsonSerializer.Serialize(
+                        new ApiErrorResponse(
+                            403,
+                            [new ErrorObject("You have no permission to access this resource")]
+                        )
+                    );
+
+                    return context.Response.WriteAsync(jsonResponse);
+                }
+            };
         });
 
     builder.Services.AddSwaggerGen(c =>
@@ -83,12 +125,66 @@ try
         var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
         c.IncludeXmlComments(xmlPath);
     });
+    builder
+        .Services.AddControllers()
+        .ConfigureApiBehaviorOptions(options =>
+        {
+            options.InvalidModelStateResponseFactory = context =>
+            {
+                var errors = context
+                    .ModelState.Values.SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage)
+                    .ToArray();
+
+                return new BadRequestObjectResult(
+                    new ApiErrorResponse(400, [new ErrorObject(errors[0])!])
+                );
+            };
+        });
+
+    builder.Services.AddLocalization();
+
+    builder.Services.Configure<RequestLocalizationOptions>(options =>
+    {
+        var supportedCultures = new List<CultureInfo>
+        {
+            new CultureInfo("en-US"),
+            new CultureInfo("pl-PL")
+        };
+    });
+
+    builder.Services.AddRateLimiter(options =>
+    {
+        options
+            .AddFixedWindowLimiter(
+                "FixedWindow",
+                limiterOptions =>
+                {
+                    limiterOptions.PermitLimit = RateLimiterSettings.permitLimit;
+                    limiterOptions.Window = RateLimiterSettings.timeWindow;
+                }
+            )
+            .OnRejected = async (context, _) =>
+        {
+            context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+            context.HttpContext.Response.ContentType = "application/json";
+            var jsonResponse = System.Text.Json.JsonSerializer.Serialize(
+                new ApiErrorResponse(429, [new ErrorObject("Too many requests. Try again later")])
+            );
+            await context.HttpContext.Response.WriteAsync(jsonResponse);
+        };
+    });
 
     var app = builder.Build();
+    var adminInit = new AdminInit(app.Services.GetService<IStringLocalizer<General>>()!);
 
-    await AdminInit.StartupBase();
+    if (!app.Environment.IsEnvironment("Testing"))
+    {
+        await adminInit.StartupBase();
+    }
 
-    //app.UseSwagger();
+    app.UseRateLimiter();
+
     app.UseSwagger(c =>
     {
         c.RouteTemplate = "api/{documentname}/swagger.json";
@@ -108,6 +204,8 @@ try
     app.UseHttpsRedirection();
 
     app.UseAuthorization();
+
+    app.UseRequestLocalization();
 
     app.MapControllers();
 

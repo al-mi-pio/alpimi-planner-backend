@@ -1,46 +1,32 @@
 ﻿using AlpimiAPI.Database;
 using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Entities.ESchedule.Commands;
-using AlpimiAPI.Entities.EUser;
+using AlpimiAPI.Responses;
+using AlpimiTest.TestSetup;
+using AlpimiTest.TestUtilities;
+using alpimi_planner_backend.API.Locales;
+using Microsoft.Extensions.Localization;
 using Moq;
+using Newtonsoft.Json;
 using Xunit;
 
 namespace AlpimiTest.Entities.ESchedule.Commands
 {
+    [Collection("Sequential Tests")]
     public class UpdateScheduleCommandUnit
     {
         private readonly Mock<IDbService> _dbService = new();
+        private readonly Mock<IStringLocalizer<Errors>> _str;
 
-        private User GetUserDetails()
+        public UpdateScheduleCommandUnit()
         {
-            var user = new User()
-            {
-                Id = new Guid(),
-                Login = "marek",
-                CustomURL = "44f"
-            };
-
-            return user;
-        }
-
-        private Schedule GetScheduleDetails()
-        {
-            var schedule = new Schedule()
-            {
-                Id = new Guid(),
-                Name = "Plan_Marka",
-                SchoolHour = 60,
-                UserID = new Guid(),
-                User = GetUserDetails()
-            };
-
-            return schedule;
+            _str = ResourceSetup.Setup();
         }
 
         [Fact]
         public async Task ReturnsUpdatedUserWhenIdIsCorrect()
         {
-            var schedule = GetScheduleDetails();
+            var schedule = MockData.GetScheduleDetails();
 
             _dbService
                 .Setup(s => s.Update<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
@@ -54,7 +40,7 @@ namespace AlpimiTest.Entities.ESchedule.Commands
                 "Admin"
             );
 
-            var updateScheduleHandler = new UpdateScheduleHandler(_dbService.Object);
+            var updateScheduleHandler = new UpdateScheduleHandler(_dbService.Object, _str.Object);
 
             var result = await updateScheduleHandler.Handle(
                 updateScheduleCommand,
@@ -65,63 +51,9 @@ namespace AlpimiTest.Entities.ESchedule.Commands
         }
 
         [Fact]
-        public async Task ReturnsNullWhenIdIsIncorrect()
-        {
-            var schedule = GetScheduleDetails();
-
-            _dbService
-                .Setup(s => s.Update<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync((Schedule?)null);
-
-            var updateScheduleCommand = new UpdateScheduleCommand(
-                schedule.Id,
-                "plan_marka2",
-                61,
-                new Guid(),
-                "Admin"
-            );
-
-            var updateScheduleHandler = new UpdateScheduleHandler(_dbService.Object);
-
-            var result = await updateScheduleHandler.Handle(
-                updateScheduleCommand,
-                new CancellationToken()
-            );
-
-            Assert.Null(result);
-        }
-
-        [Fact]
-        public async Task ReturnsNullWhenWrongUserGetsDetails()
-        {
-            var schedule = GetScheduleDetails();
-
-            _dbService
-                .Setup(s => s.Update<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync((Schedule?)null);
-
-            var updateScheduleCommand = new UpdateScheduleCommand(
-                schedule.Id,
-                "plan_marka2",
-                61,
-                new Guid(),
-                "User"
-            );
-
-            var updateScheduleHandler = new UpdateScheduleHandler(_dbService.Object);
-
-            var result = await updateScheduleHandler.Handle(
-                updateScheduleCommand,
-                new CancellationToken()
-            );
-
-            Assert.Null(result);
-        }
-
-        [Fact]
         public async Task ThrowsErrorWhenURLAlreadyExists()
         {
-            var schedule = GetScheduleDetails();
+            var schedule = MockData.GetScheduleDetails();
 
             _dbService
                 .Setup(s => s.Update<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
@@ -138,9 +70,9 @@ namespace AlpimiTest.Entities.ESchedule.Commands
                 "Admin"
             );
 
-            var updateScheduleHandler = new UpdateScheduleHandler(_dbService.Object);
+            var updateScheduleHandler = new UpdateScheduleHandler(_dbService.Object, _str.Object);
 
-            var result = await Assert.ThrowsAsync<BadHttpRequestException>(
+            var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateScheduleHandler.Handle(
                         updateScheduleCommand,
@@ -148,7 +80,15 @@ namespace AlpimiTest.Entities.ESchedule.Commands
                     )
             );
 
-            Assert.Equal("Name already taken", result.Message);
+            Assert.Equal(
+                JsonConvert.SerializeObject(
+                    new ErrorObject[]
+                    {
+                        new ErrorObject("There is already a Schedule with the name Plan_Marka")
+                    }
+                ),
+                JsonConvert.SerializeObject(result.errors)
+            );
         }
     }
 }

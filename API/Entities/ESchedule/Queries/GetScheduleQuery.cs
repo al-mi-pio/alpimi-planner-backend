@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AlpimiAPI.Entities.ESchedule.Queries
 {
-    public record GetScheduleQuery(Guid Id, Guid FilteredID, string Role) : IRequest<Schedule?>;
+    public record GetScheduleQuery(Guid Id, Guid FilteredId, string Role) : IRequest<Schedule?>;
 
     public class GetScheduleHandler : IRequestHandler<GetScheduleQuery, Schedule?>
     {
@@ -27,22 +27,26 @@ namespace AlpimiAPI.Entities.ESchedule.Queries
             {
                 case "Admin":
                     schedule = await _dbService.Get<Schedule?>(
-                        "SELECT [Id], [Name], [SchoolHour], [UserID] FROM [Schedule] WHERE [Id] = @Id;",
+                        "SELECT [Id], [Name], [SchoolHour], [UserId] FROM [Schedule] WHERE [Id] = @Id;",
                         request
                     );
                     break;
                 default:
                     schedule = await _dbService.Get<Schedule?>(
-                        "SELECT [Id], [Name], [SchoolHour], [UserID] FROM [Schedule] WHERE [Id] = @Id AND [UserId] = @FilteredID;",
+                        "SELECT [Id], [Name], [SchoolHour], [UserId] FROM [Schedule] WHERE [Id] = @Id AND [UserId] = @FilteredId;",
                         request
                     );
                     break;
             }
-            GetUserHandler getUserHandler = new GetUserHandler(_dbService);
-            GetUserQuery getUserQuery = new GetUserQuery(request.FilteredID, new Guid(), "Admin");
-            ActionResult<User?> user = await getUserHandler.Handle(getUserQuery, cancellationToken);
+
             if (schedule != null)
             {
+                GetUserHandler getUserHandler = new GetUserHandler(_dbService);
+                GetUserQuery getUserQuery = new GetUserQuery(schedule.UserId, new Guid(), "Admin");
+                ActionResult<User?> user = await getUserHandler.Handle(
+                    getUserQuery,
+                    cancellationToken
+                );
                 schedule.User = user.Value!;
             }
             return schedule;

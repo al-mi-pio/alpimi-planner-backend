@@ -5,9 +5,12 @@ using System.Text;
 using AlpimiAPI.Database;
 using AlpimiAPI.Entities.EUser;
 using AlpimiAPI.Entities.EUser.Queries;
+using AlpimiAPI.Responses;
 using AlpimiAPI.Utilities;
+using alpimi_planner_backend.API.Locales;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using Microsoft.IdentityModel.Tokens;
 
 namespace AlpimiAPI.Entities.EAuth.Queries
@@ -18,16 +21,19 @@ namespace AlpimiAPI.Entities.EAuth.Queries
     {
         private readonly IDbService _dbService;
 
-        public LoginHandler(IDbService dbService)
+        private readonly IStringLocalizer<Errors> _str;
+
+        public LoginHandler(IDbService dbService, IStringLocalizer<Errors> str)
         {
             _dbService = dbService;
+            _str = str;
         }
 
         public async Task<String> Handle(LoginQuery request, CancellationToken cancellationToken)
         {
             var auth = await _dbService.Post<Auth?>(
-                @"SELECT [Auth].[Id],[Auth].[Password],[Auth].[Salt],[Auth].[Role],[Auth].[UserID]
-                FROM [User] JOIN [Auth] on [User].[Id]=[Auth].[UserID] 
+                @"SELECT [Auth].[Id],[Auth].[Password],[Auth].[Salt],[Auth].[Role],[Auth].[UserId]
+                FROM [User] JOIN [Auth] on [User].[Id]=[Auth].[UserId] 
                 WHERE [Login] = @Login;",
                 request
             );
@@ -45,7 +51,7 @@ namespace AlpimiAPI.Entities.EAuth.Queries
 
             if (auth == null || user.Value == null)
             {
-                throw new BadHttpRequestException("Invalid login or password");
+                throw new ApiErrorException([new ErrorObject(_str["invalidLoginOrPassword"])]);
             }
             auth.User = user.Value;
 
@@ -59,14 +65,13 @@ namespace AlpimiAPI.Entities.EAuth.Queries
 
             if (Convert.ToBase64String(inputHash) != auth.Password)
             {
-                throw new BadHttpRequestException("Invalid password");
+                throw new ApiErrorException([new ErrorObject(_str["invalidPassword"])]);
             }
 
             var claims = new List<Claim>()
             {
-                new Claim(ClaimTypes.NameIdentifier, auth.UserID.ToString()),
                 new Claim("login", $"{auth.User.Login}"),
-                new Claim("userID", $"{auth.UserID}")
+                new Claim("userId", $"{auth.UserId}")
             };
             switch (auth.Role)
             {
@@ -81,16 +86,7 @@ namespace AlpimiAPI.Entities.EAuth.Queries
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetJWTKey()));
             var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            //TODO DO SMTH
-            var expires = DateTime.Now;
-            if (Configuration.GetJWTExpire() != null)
-            {
-                expires = DateTime.Now.AddMinutes(Convert.ToDouble(Configuration.GetJWTExpire()));
-            }
-            else
-            {
-                expires = DateTime.Now.AddMinutes(1000.0);
-            }
+            var expires = DateTime.Now.AddMinutes(Configuration.GetJWTExpire());
 
             var token = new JwtSecurityToken(
                 Configuration.GetJWTIssuer(),

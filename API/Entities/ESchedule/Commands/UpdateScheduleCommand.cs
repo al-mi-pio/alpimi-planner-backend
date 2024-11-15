@@ -2,8 +2,11 @@
 using AlpimiAPI.Entities.ESchedule.Queries;
 using AlpimiAPI.Entities.EUser;
 using AlpimiAPI.Entities.EUser.Queries;
+using AlpimiAPI.Responses;
+using alpimi_planner_backend.API.Locales;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 
 namespace AlpimiAPI.Entities.ESchedule.Commands
 {
@@ -11,17 +14,19 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
         Guid Id,
         string? Name,
         int? SchoolHour,
-        Guid FilteredID,
+        Guid FilteredId,
         string Role
     ) : IRequest<Schedule?>;
 
     public class UpdateScheduleHandler : IRequestHandler<UpdateScheduleCommand, Schedule?>
     {
         private readonly IDbService _dbService;
+        private readonly IStringLocalizer<Errors> _str;
 
-        public UpdateScheduleHandler(IDbService dbService)
+        public UpdateScheduleHandler(IDbService dbService, IStringLocalizer<Errors> str)
         {
             _dbService = dbService;
+            _str = str;
         }
 
         public async Task<Schedule?> Handle(
@@ -36,8 +41,8 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
                 );
                 GetScheduleByNameQuery getScheduleByNameQuery = new GetScheduleByNameQuery(
                     request.Name,
-                    new Guid(),
-                    "Admin"
+                    request.FilteredId,
+                    "User"
                 );
                 ActionResult<Schedule?> scheduleName = await getScheduleByNameHandler.Handle(
                     getScheduleByNameQuery,
@@ -46,7 +51,9 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
 
                 if (scheduleName.Value != null)
                 {
-                    throw new BadHttpRequestException("Name already taken");
+                    throw new ApiErrorException(
+                        [new ErrorObject(_str["alreadyExists", "Schedule", request.Name])]
+                    );
                 }
             }
 
@@ -71,19 +78,21 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
                     SET [Name]=CASE WHEN @Name IS NOT NULL THEN @Name 
                     ELSE [Name] END,[SchoolHour]=CASE WHEN @SchoolHour IS NOT NULL THEN @SchoolHour ELSE [SchoolHour] END 
                     OUTPUT INSERTED.[Id], INSERTED.[Name], INSERTED.[SchoolHour]
-                    WHERE [Id]=@Id and [UserID]=@FilteredID;",
+                    WHERE [Id]=@Id and [UserId]=@FilteredId;",
                         request
                     );
                     break;
             }
 
-            GetUserHandler getUserHandler = new GetUserHandler(_dbService);
-            GetUserQuery getUserQuery = new GetUserQuery(request.FilteredID, new Guid(), "Admin");
-            ActionResult<User?> user = await getUserHandler.Handle(getUserQuery, cancellationToken);
             if (schedule != null)
             {
+                GetUserHandler getUserHandler = new GetUserHandler(_dbService);
+                GetUserQuery getUserQuery = new GetUserQuery(schedule.UserId, new Guid(), "Admin");
+                ActionResult<User?> user = await getUserHandler.Handle(
+                    getUserQuery,
+                    cancellationToken
+                );
                 schedule.User = user.Value!;
-                schedule.UserID = request.FilteredID;
             }
             return schedule;
         }

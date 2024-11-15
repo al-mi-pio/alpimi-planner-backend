@@ -1,11 +1,15 @@
 ﻿using AlpimiAPI.Entities.ESchedule.Commands;
 using AlpimiAPI.Entities.ESchedule.DTO;
 using AlpimiAPI.Entities.ESchedule.Queries;
-using AlpimiAPI.Entities.EUser;
+using AlpimiAPI.Responses;
 using AlpimiAPI.Utilities;
+using alpimi_planner_backend.API.Locales;
+using alpimi_planner_backend.API.Settings;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.Extensions.Localization;
 
 namespace AlpimiAPI.Entities.ESchedule
 {
@@ -14,11 +18,18 @@ namespace AlpimiAPI.Entities.ESchedule
     [Authorize]
     [Consumes("application/json")]
     [Produces("application/json")]
+    [ProducesResponseType(typeof(ApiErrorResponse), 429)]
+    [EnableRateLimiting("FixedWindow")]
     public class ScheduleController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly IStringLocalizer<Errors> _str;
 
-        public ScheduleController(IMediator mediator) => _mediator = mediator;
+        public ScheduleController(IMediator mediator, IStringLocalizer<Errors> str)
+        {
+            _mediator = mediator;
+            _str = str;
+        }
 
         /// <summary>
         /// Creates a Schedule
@@ -28,37 +39,36 @@ namespace AlpimiAPI.Entities.ESchedule
         /// </remarks>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<Guid>> Post(
+        [ProducesResponseType(typeof(ApiErrorResponse), 400)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 401)]
+        public async Task<ActionResult<ApiGetResponse<Guid>>> Post(
             [FromBody] CreateScheduleDTO request,
             [FromHeader] string Authorization
         )
         {
-            Guid UserID = Privileges.GetUserIDFromToken(Authorization);
+            Guid UserId = Privileges.GetUserIdFromToken(Authorization);
 
             var command = new CreateScheduleCommand(
                 Guid.NewGuid(),
-                UserID,
+                UserId,
                 request.Name,
                 request.SchoolHour
             );
             try
             {
-                var res = await _mediator.Send(command);
-                return Ok(res);
+                var result = await _mediator.Send(command);
+                var response = new ApiGetResponse<Guid>(result);
+                return Ok(response);
             }
-            catch (UnauthorizedAccessException)
+            catch (ApiErrorException ex)
             {
-                return Unauthorized();
+                return BadRequest(new ApiErrorResponse(400, ex.errors));
             }
-            catch (BadHttpRequestException ex)
+            catch (Exception ex)
             {
-                return BadRequest(ex.Message);
-            }
-            catch (Exception)
-            {
-                return BadRequest("TODO make a message");
+                return BadRequest(
+                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError", ex])])
+                );
             }
         }
 
@@ -70,31 +80,36 @@ namespace AlpimiAPI.Entities.ESchedule
         /// </remarks>
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<Schedule>> GetOne(
+        [ProducesResponseType(typeof(ApiErrorResponse), 400)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 401)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 404)]
+        public async Task<ActionResult<ApiGetResponse<Schedule>>> GetOne(
             [FromRoute] Guid id,
             [FromHeader] string Authorization
         )
         {
-            Guid filteredID = Privileges.GetUserIDFromToken(Authorization);
+            Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
             string privileges = Privileges.GetUserRoleFromToken(Authorization);
 
-            var query = new GetScheduleQuery(id, filteredID, privileges);
+            var query = new GetScheduleQuery(id, filteredId, privileges);
             try
             {
-                Schedule? res = await _mediator.Send(query);
-
-                if (res is null)
+                Schedule? result = await _mediator.Send(query);
+                if (result == null)
                 {
-                    return NotFound();
+                    return NotFound(
+                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "Schedule"])])
+                    );
                 }
+                var response = new ApiGetResponse<Schedule>(result);
 
-                return Ok(res);
+                return Ok(response);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return BadRequest("TODO make a message");
+                return BadRequest(
+                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError", ex])])
+                );
             }
         }
 
@@ -106,26 +121,35 @@ namespace AlpimiAPI.Entities.ESchedule
         /// </remarks>
         [HttpGet("byName/{name}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<User>> GetOneByName(
+        [ProducesResponseType(typeof(ApiErrorResponse), 400)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 401)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 404)]
+        public async Task<ActionResult<ApiGetResponse<Schedule>>> GetOneByName(
             [FromRoute] string name,
             [FromHeader] string Authorization
         )
         {
-            Guid filteredID = Privileges.GetUserIDFromToken(Authorization);
+            Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
             string privileges = Privileges.GetUserRoleFromToken(Authorization);
 
-            var query = new GetScheduleByNameQuery(name, filteredID, privileges);
+            var query = new GetScheduleByNameQuery(name, filteredId, privileges);
             try
             {
-                Schedule? res = await _mediator.Send(query);
-
-                return Ok(res);
+                Schedule? result = await _mediator.Send(query);
+                if (result == null)
+                {
+                    return NotFound(
+                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "Schedule"])])
+                    );
+                }
+                var response = new ApiGetResponse<Schedule>(result);
+                return Ok(response);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return BadRequest("TODO make a message");
+                return BadRequest(
+                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError", ex])])
+                );
             }
         }
 
@@ -137,15 +161,15 @@ namespace AlpimiAPI.Entities.ESchedule
         /// </remarks>
         [HttpDelete("{id}")]
         [ProducesResponseType(204)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 401)]
         public async Task<ActionResult> Delete(
             [FromRoute] Guid id,
             [FromHeader] string Authorization
         )
         {
-            Guid filteredID = Privileges.GetUserIDFromToken(Authorization);
+            Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
             string privileges = Privileges.GetUserRoleFromToken(Authorization);
-            var command = new DeleteScheduleCommand(id, filteredID, privileges);
+            var command = new DeleteScheduleCommand(id, filteredId, privileges);
             try
             {
                 await _mediator.Send(command);
@@ -154,7 +178,9 @@ namespace AlpimiAPI.Entities.ESchedule
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                return BadRequest(
+                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError", ex])])
+                );
             }
         }
 
@@ -166,40 +192,46 @@ namespace AlpimiAPI.Entities.ESchedule
         /// </remarks>
         [HttpPatch("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<User>> Patch(
+        [ProducesResponseType(typeof(ApiErrorResponse), 400)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 401)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 404)]
+        public async Task<ActionResult<ApiGetResponse<Schedule>>> Patch(
             [FromBody] UpdateScheduleDTO request,
             [FromRoute] Guid id,
             [FromHeader] string Authorization
         )
         {
-            Guid filteredID = Privileges.GetUserIDFromToken(Authorization);
+            Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
             string privileges = Privileges.GetUserRoleFromToken(Authorization);
 
             var command = new UpdateScheduleCommand(
                 id,
                 request.Name,
                 request.SchoolHour,
-                filteredID,
+                filteredId,
                 privileges
             );
             try
             {
-                Schedule? res = await _mediator.Send(command);
-                if (res is null)
+                Schedule? result = await _mediator.Send(command);
+                if (result == null)
                 {
-                    return NotFound();
+                    return NotFound(
+                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "Schedule"])])
+                    );
                 }
-                return Ok(res);
+                var response = new ApiGetResponse<Schedule>(result);
+                return Ok(response);
             }
-            catch (BadHttpRequestException ex)
+            catch (ApiErrorException ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new ApiErrorResponse(400, ex.errors));
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return BadRequest("TODO make a message");
+                return BadRequest(
+                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError", ex])])
+                );
             }
         }
 
@@ -209,25 +241,44 @@ namespace AlpimiAPI.Entities.ESchedule
         /// <remarks>
         /// - JWT token is required
         /// </remarks>
-        [HttpGet("all")]
+        [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<User>> GetAll([FromHeader] string Authorization)
+        [ProducesResponseType(typeof(ApiErrorResponse), 400)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 401)]
+        public async Task<ActionResult<ApiGetAllResponse<IEnumerable<Schedule>>>> GetAll(
+            [FromHeader] string Authorization,
+            [FromQuery] int perPage = PaginationSettings.perPage,
+            [FromQuery] int page = PaginationSettings.page,
+            [FromQuery] string sortBy = PaginationSettings.sortBy,
+            [FromQuery] string sortOrder = PaginationSettings.sortOrder
+        )
         {
-            Guid filteredID = Privileges.GetUserIDFromToken(Authorization);
+            Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
             string privileges = Privileges.GetUserRoleFromToken(Authorization);
 
-            var query = new GetSchedulesQuery(filteredID, privileges);
+            var query = new GetSchedulesQuery(
+                filteredId,
+                privileges,
+                new PaginationParams(perPage, (page - 1) * perPage, sortBy, sortOrder)
+            );
             try
             {
-                IEnumerable<Schedule>? res = await _mediator.Send(query);
-
-                return Ok(res);
+                (IEnumerable<Schedule>?, int) result = await _mediator.Send(query);
+                var response = new ApiGetAllResponse<IEnumerable<Schedule>>(
+                    result.Item1!,
+                    new Pagination(result.Item2, perPage, page, sortBy, sortOrder)
+                );
+                return Ok(response);
             }
-            catch (Exception)
+            catch (ApiErrorException ex)
             {
-                return BadRequest("TODO make a message");
+                return BadRequest(new ApiErrorResponse(400, ex.errors));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(
+                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError", ex])])
+                );
             }
         }
     }

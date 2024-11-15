@@ -1,10 +1,15 @@
 ﻿using AlpimiAPI.Entities.EUser.Commands;
 using AlpimiAPI.Entities.EUser.DTO;
 using AlpimiAPI.Entities.EUser.Queries;
+using AlpimiAPI.Responses;
 using AlpimiAPI.Utilities;
+using alpimi_planner_backend.API.Locales;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.Extensions.Localization;
+using Sprache;
 
 namespace AlpimiAPI.Entities.EUser
 {
@@ -13,11 +18,19 @@ namespace AlpimiAPI.Entities.EUser
     [Authorize]
     [Consumes("application/json")]
     [Produces("application/json")]
+    [ProducesResponseType(typeof(ApiErrorResponse), 429)]
+    [EnableRateLimiting("FixedWindow")]
     public class UserController : ControllerBase
     {
         private readonly IMediator _mediator;
 
-        public UserController(IMediator mediator) => _mediator = mediator;
+        private readonly IStringLocalizer<Errors> _str;
+
+        public UserController(IMediator mediator, IStringLocalizer<Errors> str)
+        {
+            _mediator = mediator;
+            _str = str;
+        }
 
         /// <summary>
         /// Creates a User
@@ -29,9 +42,9 @@ namespace AlpimiAPI.Entities.EUser
         [HttpPost]
         [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<ActionResult<Guid>> Post([FromBody] CreateUserDTO request)
+        [ProducesResponseType(typeof(ApiErrorResponse), 400)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 403)]
+        public async Task<ActionResult<ApiGetResponse<Guid>>> Post([FromBody] CreateUserDTO request)
         {
             var command = new CreateUserCommand(
                 Guid.NewGuid(),
@@ -42,16 +55,19 @@ namespace AlpimiAPI.Entities.EUser
             );
             try
             {
-                var res = await _mediator.Send(command);
-                return Ok(res);
+                var result = await _mediator.Send(command);
+                var response = new ApiGetResponse<Guid>(result);
+                return Ok(response);
             }
-            catch (BadHttpRequestException ex)
+            catch (ApiErrorException ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new ApiErrorResponse(400, ex.errors));
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return BadRequest("TODO make a message");
+                return BadRequest(
+                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError", ex])])
+                );
             }
         }
 
@@ -63,31 +79,36 @@ namespace AlpimiAPI.Entities.EUser
         /// </remarks>
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<User>> GetOne(
+        [ProducesResponseType(typeof(ApiErrorResponse), 400)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 401)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 404)]
+        public async Task<ActionResult<ApiGetResponse<User>>> GetOne(
             [FromRoute] Guid id,
             [FromHeader] string Authorization
         )
         {
-            Guid filteredID = Privileges.GetUserIDFromToken(Authorization);
+            Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
             string privileges = Privileges.GetUserRoleFromToken(Authorization);
 
-            var query = new GetUserQuery(id, filteredID, privileges);
+            var query = new GetUserQuery(id, filteredId, privileges);
             try
             {
-                User? res = await _mediator.Send(query);
+                User? result = await _mediator.Send(query);
 
-                if (res is null)
+                if (result == null)
                 {
-                    return NotFound();
+                    return NotFound(
+                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "User"])])
+                    );
                 }
-
-                return Ok(res);
+                var response = new ApiGetResponse<User>(result);
+                return Ok(response);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return BadRequest("TODO make a message");
+                return BadRequest(
+                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError", ex])])
+                );
             }
         }
 
@@ -99,26 +120,35 @@ namespace AlpimiAPI.Entities.EUser
         /// </remarks>
         [HttpGet("byLogin/{login}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<User>> GetOneByLogin(
+        [ProducesResponseType(typeof(ApiErrorResponse), 400)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 401)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 404)]
+        public async Task<ActionResult<ApiGetResponse<User>>> GetOneByLogin(
             [FromRoute] string login,
             [FromHeader] string Authorization
         )
         {
-            Guid filteredID = Privileges.GetUserIDFromToken(Authorization);
+            Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
             string privileges = Privileges.GetUserRoleFromToken(Authorization);
 
-            var query = new GetUserByLoginQuery(login, filteredID, privileges);
+            var query = new GetUserByLoginQuery(login, filteredId, privileges);
             try
             {
-                User? res = await _mediator.Send(query);
-
-                return Ok(res);
+                User? result = await _mediator.Send(query);
+                if (result == null)
+                {
+                    return NotFound(
+                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "User"])])
+                    );
+                }
+                var response = new ApiGetResponse<User>(result);
+                return Ok(response);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return BadRequest("TODO make a message");
+                return BadRequest(
+                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError", ex])])
+                );
             }
         }
 
@@ -132,7 +162,7 @@ namespace AlpimiAPI.Entities.EUser
         [HttpDelete("{id}")]
         [Authorize(Roles = "Admin")]
         [ProducesResponseType(204)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 403)]
         public async Task<ActionResult> Delete(
             [FromRoute] Guid id,
             [FromHeader] string Authorization
@@ -147,7 +177,9 @@ namespace AlpimiAPI.Entities.EUser
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                return BadRequest(
+                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError", ex])])
+                );
             }
         }
 
@@ -159,40 +191,46 @@ namespace AlpimiAPI.Entities.EUser
         /// </remarks>
         [HttpPatch("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<User>> Patch(
+        [ProducesResponseType(typeof(ApiErrorResponse), 400)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 401)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 404)]
+        public async Task<ActionResult<ApiGetResponse<User>>> Patch(
             [FromBody] UpdateUserDTO request,
             [FromRoute] Guid id,
             [FromHeader] string Authorization
         )
         {
-            Guid filteredID = Privileges.GetUserIDFromToken(Authorization);
+            Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
             string privileges = Privileges.GetUserRoleFromToken(Authorization);
 
             var command = new UpdateUserCommand(
                 id,
                 request.Login,
                 request.CustomURL,
-                filteredID,
+                filteredId,
                 privileges
             );
             try
             {
-                User? res = await _mediator.Send(command);
-                if (res is null)
+                User? result = await _mediator.Send(command);
+                if (result == null)
                 {
-                    return NotFound();
+                    return NotFound(
+                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "User"])])
+                    );
                 }
-                return Ok(res);
+                var response = new ApiGetResponse<User>(result);
+                return Ok(response);
             }
-            catch (BadHttpRequestException ex)
+            catch (ApiErrorException ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new ApiErrorResponse(400, ex.errors));
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return BadRequest("TODO make a message");
+                return BadRequest(
+                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError", ex])])
+                );
             }
         }
     }

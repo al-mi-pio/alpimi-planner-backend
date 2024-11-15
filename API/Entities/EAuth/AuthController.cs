@@ -1,7 +1,12 @@
 ﻿using AlpimiAPI.Entities.EAuth.Queries;
+using AlpimiAPI.Responses;
+using AlpimiAPI.Utilities;
+using alpimi_planner_backend.API.Locales;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.Extensions.Localization;
 
 namespace AlpimiAPI.Entities.EAuth
 {
@@ -9,39 +14,88 @@ namespace AlpimiAPI.Entities.EAuth
     [ApiController]
     [Consumes("application/json")]
     [Produces("application/json")]
+    [ProducesResponseType(typeof(ApiErrorResponse), 429)]
+    [EnableRateLimiting("FixedWindow")]
     public class AuthController : ControllerBase
     {
         private readonly IMediator _mediator;
 
-        public AuthController(IMediator mediator) => _mediator = mediator;
+        private readonly IStringLocalizer<Errors> _str;
+
+        public AuthController(IMediator mediator, IStringLocalizer<Errors> str)
+        {
+            _mediator = mediator;
+            _str = str;
+        }
 
         /// <summary>
         /// Returns a JWT token
         /// </summary>
         /// <remarks>
-        /// To authenticate API requests provide given token inside the header of Authorization with the prefix Bearer
+        /// Provide a valid token inside the Authorization header with the 'Bearer' prefix
         /// </remarks>
 
         [AllowAnonymous]
         [HttpPost]
         [Route("login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<string>> Login([FromBody] DTO.LoginDTO request)
+        [ProducesResponseType(typeof(ApiErrorResponse), 400)]
+        public async Task<ActionResult<ApiGetResponse<string>>> Login(
+            [FromBody] DTO.LoginDTO request
+        )
         {
             var query = new LoginQuery(request.Login, request.Password);
             try
             {
-                string res = await _mediator.Send(query);
-                return Ok(res);
+                string result = await _mediator.Send(query);
+                var response = new ApiGetResponse<String>(result);
+                return Ok(response);
             }
-            catch (BadHttpRequestException ex)
+            catch (ApiErrorException ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new ApiErrorResponse(400, ex.errors));
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return BadRequest("TODO make a message");
+                return BadRequest(
+                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError", ex])])
+                );
+            }
+        }
+
+        /// <summary>
+        /// Refreshes a JWT token
+        /// </summary>
+        /// <remarks>
+        /// Takes a valid token from Authorization header and returns another one with a new expiration date
+        ///
+        /// - JWT token is required
+        /// </remarks>
+        [Authorize]
+        [HttpGet]
+        [Route("refresh")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 401)]
+        public ActionResult<ApiGetResponse<string>> Refresh([FromHeader] string Authorization)
+        {
+            var query = new RefreshTokenQuery(
+                Privileges.GetUserLoginFromToken(Authorization),
+                Privileges.GetUserIdFromToken(Authorization),
+                Privileges.GetUserRoleFromToken(Authorization)
+            );
+            try
+            {
+                var refreshTokenHandler = new RefreshTokenHandler();
+                string result = refreshTokenHandler.Handle(query, new CancellationToken());
+
+                var response = new ApiGetResponse<String>(result);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(
+                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError", ex])])
+                );
             }
         }
     }

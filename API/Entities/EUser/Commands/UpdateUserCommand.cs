@@ -1,5 +1,8 @@
 ﻿using AlpimiAPI.Database;
+using AlpimiAPI.Responses;
+using alpimi_planner_backend.API.Locales;
 using MediatR;
+using Microsoft.Extensions.Localization;
 
 namespace AlpimiAPI.Entities.EUser.Commands
 {
@@ -7,17 +10,19 @@ namespace AlpimiAPI.Entities.EUser.Commands
         Guid Id,
         string? Login,
         string? CustomURL,
-        Guid FilteredID,
+        Guid FilteredId,
         string Role
     ) : IRequest<User?>;
 
     public class UpdateUserHandler : IRequestHandler<UpdateUserCommand, User?>
     {
         private readonly IDbService _dbService;
+        private readonly IStringLocalizer<Errors> _str;
 
-        public UpdateUserHandler(IDbService dbService)
+        public UpdateUserHandler(IDbService dbService, IStringLocalizer<Errors> str)
         {
             _dbService = dbService;
+            _str = str;
         }
 
         public async Task<User?> Handle(
@@ -35,7 +40,9 @@ namespace AlpimiAPI.Entities.EUser.Commands
                 );
                 if (userURL != null)
                 {
-                    throw new BadHttpRequestException("URL already taken");
+                    throw new ApiErrorException(
+                        [new ErrorObject(_str["alreadyExists", "URL", request.CustomURL])]
+                    );
                 }
             }
             User? user;
@@ -59,7 +66,7 @@ namespace AlpimiAPI.Entities.EUser.Commands
                     SET [Login]=CASE WHEN @Login IS NOT NULL THEN @Login 
                     ELSE [Login] END,[CustomURL]=CASE WHEN @CustomURL IS NOT NULL THEN @CustomURL ELSE [CustomURL] END 
                     OUTPUT INSERTED.[Id], INSERTED.[Login], INSERTED.[CustomURL]
-                    WHERE [Id]=@Id AND [Id] = @FilteredID;",
+                    WHERE [Id]=@Id AND [Id] = @FilteredId;",
                         request
                     );
                     break;

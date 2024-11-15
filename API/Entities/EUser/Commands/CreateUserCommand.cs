@@ -1,10 +1,13 @@
 ﻿using System.Security.Cryptography;
 using AlpimiAPI.Database;
 using AlpimiAPI.Entities.EUser.Queries;
+using AlpimiAPI.Responses;
 using AlpimiAPI.Settings;
 using AlpimiAPI.Utilities;
+using alpimi_planner_backend.API.Locales;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 
 namespace AlpimiAPI.Entities.EUser.Commands
 {
@@ -19,10 +22,12 @@ namespace AlpimiAPI.Entities.EUser.Commands
     public class CreateUserHandler : IRequestHandler<CreateUserCommand, Guid>
     {
         private readonly IDbService _dbService;
+        private readonly IStringLocalizer<Errors> _str;
 
-        public CreateUserHandler(IDbService dbService)
+        public CreateUserHandler(IDbService dbService, IStringLocalizer<Errors> str)
         {
             _dbService = dbService;
+            _str = str;
         }
 
         public async Task<Guid> Handle(
@@ -41,9 +46,10 @@ namespace AlpimiAPI.Entities.EUser.Commands
                 cancellationToken
             );
 
+            List<ErrorObject> errors = new List<ErrorObject>();
             if (user.Value != null)
             {
-                throw new BadHttpRequestException("Login already taken");
+                errors.Add(new ErrorObject(_str["alreadyExists", "User", request.Login]));
             }
 
             var userURL = await _dbService.Get<string>(
@@ -52,60 +58,48 @@ namespace AlpimiAPI.Entities.EUser.Commands
                 WHERE [CustomURL] = @CustomURL;",
                 request
             );
+
             if (userURL != null)
             {
-                throw new BadHttpRequestException("URL already taken");
+                errors.Add(new ErrorObject(_str["alreadyExists", "URL", request.CustomURL]));
             }
-
             if (request.Password.Length < AuthSettings.MinimumPasswordLength)
             {
-                throw new BadHttpRequestException(
-                    "Password cannot be shorter than "
-                        + AuthSettings.MinimumPasswordLength
-                        + " characters"
+                errors.Add(
+                    new ErrorObject(_str["shortPassword", AuthSettings.MinimumPasswordLength])
                 );
             }
 
             if (request.Password.Length > AuthSettings.MaximumPasswordLength)
             {
-                throw new BadHttpRequestException(
-                    "Password cannot be longer than "
-                        + AuthSettings.MaximumPasswordLength
-                        + " characters"
+                errors.Add(
+                    new ErrorObject(_str["longPassword", AuthSettings.MaximumPasswordLength])
                 );
             }
-
             RequiredCharacterTypes[]? requiredCharacterTypes = AuthSettings.RequiredCharacters;
+            bool requiredCharactersError = false;
+
             if (requiredCharacterTypes != null)
             {
                 if (requiredCharacterTypes.Contains(RequiredCharacterTypes.BigLetter))
                 {
                     if (!request.Password.Any(char.IsUpper))
                     {
-                        throw new BadHttpRequestException(
-                            "Password must contain at least one of the following: "
-                                + string.Join(", ", requiredCharacterTypes)
-                        );
+                        requiredCharactersError = true;
                     }
                 }
                 if (requiredCharacterTypes.Contains(RequiredCharacterTypes.SmallLetter))
                 {
                     if (!request.Password.Any(char.IsLower))
                     {
-                        throw new BadHttpRequestException(
-                            "Password must contain at least one of the following: "
-                                + string.Join(", ", requiredCharacterTypes)
-                        );
+                        requiredCharactersError = true;
                     }
                 }
                 if (requiredCharacterTypes.Contains(RequiredCharacterTypes.Digit))
                 {
                     if (!request.Password.Any(char.IsDigit))
                     {
-                        throw new BadHttpRequestException(
-                            "Password must contain at least one of the following: "
-                                + string.Join(", ", requiredCharacterTypes)
-                        );
+                        requiredCharactersError = true;
                     }
                 }
                 if (requiredCharacterTypes.Contains(RequiredCharacterTypes.Symbol))
@@ -117,12 +111,23 @@ namespace AlpimiAPI.Entities.EUser.Commands
                         )
                     )
                     {
-                        throw new BadHttpRequestException(
-                            "Password must contain at least one of the following: "
-                                + string.Join(", ", requiredCharacterTypes)
-                        );
+                        requiredCharactersError = true;
                     }
                 }
+            }
+
+            if (requiredCharactersError)
+            {
+                errors.Add(
+                    new ErrorObject(
+                        _str["passwordMustContain", string.Join(", ", requiredCharacterTypes!)]
+                    )
+                );
+            }
+
+            if (errors.Count != 0)
+            {
+                throw new ApiErrorException(errors);
             }
 
             var insertedId = await _dbService.Post<Guid>(
@@ -143,8 +148,8 @@ namespace AlpimiAPI.Entities.EUser.Commands
 
             await _dbService.Post<Guid>(
                 @"
-                    INSERT INTO [Auth] ([Id],[Password],[Salt],[Role],[UserID])
-                    OUTPUT INSERTED.UserID                    
+                    INSERT INTO [Auth] ([Id],[Password],[Salt],[Role],[UserId])
+                    OUTPUT INSERTED.UserId                    
                     VALUES (@AuthId,'"
                     + Convert.ToBase64String(hash)
                     + "','"

@@ -3,7 +3,7 @@ using MediatR;
 
 namespace AlpimiAPI.Entities.EUser.Queries
 {
-    public record GetUserQuery(Guid Id, Guid FilteredID, string Role) : IRequest<User?>;
+    public record GetUserQuery(Guid Id, Guid FilteredId, string Role) : IRequest<User?>;
 
     public class GetUserHandler : IRequestHandler<GetUserQuery, User?>
     {
@@ -27,7 +27,7 @@ namespace AlpimiAPI.Entities.EUser.Queries
                     break;
                 default:
                     user = await _dbService.Get<User?>(
-                        "SELECT [Id], [Login], [CustomURL] FROM [User] WHERE [Id] = @Id AND [Id] = @FilteredID;",
+                        "SELECT [Id], [Login], [CustomURL] FROM [User] WHERE [Id] = @Id AND [Id] = @FilteredId;",
                         request
                     );
                     break;

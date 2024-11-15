@@ -17,23 +17,23 @@ namespace alpimi_planner_backend.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UserID = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Auth", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Auth_User_UserID",
-                        column: x => x.UserID,
+                        name: "FK_Auth_User_UserId",
+                        column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Auth_UserID",
+                name: "IX_Auth_UserId",
                 table: "Auth",
-                column: "UserID");
+                column: "UserId");
         }
 
         /// <inheritdoc />

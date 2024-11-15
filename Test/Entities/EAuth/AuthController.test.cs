@@ -1,9 +1,6 @@
 ﻿using System.Net;
 using System.Net.Http.Headers;
-using AlpimiAPI.Entities.EAuth.Queries;
-using AlpimiAPI.Entities.ESchedule;
-using AlpimiAPI.Entities.EUser;
-using AlpimiAPI.Responses;
+using AlpimiAPI.Settings;
 using AlpimiTest.TestUtilities;
 using Xunit;
 
@@ -60,6 +57,18 @@ namespace AlpimiTest.Entities.EAuth
             var response = await _client.PostAsJsonAsync("/api/Auth/login", loginRequest);
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task AuthControllerThrowsTooManyRequests()
+        {
+            _client.DefaultRequestHeaders.Authorization = null;
+            for (int i = 0; i != RateLimiterSettings.permitLimit; i++)
+            {
+                await _client.GetAsync("/api/Auth/refresh");
+            }
+            var response = await _client.GetAsync("/api/Auth/refresh");
+            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
         }
     }
 }

@@ -8,6 +8,7 @@ using alpimi_planner_backend.API.Settings;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Localization;
 
 namespace AlpimiAPI.Entities.ESchedule
@@ -17,6 +18,8 @@ namespace AlpimiAPI.Entities.ESchedule
     [Authorize]
     [Consumes("application/json")]
     [Produces("application/json")]
+    [ProducesResponseType(typeof(ApiErrorResponse), 429)]
+    [EnableRateLimiting("FixedWindow")]
     public class ScheduleController : ControllerBase
     {
         private readonly IMediator _mediator;

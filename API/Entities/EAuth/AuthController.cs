@@ -5,6 +5,7 @@ using alpimi_planner_backend.API.Locales;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Localization;
 
 namespace AlpimiAPI.Entities.EAuth
@@ -13,6 +14,8 @@ namespace AlpimiAPI.Entities.EAuth
     [ApiController]
     [Consumes("application/json")]
     [Produces("application/json")]
+    [ProducesResponseType(typeof(ApiErrorResponse), 429)]
+    [EnableRateLimiting("FixedWindow")]
     public class AuthController : ControllerBase
     {
         private readonly IMediator _mediator;

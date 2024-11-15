@@ -2,6 +2,7 @@
 using System.Net.Http.Headers;
 using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Responses;
+using AlpimiAPI.Settings;
 using AlpimiTest.TestUtilities;
 using Xunit;
 
@@ -393,6 +394,18 @@ namespace AlpimiTest.Entities.ESchedule
             var response = await _client.GetAsync("/api/Schedule");
 
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task ScheduleControllerThrowsTooManyRequests()
+        {
+            _client.DefaultRequestHeaders.Authorization = null;
+            for (int i = 0; i != RateLimiterSettings.permitLimit; i++)
+            {
+                await _client.GetAsync("/api/Schedule");
+            }
+            var response = await _client.GetAsync("/api/Schedule");
+            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
         }
     }
 }

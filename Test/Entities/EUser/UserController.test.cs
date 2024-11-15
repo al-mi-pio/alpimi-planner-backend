@@ -3,6 +3,7 @@ using System.Net.Http.Headers;
 using AlpimiAPI.Entities.EUser;
 using AlpimiAPI.Entities.EUser.DTO;
 using AlpimiAPI.Responses;
+using AlpimiAPI.Settings;
 using AlpimiTest.TestUtilities;
 using Xunit;
 
@@ -285,6 +286,18 @@ namespace AlpimiTest.Entities.EUser
             var response = await _client.GetAsync($"/api/User/byLogin/{userRequest.Login}");
 
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task UserControllerThrowsTooManyRequests()
+        {
+            _client.DefaultRequestHeaders.Authorization = null;
+            for (int i = 0; i != RateLimiterSettings.permitLimit; i++)
+            {
+                await _client.GetAsync($"/api/User/{new Guid()}");
+            }
+            var response = await _client.GetAsync($"/api/User/{new Guid()}");
+            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
         }
     }
 }

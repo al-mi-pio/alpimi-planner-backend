@@ -10,9 +10,6 @@ namespace AlpimiTest.TestUtilities
     {
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
-            DotNetEnv.Env.Load(
-                Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..", ".env")
-            );
             builder.UseContentRoot(Directory.GetCurrentDirectory());
             builder.UseEnvironment("Testing");
             builder.ConfigureServices(

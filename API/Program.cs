@@ -9,7 +9,6 @@ using AlpimiAPI.Utilities;
 using alpimi_planner_backend.API.Locales;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;

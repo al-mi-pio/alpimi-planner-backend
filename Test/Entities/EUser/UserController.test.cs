@@ -22,9 +22,6 @@ namespace AlpimiTest.Entities.EUser
 
         public async Task InitializeAsync()
         {
-            DotNetEnv.Env.Load(
-                Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..", ".env")
-            );
             await DbHelper.UserCleaner(_client);
         }
 
@@ -272,7 +269,7 @@ namespace AlpimiTest.Entities.EUser
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", new Guid())
             );
-            var response = await _client.GetAsync($"/api/User/byLogin/WrongLogin");
+            var response = await _client.GetAsync("/api/User/byLogin/WrongLogin");
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }

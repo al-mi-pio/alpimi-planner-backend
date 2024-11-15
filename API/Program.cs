@@ -182,8 +182,6 @@ try
 
     app.UseRequestLocalization();
 
-    //app.UseAuthentication();
-
     app.MapControllers();
 
     app.Run();

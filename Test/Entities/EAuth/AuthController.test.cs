@@ -14,7 +14,6 @@ namespace AlpimiTest.Entities.EAuth
     {
         CustomWebApplicationFactory<Program> _factory;
         HttpClient _client;
-        Guid userId;
 
         public AuthControllerTest()
         {
@@ -24,9 +23,6 @@ namespace AlpimiTest.Entities.EAuth
 
         public async Task InitializeAsync()
         {
-            DotNetEnv.Env.Load(
-                Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..", ".env")
-            );
             await DbHelper.UserCleaner(_client);
             await DbHelper.SetupUser(_client, MockData.GetCreateUserDTODetails());
         }

@@ -22,9 +22,6 @@ namespace AlpimiTest.Entities.ESchedule
 
         public async Task InitializeAsync()
         {
-            DotNetEnv.Env.Load(
-                Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..", ".env")
-            );
             await DbHelper.UserCleaner(_client);
             userId = await DbHelper.SetupUser(_client, MockData.GetCreateUserDTODetails());
         }
@@ -219,7 +216,7 @@ namespace AlpimiTest.Entities.ESchedule
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)
             );
-            var response = await _client.GetAsync($"/api/Schedule/byName/WrongName");
+            var response = await _client.GetAsync("/api/Schedule/byName/WrongName");
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }

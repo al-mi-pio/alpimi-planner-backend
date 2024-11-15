@@ -5,9 +5,11 @@ using System.Text;
 using AlpimiAPI;
 using AlpimiAPI.Database;
 using AlpimiAPI.Responses;
+using AlpimiAPI.Settings;
 using AlpimiAPI.Utilities;
 using alpimi_planner_backend.API.Locales;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Localization;
 using Microsoft.IdentityModel.Tokens;
@@ -151,6 +153,28 @@ try
         };
     });
 
+    builder.Services.AddRateLimiter(options =>
+    {
+        options
+            .AddFixedWindowLimiter(
+                "FixedWindow",
+                limiterOptions =>
+                {
+                    limiterOptions.PermitLimit = RateLimiterSettings.permitLimit;
+                    limiterOptions.Window = RateLimiterSettings.timeWindow;
+                }
+            )
+            .OnRejected = async (context, _) =>
+        {
+            context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+            context.HttpContext.Response.ContentType = "application/json";
+            var jsonResponse = System.Text.Json.JsonSerializer.Serialize(
+                new ApiErrorResponse(429, [new ErrorObject("Too many requests. Try again later")])
+            );
+            await context.HttpContext.Response.WriteAsync(jsonResponse);
+        };
+    });
+
     var app = builder.Build();
     var adminInit = new AdminInit(app.Services.GetService<IStringLocalizer<General>>()!);
 
@@ -158,6 +182,8 @@ try
     {
         await adminInit.StartupBase();
     }
+
+    app.UseRateLimiter();
 
     app.UseSwagger(c =>
     {

@@ -31,6 +31,17 @@ try
 
     builder.Services.AddScoped<IDbService, DbService>();
 
+    builder.Services.AddLocalization();
+
+    builder.Services.Configure<RequestLocalizationOptions>(options =>
+    {
+        var supportedCultures = new List<CultureInfo>
+        {
+            new CultureInfo("en-US"),
+            new CultureInfo("pl-PL")
+        };
+    });
+
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
     if (builder.Environment.IsDevelopment())
@@ -92,25 +103,30 @@ try
             {
                 OnChallenge = context =>
                 {
+                    var _str = context.HttpContext.RequestServices.GetRequiredService<
+                        IStringLocalizer<Errors>
+                    >();
+
                     context.HandleResponse();
 
                     context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                     context.Response.ContentType = "application/json";
                     var jsonResponse = System.Text.Json.JsonSerializer.Serialize(
-                        new ApiErrorResponse(401, [new ErrorObject("You are not authenticated")])
+                        new ApiErrorResponse(401, [new ErrorObject(_str["notAuthenticated"])])
                     );
 
                     return context.Response.WriteAsync(jsonResponse);
                 },
                 OnForbidden = context =>
                 {
+                    var _str = context.HttpContext.RequestServices.GetRequiredService<
+                        IStringLocalizer<Errors>
+                    >();
+
                     context.Response.StatusCode = StatusCodes.Status403Forbidden;
                     context.Response.ContentType = "application/json";
                     var jsonResponse = System.Text.Json.JsonSerializer.Serialize(
-                        new ApiErrorResponse(
-                            403,
-                            [new ErrorObject("You have no permission to access this resource")]
-                        )
+                        new ApiErrorResponse(403, [new ErrorObject(_str["notAuthorized"])])
                     );
 
                     return context.Response.WriteAsync(jsonResponse);
@@ -142,17 +158,6 @@ try
             };
         });
 
-    builder.Services.AddLocalization();
-
-    builder.Services.Configure<RequestLocalizationOptions>(options =>
-    {
-        var supportedCultures = new List<CultureInfo>
-        {
-            new CultureInfo("en-US"),
-            new CultureInfo("pl-PL")
-        };
-    });
-
     builder.Services.AddRateLimiter(options =>
     {
         options
@@ -166,10 +171,14 @@ try
             )
             .OnRejected = async (context, _) =>
         {
+            var _str = context.HttpContext.RequestServices.GetRequiredService<
+                IStringLocalizer<Errors>
+            >();
+
             context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
             context.HttpContext.Response.ContentType = "application/json";
             var jsonResponse = System.Text.Json.JsonSerializer.Serialize(
-                new ApiErrorResponse(429, [new ErrorObject("Too many requests. Try again later")])
+                new ApiErrorResponse(429, [new ErrorObject(_str["tooManyRequests"])])
             );
             await context.HttpContext.Response.WriteAsync(jsonResponse);
         };
@@ -211,9 +220,9 @@ try
 
     app.Run();
 }
-catch (Exception ex) when (ex.Message == "Connection String")
+catch (ApiErrorException ex)
 {
-    Console.WriteLine("Cannot connect to the database. Is connection string correct?");
+    Console.WriteLine(ex);
     Console.WriteLine("Press any key to exit...");
     Console.ReadKey();
 }

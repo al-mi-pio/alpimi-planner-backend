@@ -2,8 +2,10 @@
 using AlpimiAPI.Database;
 using AlpimiAPI.Entities.EUser;
 using AlpimiAPI.Entities.EUser.Queries;
+using AlpimiAPI.Responses;
 using AlpimiAPI.Utilities;
 using alpimi_planner_backend.API.Locales;
+using Azure.Core;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Localization;
@@ -35,7 +37,7 @@ namespace AlpimiAPI
             }
             catch (Exception)
             {
-                throw new Exception("Connection String");
+                throw new ApiErrorException([new ErrorObject(_str["connectionError"])]);
             }
 
             if (admins == null)

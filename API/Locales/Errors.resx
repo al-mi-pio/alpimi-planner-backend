@@ -144,4 +144,16 @@
   <data name="unknownError" xml:space="preserve">
     <value>An error occured: {0}</value>
   </data>
+  <data name="connectionError" xml:space="preserve">
+    <value>There was a problem connecting with the database. Check your connection string and internet access</value>
+  </data>
+  <data name="tooManyRequests" xml:space="preserve">
+    <value>Too many requests. Try again later</value>
+  </data>
+  <data name="notAuthenticated" xml:space="preserve">
+    <value>You are not authenticated</value>
+  </data>
+  <data name="notAuthorized" xml:space="preserve">
+    <value>You have no permission to access this resource</value>
+  </data>
 </root>

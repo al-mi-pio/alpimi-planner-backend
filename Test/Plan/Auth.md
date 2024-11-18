@@ -1,6 +1,6 @@
 # Auth entity test plan
 
-## `api/Auth/login`
+## `POST` `api/Auth/login`
 
 - [LoginReturnOKStatusCode()](../Entities/EAuth/AuthController.test.cs) - **integrity**  
   Check if returns a token when provided with correct credentials
@@ -11,7 +11,7 @@
 - [ThrowsErrorWhenIncorrectPasswordIsGiven()](../Entities/EAuth/Queries/LoginQuery.unit.cs) - **unit**  
   Check if returns an error when provided with invalid password
 
-## `api/Auth/refresh`
+## `GET` `api/Auth/refresh`
 
 - [RefreshTokenReturnsOKStatusCodeWhenCorrectJWTTokenIsGiven()](../Entities/EAuth/Queries/RefreshTokenQuery.unit.cs) - **integrity**  
   Check if returns a new token when provided with an old one

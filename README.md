@@ -1,6 +1,7 @@
 # Alpimi planner backend
 
-A WEB API created in .NET for the Alpimi planner
+> A WEB API created in .NET for the Alpimi planner  
+> _[Test Plan](./Test/Plan/)_
 
 ## Requirements
 

@@ -144,4 +144,16 @@
   <data name="unknownError" xml:space="preserve">
     <value>Wystąpił błąd: {0}</value>
   </data>
+  <data name="connectionError" xml:space="preserve">
+    <value>Wystąpił problem połączenia z bazą danych. Sprawdź parametry połączenia oraz połączenie z internetem</value>
+  </data>
+  <data name="tooManyRequests" xml:space="preserve">
+    <value>Zbyt dużo zapytań. Spróbuj ponownie poźniej</value>
+  </data>
+  <data name="notAuthenticated" xml:space="preserve">
+    <value>Brak autentykacji</value>
+  </data>
+  <data name="notAuthorized" xml:space="preserve">
+    <value>Brak dostępu do danego zasobu</value>
+  </data>
 </root>

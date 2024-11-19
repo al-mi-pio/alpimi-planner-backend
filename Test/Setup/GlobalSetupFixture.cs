@@ -1,5 +1,4 @@
-﻿using DotNetEnv;
-using Xunit;
+﻿using Xunit;
 
 namespace AlpimiTest.TestSetup
 {

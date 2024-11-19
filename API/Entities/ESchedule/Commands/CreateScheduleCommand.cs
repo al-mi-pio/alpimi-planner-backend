@@ -1,4 +1,5 @@
-﻿using AlpimiAPI.Database;
+﻿using System;
+using AlpimiAPI.Database;
 using AlpimiAPI.Entities.ESchedule.Queries;
 using AlpimiAPI.Responses;
 using alpimi_planner_backend.API.Locales;
@@ -8,8 +9,15 @@ using Microsoft.Extensions.Localization;
 
 namespace AlpimiAPI.Entities.ESchedule.Commands
 {
-    public record CreateScheduleCommand(Guid Id, Guid UserId, string Name, int SchoolHour)
-        : IRequest<Guid>;
+    public record CreateScheduleCommand(
+        Guid Id,
+        Guid UserId,
+        Guid ScheduleSettingsId,
+        string Name,
+        int SchoolHour,
+        DateTime SchoolYearStart,
+        DateTime SchoolYearEnd
+    ) : IRequest<Guid>;
 
     public class CreateScheduleHandler : IRequestHandler<CreateScheduleCommand, Guid>
     {
@@ -46,12 +54,23 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
                     [new ErrorObject(_str["alreadyExists", "Schedule", request.Name])]
                 );
             }
+            if (request.SchoolYearStart > request.SchoolYearEnd)
+            {
+                throw new ApiErrorException([new ErrorObject(_str["scheduleDate"])]);
+            }
 
             var insertedId = await _dbService.Post<Guid>(
                 @"
-                    INSERT INTO [Schedule] ([Id],[Name],[SchoolHour],[UserId])
+                    INSERT INTO [Schedule] ([Id],[Name],[UserId])
                     OUTPUT INSERTED.Id                    
-                    VALUES (@Id,@Name,@SchoolHour,@UserId);",
+                    VALUES (@Id,@Name,@UserId);",
+                request
+            );
+            await _dbService.Post<Guid>(
+                @"
+                    INSERT INTO [ScheduleSettings] ([Id],[SchoolHour],[SchoolYearStart],[SchoolYearEnd],[ScheduleId])
+                    OUTPUT INSERTED.Id
+                    VALUES (@ScheduleSettingsId, @SchoolHour, @SchoolYearStart, @SchoolYearEnd, @Id);",
                 request
             );
 

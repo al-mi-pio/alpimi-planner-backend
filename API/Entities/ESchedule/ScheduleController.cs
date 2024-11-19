@@ -51,8 +51,11 @@ namespace AlpimiAPI.Entities.ESchedule
             var command = new CreateScheduleCommand(
                 Guid.NewGuid(),
                 UserId,
+                Guid.NewGuid(),
                 request.Name,
-                request.SchoolHour
+                request.SchoolHour,
+                request.SchoolYearStart,
+                request.SchoolYearEnd
             );
             try
             {
@@ -204,13 +207,7 @@ namespace AlpimiAPI.Entities.ESchedule
             Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
             string privileges = Privileges.GetUserRoleFromToken(Authorization);
 
-            var command = new UpdateScheduleCommand(
-                id,
-                request.Name,
-                request.SchoolHour,
-                filteredId,
-                privileges
-            );
+            var command = new UpdateScheduleCommand(id, request.Name, filteredId, privileges);
             try
             {
                 Schedule? result = await _mediator.Send(command);

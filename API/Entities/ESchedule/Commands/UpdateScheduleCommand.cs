@@ -10,13 +10,8 @@ using Microsoft.Extensions.Localization;
 
 namespace AlpimiAPI.Entities.ESchedule.Commands
 {
-    public record UpdateScheduleCommand(
-        Guid Id,
-        string? Name,
-        int? SchoolHour,
-        Guid FilteredId,
-        string Role
-    ) : IRequest<Schedule?>;
+    public record UpdateScheduleCommand(Guid Id, string? Name, Guid FilteredId, string Role)
+        : IRequest<Schedule?>;
 
     public class UpdateScheduleHandler : IRequestHandler<UpdateScheduleCommand, Schedule?>
     {
@@ -65,8 +60,8 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
                         @"
                     UPDATE [Schedule] 
                     SET [Name]=CASE WHEN @Name IS NOT NULL THEN @Name 
-                    ELSE [Name] END,[SchoolHour]=CASE WHEN @SchoolHour IS NOT NULL THEN @SchoolHour ELSE [SchoolHour] END 
-                    OUTPUT INSERTED.[Id], INSERTED.[Name], INSERTED.[SchoolHour]
+                    ELSE [Name] END
+                    OUTPUT INSERTED.[Id], INSERTED.[Name]
                     WHERE [Id]=@Id;",
                         request
                     );
@@ -76,8 +71,8 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
                         @"
                      UPDATE [Schedule] 
                     SET [Name]=CASE WHEN @Name IS NOT NULL THEN @Name 
-                    ELSE [Name] END,[SchoolHour]=CASE WHEN @SchoolHour IS NOT NULL THEN @SchoolHour ELSE [SchoolHour] END 
-                    OUTPUT INSERTED.[Id], INSERTED.[Name], INSERTED.[SchoolHour]
+                    ELSE [Name] END
+                    OUTPUT INSERTED.[Id], INSERTED.[Name]
                     WHERE [Id]=@Id and [UserId]=@FilteredId;",
                         request
                     );

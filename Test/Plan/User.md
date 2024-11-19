@@ -10,8 +10,11 @@
 
 ## `POST` `api/User`
 
-- [CreateUSerReturnsOkStatusCode()](../Entities/EUser/UserController.test.cs) - **integrity**  
-  Check if returns a user when provided with correct data
+- [UserIsCreated()](../Entities/EUser/UserController.test.cs) - **integrity**  
+  Check if user is created when provided with correct data
+
+- [CreateUserThrowsForbiddenErrorWhenWrongTokenIsGiven()](../Entities/EUser/UserController.test.cs) - **integrity**  
+  Check if returns forbidden when a invalid token is provided
 
 - [ThrowsErrorWhenPasswordIsTooShort()](../Entities/EUser/Commands/CreateUserCommand.unit.cs) - **unit**  
   Check if returns an error when provided with too short password
@@ -40,9 +43,6 @@
 - [ThrowsMultipleErrorMessages()](../Entities/EUser/Commands/CreateUserCommand.unit.cs) - **unit**  
   Check if returns multiple errors when provided with multiple invalid parameters
 
-- `DUPLICATE` ~~[CreatesUserWhenPaswordIsCorrect()](../Entities/EUser/Commands/CreateUserCommand.unit.cs) - **unit**  
-  Check if returns a user when provided with correct data~~
-
 ## `GET` `api/User/{id}`
 
 - [GetUserReturnsUser()](../Entities/EUser/UserController.test.cs) - **integrity**  
@@ -54,16 +54,13 @@
 - [GetUserThrowsNotFoundErrorWhenWrongUserAttemptsGet()](../Entities/UserController.test.cs) - **integrity**  
   Check if returns an error when a user is inaccessible for user
 
-- `DUPLICATE` ~~[GetsUserWhenIdIsCorrect()](../Entities/EUser/Queries/GetUserQuery.unit.cs) - **unit**  
-  Check if returns a user when a valid token is provided~~
-
 ## `DELETE` `api/User/{id}`
 
-- [DeleteUserReturnsNoContentStatusCode()](../Entities/EUser/UserController.test.cs) - **integrity**  
-  Check if returns no content when a valid token is provided
+- [UserIsDeleted()](../Entities/EUser/UserController.test.cs) - **integrity**  
+  Check if user is deleted when a valid token is provided
 
-- `DUPLICATE` ~~[IsDeleteCalledProperly()](../Entities/EUser/Commands/DeleteUserCommand.unit.cs) - **unit**  
-  Check if returns no content when a valid token is provided~~
+- [DeleteUserThrowsForbiddenErrorWhenNoTokenIsGiven()](../Entities/EUser/UserController.test.cs) - **integrity**  
+  Check if returns forbidden when a invalid token is provided
 
 ## `PATCH` `api/User/{id}`
 
@@ -79,9 +76,6 @@
 - [ThrowsErrorWhenURLAlreadyExists()](../Entities/EUser/Commands/UpdateUserCommand.unit.cs) - **unit**  
   Check if returns an error when url is already taken
 
-- `DUPLICATE` ~~[ReturnsUpdatedUserWhenIdIsCorrect()](../Entities/EUser/Commands/UpdateUserCommand.unit.cs) - **unit**  
-  Check if returns an updated User when provided with correct data~~
-
 ## `GET` `api/User/byLogin/{login}`
 
 - [GetUserByNameReturnsUser()](../Entities/EUser/UserController.test.cs) - **integrity**  
@@ -93,5 +87,4 @@
 - [GetUserByNameThrowsNotFoundErrorWhenWrongUserAttemptsGet()](../Entities/EUser/UserController.test.cs) - **integrity**  
   Check if returns an error when a user is inaccessible for the user
 
-- `DUPLICATE` ~~[GetsUserWhenNameIsCorrect()](../Entities/EUser/Queries/GetUserByNameQuery.unit.cs) - **unit**  
-  Check if returns a user when a valid token is provided~~
+

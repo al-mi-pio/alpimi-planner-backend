@@ -35,7 +35,6 @@ namespace AlpimiTest.Entities.ESchedule.Commands
             var updateScheduleCommand = new UpdateScheduleCommand(
                 schedule.Id,
                 schedule.Name,
-                61,
                 new Guid(),
                 "Admin"
             );

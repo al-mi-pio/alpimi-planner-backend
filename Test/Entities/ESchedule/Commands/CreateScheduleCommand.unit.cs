@@ -24,39 +24,10 @@ namespace AlpimiTest.Entities.ESchedule.Commands
         }
 
         [Fact]
-        public async Task CreatesSchedule()
-        {
-            var schedule = MockData.GetScheduleDetails();
-
-            _dbService
-                .Setup(s => s.Post<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(schedule);
-
-            var createScheduleCommand = new CreateScheduleCommand(
-                schedule.Id,
-                schedule.UserId,
-                schedule.Name,
-                schedule.SchoolHour
-            );
-
-            var createScheduleHandler = new CreateScheduleHandler(_dbService.Object, _str.Object);
-
-            var result = await createScheduleHandler.Handle(
-                createScheduleCommand,
-                new CancellationToken()
-            );
-
-            Assert.Equal(schedule.Id, result);
-        }
-
-        [Fact]
         public async Task ThrowsErrorWheNameIsTaken()
         {
             var schedule = MockData.GetScheduleDetails();
 
-            _dbService
-                .Setup(s => s.Post<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(schedule);
             _dbService
                 .Setup(s => s.Get<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(schedule);

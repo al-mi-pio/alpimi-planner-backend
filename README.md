@@ -1,12 +1,17 @@
 # Alpimi planner backend
 
-A WEP API created in .NET for the Alpimi planner
+> A WEB API created in .NET for the Alpimi planner  
+> _[Test Plan](./Test/Plan/)_
+
+## Requirements
+
+- [.NET SDK 8](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
+
+- [SQL Server Developer](https://www.microsoft.com/pl-pl/sql-server/sql-server-downloads)
+
+- `Recommended` [Visual Studio Community 2022](https://visualstudio.microsoft.com/pl/vs/community/)
 
 ## Setup for development
-
-- Install [.NET SDK 8](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
-
-- Install [SQL Server Developer](https://www.microsoft.com/pl-pl/sql-server/sql-server-downloads)
 
 - Launch `View > Server Explorer` in Visual Studio, right click `Data Connections` and `Create New SQL Server Database`:
 

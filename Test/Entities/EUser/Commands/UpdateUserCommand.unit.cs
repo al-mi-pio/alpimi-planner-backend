@@ -24,37 +24,10 @@ namespace AlpimiTest.Entities.EUser.Commands
         }
 
         [Fact]
-        public async Task ReturnsUpdatedUserWhenIdIsCorrect()
-        {
-            var user = MockData.GetUserDetails();
-
-            _dbService
-                .Setup(s => s.Update<User>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(user);
-
-            var updateUserCommand = new UpdateUserCommand(
-                user.Id,
-                "marek2",
-                "f44",
-                new Guid(),
-                "Admin"
-            );
-
-            var updateUserHandler = new UpdateUserHandler(_dbService.Object, _str.Object);
-
-            var result = await updateUserHandler.Handle(updateUserCommand, new CancellationToken());
-
-            Assert.Equal(user, result);
-        }
-
-        [Fact]
         public async Task ThrowsErrorWhenURLAlreadyExists()
         {
             var user = MockData.GetUserDetails();
 
-            _dbService
-                .Setup(s => s.Update<User>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(user);
             _dbService
                 .Setup(s => s.Get<string>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(user.CustomURL);

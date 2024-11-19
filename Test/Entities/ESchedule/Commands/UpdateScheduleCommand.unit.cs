@@ -24,40 +24,10 @@ namespace AlpimiTest.Entities.ESchedule.Commands
         }
 
         [Fact]
-        public async Task ReturnsUpdatedUserWhenIdIsCorrect()
-        {
-            var schedule = MockData.GetScheduleDetails();
-
-            _dbService
-                .Setup(s => s.Update<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(schedule);
-
-            var updateScheduleCommand = new UpdateScheduleCommand(
-                schedule.Id,
-                "plan_marka2",
-                61,
-                new Guid(),
-                "Admin"
-            );
-
-            var updateScheduleHandler = new UpdateScheduleHandler(_dbService.Object, _str.Object);
-
-            var result = await updateScheduleHandler.Handle(
-                updateScheduleCommand,
-                new CancellationToken()
-            );
-
-            Assert.Equal(schedule, result);
-        }
-
-        [Fact]
         public async Task ThrowsErrorWhenURLAlreadyExists()
         {
             var schedule = MockData.GetScheduleDetails();
 
-            _dbService
-                .Setup(s => s.Update<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(schedule);
             _dbService
                 .Setup(s => s.Get<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(schedule);

@@ -222,7 +222,7 @@ try
 }
 catch (ApiErrorException ex)
 {
-    Console.WriteLine(ex);
+    Console.WriteLine(ex.errors.FirstOrDefault()!.message);
     Console.WriteLine("Press any key to exit...");
     Console.ReadKey();
 }

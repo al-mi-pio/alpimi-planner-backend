@@ -32,16 +32,19 @@ namespace AlpimiTest.Entities.EUser
         }
 
         [Fact]
-        public async Task DeleteUserReturnsNoContentStatusCode()
+        public async Task UserIsDeleted()
         {
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", new Guid())
             );
-            var response = await _client.DeleteAsync(
-                "/api/User/b70eda99-ed0a-4c06-bc65-44166ce58bb0"
-            );
+            var userId = await DbHelper.SetupUser(_client, MockData.GetCreateUserDTODetails());
+
+            var response = await _client.DeleteAsync($"/api/User/{userId}");
             Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+
+            response = await _client.GetAsync($"/api/User/{userId}");
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
         [Fact]
@@ -51,37 +54,32 @@ namespace AlpimiTest.Entities.EUser
                 "Bearer",
                 TestAuthorization.GetToken("User", "User", new Guid())
             );
-            var response = await _client.DeleteAsync(
-                "/api/User/b70eda99-ed0a-4c06-bc65-44166ce58bb0"
-            );
+            var response = await _client.DeleteAsync($"/api/User/{new Guid()}");
 
             Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
         }
 
         [Fact]
-        public async Task CreateUSerReturnsOkStatusCode()
+        public async Task UserIsCreated()
         {
-            var user = MockData.GetUserDetails();
-            var userRequest = new CreateUserDTO
-            {
-                Login = user.Login,
-                CustomURL = user.CustomURL!,
-                Password = "sssSSS1!"
-            };
+            var userRequest = MockData.GetCreateUserDTODetails();
 
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
-                TestAuthorization.GetToken("Admin", user.Login, user.Id)
+                TestAuthorization.GetToken("Admin", "Bob", new Guid())
             );
 
             var response = await _client.PostAsJsonAsync("/api/User", userRequest);
             var jsonId = await response.Content.ReadFromJsonAsync<ApiGetResponse<Guid>>();
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            response = await _client.GetAsync($"/api/User/{jsonId!.Content}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
         [Fact]
-        public async Task CreateUserThrowsUnothorizedErrorWhenNoTokenIsGiven()
+        public async Task CreateUserThrowsForbiddenErrorWhenWrongTokenIsGiven()
         {
             var user = MockData.GetUserDetails();
             var userRequest = new CreateUserDTO
@@ -157,20 +155,6 @@ namespace AlpimiTest.Entities.EUser
         }
 
         [Fact]
-        public async Task UpdateUserThrowsUnothorizedErrorWhenNoTokenIsGiven()
-        {
-            var userUpdateRequest = MockData.GetUpdateUserDTODetails();
-
-            var userId = await DbHelper.SetupUser(_client, MockData.GetCreateUserDTODetails());
-
-            _client.DefaultRequestHeaders.Authorization = null;
-            var response = await _client.PatchAsJsonAsync($"/api/User/{userId}", userUpdateRequest);
-            var jsonResponse = await response.Content.ReadFromJsonAsync<ApiGetResponse<User>>();
-
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-        }
-
-        [Fact]
         public async Task GetUserReturnsUser()
         {
             var userRequest = MockData.GetCreateUserDTODetails();
@@ -214,17 +198,6 @@ namespace AlpimiTest.Entities.EUser
             var response = await _client.GetAsync($"/api/User/{new Guid()}");
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
-        }
-
-        [Fact]
-        public async Task GetUserThrowsThrowsUnothorizedErrorWhenNoTokenIsGiven()
-        {
-            var userId = await DbHelper.SetupUser(_client, MockData.GetCreateUserDTODetails());
-
-            _client.DefaultRequestHeaders.Authorization = null;
-            var response = await _client.GetAsync($"/api/User/{userId}");
-
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         }
 
         [Fact]
@@ -276,15 +249,29 @@ namespace AlpimiTest.Entities.EUser
         }
 
         [Fact]
-        public async Task GetUserByLoginThrowsUnothorizedErrorWhenNoTokenIsGiven()
+        public async Task GetUserByLoginThrowsUnauthorizedErrorWhenNoTokenIsGiven()
         {
-            var userRequest = MockData.GetCreateUserDTODetails();
-
-            await DbHelper.SetupUser(_client, userRequest);
-
             _client.DefaultRequestHeaders.Authorization = null;
-            var response = await _client.GetAsync($"/api/User/byLogin/{userRequest.Login}");
 
+            var response = await _client.GetAsync("/api/User/byLogin/AnyLogin");
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+
+            response = await _client.PatchAsJsonAsync(
+                $"/api/User/{new Guid()}",
+                MockData.GetUpdateUserDTODetails()
+            );
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+
+            response = await _client.GetAsync($"/api/User/{new Guid()}");
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+
+            response = await _client.PostAsJsonAsync(
+                "/api/User",
+                MockData.GetUpdateUserDTODetails()
+            );
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+
+            response = await _client.DeleteAsync($"/api/User/{new Guid()}");
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         }
 
@@ -296,7 +283,26 @@ namespace AlpimiTest.Entities.EUser
             {
                 await _client.GetAsync($"/api/User/{new Guid()}");
             }
+
             var response = await _client.GetAsync($"/api/User/{new Guid()}");
+            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
+
+            response = await _client.GetAsync("/api/User/byLogin/AnyLogin");
+            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
+
+            response = await _client.PatchAsJsonAsync(
+                $"/api/User/{new Guid()}",
+                MockData.GetUpdateUserDTODetails()
+            );
+            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
+
+            response = await _client.PostAsJsonAsync(
+                "/api/User",
+                MockData.GetUpdateUserDTODetails()
+            );
+            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
+
+            response = await _client.DeleteAsync($"/api/User/{new Guid()}");
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
         }
     }

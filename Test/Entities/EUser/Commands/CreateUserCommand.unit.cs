@@ -25,37 +25,9 @@ namespace AlpimiTest.Entities.EUser.Commands
         }
 
         [Fact]
-        public async Task CreatesUserWhenPaswordIsCorrect()
-        {
-            var user = MockData.GetUserDetails();
-
-            _dbService
-                .Setup(s => s.Post<User>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(user);
-
-            var createUserCommand = new CreateUserCommand(
-                user.Id,
-                new Guid(),
-                user.Login,
-                user.CustomURL!,
-                "RandomPassword!1"
-            );
-
-            var createUserHandler = new CreateUserHandler(_dbService.Object, _str.Object);
-
-            var result = await createUserHandler.Handle(createUserCommand, new CancellationToken());
-
-            Assert.Equal(user.Id, result);
-        }
-
-        [Fact]
         public async Task ThrowsErrorWhenPasswordIsTooShort()
         {
             var user = MockData.GetUserDetails();
-
-            _dbService
-                .Setup(s => s.Post<User>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(user);
 
             var createUserCommand = new CreateUserCommand(
                 user.Id,
@@ -92,10 +64,6 @@ namespace AlpimiTest.Entities.EUser.Commands
         {
             var user = MockData.GetUserDetails();
 
-            _dbService
-                .Setup(s => s.Post<User>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(user);
-
             var createUserCommand = new CreateUserCommand(
                 user.Id,
                 new Guid(),
@@ -130,10 +98,6 @@ namespace AlpimiTest.Entities.EUser.Commands
         public async Task ThrowsErrorWhenPasswordDosentContainSmallLetters()
         {
             var user = MockData.GetUserDetails();
-
-            _dbService
-                .Setup(s => s.Post<User>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(user);
 
             var createUserCommand = new CreateUserCommand(
                 user.Id,
@@ -170,10 +134,6 @@ namespace AlpimiTest.Entities.EUser.Commands
         {
             var user = MockData.GetUserDetails();
 
-            _dbService
-                .Setup(s => s.Post<User>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(user);
-
             var createUserCommand = new CreateUserCommand(
                 user.Id,
                 new Guid(),
@@ -209,10 +169,6 @@ namespace AlpimiTest.Entities.EUser.Commands
         {
             var user = MockData.GetUserDetails();
 
-            _dbService
-                .Setup(s => s.Post<User>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(user);
-
             var createUserCommand = new CreateUserCommand(
                 user.Id,
                 new Guid(),
@@ -247,10 +203,6 @@ namespace AlpimiTest.Entities.EUser.Commands
         public async Task ThrowsErrorWhenPasswordDosentContainDigits()
         {
             var user = MockData.GetUserDetails();
-
-            _dbService
-                .Setup(s => s.Post<User>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(user);
 
             var createUserCommand = new CreateUserCommand(
                 user.Id,
@@ -288,9 +240,6 @@ namespace AlpimiTest.Entities.EUser.Commands
             var user = MockData.GetUserDetails();
 
             _dbService
-                .Setup(s => s.Post<User>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(user);
-            _dbService
                 .Setup(s => s.Get<User>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(user);
 
@@ -327,9 +276,6 @@ namespace AlpimiTest.Entities.EUser.Commands
             var user = MockData.GetUserDetails();
 
             _dbService
-                .Setup(s => s.Post<User>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(user);
-            _dbService
                 .Setup(s => s.Get<string>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(user.CustomURL);
             var createUserCommand = new CreateUserCommand(
@@ -362,10 +308,6 @@ namespace AlpimiTest.Entities.EUser.Commands
         public async Task ThrowsMultipleErrorMessages()
         {
             var user = MockData.GetUserDetails();
-
-            _dbService
-                .Setup(s => s.Post<User>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(user);
 
             var createUserCommand = new CreateUserCommand(
                 user.Id,

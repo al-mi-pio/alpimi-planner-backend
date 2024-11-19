@@ -10,24 +10,22 @@
 
 ## `POST` `api/Schedule`
 
-- [CreateScheduleReturnsOkStatusCode()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
-  Check if returns a schedule when provided with correct data
+- [ScheduleIsCreated()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
+  Check if schedule is created when provided with correct data
 
 - [ThrowsErrorWheNameIsTaken()](../Entities/ESchedule/Commands/CreateScheduleCommand.unit.cs) - **unit**  
   Check if returns an error when a taken name is provided
 
-- `DUPLICATE` ~~[CreatesSchedule()](../Entities/ESchedule/Commands/CreateScheduleCommand.unit.cs) - **unit**  
-  Check if returns a schedule when provided with correct data~~
 
 ## `GET` `api/Schedule`
 
 - [GetAllScheduleReturnsSchedules()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
   Check if returns two schedules when a valid token is provided
 
-- [GetAllScheduleTReturnsEmptyContentWhenWrongUserAttemptsGet()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
+- [GetAllScheduleReturnsEmptyContentWhenWrongUserAttemptsGet()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
   Check if returns no schedules when other user's token is provided
 
-- [GetAllScheduleTReturnsOnlyUserMadeSchedules()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
+- [GetAllScheduleReturnsOnlyUserMadeSchedules()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
   Check if returns a schedule when valid token is provided
 
 - [ThrowsErrorWhenIncorrectPerPageIsGiven()](../Entities/ESchedule/Queries/GetSchedulesQuery.unit.cs) - **unit**  
@@ -45,11 +43,7 @@
 - [ThrowsMultipleErrorMessages()](../Entities/ESchedule/Queries/GetSchedulesQuery.unit.cs) - **unit**  
   Check if returns multiple errors when provided with multiple invalid parameters
 
-- `DUPLICATE` ~~[GetsSchedules()](../Entities/ESchedule/Queries/GetSchedulesQuery.unit.cs) - **unit**  
-  Check if returns two schedules when a valid token is provided~~
 
-- `DUPLICATE` ~~[ReturnsEmptyWhenWrongUserGetsSchedules()](../Entities/ESchedule/Queries/GetSchedulesQuery.unit.cs) - **unit**  
-  Check if returns no schedules when other user's token is provided~~
 
 ## `GET` `api/Schedule/{id}`
 
@@ -59,19 +53,14 @@
 - [GetScheduleThrowsNotFoundWhenWrongIdIsGiven()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
   Check if returns an error when a schedule doesn't exists
 
-- [GetScheduleThrowsNotFoundErrorWhenWrongUserAttemptsGet()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
+- [GetScheduleThrowsNotFoundErrorWhenWrongUserTokenIsGivent()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
   Check if returns an error when a schedule is inaccessible for user
 
-- `DUPLICATE` ~~[GetsScheduleWhenIdIsCorrect()](../Entities/ESchedule/Queries/GetScheduleQuery.unit.cs) - **unit**  
-  Check if returns a schedule when a valid token is provided~~
 
 ## `DELETE` `api/Schedule/{id}`
 
-- [DeleteScheduleReturnsNoContentStatusCode()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
-  Check if returns no content when a valid token is provided
-
-- `DUPLICATE` ~~[IsDeleteCalledProperly()](../Entities/ESchedule/Commands/DeleteScheduleCommand.unit.cs) - **unit**  
-  Check if returns no content when a valid token is provided~~
+- [ScheduleIsDeleted()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
+  Check if schedule is deleted when a valid token is provided
 
 ## `PATCH` `api/Schedule/{id}`
 
@@ -87,8 +76,6 @@
 - [ThrowsErrorWhenURLAlreadyExists()](../Entities/ESchedule/Commands/UpdateScheduleCommand.unit.cs) - **unit**  
   Check if returns an error when url is already taken
 
-- `DUPLICATE` ~~[ReturnsUpdatedUserWhenIdIsCorrect()](../Entities/ESchedule/Commands/UpdateScheduleCommand.unit.cs) - **unit**  
-  Check if returns an updated schedule when provided with correct data~~
 
 ## `GET` `api/Schedule/byName/{name}`
 
@@ -98,8 +85,6 @@
 - [GetScheduleByNameThrowsNotFoundWhenWrongIdIsGiven()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
   Check if returns an error when a schedule doesn't exists
 
-- [GetScheduleByNameThrowsNotFoundErrorWhenWrongUserAttemptsGet()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
+- [GetScheduleByNameThrowsNotFoundErrorWhenWrongUserTokenIsGiven())](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
   Check if returns an error when a schedule is inaccessible for user
 
-- `DUPLICATE` ~~[GetsScheduleWhenNameIsCorrect()](../Entities/ESchedule/Queries/GetScheduleByNameQuery.unit.cs) - **unit**  
-  Check if returns a schedule when a valid token is provided~~

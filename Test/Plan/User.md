@@ -1,12 +1,17 @@
 # User entity test plan
 
+## `ALL` `api/User/*`
+
+- [UserControllerThrowsTooManyRequests()](../Entities/EUser/UserController.test.cs) - **integrity**  
+  Check if returns an error when request is sent too many times
+
+- [UserControllerThrowsUnauthorized()](../Entities/UserController.test.cs) - **integrity**  
+  Check if returns an error when token is not provided
+
 ## `POST` `api/User`
 
 - [CreateUSerReturnsOkStatusCode()](../Entities/EUser/UserController.test.cs) - **integrity**  
   Check if returns a user when provided with correct data
-
-- [CreateUserThrowsUnothorizedErrorWhenNoTokenIsGiven()](../Entities/EUser/UserController.test.cs) - **integrity**  
-  Check if returns an error when token is not provided
 
 - [ThrowsErrorWhenPasswordIsTooShort()](../Entities/EUser/Commands/CreateUserCommand.unit.cs) - **unit**  
   Check if returns an error when provided with too short password
@@ -49,12 +54,6 @@
 - [GetUserThrowsNotFoundErrorWhenWrongUserAttemptsGet()](../Entities/UserController.test.cs) - **integrity**  
   Check if returns an error when a user is inaccessible for user
 
-- [GetUserThrowsUnothorizedErrorWhenNoTokenIsGiven()](../Entities/UserController.test.cs) - **integrity**  
-  Check if returns an error when token is not provided
-
-- [UserControllerThrowsTooManyRequests()](../Entities/EUser/UserController.test.cs) - **integrity**  
-  Check if returns an error when request is sent too many times
-
 - `DUPLICATE` ~~[GetsUserWhenIdIsCorrect()](../Entities/EUser/Queries/GetUserQuery.unit.cs) - **unit**  
   Check if returns a user when a valid token is provided~~
 
@@ -62,9 +61,6 @@
 
 - [DeleteUserReturnsNoContentStatusCode()](../Entities/EUser/UserController.test.cs) - **integrity**  
   Check if returns no content when a valid token is provided
-
-- [DeleteUserThrowsUnothorizedErrorWhenNoTokenIsGiven()](../Entities/EUser/UserController.test.cs) - **integrity**  
-  Check if returns an error when token is not provided
 
 - `DUPLICATE` ~~[IsDeleteCalledProperly()](../Entities/EUser/Commands/DeleteUserCommand.unit.cs) - **unit**  
   Check if returns no content when a valid token is provided~~
@@ -79,9 +75,6 @@
 
 - [UpdateUserThrowsNotFoundErrorWhenWrongUserAttemptsUpdate()](../Entities/EUser/UserController.test.cs) - **integrity**  
   Check if returns an error when user is inaccessible for the user
-
-- [UpdateUserThrowsUnothorizedErrorWhenNoTokenIsGiven()](../Entities/EUser/UserController.test.cs) - **integrity**  
-  Check if returns an error when token is not provided
 
 - [ThrowsErrorWhenURLAlreadyExists()](../Entities/EUser/Commands/UpdateUserCommand.unit.cs) - **unit**  
   Check if returns an error when url is already taken
@@ -99,9 +92,6 @@
 
 - [GetUserByNameThrowsNotFoundErrorWhenWrongUserAttemptsGet()](../Entities/EUser/UserController.test.cs) - **integrity**  
   Check if returns an error when a user is inaccessible for the user
-
-- [GetUserByNameThrowsUnothorizedErrorWhenNoTokenIsGiven()](../Entities/EUser/UserController.test.cs) - **integrity**  
-  Check if returns an error when token is not provided
 
 - `DUPLICATE` ~~[GetsUserWhenNameIsCorrect()](../Entities/EUser/Queries/GetUserByNameQuery.unit.cs) - **unit**  
   Check if returns a user when a valid token is provided~~

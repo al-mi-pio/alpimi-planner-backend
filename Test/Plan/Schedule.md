@@ -1,12 +1,17 @@
 # Schedule entity test plan
 
+## `ALL` `api/Schedule/*`
+
+- [ScheduleControllerThrowsTooManyRequests()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
+  Check if returns an error when request is sent too many times
+
+- [ScheduleControllerThrowsUnauthorized()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
+  Check if returns an error when token is not provided
+
 ## `POST` `api/Schedule`
 
 - [CreateScheduleReturnsOkStatusCode()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
   Check if returns a schedule when provided with correct data
-
-- [CreateScheduleThrowsUnothorizedErrorWhenNoTokenIsGiven()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
-  Check if returns an error when token is not provided
 
 - [ThrowsErrorWheNameIsTaken()](../Entities/ESchedule/Commands/CreateScheduleCommand.unit.cs) - **unit**  
   Check if returns an error when a taken name is provided
@@ -24,12 +29,6 @@
 
 - [GetAllScheduleTReturnsOnlyUserMadeSchedules()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
   Check if returns a schedule when valid token is provided
-
-- [ThrowsUnothorizedErrorWhenNoTokenIsGiven()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
-  Check if returns an error when token is not provided
-
-- [ScheduleControllerThrowsTooManyRequests()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
-  Check if returns an error when request is sent too many times
 
 - [ThrowsErrorWhenIncorrectPerPageIsGiven()](../Entities/ESchedule/Queries/GetSchedulesQuery.unit.cs) - **unit**  
   Check if returns an error when provided with invalid perPage
@@ -63,9 +62,6 @@
 - [GetScheduleThrowsNotFoundErrorWhenWrongUserAttemptsGet()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
   Check if returns an error when a schedule is inaccessible for user
 
-- [GetScheduleThrowsUnothorizedErrorWhenNoTokenIsGiven()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
-  Check if returns an error when token is not provided
-
 - `DUPLICATE` ~~[GetsScheduleWhenIdIsCorrect()](../Entities/ESchedule/Queries/GetScheduleQuery.unit.cs) - **unit**  
   Check if returns a schedule when a valid token is provided~~
 
@@ -73,9 +69,6 @@
 
 - [DeleteScheduleReturnsNoContentStatusCode()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
   Check if returns no content when a valid token is provided
-
-- [DeleteScheduleThrowsUnothorizedErrorWhenNoTokenIsGiven()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
-  Check if returns an error when token is not provided
 
 - `DUPLICATE` ~~[IsDeleteCalledProperly()](../Entities/ESchedule/Commands/DeleteScheduleCommand.unit.cs) - **unit**  
   Check if returns no content when a valid token is provided~~
@@ -90,9 +83,6 @@
 
 - [UpdateScheduleThrowsNotFoundErrorWhenWrongUserAttemptsUpdate()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
   Check if returns an error when schedule is inaccessible for user
-
-- [UpdateScheduleThrowsUnothorizedErrorWhenNoTokenIsGiven()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
-  Check if returns an error when token is not provided
 
 - [ThrowsErrorWhenURLAlreadyExists()](../Entities/ESchedule/Commands/UpdateScheduleCommand.unit.cs) - **unit**  
   Check if returns an error when url is already taken
@@ -110,9 +100,6 @@
 
 - [GetScheduleByNameThrowsNotFoundErrorWhenWrongUserAttemptsGet()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
   Check if returns an error when a schedule is inaccessible for user
-
-- [GetScheduleByNameThrowsUnothorizedErrorWhenNoTokenIsGiven()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
-  Check if returns an error when token is not provided
 
 - `DUPLICATE` ~~[GetsScheduleWhenNameIsCorrect()](../Entities/ESchedule/Queries/GetScheduleByNameQuery.unit.cs) - **unit**  
   Check if returns a schedule when a valid token is provided~~

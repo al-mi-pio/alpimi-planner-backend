@@ -1,5 +1,10 @@
 # Auth entity test plan
 
+## `ALL` `api/Auth/*`
+
+- [AuthControllerThrowsTooManyRequests()](../Entities/EAuth/AuthController.test.cs) - **integrity**  
+  Check if returns an error when request is sent too many times
+
 ## `POST` `api/Auth/login`
 
 - [LoginReturnOKStatusCode()](../Entities/EAuth/AuthController.test.cs) - **integrity**  
@@ -18,9 +23,6 @@
 
 - [RefreshTokenThrowsUnothorizedErrorWhenNoJWTTokenIsGiven()](../Entities/EAuth/Queries/RefreshTokenQuery.unit.cs) - **integrity**  
   Check if returns an error when token is not provided
-
-- [AuthControllerThrowsTooManyRequests()](../Entities/EAuth/AuthController.test.cs) - **integrity**  
-  Check if returns an error when request is sent too many times
 
 - `DUPLICATE` ~~[GivesRefreshedToken()](../Entities/EAuth/Queries/RefreshTokenQuery.unit.cs) - **unit**  
   Check if returns a new token when provided with an old one~~

@@ -7,7 +7,7 @@
 
 ## `POST` `api/Auth/login`
 
-- [LoginReturnOKStatusCode()](../Entities/EAuth/AuthController.test.cs) - **integrity**  
+- [LoginReturnsOKStatusCode()](../Entities/EAuth/AuthController.test.cs) - **integrity**  
   Check if returns a token when provided with correct credentials
 
 - [ThrowsErrorWhenIncorrectLoginIsGiven()](../Entities/EAuth/Queries/LoginQuery.unit.cs) - **unit**  
@@ -24,5 +24,3 @@
 - [RefreshTokenThrowsUnothorizedErrorWhenNoJWTTokenIsGiven()](../Entities/EAuth/Queries/RefreshTokenQuery.unit.cs) - **integrity**  
   Check if returns an error when token is not provided
 
-- `DUPLICATE` ~~[GivesRefreshedToken()](../Entities/EAuth/Queries/RefreshTokenQuery.unit.cs) - **unit**  
-  Check if returns a new token when provided with an old one~~

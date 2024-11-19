@@ -32,9 +32,6 @@ namespace AlpimiTest.Entities.EAuth.Queries
             _dbService
                 .Setup(s => s.Get<User>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync((User?)null);
-            _dbService
-                .Setup(s => s.Post<Auth>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(auth);
 
             var loginCommand = new LoginQuery("wrongLogin", "sssSSS1!");
 
@@ -56,13 +53,12 @@ namespace AlpimiTest.Entities.EAuth.Queries
         public async Task ThrowsErrorWhenIncorrectPasswordIsGiven()
         {
             var auth = MockData.GetAuthDetails();
-
-            _dbService
-                .Setup(s => s.Get<User>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(auth.User);
             _dbService
                 .Setup(s => s.Post<Auth>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(auth);
+            _dbService
+                .Setup(s => s.Get<User>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(auth.User);
 
             var loginCommand = new LoginQuery(auth.User.Login, "wrongPassword");
 

@@ -14,6 +14,7 @@ namespace AlpimiTest.TestSetup
         {
             { "invalidLoginOrPassword", "Invalid login or password" },
             { "invalidPassword", "Invalid password" },
+            { "scheduleDate", "The end date cannot happen before the start date" }
         };
         private static readonly Dictionary<
             string,

@@ -278,7 +278,6 @@ namespace AlpimiTest.Entities.EUser
         [Fact]
         public async Task UserControllerThrowsTooManyRequests()
         {
-            _client.DefaultRequestHeaders.Authorization = null;
             for (int i = 0; i != RateLimiterSettings.permitLimit; i++)
             {
                 await _client.GetAsync($"/api/User/{new Guid()}");

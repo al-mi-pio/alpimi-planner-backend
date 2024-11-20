@@ -16,7 +16,7 @@
 - [UpdateScheduleSettingsThrowsNotFoundErrorWhenWrongUserAttemptsUpdate()](../Entities/EUser/UserController.test.cs) - **integrity**  
   Check if returns an error when schedule settings are inaccessible for user
 
-- [UpdateScheduleSettingsThrowsNotFoundErrorWhenWrongIdIsGiven()](../Entities/EUser/Commands/CreateUserCommand.unit.cs) - **integrity**
+- [UpdateScheduleSettingsThrowsNotFoundErrorWhenWrongIdIsGiven()](../Entities/EScheduleSettings/ScheduleSettingsController.test.cs) - **integrity**
   Check if returns an error when schedule settings don't exists
 
 - [ThrowsErrorWhenDateIsIncorrect()](../Entities/EUser/Commands/CreateUserCommand.unit.cs) - **unit**  

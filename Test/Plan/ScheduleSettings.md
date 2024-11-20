@@ -19,7 +19,7 @@
 - [UpdateScheduleSettingsThrowsNotFoundErrorWhenWrongIdIsGiven()](../Entities/EUser/Commands/CreateUserCommand.unit.cs) - **integrity**
   Check if returns an error when schedule settings don't exists
 
-- [ThrowsErrorWhenDateIsIncorrect()](../Entities/EScheduleSettings/ScheduleSettingsController.test.cs) - **unit**  
+- [ThrowsErrorWhenDateIsIncorrect()](../Entities/EUser/Commands/CreateUserCommand.unit.cs) - **unit**  
   Check if returns an error when incorrect dates are provided
 
 

@@ -28,7 +28,7 @@
 - [GetScheduleSettingsByScheduleIdReturnsScheduleSettings()](../Entities/EScheduleSettings/ScheduleSettingsController.test.cs) - **integrity**
   Check if returns schedule settings when a valid token is provided
 
-- [GetScheduleSettingsByScheduleIdThrowsNotFoundErrorWhenWrongUserAttemptsUpdate()](../Entities/EUser/Commands/CreateUserCommand.unit.cs) - **integrity**  
+- [GetScheduleSettingsByScheduleIdThrowsNotFoundErrorWhenWrongUserAttemptsUpdate()](../Entities/EScheduleSettings/ScheduleSettingsController.test.cs) - **integrity**  
   Check if returns an error when schedule settings are inaccessible for user
 
 - [GetUserThrowsNotFoundErrorWhenWrongUserAttemptsGet()](../Entities/EUser/Commands/CreateUserCommand.unit.cs) - **integrity** 	

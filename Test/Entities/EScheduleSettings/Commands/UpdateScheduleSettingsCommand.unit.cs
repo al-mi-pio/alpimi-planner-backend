@@ -1,6 +1,5 @@
 ﻿using AlpimiAPI.Database;
-using AlpimiAPI.Entities.ESchedule;
-using AlpimiAPI.Entities.ESchedule.Commands;
+using AlpimiAPI.Entities.EScheduleSettings.Commands;
 using AlpimiAPI.Responses;
 using AlpimiTest.TestSetup;
 using AlpimiTest.TestUtilities;
@@ -10,41 +9,42 @@ using Moq;
 using Newtonsoft.Json;
 using Xunit;
 
-namespace AlpimiTest.Entities.ESchedule.Commands
+namespace AlpimiTest.Entities.EScheduleSettings.Commands
 {
     [Collection("Sequential Tests")]
-    public class UpdateScheduleCommandUnit
+    public class UpdateScheduleSettingsCommandUnit
     {
         private readonly Mock<IDbService> _dbService = new();
         private readonly Mock<IStringLocalizer<Errors>> _str;
 
-        public UpdateScheduleCommandUnit()
+        public UpdateScheduleSettingsCommandUnit()
         {
             _str = ResourceSetup.Setup();
         }
 
         [Fact]
-        public async Task ThrowsErrorWhenURLAlreadyExists()
+        public async Task ThrowsErrorWhenDateIsIncorrect()
         {
-            var schedule = MockData.GetScheduleDetails();
+            var scheduleSettings = MockData.GetScheduleSettingsDetails();
 
-            _dbService
-                .Setup(s => s.Get<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(schedule);
-
-            var updateScheduleCommand = new UpdateScheduleCommand(
-                schedule.Id,
-                schedule.Name,
+            var updateScheduleSettingsCommand = new UpdateScheduleSettingsCommand(
+                scheduleSettings.Id,
+                scheduleSettings.SchoolHour,
+                new DateTime(2020, 10, 10),
+                new DateTime(2000, 10, 10),
                 new Guid(),
                 "Admin"
             );
 
-            var updateScheduleHandler = new UpdateScheduleHandler(_dbService.Object, _str.Object);
+            var updateScheduleSettingsHandler = new UpdateScheduleSettingsHandler(
+                _dbService.Object,
+                _str.Object
+            );
 
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
-                    await updateScheduleHandler.Handle(
-                        updateScheduleCommand,
+                    await updateScheduleSettingsHandler.Handle(
+                        updateScheduleSettingsCommand,
                         new CancellationToken()
                     )
             );
@@ -53,7 +53,7 @@ namespace AlpimiTest.Entities.ESchedule.Commands
                 JsonConvert.SerializeObject(
                     new ErrorObject[]
                     {
-                        new ErrorObject("There is already a Schedule with the name Plan_Marka")
+                        new ErrorObject("The end date cannot happen before the start date")
                     }
                 ),
                 JsonConvert.SerializeObject(result.errors)

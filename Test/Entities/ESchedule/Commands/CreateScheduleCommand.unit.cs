@@ -26,17 +26,20 @@ namespace AlpimiTest.Entities.ESchedule.Commands
         [Fact]
         public async Task ThrowsErrorWheNameIsTaken()
         {
-            var schedule = MockData.GetScheduleDetails();
+            var scheduleSettings = MockData.GetScheduleSettingsDetails();
 
             _dbService
                 .Setup(s => s.Get<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(schedule);
+                .ReturnsAsync(scheduleSettings.Schedule);
 
             var createScheduleCommand = new CreateScheduleCommand(
-                schedule.Id,
-                schedule.UserId,
+                scheduleSettings.Schedule.Id,
+                scheduleSettings.Schedule.UserId,
+                scheduleSettings.Id,
                 "TakenName",
-                schedule.SchoolHour
+                scheduleSettings.SchoolHour,
+                scheduleSettings.SchoolYearStart,
+                scheduleSettings.SchoolYearEnd
             );
 
             var createScheduleHandler = new CreateScheduleHandler(_dbService.Object, _str.Object);
@@ -54,6 +57,42 @@ namespace AlpimiTest.Entities.ESchedule.Commands
                     new ErrorObject[]
                     {
                         new ErrorObject("There is already a Schedule with the name TakenName")
+                    }
+                ),
+                JsonConvert.SerializeObject(result.errors)
+            );
+        }
+
+        [Fact]
+        public async Task ThrowsErrorWhenDateIsIncorrect()
+        {
+            var scheduleSettings = MockData.GetScheduleSettingsDetails();
+
+            var createScheduleCommand = new CreateScheduleCommand(
+                scheduleSettings.Schedule.Id,
+                scheduleSettings.Schedule.UserId,
+                scheduleSettings.Id,
+                scheduleSettings.Schedule.Name,
+                scheduleSettings.SchoolHour,
+                new DateTime(2020, 10, 10),
+                new DateTime(2000, 10, 10)
+            );
+
+            var createScheduleHandler = new CreateScheduleHandler(_dbService.Object, _str.Object);
+
+            var result = await Assert.ThrowsAsync<ApiErrorException>(
+                async () =>
+                    await createScheduleHandler.Handle(
+                        createScheduleCommand,
+                        new CancellationToken()
+                    )
+            );
+
+            Assert.Equal(
+                JsonConvert.SerializeObject(
+                    new ErrorObject[]
+                    {
+                        new ErrorObject("The end date cannot happen before the start date")
                     }
                 ),
                 JsonConvert.SerializeObject(result.errors)

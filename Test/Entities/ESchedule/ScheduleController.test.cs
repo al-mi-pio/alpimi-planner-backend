@@ -1,7 +1,6 @@
 ﻿using System.Net;
 using System.Net.Http.Headers;
 using AlpimiAPI.Entities.ESchedule;
-using AlpimiAPI.Entities.ESchedule.DTO;
 using AlpimiAPI.Responses;
 using AlpimiAPI.Settings;
 using AlpimiTest.TestUtilities;
@@ -95,7 +94,6 @@ namespace AlpimiTest.Entities.ESchedule
             var jsonResponse = await response.Content.ReadFromJsonAsync<ApiGetResponse<Schedule>>();
 
             Assert.Equal(scheduleUpdateRequest.Name, jsonResponse!.Content.Name);
-            Assert.Equal(scheduleUpdateRequest.SchoolHour, jsonResponse!.Content.SchoolHour);
         }
 
         [Fact]
@@ -159,7 +157,6 @@ namespace AlpimiTest.Entities.ESchedule
             var jsonResponse = await response.Content.ReadFromJsonAsync<ApiGetResponse<Schedule>>();
 
             Assert.Equal(scheduleRequest.Name, jsonResponse!.Content.Name);
-            Assert.Equal(scheduleRequest.SchoolHour, jsonResponse!.Content.SchoolHour);
         }
 
         [Fact]
@@ -209,7 +206,6 @@ namespace AlpimiTest.Entities.ESchedule
             var jsonResponse = await response.Content.ReadFromJsonAsync<ApiGetResponse<Schedule>>();
 
             Assert.Equal(scheduleRequest.Name, jsonResponse!.Content.Name);
-            Assert.Equal(scheduleRequest.SchoolHour, jsonResponse!.Content.SchoolHour);
         }
 
         [Fact]
@@ -353,7 +349,6 @@ namespace AlpimiTest.Entities.ESchedule
         [Fact]
         public async Task ScheduleControllerThrowsTooManyRequests()
         {
-            _client.DefaultRequestHeaders.Authorization = null;
             for (int i = 0; i != RateLimiterSettings.permitLimit; i++)
             {
                 await _client.GetAsync("/api/Schedule");

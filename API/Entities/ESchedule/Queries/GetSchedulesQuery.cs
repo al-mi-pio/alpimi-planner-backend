@@ -64,7 +64,7 @@ namespace AlpimiAPI.Entities.ESchedule.Queries
                 case "Admin":
                     count = await _dbService.Get<int>("SELECT COUNT(*) from [Schedule]", request);
                     schedules = await _dbService.GetAll<Schedule>(
-                        "SELECT [Id], [Name], [SchoolHour], [UserId] FROM [Schedule] ORDER BY '"
+                        "SELECT [Id], [Name], [UserId] FROM [Schedule] ORDER BY '"
                             + request.Pagination.SortBy
                             + "' "
                             + request.Pagination.SortOrder
@@ -82,7 +82,7 @@ namespace AlpimiAPI.Entities.ESchedule.Queries
                         request
                     );
                     schedules = await _dbService.GetAll<Schedule>(
-                        "SELECT [Id], [Name], [SchoolHour], [UserId] FROM [Schedule] WHERE [UserId] = @FilteredId ORDER BY'"
+                        "SELECT [Id], [Name], [UserId] FROM [Schedule] WHERE [UserId] = @FilteredId ORDER BY'"
                             + request.Pagination.SortBy
                             + "' "
                             + request.Pagination.SortOrder

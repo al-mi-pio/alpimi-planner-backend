@@ -156,4 +156,7 @@
   <data name="notAuthorized" xml:space="preserve">
     <value>You have no permission to access this resource</value>
   </data>
+  <data name="scheduleDate" xml:space="preserve">
+    <value>The end date cannot happen before the start date</value>
+  </data>
 </root>

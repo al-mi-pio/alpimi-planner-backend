@@ -2,6 +2,8 @@
 using AlpimiAPI.Entities.EAuth.DTO;
 using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Entities.ESchedule.DTO;
+using AlpimiAPI.Entities.EScheduleSettings;
+using AlpimiAPI.Entities.EScheduleSettings.DTO;
 using AlpimiAPI.Entities.EUser;
 using AlpimiAPI.Entities.EUser.DTO;
 
@@ -27,26 +29,11 @@ namespace AlpimiTest.TestUtilities
             {
                 Id = new Guid(),
                 Name = "Plan_Marka",
-                SchoolHour = 60,
                 UserId = new Guid(),
                 User = GetUserDetails()
             };
 
             return schedule;
-        }
-
-        public static IEnumerable<Schedule> GetSchedulesDetails()
-        {
-            var schedule = new Schedule()
-            {
-                Id = new Guid(),
-                Name = "Plan_Marka",
-                SchoolHour = 60,
-                UserId = new Guid(),
-                User = GetUserDetails()
-            };
-
-            return [schedule, schedule];
         }
 
         public static Auth GetAuthDetails()
@@ -58,10 +45,25 @@ namespace AlpimiTest.TestUtilities
                 Salt = "cSnOW17u464QVvXSjMr0wQ==",
                 Role = "User",
                 UserId = new Guid(),
-                User = GetUserDetails(),
+                User = GetUserDetails()
             };
 
             return auth;
+        }
+
+        public static ScheduleSettings GetScheduleSettingsDetails()
+        {
+            var scheduleSettings = new ScheduleSettings()
+            {
+                Id = new Guid(),
+                SchoolHour = 10,
+                SchoolYearStart = new DateTime(2024, 11, 19),
+                SchoolYearEnd = new DateTime(2025, 11, 19),
+                ScheduleId = new Guid(),
+                Schedule = GetScheduleDetails()
+            };
+
+            return scheduleSettings;
         }
 
         public static CreateUserDTO GetCreateUserDTODetails()
@@ -82,22 +84,40 @@ namespace AlpimiTest.TestUtilities
 
         public static CreateScheduleDTO GetCreateScheduleDTODetails()
         {
-            var schedule = GetScheduleDetails();
+            var scheduleSettings = GetScheduleSettingsDetails();
             return new CreateScheduleDTO()
             {
-                Name = schedule.Name,
-                SchoolHour = schedule.SchoolHour
+                Name = scheduleSettings.Schedule.Name,
+                SchoolHour = scheduleSettings.SchoolHour,
+                SchoolYearStart = scheduleSettings.SchoolYearStart,
+                SchoolYearEnd = scheduleSettings.SchoolYearEnd
+            };
+        }
+
+        public static UpdateScheduleSettingsDTO GetUpdateScheduleSettingsDTO()
+        {
+            return new UpdateScheduleSettingsDTO()
+            {
+                SchoolHour = 29,
+                SchooldYearStart = new DateTime(2020, 10, 1),
+                SchooldYearEnd = new DateTime(2022, 1, 10)
             };
         }
 
         public static UpdateScheduleDTO GetUpdateScheduleDTODetails()
         {
-            return new UpdateScheduleDTO() { Name = "Updated_plan", SchoolHour = 409 };
+            return new UpdateScheduleDTO() { Name = "Updated_plan" };
         }
 
         public static CreateScheduleDTO GetCreateSecondScheduleDTODetails()
         {
-            return new CreateScheduleDTO() { Name = "Second_Name", SchoolHour = 431 };
+            return new CreateScheduleDTO()
+            {
+                Name = "Second_Name",
+                SchoolHour = 431,
+                SchoolYearStart = new DateTime(2022, 11, 19),
+                SchoolYearEnd = new DateTime(2025, 11, 19),
+            };
         }
 
         public static CreateUserDTO GetCreateSecondUserDTODetails()

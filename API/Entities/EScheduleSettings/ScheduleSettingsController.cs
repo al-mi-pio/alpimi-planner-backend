@@ -92,7 +92,7 @@ namespace AlpimiAPI.Entities.EScheduleSettings
         /// <remarks>
         /// - JWT token is required
         /// </remarks>
-        [HttpGet("{scheduleId}")]
+        [HttpGet("bySchedule/{scheduleId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
@@ -110,6 +110,46 @@ namespace AlpimiAPI.Entities.EScheduleSettings
                 filteredId,
                 privileges
             );
+            try
+            {
+                ScheduleSettings? result = await _mediator.Send(query);
+                if (result == null)
+                {
+                    return NotFound(
+                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "Schedule"])])
+                    );
+                }
+                var response = new ApiGetResponse<ScheduleSettings>(result);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(
+                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError", ex])])
+                );
+            }
+        }
+
+        /// <summary>
+        /// Gets schedule settings by id
+        /// </summary>
+        /// <remarks>
+        /// - JWT token is required
+        /// </remarks>
+        [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 400)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 401)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 404)]
+        public async Task<ActionResult<ApiGetResponse<Schedule>>> Get(
+            [FromRoute] Guid Id,
+            [FromHeader] string Authorization
+        )
+        {
+            Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
+            string privileges = Privileges.GetUserRoleFromToken(Authorization);
+
+            var query = new GetScheduleSettingsQuery(Id, filteredId, privileges);
             try
             {
                 ScheduleSettings? result = await _mediator.Send(query);

@@ -25,7 +25,7 @@ namespace AlpimiTest.Entities.EDayOff.Commands
         }
 
         [Fact]
-        public async Task ThrowsErrorWrongDateIsProvided()
+        public async Task ThrowsErrorWhenOutOfRangeDateIsProvided()
         {
             var scheduleSettings = MockData.GetScheduleSettingsDetails();
             var dayOff = MockData.GetDayOffDetails();
@@ -57,7 +57,7 @@ namespace AlpimiTest.Entities.EDayOff.Commands
         }
 
         [Fact]
-        public async Task ThrowsErrorWhenDateIsIncorrect()
+        public async Task ThrowsErrorWhenDateStartIsAfterDateEnd()
         {
             var scheduleSettings = MockData.GetScheduleSettingsDetails();
             _dbService

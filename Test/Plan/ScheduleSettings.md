@@ -10,19 +10,19 @@
 
 ## `POST` `api/ScheduleSettings`
 
-- [UpdateScheduleSettingsReturnsUpdatedSchedule()](../Entities/EUser/UserController.test.cs) - **integrity**  			
+- [UpdateScheduleSettingsReturnsUpdatedSchedule()](../EntitiesEScheduleSettings/UserController.test.cs) - **integrity**  			
   Check if returns an updated schedule settings when provided with correct data
 
-- [UpdateScheduleSettingsThrowsNotFoundErrorWhenWrongUserAttemptsUpdate()](../Entities/EUser/UserController.test.cs) - **integrity**  
+- [UpdateScheduleSettingsThrowsNotFoundErrorWhenWrongUserAttemptsUpdate()](../Entities/EScheduleSettings/UserController.test.cs) - **integrity**  
   Check if returns an error when schedule settings are inaccessible for user
 
 - [UpdateScheduleSettingsThrowsNotFoundErrorWhenWrongIdIsGiven()](../Entities/EScheduleSettings/ScheduleSettingsController.test.cs) - **integrity**
   Check if returns an error when schedule settings don't exists
 
-- [ThrowsErrorWhenDateIsIncorrect()](../Entities/EUser/Commands/CreateUserCommand.unit.cs) - **unit**  
+- [ThrowsErrorWhenDateIsIncorrect()](../Entities/EScheduleSettings/Commands/UpdateEScheduleSettingsCommand.unit.cs) - **unit**  
   Check if returns an error when incorrect dates are provided
 
-
+- [ThrowsErrorWhenNumberOfDaysIncorrect()]
 ## `GET` `api/ScheduleSettings/bySchedule/{scheduleId}`
 
 - [GetScheduleSettingsByScheduleIdReturnsScheduleSettings()](../Entities/EScheduleSettings/ScheduleSettingsController.test.cs) - **integrity**

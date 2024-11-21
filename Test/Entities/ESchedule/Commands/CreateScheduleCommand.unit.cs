@@ -64,7 +64,7 @@ namespace AlpimiTest.Entities.ESchedule.Commands
         }
 
         [Fact]
-        public async Task ThrowsErrorWhenDateIsIncorrect()
+        public async Task ThrowsErrorWhenDateStartIsAfterDateEnd()
         {
             var scheduleSettings = MockData.GetScheduleSettingsDetails();
 

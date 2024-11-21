@@ -46,8 +46,8 @@ namespace AlpimiAPI.Entities.EDayOff.Commands
             }
 
             var originalDayOff = await _dbService.Get<DayOff?>(
-                @"SELECT [Id],[Name],[From],[To] FROM [DayOff] 
-                    WHERE [Id]=@Id ;",
+                @"SELECT [Id],[Name],[From],[To],[ScheduleSettingsId] FROM [DayOff] 
+                    WHERE [Id]=@Id;",
                 request
             );
 
@@ -83,7 +83,7 @@ namespace AlpimiAPI.Entities.EDayOff.Commands
                             SET [Name]=CASE WHEN @Name IS NOT NULL THEN @Name ELSE [Name] END,
                             [From]=CASE WHEN @From IS NOT NULL THEN @From ELSE [From] END,
                             [To]=CASE WHEN @To IS NOT NULL THEN @To ELSE [To] END
-                            OUTPUT INSERTED.[Id], INSERTED.[Name],INSERTED.[From],INSERTED.[TO],INSERTED.[ScheduleSettingsId]
+                            OUTPUT INSERTED.[Id], INSERTED.[Name],INSERTED.[From],INSERTED.[To],INSERTED.[ScheduleSettingsId]
                             WHERE [Id]=@Id;",
                         request
                     );

@@ -90,7 +90,7 @@ namespace AlpimiTest.Entities.EDayOff
 
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
-                TestAuthorization.GetToken("Admin", "User", userId)
+                TestAuthorization.GetToken("Admin", "Bob", userId)
             );
 
             var response = await _client.PatchAsJsonAsync(
@@ -100,6 +100,8 @@ namespace AlpimiTest.Entities.EDayOff
             var jsonResponse = await response.Content.ReadFromJsonAsync<ApiGetResponse<DayOff>>();
 
             Assert.Equal(dayOffUpdateRequest.Name, jsonResponse!.Content.Name);
+            Assert.Equal(dayOffUpdateRequest.From, jsonResponse!.Content.From);
+            Assert.Equal(dayOffUpdateRequest.To, jsonResponse!.Content.To);
         }
 
         [Fact]

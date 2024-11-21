@@ -74,7 +74,8 @@ namespace AlpimiTest.TestUtilities
             {
                 Id = new Guid(),
                 Name = "Marek_Fest",
-                Date = new DateTime(2021, 12, 12),
+                From = new DateTime(2022, 12, 12),
+                To = new DateTime(2025, 12, 12),
                 ScheduleSettingsId = new Guid(),
                 ScheduleSettings = null!
             };
@@ -157,7 +158,8 @@ namespace AlpimiTest.TestUtilities
             return new CreateDayOffDTO()
             {
                 Name = dayOff.Name,
-                Date = dayOff.Date,
+                Date = dayOff.From,
+                NumberOfDays = 2,
                 ScheduleId = scheduleId
             };
         }
@@ -173,21 +175,14 @@ namespace AlpimiTest.TestUtilities
             };
         }
 
-        public static CreateMultipleDayOffDTO GetCreateMultipleDayOffDTODetails(Guid scheduleId)
-        {
-            var dayOff = GetDayOffDetails();
-            return new CreateMultipleDayOffDTO()
-            {
-                Name = dayOff.Name,
-                From = new DateTime(2022, 11, 22),
-                To = new DateTime(2022, 11, 30),
-                ScheduleId = scheduleId
-            };
-        }
-
         public static UpdateDayOffDTO GetUpdateDayOffDTODetails()
         {
-            return new UpdateDayOffDTO() { Date = new DateTime(2023, 11, 22), Name = "Inny_fest" };
+            return new UpdateDayOffDTO()
+            {
+                From = new DateTime(2023, 11, 22),
+                To = new DateTime(2023, 11, 23),
+                Name = "Inny_fest"
+            };
         }
     }
 }

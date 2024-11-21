@@ -56,7 +56,7 @@ namespace alpimi_planner_backend.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("Date")
+                    b.Property<DateTime>("From")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
@@ -65,6 +65,9 @@ namespace alpimi_planner_backend.Migrations
 
                     b.Property<Guid>("ScheduleSettingsId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("To")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 

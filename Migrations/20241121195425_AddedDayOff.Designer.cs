@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace alpimi_planner_backend.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20241121000451_AddedDayOff")]
+    [Migration("20241121195425_AddedDayOff")]
     partial class AddedDayOff
     {
         /// <inheritdoc />
@@ -59,7 +59,7 @@ namespace alpimi_planner_backend.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("Date")
+                    b.Property<DateTime>("From")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
@@ -68,6 +68,9 @@ namespace alpimi_planner_backend.Migrations
 
                     b.Property<Guid>("ScheduleSettingsId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("To")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 

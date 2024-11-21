@@ -1,5 +1,6 @@
 ﻿using System.Net.Http.Headers;
 using AlpimiAPI.Database;
+using AlpimiAPI.Entities.EDayOff.DTO;
 using AlpimiAPI.Entities.ESchedule.DTO;
 using AlpimiAPI.Entities.EUser.DTO;
 using AlpimiAPI.Responses;
@@ -55,6 +56,22 @@ namespace AlpimiTest.TestUtilities
             var jsonScheduleId = await scheduleId.Content.ReadFromJsonAsync<ApiGetResponse<Guid>>();
 
             return jsonScheduleId!.Content;
+        }
+
+        public static async Task<Guid> SetupDayOff(
+            HttpClient _client,
+            CreateDayOffDTO dayOffRequest
+        )
+        {
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "Bob", new Guid())
+            );
+
+            var dayOffId = await _client.PostAsJsonAsync("/api/DayOff", dayOffRequest);
+            var jsonDayOffId = await dayOffId.Content.ReadFromJsonAsync<ApiGetResponse<Guid>>();
+
+            return jsonDayOffId!.Content;
         }
     }
 }

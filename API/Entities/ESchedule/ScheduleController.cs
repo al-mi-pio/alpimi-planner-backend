@@ -172,6 +172,7 @@ namespace AlpimiAPI.Entities.ESchedule
         {
             Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
             string privileges = Privileges.GetUserRoleFromToken(Authorization);
+
             var command = new DeleteScheduleCommand(id, filteredId, privileges);
             try
             {
@@ -253,7 +254,7 @@ namespace AlpimiAPI.Entities.ESchedule
             Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
             string privileges = Privileges.GetUserRoleFromToken(Authorization);
 
-            var query = new GetSchedulesQuery(
+            var query = new GetAllSchedulesQuery(
                 filteredId,
                 privileges,
                 new PaginationParams(perPage, (page - 1) * perPage, sortBy, sortOrder)

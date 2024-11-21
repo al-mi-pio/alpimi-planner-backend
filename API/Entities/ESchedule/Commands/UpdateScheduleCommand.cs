@@ -61,7 +61,7 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
                     UPDATE [Schedule] 
                     SET [Name]=CASE WHEN @Name IS NOT NULL THEN @Name 
                     ELSE [Name] END
-                    OUTPUT INSERTED.[Id], INSERTED.[Name]
+                    OUTPUT INSERTED.[Id], INSERTED.[Name], INSERTED.[UserId]
                     WHERE [Id]=@Id;",
                         request
                     );
@@ -72,7 +72,7 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
                      UPDATE [Schedule] 
                     SET [Name]=CASE WHEN @Name IS NOT NULL THEN @Name 
                     ELSE [Name] END
-                    OUTPUT INSERTED.[Id], INSERTED.[Name]
+                    OUTPUT INSERTED.[Id], INSERTED.[Name], INSERTED.[UserId]
                     WHERE [Id]=@Id and [UserId]=@FilteredId;",
                         request
                     );

@@ -76,7 +76,7 @@ namespace AlpimiAPI.Entities.EDayOff.Queries
                     );
                     daysOff = await _dbService.GetAll<DayOff>(
                         @"
-                            SELECT do.[Id], do.[Name], [Date],[ScheduleSettingsId] FROM [DayOff] do
+                            SELECT do.[Id], do.[Name], [From],[To],[ScheduleSettingsId] FROM [DayOff] do
                             INNER JOIN [ScheduleSettings] ss ON ss.[Id] = do.[ScheduleSettingsId]
                             WHERE ss.[ScheduleId] = @ScheduleId ORDER BY'"
                             + request.Pagination.SortBy
@@ -102,7 +102,7 @@ namespace AlpimiAPI.Entities.EDayOff.Queries
                         request
                     );
                     daysOff = await _dbService.GetAll<DayOff>(
-                        @"SELECT do.[Id], do.[Name], [Date],[ScheduleSettingsId] FROM [DayOff] do
+                        @"SELECT do.[Id], do.[Name], [From],[To],[ScheduleSettingsId] FROM [DayOff] do
                             INNER JOIN [ScheduleSettings] ss ON ss.[Id] = do.[ScheduleSettingsId]
                             INNER JOIN [Schedule] s ON s.[Id]=ss.[ScheduleId]
                             WHERE s.[UserId] = @FilteredId AND ss.[ScheduleId] = @ScheduleId ORDER BY'"

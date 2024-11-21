@@ -2,8 +2,10 @@
 {
     public class UpdateDayOffDTO
     {
-        public required string? Name { get; set; }
+        public string? Name { get; set; }
 
-        public required DateTime? Date { get; set; }
+        public DateTime? From { get; set; }
+
+        public DateTime? To { get; set; }
     }
 }

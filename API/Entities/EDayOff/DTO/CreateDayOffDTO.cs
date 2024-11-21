@@ -10,6 +10,8 @@ namespace AlpimiAPI.Entities.EDayOff.DTO
         [Required]
         public required DateTime Date { get; set; }
 
+        public int? NumberOfDays { get; set; }
+
         [Required]
         public required Guid ScheduleId { get; set; }
     }

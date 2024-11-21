@@ -80,25 +80,6 @@ namespace AlpimiTest.Entities.EDayOff
         }
 
         [Fact]
-        public async Task MultipleDaysOffAreCreated()
-        {
-            var dayOffRequest = MockData.GetCreateMultipleDayOffDTODetails(scheduleId);
-
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-                "Bearer",
-                TestAuthorization.GetToken("Admin", "User", userId)
-            );
-
-            var response = await _client.PostAsJsonAsync("/api/DayOff/multiple", dayOffRequest);
-            Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
-
-            var query = $"?scheduleId={scheduleId}";
-            response = await _client.GetAsync($"/api/DayOff{query}");
-            var stringResponse = await response.Content.ReadAsStringAsync();
-            Assert.Contains(dayOffRequest.Name, stringResponse);
-        }
-
-        [Fact]
         public async Task UpdateDayOffReturnsUpdatedDayOff()
         {
             var dayOffUpdateRequest = MockData.GetUpdateDayOffDTODetails();
@@ -244,12 +225,6 @@ namespace AlpimiTest.Entities.EDayOff
             );
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
 
-            response = await _client.PostAsJsonAsync(
-                "/api/DayOff/multiple",
-                MockData.GetCreateMultipleDayOffDTODetails(scheduleId)
-            );
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-
             var query = $"?scheduleId={new Guid()}";
             response = await _client.GetAsync($"/api/DayOff{query}");
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
@@ -277,12 +252,6 @@ namespace AlpimiTest.Entities.EDayOff
             response = await _client.PostAsJsonAsync(
                 "/api/DayOff",
                 MockData.GetCreateDayOffDTODetails(scheduleId)
-            );
-            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
-
-            response = await _client.PostAsJsonAsync(
-                "/api/DayOff/multiple",
-                MockData.GetCreateMultipleDayOffDTODetails(scheduleId)
             );
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
 

@@ -13,6 +13,7 @@ namespace AlpimiAPI.Entities.EDayOff.Commands
         Guid Id,
         string Name,
         DateTime Date,
+        int? numberOfDays,
         Guid ScheduleId,
         Guid FilteredId,
         string Role
@@ -34,6 +35,22 @@ namespace AlpimiAPI.Entities.EDayOff.Commands
             CancellationToken cancellationToken
         )
         {
+            DateTime to = new DateTime();
+            if (request.numberOfDays == null)
+            {
+                to = request.Date;
+            }
+            else if (request.numberOfDays < 1)
+            {
+                throw new ApiErrorException(
+                    [new ErrorObject(_str["badParameter", "NumberOfDays"])]
+                );
+            }
+            else
+            {
+                to = request.Date.AddDays(Convert.ToDouble(request.numberOfDays - 1));
+            }
+
             GetScheduleSettingsByScheduleIdHandler getScheduleSettingsByScheduleIdHandler =
                 new GetScheduleSettingsByScheduleIdHandler(_dbService);
             GetScheduleSettingsByScheduleIdQuery getScheduleSettingsByScheduleIdQuery =
@@ -74,9 +91,11 @@ namespace AlpimiAPI.Entities.EDayOff.Commands
 
             var insertedId = await _dbService.Post<Guid>(
                 @"
-                    INSERT INTO [DayOff] ([Id],[Name],[Date],[ScheduleSettingsId])
+                    INSERT INTO [DayOff] ([Id],[Name],[From],[To],[ScheduleSettingsId])
                     OUTPUT INSERTED.Id                    
                     VALUES (@Id,@Name,@Date,'"
+                    + to.ToString("yyyy-MM-dd HH:mm:ss")
+                    + "','"
                     + scheduleSettings.Value.Id
                     + "');",
                 request

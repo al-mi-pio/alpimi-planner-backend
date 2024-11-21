@@ -12,7 +12,8 @@ namespace AlpimiAPI.Entities.EDayOff.Commands
     public record UpdateDayOffCommand(
         Guid Id,
         string? Name,
-        DateTime? Date,
+        DateTime? From,
+        DateTime? To,
         Guid FilteredId,
         string Role
     ) : IRequest<DayOff?>;
@@ -38,29 +39,38 @@ namespace AlpimiAPI.Entities.EDayOff.Commands
                     INNER JOIN [DayOff] do ON do.[ScheduleSettingsId]=ss.[Id] WHERE do.[Id]=@Id ;",
                 request
             );
-            if (request.Date != null)
+
+            if (scheduleSettings == null)
             {
-                if (scheduleSettings == null)
-                {
-                    return null;
-                }
-                if (
-                    request.Date < scheduleSettings.SchoolYearStart
-                    || request.Date > scheduleSettings.SchoolYearEnd
-                )
-                {
-                    throw new ApiErrorException(
-                        [
-                            new ErrorObject(
-                                _str[
-                                    "dateOutOfRange",
-                                    scheduleSettings.SchoolYearStart.ToString("dd/MM/yyyy"),
-                                    scheduleSettings.SchoolYearEnd.ToString("dd/MM/yyyy")
-                                ]
-                            )
-                        ]
-                    );
-                }
+                return null;
+            }
+
+            var originalDayOff = await _dbService.Get<DayOff?>(
+                @"SELECT [Id],[Name],[From],[To] FROM [DayOff] 
+                    WHERE [Id]=@Id ;",
+                request
+            );
+
+            if ((request.From ?? originalDayOff!.From) > (request.To ?? originalDayOff!.To))
+            {
+                throw new ApiErrorException([new ErrorObject(_str["scheduleDate"])]);
+            }
+            if (
+                (request.From ?? originalDayOff!.From) < scheduleSettings.SchoolYearStart
+                || (request.To ?? originalDayOff!.To) > scheduleSettings.SchoolYearEnd
+            )
+            {
+                throw new ApiErrorException(
+                    [
+                        new ErrorObject(
+                            _str[
+                                "dateOutOfRange",
+                                scheduleSettings.SchoolYearStart.ToString("dd/MM/yyyy"),
+                                scheduleSettings.SchoolYearEnd.ToString("dd/MM/yyyy")
+                            ]
+                        )
+                    ]
+                );
             }
 
             DayOff? dayOff;
@@ -71,8 +81,9 @@ namespace AlpimiAPI.Entities.EDayOff.Commands
                         @"
                             UPDATE [DayOff] 
                             SET [Name]=CASE WHEN @Name IS NOT NULL THEN @Name ELSE [Name] END,
-                            [Date]=CASE WHEN @Date IS NOT NULL THEN @Date ELSE [Date] END
-                            OUTPUT INSERTED.[Id], INSERTED.[Name],INSERTED.[Date],INSERTED.[ScheduleSettingsId]
+                            [From]=CASE WHEN @From IS NOT NULL THEN @From ELSE [From] END,
+                            [To]=CASE WHEN @To IS NOT NULL THEN @To ELSE [To] END
+                            OUTPUT INSERTED.[Id], INSERTED.[Name],INSERTED.[From],INSERTED.[TO],INSERTED.[ScheduleSettingsId]
                             WHERE [Id]=@Id;",
                         request
                     );
@@ -83,11 +94,13 @@ namespace AlpimiAPI.Entities.EDayOff.Commands
                             UPDATE do
                             SET 
                             [Name] = CASE WHEN @Name IS NOT NULL THEN @Name ELSE do.[Name] END,
-                            [Date] = CASE WHEN @Date IS NOT NULL THEN @Date ELSE do.[Date] END
+                            [From]=CASE WHEN @From IS NOT NULL THEN @From ELSE [From] END,
+                            [To]=CASE WHEN @To IS NOT NULL THEN @To ELSE [To] END
                             OUTPUT 
                             INSERTED.[Id], 
                             INSERTED.[Name], 
-                            INSERTED.[Date], 
+                            INSERTED.[From], 
+                            INSERTED.[To],
                             INSERTED.[ScheduleSettingsId]
                             FROM [DayOff] do
                             INNER JOIN [ScheduleSettings] ss ON ss.[Id] = do.[ScheduleSettingsId]

@@ -29,7 +29,8 @@ namespace AlpimiTest.Entities.EDayOff.Commands
             var createDayOffCommand = new CreateDayOffCommand(
                 new Guid(),
                 "Bob",
-                new DateTime(2000, 1, 1),
+                new DateTime(2020, 1, 1),
+                3,
                 new Guid(),
                 new Guid(),
                 "User"
@@ -62,6 +63,7 @@ namespace AlpimiTest.Entities.EDayOff.Commands
                 new Guid(),
                 "Bob",
                 new DateTime(2000, 1, 1),
+                3,
                 new Guid(),
                 new Guid(),
                 "User"
@@ -75,6 +77,39 @@ namespace AlpimiTest.Entities.EDayOff.Commands
             );
 
             Assert.Contains("Date must be in between", result.errors.First().message);
+        }
+
+        [Fact]
+        public async Task ThrowsErrorWhenNumberOfDaysIncorrect()
+        {
+            var scheduleSettings = MockData.GetScheduleSettingsDetails();
+            _dbService
+                .Setup(s => s.Get<ScheduleSettings>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(scheduleSettings);
+
+            var createDayOffCommand = new CreateDayOffCommand(
+                new Guid(),
+                "Bob",
+                new DateTime(2000, 1, 1),
+                0,
+                new Guid(),
+                new Guid(),
+                "User"
+            );
+
+            var createDayOffHandler = new CreateDayOffHandler(_dbService.Object, _str.Object);
+
+            var result = await Assert.ThrowsAsync<ApiErrorException>(
+                async () =>
+                    await createDayOffHandler.Handle(createDayOffCommand, new CancellationToken())
+            );
+
+            Assert.Equal(
+                JsonConvert.SerializeObject(
+                    new ErrorObject[] { new ErrorObject("NumberOfDays parameter is invalid") }
+                ),
+                JsonConvert.SerializeObject(result.errors)
+            );
         }
     }
 }

@@ -53,16 +53,17 @@ namespace AlpimiAPI.Entities.EDayOff
                 Guid.NewGuid(),
                 request.Name,
                 request.Date,
+                request.NumberOfDays,
                 request.ScheduleId,
                 filteredId,
                 privileges
             );
-            try
-            {
-                var result = await _mediator.Send(command);
-                var response = new ApiGetResponse<Guid>(result);
-                return Ok(response);
-            }
+            //try
+            //{
+            var result = await _mediator.Send(command);
+            var response = new ApiGetResponse<Guid>(result);
+            return Ok(response);
+            /*}
             catch (ApiErrorException ex)
             {
                 return BadRequest(new ApiErrorResponse(400, ex.errors));
@@ -72,52 +73,7 @@ namespace AlpimiAPI.Entities.EDayOff
                 return BadRequest(
                     new ApiErrorResponse(400, [new ErrorObject(_str["unknownError", ex])])
                 );
-            }
-        }
-
-        /// <summary>
-        /// Creates multiple DayOff
-        /// </summary>
-        /// <remarks>
-        /// - JWT token is required
-        /// </remarks>
-        [HttpPost]
-        [Route("multiple")]
-        [ProducesResponseType(204)]
-        [ProducesResponseType(typeof(ApiErrorResponse), 401)]
-        public async Task<ActionResult> PostMultiple(
-            [FromBody] CreateMultipleDayOffDTO request,
-            [FromHeader] string Authorization
-        )
-        {
-            Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
-            string privileges = Privileges.GetUserRoleFromToken(Authorization);
-
-            var command = new CreateMultipleDayOffCommand(
-                Guid.NewGuid(),
-                request.Name,
-                request.From,
-                request.To,
-                request.ScheduleId,
-                filteredId,
-                privileges
-            );
-            try
-            {
-                await _mediator.Send(command);
-
-                return NoContent();
-            }
-            catch (ApiErrorException ex)
-            {
-                return BadRequest(new ApiErrorResponse(400, ex.errors));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(
-                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError", ex])])
-                );
-            }
+            }*/
         }
 
         /// <summary>
@@ -175,7 +131,8 @@ namespace AlpimiAPI.Entities.EDayOff
             var command = new UpdateDayOffCommand(
                 id,
                 request.Name,
-                request.Date,
+                request.From,
+                request.To,
                 filteredId,
                 privileges
             );

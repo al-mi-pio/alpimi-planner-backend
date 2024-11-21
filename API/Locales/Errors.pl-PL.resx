@@ -159,4 +159,7 @@
   <data name="scheduleDate" xml:space="preserve">
     <value>Data zakończenia nie może być przed datą rozpoczęcia</value>
   </data>
+  <data name="dateOutOfRange" xml:space="preserve">
+    <value>Data musi mieścić się w zakresie od {0} do {1}</value>
+  </data>
 </root>

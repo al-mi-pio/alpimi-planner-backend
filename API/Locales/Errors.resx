@@ -159,4 +159,7 @@
   <data name="scheduleDate" xml:space="preserve">
     <value>The end date cannot happen before the start date</value>
   </data>
+  <data name="dateOutOfRange" xml:space="preserve">
+    <value>Date must be in between {0} and {1}</value>
+  </data>
 </root>

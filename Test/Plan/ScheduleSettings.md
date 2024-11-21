@@ -22,7 +22,9 @@
 - [ThrowsErrorWhenDateIsIncorrect()](../Entities/EScheduleSettings/Commands/UpdateEScheduleSettingsCommand.unit.cs) - **unit**  
   Check if returns an error when incorrect dates are provided
 
-- [ThrowsErrorWhenNumberOfDaysIncorrect()]
+- [ThrowsErrorWhenNumberOfDaysIsIncorrect()](../Entities/EScheduleSettings/Commands/UpdateEScheduleSettingsCommand.unit.cs) - **unit**  
+  Check if returns an error when a incorrect number of days is provided
+  
 ## `GET` `api/ScheduleSettings/bySchedule/{scheduleId}`
 
 - [GetScheduleSettingsByScheduleIdReturnsScheduleSettings()](../Entities/EScheduleSettings/ScheduleSettingsController.test.cs) - **integrity**

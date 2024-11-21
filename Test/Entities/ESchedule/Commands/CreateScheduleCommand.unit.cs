@@ -24,7 +24,7 @@ namespace AlpimiTest.Entities.ESchedule.Commands
         }
 
         [Fact]
-        public async Task ThrowsErrorWheNameIsTaken()
+        public async Task ThrowsErrorWhenNameIsTaken()
         {
             var scheduleSettings = MockData.GetScheduleSettingsDetails();
 

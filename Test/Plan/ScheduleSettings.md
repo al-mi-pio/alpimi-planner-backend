@@ -23,7 +23,7 @@
   Check if returns an error when incorrect dates are provided
 
 
-## `GET` `api/User/{scheduleId}`
+## `GET` `api/ScheduleSettings/bySchedule/{scheduleId}`
 
 - [GetScheduleSettingsByScheduleIdReturnsScheduleSettings()](../Entities/EScheduleSettings/ScheduleSettingsController.test.cs) - **integrity**
   Check if returns schedule settings when a valid token is provided
@@ -31,8 +31,18 @@
 - [GetScheduleSettingsByScheduleIdThrowsNotFoundErrorWhenWrongUserAttemptsUpdate()](../Entities/EScheduleSettings/ScheduleSettingsController.test.cs) - **integrity**  
   Check if returns an error when schedule settings are inaccessible for user
 
-- [GetUserThrowsNotFoundErrorWhenWrongUserAttemptsGet()](../Entities/EScheduleSettings/ScheduleSettingsController.test.cs) - **integrity** 	
+- [GetScheduleSettingsByScheduleIdThrowsNotFoundErrorWhenWrongIdIsGiven()](../Entities/EScheduleSettings/ScheduleSettingsController.test.cs) - **integrity** 	
   Check if returns an error when schedule settings don't exists
 
+## `GET` `api/ScheduleSettings/{id}`
+
+- [GetScheduleSettingsReturnsScheduleSettings()](../Entities/EScheduleSettings/ScheduleSettingsController.test.cs) - **integrity**
+  Check if returns schedule settings when a valid token is provided
+
+- [GetScheduleSettingsThrowsNotFoundErrorWhenWrongUserAttemptsUpdate()](../Entities/EScheduleSettings/ScheduleSettingsController.test.cs) - **integrity**  
+  Check if returns an error when schedule settings are inaccessible for user
+
+- [GetScheduleSettingsThrowsNotFoundErrorWhenWrongIdIsGiven()](../Entities/EScheduleSettings/ScheduleSettingsController.test.cs) - **integrity** 	
+  Check if returns an error when schedule settings don't exists
 
 

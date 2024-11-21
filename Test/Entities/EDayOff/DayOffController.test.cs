@@ -1,7 +1,6 @@
 ﻿using System.Net;
 using System.Net.Http.Headers;
 using AlpimiAPI.Entities.EDayOff;
-using AlpimiAPI.Entities.EDayOff.DTO;
 using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Responses;
 using AlpimiAPI.Settings;

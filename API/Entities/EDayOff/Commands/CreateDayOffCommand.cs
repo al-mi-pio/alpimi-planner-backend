@@ -1,5 +1,4 @@
 ﻿using AlpimiAPI.Database;
-using AlpimiAPI.Entities.ESchedule.Queries;
 using AlpimiAPI.Entities.EScheduleSettings;
 using AlpimiAPI.Entities.EScheduleSettings.Queries;
 using AlpimiAPI.Responses;

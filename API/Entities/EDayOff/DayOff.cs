@@ -1,5 +1,4 @@
 ﻿using AlpimiAPI.Entities.EScheduleSettings;
-using AlpimiAPI.Entities.EUser;
 
 namespace AlpimiAPI.Entities.EDayOff
 {

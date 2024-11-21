@@ -1,9 +1,6 @@
 ﻿using AlpimiAPI.Entities.EDayOff.Commands;
 using AlpimiAPI.Entities.EDayOff.DTO;
 using AlpimiAPI.Entities.EDayOff.Queries;
-using AlpimiAPI.Entities.ESchedule;
-using AlpimiAPI.Entities.ESchedule.Commands;
-using AlpimiAPI.Entities.ESchedule.DTO;
 using AlpimiAPI.Responses;
 using AlpimiAPI.Utilities;
 using alpimi_planner_backend.API.Locales;

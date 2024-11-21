@@ -1,4 +1,5 @@
 ﻿using AlpimiAPI.Entities.EAuth;
+using AlpimiAPI.Entities.EDayOff;
 using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Entities.EScheduleSettings;
 using AlpimiAPI.Entities.EUser;
@@ -16,6 +17,7 @@ namespace AlpimiAPI.Database
         public DbSet<Auth> Auth { get; set; }
         public DbSet<Schedule> Schedule { get; set; }
         public DbSet<ScheduleSettings> ScheduleSettings { get; set; }
+        public DbSet<DayOff> DayOff { get; set; }
         #endregion
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

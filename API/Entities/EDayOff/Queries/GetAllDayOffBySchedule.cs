@@ -2,8 +2,10 @@
 using AlpimiAPI.Entities.EScheduleSettings;
 using AlpimiAPI.Entities.EScheduleSettings.Queries;
 using AlpimiAPI.Responses;
+using alpimi_planner_backend.API.Locales;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 
 namespace AlpimiAPI.Entities.EDayOff.Queries
 {
@@ -18,10 +20,12 @@ namespace AlpimiAPI.Entities.EDayOff.Queries
         : IRequestHandler<GetAllDayOffByScheduleQuery, (IEnumerable<DayOff>?, int)>
     {
         private readonly IDbService _dbService;
+        private readonly IStringLocalizer<Errors> _str;
 
-        public GetAllDayOffByScheduleHandler(IDbService dbService)
+        public GetAllDayOffByScheduleHandler(IDbService dbService, IStringLocalizer<Errors> str)
         {
             _dbService = dbService;
+            _str = str;
         }
 
         public async Task<(IEnumerable<DayOff>?, int)> Handle(
@@ -32,18 +36,18 @@ namespace AlpimiAPI.Entities.EDayOff.Queries
             List<ErrorObject> errors = new List<ErrorObject>();
             if (request.Pagination.PerPage < 0)
             {
-                errors.Add(new ErrorObject("Bad PerPage"));
+                errors.Add(new ErrorObject(_str["badParameter", "PerPage"]));
             }
             if (request.Pagination.Offset < 0)
             {
-                errors.Add(new ErrorObject("Bad Page"));
+                errors.Add(new ErrorObject(_str["badParameter", "Page"]));
             }
             if (
                 request.Pagination.SortOrder.ToLower() != "asc"
                 && request.Pagination.SortOrder.ToLower() != "desc"
             )
             {
-                errors.Add(new ErrorObject("Bad SortOrder"));
+                errors.Add(new ErrorObject(_str["badParameter", "SortOrder"]));
             }
             if (
                 request.Pagination.SortBy.ToLower() != "id"
@@ -52,7 +56,7 @@ namespace AlpimiAPI.Entities.EDayOff.Queries
                 && request.Pagination.SortBy.ToLower() != "userid"
             )
             {
-                errors.Add(new ErrorObject("Bad SortBy"));
+                errors.Add(new ErrorObject(_str["badParameter", "SortBy"]));
             }
 
             if (errors.Count != 0)

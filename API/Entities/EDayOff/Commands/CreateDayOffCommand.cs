@@ -73,7 +73,7 @@ namespace AlpimiAPI.Entities.EDayOff.Commands
             }
             if (
                 request.Date < scheduleSettings.Value!.SchoolYearStart
-                || request.Date > scheduleSettings.Value.SchoolYearEnd
+                || to > scheduleSettings.Value.SchoolYearEnd
             )
             {
                 throw new ApiErrorException(

@@ -10,7 +10,7 @@
 
 ## `POST` `api/ScheduleSettings`
 
-- [UpdateScheduleSettingsReturnsUpdatedSchedule()](../EntitiesEScheduleSettings/UserController.test.cs) - **integrity**  			
+- [UpdateScheduleSettingsReturnsUpdatedSchedule()](../EntitiesEScheduleSettings/ScheduleSettingsController.test.cs) - **integrity**  			
   Check if returns an updated schedule settings when provided with correct data
 
 - [UpdateScheduleSettingsThrowsNotFoundErrorWhenWrongUserAttemptsUpdate()](../Entities/EScheduleSettings/UserController.test.cs) - **integrity**  

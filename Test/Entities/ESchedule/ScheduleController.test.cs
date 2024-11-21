@@ -47,6 +47,7 @@ namespace AlpimiTest.Entities.ESchedule
             );
 
             var response = await _client.DeleteAsync($"/api/Schedule/{scheduleId}");
+
             Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
 
             response = await _client.GetAsync($"/api/Schedule/{scheduleId}");
@@ -241,7 +242,7 @@ namespace AlpimiTest.Entities.ESchedule
         }
 
         [Fact]
-        public async Task GetAllScheduleReturnsSchedules()
+        public async Task GetAllSchedulesReturnsSchedules()
         {
             var scheduleRequest1 = MockData.GetCreateScheduleDTODetails();
             var scheduleRequest2 = MockData.GetCreateSecondScheduleDTODetails();
@@ -291,7 +292,7 @@ namespace AlpimiTest.Entities.ESchedule
         }
 
         [Fact]
-        public async Task GetAllScheduleTReturnsOnlyUserMadeSchedules()
+        public async Task GetAllSchedulesReturnsOnlyUserMadeSchedules()
         {
             var scheduleRequest1 = MockData.GetCreateScheduleDTODetails();
             var scheduleRequest2 = MockData.GetCreateSecondScheduleDTODetails();

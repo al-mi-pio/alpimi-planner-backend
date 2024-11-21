@@ -1,6 +1,6 @@
-﻿using AlpimiAPI.Entities.ESchedule.Commands;
-using AlpimiAPI.Entities.ESchedule.DTO;
-using AlpimiAPI.Entities.ESchedule.Queries;
+﻿using AlpimiAPI.Entities.EDayOff.Commands;
+using AlpimiAPI.Entities.EDayOff.DTO;
+using AlpimiAPI.Entities.EDayOff.Queries;
 using AlpimiAPI.Responses;
 using AlpimiAPI.Utilities;
 using alpimi_planner_backend.API.Locales;
@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Localization;
 
-namespace AlpimiAPI.Entities.ESchedule
+namespace AlpimiAPI.Entities.EDayOff
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -20,19 +20,19 @@ namespace AlpimiAPI.Entities.ESchedule
     [Produces("application/json")]
     [ProducesResponseType(typeof(ApiErrorResponse), 429)]
     [EnableRateLimiting("FixedWindow")]
-    public class ScheduleController : ControllerBase
+    public class DayOffController : ControllerBase
     {
         private readonly IMediator _mediator;
         private readonly IStringLocalizer<Errors> _str;
 
-        public ScheduleController(IMediator mediator, IStringLocalizer<Errors> str)
+        public DayOffController(IMediator mediator, IStringLocalizer<Errors> str)
         {
             _mediator = mediator;
             _str = str;
         }
 
         /// <summary>
-        /// Creates a Schedule
+        /// Creates a DayOff
         /// </summary>
         /// <remarks>
         /// - JWT token is required
@@ -42,20 +42,21 @@ namespace AlpimiAPI.Entities.ESchedule
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
         public async Task<ActionResult<ApiGetResponse<Guid>>> Post(
-            [FromBody] CreateScheduleDTO request,
+            [FromBody] CreateDayOffDTO request,
             [FromHeader] string Authorization
         )
         {
-            Guid UserId = Privileges.GetUserIdFromToken(Authorization);
+            Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
+            string privileges = Privileges.GetUserRoleFromToken(Authorization);
 
-            var command = new CreateScheduleCommand(
-                Guid.NewGuid(),
-                UserId,
+            var command = new CreateDayOffCommand(
                 Guid.NewGuid(),
                 request.Name,
-                request.SchoolHour,
-                request.SchoolYearStart,
-                request.SchoolYearEnd
+                request.Date,
+                request.NumberOfDays,
+                request.ScheduleId,
+                filteredId,
+                privileges
             );
             try
             {
@@ -76,88 +77,7 @@ namespace AlpimiAPI.Entities.ESchedule
         }
 
         /// <summary>
-        /// Gets a Schedule
-        /// </summary>
-        /// <remarks>
-        /// - JWT token is required
-        /// </remarks>
-        [HttpGet("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiErrorResponse), 400)]
-        [ProducesResponseType(typeof(ApiErrorResponse), 401)]
-        [ProducesResponseType(typeof(ApiErrorResponse), 404)]
-        public async Task<ActionResult<ApiGetResponse<Schedule>>> GetOne(
-            [FromRoute] Guid id,
-            [FromHeader] string Authorization
-        )
-        {
-            Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
-            string privileges = Privileges.GetUserRoleFromToken(Authorization);
-
-            var query = new GetScheduleQuery(id, filteredId, privileges);
-            try
-            {
-                Schedule? result = await _mediator.Send(query);
-                if (result == null)
-                {
-                    return NotFound(
-                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "Schedule"])])
-                    );
-                }
-                var response = new ApiGetResponse<Schedule>(result);
-
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(
-                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError", ex])])
-                );
-            }
-        }
-
-        /// <summary>
-        /// Gets a Schedule by Name
-        /// </summary>
-        /// <remarks>
-        /// - JWT token is required
-        /// </remarks>
-        [HttpGet("byName/{name}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiErrorResponse), 400)]
-        [ProducesResponseType(typeof(ApiErrorResponse), 401)]
-        [ProducesResponseType(typeof(ApiErrorResponse), 404)]
-        public async Task<ActionResult<ApiGetResponse<Schedule>>> GetOneByName(
-            [FromRoute] string name,
-            [FromHeader] string Authorization
-        )
-        {
-            Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
-            string privileges = Privileges.GetUserRoleFromToken(Authorization);
-
-            var query = new GetScheduleByNameQuery(name, filteredId, privileges);
-            try
-            {
-                Schedule? result = await _mediator.Send(query);
-                if (result == null)
-                {
-                    return NotFound(
-                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "Schedule"])])
-                    );
-                }
-                var response = new ApiGetResponse<Schedule>(result);
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(
-                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError", ex])])
-                );
-            }
-        }
-
-        /// <summary>
-        /// Deletes a Schedule
+        /// Deletes a DayOff
         /// </summary>
         /// <remarks>
         /// - JWT is required
@@ -173,7 +93,7 @@ namespace AlpimiAPI.Entities.ESchedule
             Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
             string privileges = Privileges.GetUserRoleFromToken(Authorization);
 
-            var command = new DeleteScheduleCommand(id, filteredId, privileges);
+            var command = new DeleteDayOffCommand(id, filteredId, privileges);
             try
             {
                 await _mediator.Send(command);
@@ -189,7 +109,7 @@ namespace AlpimiAPI.Entities.ESchedule
         }
 
         /// <summary>
-        /// Updates a Schedule
+        /// Updates a DayOff
         /// </summary>
         /// <remarks>
         /// - JWT token is required
@@ -199,8 +119,8 @@ namespace AlpimiAPI.Entities.ESchedule
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
         [ProducesResponseType(typeof(ApiErrorResponse), 404)]
-        public async Task<ActionResult<ApiGetResponse<Schedule>>> Patch(
-            [FromBody] UpdateScheduleDTO request,
+        public async Task<ActionResult<ApiGetResponse<DayOff>>> Patch(
+            [FromBody] UpdateDayOffDTO request,
             [FromRoute] Guid id,
             [FromHeader] string Authorization
         )
@@ -208,17 +128,24 @@ namespace AlpimiAPI.Entities.ESchedule
             Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
             string privileges = Privileges.GetUserRoleFromToken(Authorization);
 
-            var command = new UpdateScheduleCommand(id, request.Name, filteredId, privileges);
+            var command = new UpdateDayOffCommand(
+                id,
+                request.Name,
+                request.From,
+                request.To,
+                filteredId,
+                privileges
+            );
             try
             {
-                Schedule? result = await _mediator.Send(command);
+                DayOff? result = await _mediator.Send(command);
                 if (result == null)
                 {
                     return NotFound(
-                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "Schedule"])])
+                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "DayOff"])])
                     );
                 }
-                var response = new ApiGetResponse<Schedule>(result);
+                var response = new ApiGetResponse<DayOff>(result);
                 return Ok(response);
             }
             catch (ApiErrorException ex)
@@ -234,7 +161,7 @@ namespace AlpimiAPI.Entities.ESchedule
         }
 
         /// <summary>
-        /// Gets all Schedule
+        /// Gets all DayOff by ScheduleId
         /// </summary>
         /// <remarks>
         /// - JWT token is required
@@ -243,8 +170,9 @@ namespace AlpimiAPI.Entities.ESchedule
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
-        public async Task<ActionResult<ApiGetAllResponse<IEnumerable<Schedule>>>> GetAll(
+        public async Task<ActionResult<ApiGetAllResponse<IEnumerable<DayOff>>>> GetAll(
             [FromHeader] string Authorization,
+            [FromQuery] Guid scheduleId,
             [FromQuery] int perPage = PaginationSettings.perPage,
             [FromQuery] int page = PaginationSettings.page,
             [FromQuery] string sortBy = PaginationSettings.sortBy,
@@ -254,15 +182,16 @@ namespace AlpimiAPI.Entities.ESchedule
             Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
             string privileges = Privileges.GetUserRoleFromToken(Authorization);
 
-            var query = new GetAllSchedulesQuery(
+            var query = new GetAllDayOffByScheduleQuery(
+                scheduleId,
                 filteredId,
                 privileges,
                 new PaginationParams(perPage, (page - 1) * perPage, sortBy, sortOrder)
             );
             try
             {
-                (IEnumerable<Schedule>?, int) result = await _mediator.Send(query);
-                var response = new ApiGetAllResponse<IEnumerable<Schedule>>(
+                (IEnumerable<DayOff>?, int) result = await _mediator.Send(query);
+                var response = new ApiGetAllResponse<IEnumerable<DayOff>>(
                     result.Item1!,
                     new Pagination(result.Item2, perPage, page, sortBy, sortOrder)
                 );

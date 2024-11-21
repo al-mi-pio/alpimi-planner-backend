@@ -16,7 +16,7 @@
 - [ThrowsErrorWheNameIsTaken()](../Entities/ESchedule/Commands/CreateScheduleCommand.unit.cs) - **unit**  
   Check if returns an error when a taken name is provided
 
-- [ThrowsErrorWhenDateIsIncorrect()](../Entities/ESchedule/Commands/CreateScheduleCommand.unit.cs) - **unit**  
+- [ThrowsErrorWhenDateStartIsAfterDateEnd()](../Entities/ESchedule/Commands/CreateScheduleCommand.unit.cs) - **unit**  
   Check if returns an error when incorrect dates are provided
 
 ## `GET` `api/Schedule`

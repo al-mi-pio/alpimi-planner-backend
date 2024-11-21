@@ -24,7 +24,7 @@ namespace AlpimiTest.Entities.ESchedule.Commands
         }
 
         [Fact]
-        public async Task ThrowsErrorWheNameIsTaken()
+        public async Task ThrowsErrorWhenNameIsTaken()
         {
             var scheduleSettings = MockData.GetScheduleSettingsDetails();
 
@@ -64,7 +64,7 @@ namespace AlpimiTest.Entities.ESchedule.Commands
         }
 
         [Fact]
-        public async Task ThrowsErrorWhenDateIsIncorrect()
+        public async Task ThrowsErrorWhenDateStartIsAfterDateEnd()
         {
             var scheduleSettings = MockData.GetScheduleSettingsDetails();
 

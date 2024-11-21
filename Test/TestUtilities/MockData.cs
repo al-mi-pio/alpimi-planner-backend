@@ -1,5 +1,7 @@
 ﻿using AlpimiAPI.Entities.EAuth;
 using AlpimiAPI.Entities.EAuth.DTO;
+using AlpimiAPI.Entities.EDayOff;
+using AlpimiAPI.Entities.EDayOff.DTO;
 using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Entities.ESchedule.DTO;
 using AlpimiAPI.Entities.EScheduleSettings;
@@ -57,13 +59,27 @@ namespace AlpimiTest.TestUtilities
             {
                 Id = new Guid(),
                 SchoolHour = 10,
-                SchoolYearStart = new DateTime(2024, 11, 19),
+                SchoolYearStart = new DateTime(2020, 11, 19),
                 SchoolYearEnd = new DateTime(2025, 11, 19),
                 ScheduleId = new Guid(),
                 Schedule = GetScheduleDetails()
             };
 
             return scheduleSettings;
+        }
+
+        public static DayOff GetDayOffDetails()
+        {
+            var dayOff = new DayOff()
+            {
+                Id = new Guid(),
+                Name = "Marek_Fest",
+                From = new DateTime(2022, 12, 12),
+                To = new DateTime(2025, 12, 12),
+                ScheduleSettingsId = new Guid(),
+                ScheduleSettings = null!
+            };
+            return dayOff;
         }
 
         public static CreateUserDTO GetCreateUserDTODetails()
@@ -132,8 +148,41 @@ namespace AlpimiTest.TestUtilities
 
         public static LoginDTO GetLoginDTODetails()
         {
-            var auth = MockData.GetAuthDetails();
+            var auth = GetAuthDetails();
             return new LoginDTO() { Login = auth.User.Login, Password = auth.Password };
+        }
+
+        public static CreateDayOffDTO GetCreateDayOffDTODetails(Guid scheduleId)
+        {
+            var dayOff = GetDayOffDetails();
+            return new CreateDayOffDTO()
+            {
+                Name = dayOff.Name,
+                Date = dayOff.From,
+                NumberOfDays = 2,
+                ScheduleId = scheduleId
+            };
+        }
+
+        public static CreateDayOffDTO GetCreateSecondDayOffDTODetails(Guid scheduleId)
+        {
+            var dayOff = GetDayOffDetails();
+            return new CreateDayOffDTO()
+            {
+                Name = "second_name",
+                Date = new DateTime(2021, 8, 8),
+                ScheduleId = scheduleId
+            };
+        }
+
+        public static UpdateDayOffDTO GetUpdateDayOffDTODetails()
+        {
+            return new UpdateDayOffDTO()
+            {
+                From = new DateTime(2023, 11, 22),
+                To = new DateTime(2023, 11, 23),
+                Name = "Inny_fest"
+            };
         }
     }
 }

@@ -71,16 +71,20 @@ namespace AlpimiAPI.Entities.EScheduleSettings.Commands
                 default:
                     scheduleSettings = await _dbService.Update<ScheduleSettings?>(
                         @"
-                            WITH UpdatedSettings AS (
-                            SELECT ss.*
-                            FROM [ScheduleSettings] ss
-                            INNER JOIN [Schedule] s ON s.[Id] = ss.[ScheduleId]
-                            WHERE s.[UserId] = @FilteredId AND ss.[ScheduleId] = @ScheduleId)
-                            UPDATE UpdatedSettings
-                            SET [SchoolHour] = CASE WHEN @SchoolHour IS NOT NULL THEN @SchoolHour ELSE [SchoolHour] END,
+                            UPDATE ss
+                            SET
+                            [SchoolHour] = CASE WHEN @SchoolHour IS NOT NULL THEN @SchoolHour ELSE [SchoolHour] END,
                             [SchoolYearStart] = CASE WHEN @SchoolYearStart IS NOT NULL THEN @SchoolYearStart ELSE [SchoolYearStart] END,
                             [SchoolYearEnd] = CASE WHEN @SchoolYearEnd IS NOT NULL THEN @SchoolYearEnd ELSE [SchoolYearEnd] END
-                            OUTPUT INSERTED.[Id], INSERTED.[SchoolHour], INSERTED.[SchoolYearStart], INSERTED.[SchoolYearEnd], INSERTED.[ScheduleId];",
+                            OUTPUT 
+                            INSERTED.[Id],
+                            INSERTED.[SchoolHour], 
+                            INSERTED.[SchoolYearStart], 
+                            INSERTED.[SchoolYearEnd], 
+                            INSERTED.[ScheduleId]
+                            FROM [ScheduleSettings] ss
+                            INNER JOIN [Schedule] s ON s.[Id] = ss.[ScheduleId]
+                            WHERE s.[UserId] = @FilteredId AND ss.[ScheduleId] = @ScheduleId;",
                         request
                     );
                     break;

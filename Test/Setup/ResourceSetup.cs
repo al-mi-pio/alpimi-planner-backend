@@ -29,6 +29,10 @@ namespace AlpimiTest.TestSetup
                 )
             },
             {
+                "notFound",
+                args => new LocalizedString("notFound", string.Format("{0} was not found", args[0]))
+            },
+            {
                 "longPassword",
                 args => new LocalizedString(
                     "longPassword",
@@ -57,6 +61,13 @@ namespace AlpimiTest.TestSetup
                         "Password must contain at least one of the following: {0}",
                         args[0]
                     )
+                )
+            },
+            {
+                "dateOutOfRange",
+                args => new LocalizedString(
+                    "dateOutofRange",
+                    string.Format("Date must be in between {0} and {1}", args[0], args[1])
                 )
             }
         };

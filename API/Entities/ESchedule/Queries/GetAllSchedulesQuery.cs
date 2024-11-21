@@ -4,15 +4,14 @@ using AlpimiAPI.Entities.EUser.Queries;
 using AlpimiAPI.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualBasic;
 
 namespace AlpimiAPI.Entities.ESchedule.Queries
 {
-    public record GetSchedulesQuery(Guid FilteredId, string Role, PaginationParams Pagination)
+    public record GetAllSchedulesQuery(Guid FilteredId, string Role, PaginationParams Pagination)
         : IRequest<(IEnumerable<Schedule>?, int)>;
 
     public class GetSchedulesHandler
-        : IRequestHandler<GetSchedulesQuery, (IEnumerable<Schedule>?, int)>
+        : IRequestHandler<GetAllSchedulesQuery, (IEnumerable<Schedule>?, int)>
     {
         private readonly IDbService _dbService;
 
@@ -22,7 +21,7 @@ namespace AlpimiAPI.Entities.ESchedule.Queries
         }
 
         public async Task<(IEnumerable<Schedule>?, int)> Handle(
-            GetSchedulesQuery request,
+            GetAllSchedulesQuery request,
             CancellationToken cancellationToken
         )
         {

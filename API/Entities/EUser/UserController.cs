@@ -46,13 +46,7 @@ namespace AlpimiAPI.Entities.EUser
         [ProducesResponseType(typeof(ApiErrorResponse), 403)]
         public async Task<ActionResult<ApiGetResponse<Guid>>> Post([FromBody] CreateUserDTO request)
         {
-            var command = new CreateUserCommand(
-                Guid.NewGuid(),
-                Guid.NewGuid(),
-                request.Login,
-                request.CustomURL,
-                request.Password
-            );
+            var command = new CreateUserCommand(Guid.NewGuid(), Guid.NewGuid(), request);
             try
             {
                 var result = await _mediator.Send(command);
@@ -203,13 +197,7 @@ namespace AlpimiAPI.Entities.EUser
             Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
             string privileges = Privileges.GetUserRoleFromToken(Authorization);
 
-            var command = new UpdateUserCommand(
-                id,
-                request.Login,
-                request.CustomURL,
-                filteredId,
-                privileges
-            );
+            var command = new UpdateUserCommand(id, request, filteredId, privileges);
             try
             {
                 User? result = await _mediator.Send(command);

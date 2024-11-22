@@ -24,13 +24,21 @@ namespace AlpimiAPI.Entities.EUser.Queries
             {
                 case "Admin":
                     user = await _dbService.Get<User?>(
-                        "SELECT [Id], [Login], [CustomURL] FROM [User] WHERE [Login] = @Login;",
+                        @"
+                            SELECT 
+                            [Id], [Login], [CustomURL] 
+                            FROM [User] 
+                            WHERE [Login] = @Login;",
                         request
                     );
                     break;
                 default:
                     user = await _dbService.Get<User?>(
-                        "SELECT [Id], [Login], [CustomURL] FROM [User] WHERE [Login] = @Login AND [Id] = @FilteredId;",
+                        @"
+                            SELECT
+                            [Id], [Login], [CustomURL]
+                            FROM [User]
+                            WHERE [Login] = @Login AND [Id] = @FilteredId;",
                         request
                     );
                     break;

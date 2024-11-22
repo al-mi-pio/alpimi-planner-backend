@@ -1,4 +1,5 @@
 ﻿using AlpimiAPI.Database;
+using AlpimiAPI.Entities.ESchedule.DTO;
 using AlpimiAPI.Entities.ESchedule.Queries;
 using AlpimiAPI.Entities.EUser;
 using AlpimiAPI.Entities.EUser.Queries;
@@ -10,8 +11,12 @@ using Microsoft.Extensions.Localization;
 
 namespace AlpimiAPI.Entities.ESchedule.Commands
 {
-    public record UpdateScheduleCommand(Guid Id, string? Name, Guid FilteredId, string Role)
-        : IRequest<Schedule?>;
+    public record UpdateScheduleCommand(
+        Guid Id,
+        UpdateScheduleDTO dto,
+        Guid FilteredId,
+        string Role
+    ) : IRequest<Schedule?>;
 
     public class UpdateScheduleHandler : IRequestHandler<UpdateScheduleCommand, Schedule?>
     {
@@ -29,13 +34,13 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
             CancellationToken cancellationToken
         )
         {
-            if (request.Name != null)
+            if (request.dto.Name != null)
             {
                 GetScheduleByNameHandler getScheduleByNameHandler = new GetScheduleByNameHandler(
                     _dbService
                 );
                 GetScheduleByNameQuery getScheduleByNameQuery = new GetScheduleByNameQuery(
-                    request.Name,
+                    request.dto.Name,
                     request.FilteredId,
                     "User"
                 );
@@ -47,7 +52,7 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
                 if (scheduleName.Value != null)
                 {
                     throw new ApiErrorException(
-                        [new ErrorObject(_str["alreadyExists", "Schedule", request.Name])]
+                        [new ErrorObject(_str["alreadyExists", "Schedule", request.dto.Name])]
                     );
                 }
             }
@@ -57,24 +62,28 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
             {
                 case "Admin":
                     schedule = await _dbService.Update<Schedule?>(
-                        @"
-                    UPDATE [Schedule] 
-                    SET [Name]=CASE WHEN @Name IS NOT NULL THEN @Name 
-                    ELSE [Name] END
-                    OUTPUT INSERTED.[Id], INSERTED.[Name], INSERTED.[UserId]
-                    WHERE [Id]=@Id;",
-                        request
+                        $@"
+                            UPDATE [Schedule] 
+                            SET 
+                            [Name]=CASE WHEN @Name IS NOT NULL THEN @Name ELSE [Name] END
+                            OUTPUT
+                            INSERTED.[Id], 
+                            INSERTED.[Name], 
+                            INSERTED.[UserId]
+                            WHERE [Id] = '{request.Id}';",
+                        request.dto
                     );
                     break;
                 default:
                     schedule = await _dbService.Update<Schedule?>(
-                        @"
-                     UPDATE [Schedule] 
-                    SET [Name]=CASE WHEN @Name IS NOT NULL THEN @Name 
-                    ELSE [Name] END
-                    OUTPUT INSERTED.[Id], INSERTED.[Name], INSERTED.[UserId]
-                    WHERE [Id]=@Id and [UserId]=@FilteredId;",
-                        request
+                        $@"
+                            UPDATE [Schedule] 
+                            SET 
+                            [Name]=CASE WHEN @Name IS NOT NULL THEN @Name ELSE [Name] END
+                            OUTPUT 
+                            INSERTED.[Id], INSERTED.[Name], INSERTED.[UserId]
+                            WHERE [Id] = '{request.Id}' and [UserId] = '{request.FilteredId}';",
+                        request.dto
                     );
                     break;
             }

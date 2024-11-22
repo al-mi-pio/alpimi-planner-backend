@@ -1,5 +1,5 @@
-﻿using System;
-using AlpimiAPI.Database;
+﻿using AlpimiAPI.Database;
+using AlpimiAPI.Entities.ESchedule.DTO;
 using AlpimiAPI.Entities.ESchedule.Queries;
 using AlpimiAPI.Responses;
 using alpimi_planner_backend.API.Locales;
@@ -13,10 +13,7 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
         Guid Id,
         Guid UserId,
         Guid ScheduleSettingsId,
-        string Name,
-        int SchoolHour,
-        DateTime SchoolYearStart,
-        DateTime SchoolYearEnd
+        CreateScheduleDTO dto
     ) : IRequest<Guid>;
 
     public class CreateScheduleHandler : IRequestHandler<CreateScheduleCommand, Guid>
@@ -39,7 +36,7 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
                 _dbService
             );
             GetScheduleByNameQuery getScheduleByNameQuery = new GetScheduleByNameQuery(
-                request.Name,
+                request.dto.Name,
                 request.UserId,
                 "User"
             );
@@ -51,27 +48,39 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
             if (scheduleName.Value != null)
             {
                 throw new ApiErrorException(
-                    [new ErrorObject(_str["alreadyExists", "Schedule", request.Name])]
+                    [new ErrorObject(_str["alreadyExists", "Schedule", request.dto.Name])]
                 );
             }
-            if (request.SchoolYearStart > request.SchoolYearEnd)
+            if (request.dto.SchoolYearStart > request.dto.SchoolYearEnd)
             {
                 throw new ApiErrorException([new ErrorObject(_str["scheduleDate"])]);
             }
 
             var insertedId = await _dbService.Post<Guid>(
-                @"
-                    INSERT INTO [Schedule] ([Id],[Name],[UserId])
-                    OUTPUT INSERTED.Id                    
-                    VALUES (@Id,@Name,@UserId);",
-                request
+                $@"
+                    INSERT INTO [Schedule] 
+                    ([Id],[Name],[UserId])
+                    OUTPUT 
+                    INSERTED.Id                    
+                    VALUES (
+                    '{request.Id}',   
+                    @Name,
+                    '{request.UserId}');",
+                request.dto
             );
             await _dbService.Post<Guid>(
-                @"
-                    INSERT INTO [ScheduleSettings] ([Id],[SchoolHour],[SchoolYearStart],[SchoolYearEnd],[ScheduleId])
-                    OUTPUT INSERTED.Id
-                    VALUES (@ScheduleSettingsId, @SchoolHour, @SchoolYearStart, @SchoolYearEnd, @Id);",
-                request
+                $@"
+                    INSERT INTO [ScheduleSettings] 
+                    ([Id],[SchoolHour],[SchoolYearStart],[SchoolYearEnd],[ScheduleId])
+                    OUTPUT 
+                    INSERTED.Id
+                    VALUES (
+                    '{request.ScheduleSettingsId}',
+                    @SchoolHour, 
+                    @SchoolYearStart, 
+                    @SchoolYearEnd,
+                    '{request.Id}');",
+                request.dto
             );
 
             return insertedId;

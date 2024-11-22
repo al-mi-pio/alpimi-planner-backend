@@ -28,10 +28,7 @@ namespace AlpimiTest.Entities.EDayOff.Commands
         {
             var createDayOffCommand = new CreateDayOffCommand(
                 new Guid(),
-                "Bob",
-                new DateTime(2020, 1, 1),
-                3,
-                new Guid(),
+                MockData.GetCreateDayOffDTODetails(new Guid()),
                 new Guid(),
                 "User"
             );
@@ -54,20 +51,15 @@ namespace AlpimiTest.Entities.EDayOff.Commands
         [Fact]
         public async Task ThrowsErrorWhenOutOfRangeDateIsProvided()
         {
+            var dto = MockData.GetCreateDayOffDTODetails(new Guid());
+            dto.Date = new DateTime(2000, 1, 1);
+
             var scheduleSettings = MockData.GetScheduleSettingsDetails();
             _dbService
                 .Setup(s => s.Get<ScheduleSettings>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(scheduleSettings);
 
-            var createDayOffCommand = new CreateDayOffCommand(
-                new Guid(),
-                "Bob",
-                new DateTime(2000, 1, 1),
-                3,
-                new Guid(),
-                new Guid(),
-                "User"
-            );
+            var createDayOffCommand = new CreateDayOffCommand(new Guid(), dto, new Guid(), "User");
 
             var createDayOffHandler = new CreateDayOffHandler(_dbService.Object, _str.Object);
 
@@ -82,20 +74,15 @@ namespace AlpimiTest.Entities.EDayOff.Commands
         [Fact]
         public async Task ThrowsErrorWhenNumberOfDaysIsIncorrect()
         {
+            var dto = MockData.GetCreateDayOffDTODetails(new Guid());
+            dto.NumberOfDays = 0;
+
             var scheduleSettings = MockData.GetScheduleSettingsDetails();
             _dbService
                 .Setup(s => s.Get<ScheduleSettings>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(scheduleSettings);
 
-            var createDayOffCommand = new CreateDayOffCommand(
-                new Guid(),
-                "Bob",
-                new DateTime(2000, 1, 1),
-                0,
-                new Guid(),
-                new Guid(),
-                "User"
-            );
+            var createDayOffCommand = new CreateDayOffCommand(new Guid(), dto, new Guid(), "User");
 
             var createDayOffHandler = new CreateDayOffHandler(_dbService.Object, _str.Object);
 

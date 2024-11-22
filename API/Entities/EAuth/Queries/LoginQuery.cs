@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using AlpimiAPI.Database;
+using AlpimiAPI.Entities.EAuth.DTO;
 using AlpimiAPI.Entities.EUser;
 using AlpimiAPI.Entities.EUser.Queries;
 using AlpimiAPI.Responses;
@@ -15,7 +16,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace AlpimiAPI.Entities.EAuth.Queries
 {
-    public record LoginQuery(string Login, string Password) : IRequest<String>;
+    public record LoginQuery(LoginDTO dto) : IRequest<String>;
 
     public class LoginHandler : IRequestHandler<LoginQuery, string>
     {
@@ -32,15 +33,18 @@ namespace AlpimiAPI.Entities.EAuth.Queries
         public async Task<String> Handle(LoginQuery request, CancellationToken cancellationToken)
         {
             var auth = await _dbService.Post<Auth?>(
-                @"SELECT [Auth].[Id],[Auth].[Password],[Auth].[Salt],[Auth].[Role],[Auth].[UserId]
-                FROM [User] JOIN [Auth] on [User].[Id]=[Auth].[UserId] 
-                WHERE [Login] = @Login;",
-                request
+                @"
+                    SELECT
+                    a.[Id],a.[Password],a.[Salt],a.[Role],a.[UserId]
+                    FROM [User] u
+                    JOIN [Auth] a on u.[Id]=a.[UserId] 
+                    WHERE [Login] = @Login;",
+                request.dto
             );
 
             GetUserByLoginHandler getUserByLoginHandler = new GetUserByLoginHandler(_dbService);
             GetUserByLoginQuery getUserByLoginQuery = new GetUserByLoginQuery(
-                request.Login,
+                request.dto.Login,
                 new Guid(),
                 "Admin"
             );
@@ -56,7 +60,7 @@ namespace AlpimiAPI.Entities.EAuth.Queries
             auth.User = user.Value;
 
             byte[] inputHash = Rfc2898DeriveBytes.Pbkdf2(
-                request.Password,
+                request.dto.Password,
                 Convert.FromBase64String(auth.Salt),
                 Configuration.GetHashIterations(),
                 Configuration.GetHashAlgorithm(),

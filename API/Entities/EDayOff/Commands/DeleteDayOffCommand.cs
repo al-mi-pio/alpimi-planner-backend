@@ -19,7 +19,12 @@ namespace AlpimiAPI.Entities.EDayOff.Commands
             switch (request.Role)
             {
                 case "Admin":
-                    await _dbService.Delete("DELETE [DayOff] WHERE [Id] = @Id;", request);
+                    await _dbService.Delete(
+                        @"
+                            DELETE [DayOff] 
+                            WHERE [Id] = @Id;",
+                        request
+                    );
                     break;
                 default:
                     await _dbService.Delete(

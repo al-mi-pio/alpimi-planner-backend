@@ -115,8 +115,8 @@ namespace AlpimiTest.TestUtilities
             return new UpdateScheduleSettingsDTO()
             {
                 SchoolHour = 29,
-                SchooldYearStart = new DateTime(2020, 10, 1),
-                SchooldYearEnd = new DateTime(2022, 1, 10)
+                SchoolYearStart = new DateTime(2020, 10, 1),
+                SchoolYearEnd = new DateTime(2022, 1, 10)
             };
         }
 

@@ -26,8 +26,10 @@ namespace AlpimiTest.Entities.ESchedule.Commands
         [Fact]
         public async Task ThrowsErrorWhenNameIsTaken()
         {
-            var scheduleSettings = MockData.GetScheduleSettingsDetails();
+            var dto = MockData.GetCreateScheduleDTODetails();
+            dto.Name = "TakenName";
 
+            var scheduleSettings = MockData.GetScheduleSettingsDetails();
             _dbService
                 .Setup(s => s.Get<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(scheduleSettings.Schedule);
@@ -36,10 +38,7 @@ namespace AlpimiTest.Entities.ESchedule.Commands
                 scheduleSettings.Schedule.Id,
                 scheduleSettings.Schedule.UserId,
                 scheduleSettings.Id,
-                "TakenName",
-                scheduleSettings.SchoolHour,
-                scheduleSettings.SchoolYearStart,
-                scheduleSettings.SchoolYearEnd
+                dto
             );
 
             var createScheduleHandler = new CreateScheduleHandler(_dbService.Object, _str.Object);
@@ -66,16 +65,16 @@ namespace AlpimiTest.Entities.ESchedule.Commands
         [Fact]
         public async Task ThrowsErrorWhenDateStartIsAfterDateEnd()
         {
+            var dto = MockData.GetCreateScheduleDTODetails();
+            dto.SchoolYearStart = new DateTime(2050, 10, 10);
+
             var scheduleSettings = MockData.GetScheduleSettingsDetails();
 
             var createScheduleCommand = new CreateScheduleCommand(
                 scheduleSettings.Schedule.Id,
                 scheduleSettings.Schedule.UserId,
                 scheduleSettings.Id,
-                scheduleSettings.Schedule.Name,
-                scheduleSettings.SchoolHour,
-                new DateTime(2020, 10, 10),
-                new DateTime(2000, 10, 10)
+                dto
             );
 
             var createScheduleHandler = new CreateScheduleHandler(_dbService.Object, _str.Object);

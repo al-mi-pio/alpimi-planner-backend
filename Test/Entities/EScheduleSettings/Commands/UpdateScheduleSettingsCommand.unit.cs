@@ -23,15 +23,17 @@ namespace AlpimiTest.Entities.EScheduleSettings.Commands
         }
 
         [Fact]
-        public async Task ThrowsErrorWhenDateIsIncorrect()
+        public async Task ThrowsErrorWhenDateStartIsAfterDateEnd()
         {
+            var dto = MockData.GetUpdateScheduleSettingsDTO();
+            dto.SchoolYearStart = new DateTime(2020, 10, 10);
+            dto.SchoolYearEnd = new DateTime(2000, 10, 10);
+
             var scheduleSettings = MockData.GetScheduleSettingsDetails();
 
             var updateScheduleSettingsCommand = new UpdateScheduleSettingsCommand(
                 scheduleSettings.Id,
-                scheduleSettings.SchoolHour,
-                new DateTime(2020, 10, 10),
-                new DateTime(2000, 10, 10),
+                dto,
                 new Guid(),
                 "Admin"
             );

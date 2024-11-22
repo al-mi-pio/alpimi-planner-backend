@@ -19,11 +19,18 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
             switch (request.Role)
             {
                 case "Admin":
-                    await _dbService.Delete("DELETE [Schedule] WHERE [Id] = @Id;", request);
+                    await _dbService.Delete(
+                        @"
+                            DELETE [Schedule] 
+                            WHERE [Id] = @Id;",
+                        request
+                    );
                     break;
                 default:
                     await _dbService.Delete(
-                        "DELETE [Schedule] WHERE [Id] = @Id and [UserId]=@FilteredId;",
+                        @"
+                            DELETE [Schedule] 
+                            WHERE [Id] = @Id and [UserId] = @FilteredId;",
                         request
                     );
                     break;

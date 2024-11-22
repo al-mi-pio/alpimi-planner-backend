@@ -29,13 +29,22 @@ namespace AlpimiAPI.Entities.EScheduleSettings.Queries
             {
                 case "Admin":
                     scheduleSettings = await _dbService.Get<ScheduleSettings?>(
-                        "SELECT [Id], [SchoolHour], [SchoolYearStart], [SchoolYearEnd], [ScheduleId] FROM [ScheduleSettings] WHERE [Id] = @Id;",
+                        @"
+                            SELECT
+                            [Id], [SchoolHour], [SchoolYearStart], [SchoolYearEnd], [ScheduleId] 
+                            FROM [ScheduleSettings] 
+                            WHERE [Id] = @Id;",
                         request
                     );
                     break;
                 default:
                     scheduleSettings = await _dbService.Get<ScheduleSettings?>(
-                        $"SELECT [ScheduleSettings].[Id], [SchoolHour], [SchoolYearStart], [SchoolYearEnd], [ScheduleId] FROM [ScheduleSettings] JOIN [Schedule] ON [Schedule].[Id]=[ScheduleSettings].[ScheduleId] WHERE [ScheduleSettings].[Id]=@Id AND [Schedule].[UserId]=@FilteredId;",
+                        @"
+                            SELECT 
+                            ss.[Id], [SchoolHour], [SchoolYearStart], [SchoolYearEnd], [ScheduleId] 
+                            FROM [ScheduleSettings] ss 
+                            JOIN [Schedule] s ON s.[Id]=ss.[ScheduleId]
+                            WHERE ss.[Id] = @Id AND s.[UserId] = @FilteredId;",
                         request
                     );
                     break;

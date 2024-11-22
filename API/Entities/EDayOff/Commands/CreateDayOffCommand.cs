@@ -1,4 +1,5 @@
 ﻿using AlpimiAPI.Database;
+using AlpimiAPI.Entities.EDayOff.DTO;
 using AlpimiAPI.Entities.EScheduleSettings;
 using AlpimiAPI.Entities.EScheduleSettings.Queries;
 using AlpimiAPI.Responses;
@@ -9,15 +10,8 @@ using Microsoft.Extensions.Localization;
 
 namespace AlpimiAPI.Entities.EDayOff.Commands
 {
-    public record CreateDayOffCommand(
-        Guid Id,
-        string Name,
-        DateTime Date,
-        int? numberOfDays,
-        Guid ScheduleId,
-        Guid FilteredId,
-        string Role
-    ) : IRequest<Guid>;
+    public record CreateDayOffCommand(Guid Id, CreateDayOffDTO dto, Guid FilteredId, string Role)
+        : IRequest<Guid>;
 
     public class CreateDayOffHandler : IRequestHandler<CreateDayOffCommand, Guid>
     {
@@ -36,11 +30,11 @@ namespace AlpimiAPI.Entities.EDayOff.Commands
         )
         {
             DateTime to = new DateTime();
-            if (request.numberOfDays == null)
+            if (request.dto.NumberOfDays == null)
             {
-                to = request.Date;
+                to = request.dto.Date;
             }
-            else if (request.numberOfDays < 1)
+            else if (request.dto.NumberOfDays < 1)
             {
                 throw new ApiErrorException(
                     [new ErrorObject(_str["badParameter", "NumberOfDays"])]
@@ -48,14 +42,14 @@ namespace AlpimiAPI.Entities.EDayOff.Commands
             }
             else
             {
-                to = request.Date.AddDays(Convert.ToDouble(request.numberOfDays - 1));
+                to = request.dto.Date.AddDays(Convert.ToDouble(request.dto.NumberOfDays - 1));
             }
 
             GetScheduleSettingsByScheduleIdHandler getScheduleSettingsByScheduleIdHandler =
                 new GetScheduleSettingsByScheduleIdHandler(_dbService);
             GetScheduleSettingsByScheduleIdQuery getScheduleSettingsByScheduleIdQuery =
                 new GetScheduleSettingsByScheduleIdQuery(
-                    request.ScheduleId,
+                    request.dto.ScheduleId,
                     request.FilteredId,
                     request.Role
                 );
@@ -72,7 +66,7 @@ namespace AlpimiAPI.Entities.EDayOff.Commands
                 );
             }
             if (
-                request.Date < scheduleSettings.Value!.SchoolYearStart
+                request.dto.Date < scheduleSettings.Value!.SchoolYearStart
                 || to > scheduleSettings.Value.SchoolYearEnd
             )
             {
@@ -90,15 +84,18 @@ namespace AlpimiAPI.Entities.EDayOff.Commands
             }
 
             var insertedId = await _dbService.Post<Guid>(
-                @"
-                    INSERT INTO [DayOff] ([Id],[Name],[From],[To],[ScheduleSettingsId])
-                    OUTPUT INSERTED.Id                    
-                    VALUES (@Id,@Name,@Date,'"
-                    + to.ToString("yyyy-MM-dd HH:mm:ss")
-                    + "','"
-                    + scheduleSettings.Value.Id
-                    + "');",
-                request
+                $@"
+                    INSERT INTO [DayOff] 
+                    ([Id],[Name],[From],[To],[ScheduleSettingsId])
+                    OUTPUT 
+                    INSERTED.Id                    
+                    VALUES (
+                    '{request.Id}',
+                    @Name,
+                    @Date,
+                    '{to.ToString("yyyy-MM-dd HH:mm:ss")}',
+                    '{scheduleSettings.Value.Id}');",
+                request.dto
             );
 
             return insertedId;

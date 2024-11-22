@@ -44,7 +44,7 @@ namespace AlpimiAPI.Entities.EAuth
             [FromBody] DTO.LoginDTO request
         )
         {
-            var query = new LoginQuery(request.Login, request.Password);
+            var query = new LoginQuery(request);
             try
             {
                 string result = await _mediator.Send(query);

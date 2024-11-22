@@ -51,9 +51,8 @@ namespace AlpimiAPI.Entities.EDayOff.Queries
             }
             if (
                 request.Pagination.SortBy.ToLower() != "id"
-                && request.Pagination.SortBy.ToLower() != "name"
-                && request.Pagination.SortBy.ToLower() != "schoolhour"
-                && request.Pagination.SortBy.ToLower() != "userid"
+                && request.Pagination.SortBy.ToLower() != "from"
+                && request.Pagination.SortBy.ToLower() != "to"
             )
             {
                 errors.Add(new ErrorObject(_str["badParameter", "SortBy"]));
@@ -71,26 +70,27 @@ namespace AlpimiAPI.Entities.EDayOff.Queries
                 case "Admin":
                     count = await _dbService.Get<int>(
                         @"
-                            SELECT COUNT(*)
+                            SELECT 
+                            COUNT(*)
                             FROM [DayOff] do
                             INNER JOIN [ScheduleSettings] ss ON ss.[Id] = do.[ScheduleSettingsId]
-                            WHERE ss.[ScheduleId] = @ScheduleId
-                            ",
+                            WHERE ss.[ScheduleId] = @ScheduleId",
                         request
                     );
                     daysOff = await _dbService.GetAll<DayOff>(
-                        @"
-                            SELECT do.[Id], do.[Name], [From],[To],[ScheduleSettingsId] FROM [DayOff] do
+                        $@"
+                            SELECT
+                            do.[Id], do.[Name], [From],[To],[ScheduleSettingsId] 
+                            FROM [DayOff] do
                             INNER JOIN [ScheduleSettings] ss ON ss.[Id] = do.[ScheduleSettingsId]
-                            WHERE ss.[ScheduleId] = @ScheduleId ORDER BY'"
-                            + request.Pagination.SortBy
-                            + "' "
-                            + request.Pagination.SortOrder
-                            + " OFFSET "
-                            + request.Pagination.Offset
-                            + " ROWS FETCH NEXT "
-                            + request.Pagination.PerPage
-                            + " ROWS ONLY;",
+                            WHERE ss.[ScheduleId] = @ScheduleId 
+                            ORDER BY
+                            {request.Pagination.SortBy}
+                            {request.Pagination.SortOrder}
+                            OFFSET
+                            {request.Pagination.Offset} ROWS
+                            FETCH NEXT
+                            {request.Pagination.PerPage} ROWS ONLY; ",
                         request
                     );
                     break;
@@ -101,23 +101,25 @@ namespace AlpimiAPI.Entities.EDayOff.Queries
                             FROM [DayOff] do
                             INNER JOIN [ScheduleSettings] ss ON ss.[Id] = do.[ScheduleSettingsId]
                             INNER JOIN [Schedule] s ON s.[Id]=ss.[ScheduleId]
-                            WHERE s.[UserId] = @FilteredId AND ss.[ScheduleId] = @ScheduleId
+                            WHERE s.[UserId] = @FilteredId AND ss.[ScheduleId] =@ScheduleId
                             ",
                         request
                     );
                     daysOff = await _dbService.GetAll<DayOff>(
-                        @"SELECT do.[Id], do.[Name], [From],[To],[ScheduleSettingsId] FROM [DayOff] do
+                        $@"
+                            SELECT 
+                            do.[Id], do.[Name], [From],[To],[ScheduleSettingsId]
+                            FROM [DayOff] do
                             INNER JOIN [ScheduleSettings] ss ON ss.[Id] = do.[ScheduleSettingsId]
                             INNER JOIN [Schedule] s ON s.[Id]=ss.[ScheduleId]
-                            WHERE s.[UserId] = @FilteredId AND ss.[ScheduleId] = @ScheduleId ORDER BY'"
-                            + request.Pagination.SortBy
-                            + "' "
-                            + request.Pagination.SortOrder
-                            + " OFFSET "
-                            + request.Pagination.Offset
-                            + " ROWS FETCH NEXT "
-                            + request.Pagination.PerPage
-                            + " ROWS ONLY;",
+                            WHERE s.[UserId] = @FilteredId AND ss.[ScheduleId] = @ScheduleId 
+                            ORDER BY
+                            {request.Pagination.SortBy}
+                            {request.Pagination.SortOrder}
+                            OFFSET
+                            {request.Pagination.Offset} ROWS
+                            FETCH NEXT
+                            {request.Pagination.PerPage} ROWS ONLY; ",
                         request
                     );
                     break;

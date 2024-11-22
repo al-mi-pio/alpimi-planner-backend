@@ -1,5 +1,13 @@
 ﻿namespace AlpimiAPI.Settings
 {
+    public enum RequiredCharacterTypes
+    {
+        SmallLetter,
+        BigLetter,
+        Digit,
+        Symbol
+    }
+
     public static class AuthSettings
     {
         public const int MinimumPasswordLength = 8;

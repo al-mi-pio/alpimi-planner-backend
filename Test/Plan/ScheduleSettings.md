@@ -19,7 +19,7 @@
 - [UpdateScheduleSettingsThrowsNotFoundErrorWhenWrongIdIsGiven()](../Entities/EScheduleSettings/ScheduleSettingsController.test.cs) - **integrity**
   Check if returns an error when schedule settings don't exists
 
-- [ThrowsErrorWhenDateIsIncorrect()](../Entities/EScheduleSettings/Commands/UpdateEScheduleSettingsCommand.unit.cs) - **unit**  
+- [ThrowsErrorWhenDateStartIsAfterDateEnd()](../Entities/EScheduleSettings/Commands/UpdateEScheduleSettingsCommand.unit.cs) - **unit**  
   Check if returns an error when incorrect dates are provided
 
 - [ThrowsErrorWhenNumberOfDaysIsIncorrect()](../Entities/EScheduleSettings/Commands/UpdateEScheduleSettingsCommand.unit.cs) - **unit**  

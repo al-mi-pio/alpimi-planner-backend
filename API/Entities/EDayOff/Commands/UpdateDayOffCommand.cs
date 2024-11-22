@@ -1,7 +1,9 @@
 ﻿using AlpimiAPI.Database;
+using AlpimiAPI.Entities.EDayOff.DTO;
 using AlpimiAPI.Entities.EScheduleSettings;
 using AlpimiAPI.Entities.EScheduleSettings.Queries;
 using AlpimiAPI.Responses;
+using AlpimiAPI.Utilities;
 using alpimi_planner_backend.API.Locales;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -9,14 +11,8 @@ using Microsoft.Extensions.Localization;
 
 namespace AlpimiAPI.Entities.EDayOff.Commands
 {
-    public record UpdateDayOffCommand(
-        Guid Id,
-        string? Name,
-        DateTime? From,
-        DateTime? To,
-        Guid FilteredId,
-        string Role
-    ) : IRequest<DayOff?>;
+    public record UpdateDayOffCommand(Guid Id, UpdateDayOffDTO dto, Guid FilteredId, string Role)
+        : IRequest<DayOff?>;
 
     public class UpdateDayOffHandler : IRequestHandler<UpdateDayOffCommand, DayOff?>
     {
@@ -35,7 +31,10 @@ namespace AlpimiAPI.Entities.EDayOff.Commands
         )
         {
             var scheduleSettings = await _dbService.Get<ScheduleSettings?>(
-                @"SELECT ss.[Id], [SchoolHour], [SchoolYearStart], [SchoolYearEnd], [ScheduleId] FROM [ScheduleSettings] ss
+                @"
+                    SELECT
+                    ss.[Id], [SchoolHour], [SchoolYearStart], [SchoolYearEnd], [ScheduleId]
+                    FROM [ScheduleSettings] ss
                     INNER JOIN [DayOff] do ON do.[ScheduleSettingsId]=ss.[Id] WHERE do.[Id]=@Id ;",
                 request
             );
@@ -46,18 +45,21 @@ namespace AlpimiAPI.Entities.EDayOff.Commands
             }
 
             var originalDayOff = await _dbService.Get<DayOff?>(
-                @"SELECT [Id],[Name],[From],[To],[ScheduleSettingsId] FROM [DayOff] 
+                @"
+                    SELECT 
+                    [Id],[Name],[From],[To],[ScheduleSettingsId]
+                    FROM [DayOff] 
                     WHERE [Id]=@Id;",
                 request
             );
 
-            if ((request.From ?? originalDayOff!.From) > (request.To ?? originalDayOff!.To))
+            if ((request.dto.From ?? originalDayOff!.From) > (request.dto.To ?? originalDayOff!.To))
             {
                 throw new ApiErrorException([new ErrorObject(_str["scheduleDate"])]);
             }
             if (
-                (request.From ?? originalDayOff!.From) < scheduleSettings.SchoolYearStart
-                || (request.To ?? originalDayOff!.To) > scheduleSettings.SchoolYearEnd
+                (request.dto.From ?? originalDayOff!.From) < scheduleSettings.SchoolYearStart
+                || (request.dto.To ?? originalDayOff!.To) > scheduleSettings.SchoolYearEnd
             )
             {
                 throw new ApiErrorException(
@@ -78,19 +80,19 @@ namespace AlpimiAPI.Entities.EDayOff.Commands
             {
                 case "Admin":
                     dayOff = await _dbService.Update<DayOff?>(
-                        @"
+                        $@"
                             UPDATE [DayOff] 
                             SET [Name]=CASE WHEN @Name IS NOT NULL THEN @Name ELSE [Name] END,
                             [From]=CASE WHEN @From IS NOT NULL THEN @From ELSE [From] END,
                             [To]=CASE WHEN @To IS NOT NULL THEN @To ELSE [To] END
                             OUTPUT INSERTED.[Id], INSERTED.[Name],INSERTED.[From],INSERTED.[To],INSERTED.[ScheduleSettingsId]
-                            WHERE [Id]=@Id;",
-                        request
+                            WHERE [Id] = '{request.Id}';",
+                        request.dto
                     );
                     break;
                 default:
                     dayOff = await _dbService.Update<DayOff?>(
-                        @"
+                        $@"
                             UPDATE do
                             SET 
                             [Name] = CASE WHEN @Name IS NOT NULL THEN @Name ELSE do.[Name] END,
@@ -105,8 +107,8 @@ namespace AlpimiAPI.Entities.EDayOff.Commands
                             FROM [DayOff] do
                             INNER JOIN [ScheduleSettings] ss ON ss.[Id] = do.[ScheduleSettingsId]
                             INNER JOIN [Schedule] s ON s.[Id] = ss.[ScheduleId]
-                            WHERE s.[UserId] = @FilteredId AND do.[Id] = @Id;",
-                        request
+                            WHERE s.[UserId] = '{request.FilteredId}' AND do.[Id] = '{request.Id}';",
+                        request.dto
                     );
                     break;
             }

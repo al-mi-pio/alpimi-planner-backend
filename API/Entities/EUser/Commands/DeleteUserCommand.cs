@@ -16,7 +16,12 @@ namespace AlpimiAPI.Entities.EUser.Commands
 
         public async Task Handle(DeleteUserCommand request, CancellationToken cancellationToken)
         {
-            await _dbService.Delete("DELETE [User] WHERE [Id] = @Id;", request);
+            await _dbService.Delete(
+                @"
+                    DELETE [User]
+                    WHERE [Id] = @Id;",
+                request
+            );
         }
     }
 }

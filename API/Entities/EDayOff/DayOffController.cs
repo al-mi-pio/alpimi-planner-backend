@@ -49,15 +49,7 @@ namespace AlpimiAPI.Entities.EDayOff
             Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
             string privileges = Privileges.GetUserRoleFromToken(Authorization);
 
-            var command = new CreateDayOffCommand(
-                Guid.NewGuid(),
-                request.Name,
-                request.Date,
-                request.NumberOfDays,
-                request.ScheduleId,
-                filteredId,
-                privileges
-            );
+            var command = new CreateDayOffCommand(Guid.NewGuid(), request, filteredId, privileges);
             try
             {
                 var result = await _mediator.Send(command);
@@ -128,14 +120,7 @@ namespace AlpimiAPI.Entities.EDayOff
             Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
             string privileges = Privileges.GetUserRoleFromToken(Authorization);
 
-            var command = new UpdateDayOffCommand(
-                id,
-                request.Name,
-                request.From,
-                request.To,
-                filteredId,
-                privileges
-            );
+            var command = new UpdateDayOffCommand(id, request, filteredId, privileges);
             try
             {
                 DayOff? result = await _mediator.Send(command);

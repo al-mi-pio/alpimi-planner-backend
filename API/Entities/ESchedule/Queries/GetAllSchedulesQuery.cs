@@ -2,10 +2,12 @@
 using AlpimiAPI.Entities.EUser;
 using AlpimiAPI.Entities.EUser.Queries;
 using AlpimiAPI.Responses;
+using AlpimiAPI.Utilities;
 using alpimi_planner_backend.API.Locales;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace AlpimiAPI.Entities.ESchedule.Queries
 {
@@ -48,8 +50,6 @@ namespace AlpimiAPI.Entities.ESchedule.Queries
             if (
                 request.Pagination.SortBy.ToLower() != "id"
                 && request.Pagination.SortBy.ToLower() != "name"
-                && request.Pagination.SortBy.ToLower() != "schoolhour"
-                && request.Pagination.SortBy.ToLower() != "userid"
             )
             {
                 errors.Add(new ErrorObject(_str["badParameter", "SortBy"]));
@@ -65,35 +65,50 @@ namespace AlpimiAPI.Entities.ESchedule.Queries
             switch (request.Role)
             {
                 case "Admin":
-                    count = await _dbService.Get<int>("SELECT COUNT(*) from [Schedule]", request);
+                    count = await _dbService.Get<int>(
+                        @"
+                            SELECT 
+                            COUNT(*) 
+                            from [Schedule]",
+                        ""
+                    );
                     schedules = await _dbService.GetAll<Schedule>(
-                        "SELECT [Id], [Name], [UserId] FROM [Schedule] ORDER BY '"
-                            + request.Pagination.SortBy
-                            + "' "
-                            + request.Pagination.SortOrder
-                            + " OFFSET "
-                            + request.Pagination.Offset
-                            + " ROWS FETCH NEXT "
-                            + request.Pagination.PerPage
-                            + " ROWS ONLY;",
-                        request
+                        $@"
+                            SELECT 
+                            [Id], [Name], [UserId]
+                            FROM [Schedule] 
+                            ORDER BY 
+                            {request.Pagination.SortBy}
+                            {request.Pagination.SortOrder}
+                            OFFSET
+                            {request.Pagination.Offset} ROWS
+                            FETCH NEXT
+                            {request.Pagination.PerPage} ROWS ONLY; ",
+                        request.Pagination
                     );
                     break;
                 default:
                     count = await _dbService.Get<int>(
-                        "SELECT COUNT(*) from [Schedule] WHERE [UserId] = @FilteredId",
+                        @"
+                            SELECT 
+                            COUNT(*) 
+                            from [Schedule] 
+                            WHERE [UserId] = @FilteredId",
                         request
                     );
                     schedules = await _dbService.GetAll<Schedule>(
-                        "SELECT [Id], [Name], [UserId] FROM [Schedule] WHERE [UserId] = @FilteredId ORDER BY'"
-                            + request.Pagination.SortBy
-                            + "' "
-                            + request.Pagination.SortOrder
-                            + " OFFSET "
-                            + request.Pagination.Offset
-                            + " ROWS FETCH NEXT "
-                            + request.Pagination.PerPage
-                            + " ROWS ONLY;",
+                        $@"
+                            SELECT 
+                            [Id], [Name], [UserId] 
+                            FROM [Schedule]
+                            WHERE [UserId] = @FilteredId
+                            ORDER BY 
+                            {request.Pagination.SortBy}
+                            {request.Pagination.SortOrder}
+                            OFFSET
+                            {request.Pagination.Offset} ROWS
+                            FETCH NEXT
+                            {request.Pagination.PerPage} ROWS ONLY; ",
                         request
                     );
                     break;

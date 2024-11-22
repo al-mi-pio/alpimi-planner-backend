@@ -28,13 +28,21 @@ namespace AlpimiAPI.Entities.ESchedule.Queries
             {
                 case "Admin":
                     schedule = await _dbService.Get<Schedule?>(
-                        "SELECT [Id], [Name], [UserId] FROM [Schedule] WHERE [Name] = @Name;",
+                        @"
+                            SELECT
+                            [Id], [Name], [UserId] 
+                            FROM [Schedule] 
+                            WHERE [Name] = @Name;",
                         request
                     );
                     break;
                 default:
                     schedule = await _dbService.Get<Schedule?>(
-                        "SELECT [Id], [Name], [UserId] FROM [Schedule] WHERE [Name] = @Name AND [UserId] = @FilteredId;",
+                        @"
+                            SELECT 
+                            [Id], [Name], [UserId] 
+                            FROM [Schedule] 
+                            WHERE [Name] =  @Name AND [UserId] = @FilteredId;",
                         request
                     );
                     break;

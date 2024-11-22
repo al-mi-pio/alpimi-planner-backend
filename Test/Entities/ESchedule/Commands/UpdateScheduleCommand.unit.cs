@@ -26,6 +26,8 @@ namespace AlpimiTest.Entities.ESchedule.Commands
         [Fact]
         public async Task ThrowsErrorWhenURLAlreadyExists()
         {
+            var dto = MockData.GetUpdateScheduleDTODetails();
+
             var schedule = MockData.GetScheduleDetails();
 
             _dbService
@@ -34,7 +36,7 @@ namespace AlpimiTest.Entities.ESchedule.Commands
 
             var updateScheduleCommand = new UpdateScheduleCommand(
                 schedule.Id,
-                schedule.Name,
+                dto,
                 new Guid(),
                 "Admin"
             );
@@ -53,7 +55,7 @@ namespace AlpimiTest.Entities.ESchedule.Commands
                 JsonConvert.SerializeObject(
                     new ErrorObject[]
                     {
-                        new ErrorObject("There is already a Schedule with the name Plan_Marka")
+                        new ErrorObject("There is already a Schedule with the name Updated_plan")
                     }
                 ),
                 JsonConvert.SerializeObject(result.errors)

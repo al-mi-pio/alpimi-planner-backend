@@ -1,5 +1,6 @@
 ﻿using AlpimiAPI.Database;
 using AlpimiAPI.Entities.EAuth;
+using AlpimiAPI.Entities.EAuth.DTO;
 using AlpimiAPI.Entities.EAuth.Queries;
 using AlpimiAPI.Entities.EUser;
 using AlpimiAPI.Responses;
@@ -33,7 +34,9 @@ namespace AlpimiTest.Entities.EAuth.Queries
                 .Setup(s => s.Get<User>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync((User?)null);
 
-            var loginCommand = new LoginQuery("wrongLogin", "sssSSS1!");
+            var loginCommand = new LoginQuery(
+                new LoginDTO() { Login = "wrongLogin", Password = "sssSSS1!" }
+            );
 
             var loginHandler = new LoginHandler(_dbService.Object, _str.Object);
 
@@ -60,7 +63,9 @@ namespace AlpimiTest.Entities.EAuth.Queries
                 .Setup(s => s.Get<User>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(auth.User);
 
-            var loginCommand = new LoginQuery(auth.User.Login, "wrongPassword");
+            var loginCommand = new LoginQuery(
+                new LoginDTO() { Login = auth.User.Login, Password = "wrongPassword" }
+            );
 
             var loginHandler = new LoginHandler(_dbService.Object, _str.Object);
 

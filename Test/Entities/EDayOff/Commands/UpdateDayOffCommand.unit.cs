@@ -27,6 +27,9 @@ namespace AlpimiTest.Entities.EDayOff.Commands
         [Fact]
         public async Task ThrowsErrorWhenOutOfRangeDateIsProvided()
         {
+            var dto = MockData.GetUpdateDayOffDTODetails();
+            dto.From = new DateTime(1000, 1, 1);
+
             var scheduleSettings = MockData.GetScheduleSettingsDetails();
             var dayOff = MockData.GetDayOffDetails();
 
@@ -37,14 +40,7 @@ namespace AlpimiTest.Entities.EDayOff.Commands
                 .Setup(s => s.Get<DayOff>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(dayOff);
 
-            var updateDayOffCommand = new UpdateDayOffCommand(
-                new Guid(),
-                "name",
-                new DateTime(1000, 1, 1),
-                null,
-                new Guid(),
-                "Admin"
-            );
+            var updateDayOffCommand = new UpdateDayOffCommand(new Guid(), dto, new Guid(), "Admin");
 
             var updateDayOffHandler = new UpdateDayOffHandler(_dbService.Object, _str.Object);
 
@@ -59,19 +55,16 @@ namespace AlpimiTest.Entities.EDayOff.Commands
         [Fact]
         public async Task ThrowsErrorWhenDateStartIsAfterDateEnd()
         {
+            var dto = MockData.GetUpdateDayOffDTODetails();
+            dto.From = new DateTime(2020, 1, 1);
+            dto.To = new DateTime(2019, 1, 1);
+
             var scheduleSettings = MockData.GetScheduleSettingsDetails();
             _dbService
                 .Setup(s => s.Get<ScheduleSettings>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(scheduleSettings);
 
-            var updateDayOffCommand = new UpdateDayOffCommand(
-                new Guid(),
-                "Bob",
-                new DateTime(2020, 1, 1),
-                new DateTime(2019, 1, 1),
-                new Guid(),
-                "User"
-            );
+            var updateDayOffCommand = new UpdateDayOffCommand(new Guid(), dto, new Guid(), "User");
 
             var updateDayOffHandler = new UpdateDayOffHandler(_dbService.Object, _str.Object);
 

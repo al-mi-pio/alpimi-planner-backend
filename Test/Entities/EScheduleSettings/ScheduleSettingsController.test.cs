@@ -58,9 +58,9 @@ namespace AlpimiTest.Entities.EScheduleSettings
 
             Assert.Equal(
                 jsonResponse!.Content.SchoolYearStart,
-                updateScheduleSettings.SchooldYearStart
+                updateScheduleSettings.SchoolYearStart
             );
-            Assert.Equal(jsonResponse.Content.SchoolYearEnd, updateScheduleSettings.SchooldYearEnd);
+            Assert.Equal(jsonResponse.Content.SchoolYearEnd, updateScheduleSettings.SchoolYearEnd);
             Assert.Equal(jsonResponse.Content.SchoolHour, updateScheduleSettings.SchoolHour);
         }
 

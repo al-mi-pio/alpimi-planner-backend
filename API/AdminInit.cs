@@ -31,7 +31,11 @@ namespace AlpimiAPI
             try
             {
                 admins = await _dbService.Get<string>(
-                    "SELECT [Role] FROM [Auth] WHERE [Role] = 'Admin';",
+                    @"
+                        SELECT 
+                        [Role]
+                        FROM [Auth]
+                        WHERE [Role] = 'Admin';",
                     ""
                 );
             }
@@ -81,14 +85,15 @@ namespace AlpimiAPI
                     } while (password != Console.ReadLine() || password == "");
 
                     var userId = await _dbService.Post<Guid>(
-                        @"
-                    INSERT INTO [User] ([Id],[Login],[CustomURL])
-                    OUTPUT INSERTED.Id                    
-                    VALUES ('"
-                            + Guid.NewGuid()
-                            + "','"
-                            + login
-                            + "',NULL);",
+                        $@"
+                            INSERT INTO [User] 
+                            ([Id],[Login],[CustomURL])
+                            OUTPUT 
+                            INSERTED.Id                    
+                            VALUES (
+                            '{Guid.NewGuid()}',
+                            '{login}',
+                            NULL);",
                         ""
                     );
                     byte[] salt = RandomNumberGenerator.GetBytes(16);
@@ -101,18 +106,17 @@ namespace AlpimiAPI
                     );
 
                     await _dbService.Post<Guid>(
-                        @"
-                    INSERT INTO [Auth] ([Id],[Password],[Salt],[Role],[UserId])
-                    OUTPUT INSERTED.UserId                    
-                    VALUES ('"
-                            + Guid.NewGuid()
-                            + "','"
-                            + Convert.ToBase64String(hash)
-                            + "','"
-                            + Convert.ToBase64String(salt)
-                            + "','Admin','"
-                            + userId
-                            + "');",
+                        $@"
+                            INSERT INTO [Auth] 
+                            ([Id],[Password],[Salt],[Role],[UserId])
+                            OUTPUT 
+                            INSERTED.UserId                    
+                            VALUES (
+                            '{Guid.NewGuid()}',
+                            '{Convert.ToBase64String(hash)}',
+                            '{Convert.ToBase64String(salt)}',
+                            'Admin',
+                            '{userId}');",
                         ""
                     );
                     Console.WriteLine(_str["success"]);

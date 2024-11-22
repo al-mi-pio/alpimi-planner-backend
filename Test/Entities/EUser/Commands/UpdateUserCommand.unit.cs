@@ -26,19 +26,15 @@ namespace AlpimiTest.Entities.EUser.Commands
         [Fact]
         public async Task ThrowsErrorWhenURLAlreadyExists()
         {
+            var dto = MockData.GetUpdateUserDTODetails();
+
             var user = MockData.GetUserDetails();
 
             _dbService
                 .Setup(s => s.Get<string>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(user.CustomURL);
 
-            var updateUserCommand = new UpdateUserCommand(
-                user.Id,
-                user.Login,
-                user.CustomURL,
-                new Guid(),
-                "Admin"
-            );
+            var updateUserCommand = new UpdateUserCommand(user.Id, dto, new Guid(), "Admin");
 
             var updateUserHandler = new UpdateUserHandler(_dbService.Object, _str.Object);
 
@@ -51,7 +47,7 @@ namespace AlpimiTest.Entities.EUser.Commands
                 JsonConvert.SerializeObject(
                     new ErrorObject[]
                     {
-                        new ErrorObject("There is already a URL with the name 44f")
+                        new ErrorObject("There is already a URL with the name Updated_URL")
                     }
                 ),
                 JsonConvert.SerializeObject(result.errors)

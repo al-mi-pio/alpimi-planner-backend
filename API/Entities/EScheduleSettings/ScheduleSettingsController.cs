@@ -37,28 +37,21 @@ namespace AlpimiAPI.Entities.EScheduleSettings
         /// <remarks>
         /// - JWT token is required
         /// </remarks>
-        [HttpPatch("{id}")]
+        [HttpPatch("{scheduleId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
         [ProducesResponseType(typeof(ApiErrorResponse), 404)]
         public async Task<ActionResult<ApiGetResponse<ScheduleSettings>>> Patch(
             [FromBody] UpdateScheduleSettingsDTO request,
-            [FromRoute] Guid id,
+            [FromRoute] Guid scheduleId,
             [FromHeader] string Authorization
         )
         {
             Guid UserId = Privileges.GetUserIdFromToken(Authorization);
             string Role = Privileges.GetUserRoleFromToken(Authorization);
 
-            var command = new UpdateScheduleSettingsCommand(
-                id,
-                request.SchoolHour,
-                request.SchooldYearStart,
-                request.SchooldYearEnd,
-                UserId,
-                Role
-            );
+            var command = new UpdateScheduleSettingsCommand(scheduleId, request, UserId, Role);
             try
             {
                 var result = await _mediator.Send(command);
@@ -145,14 +138,14 @@ namespace AlpimiAPI.Entities.EScheduleSettings
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
         [ProducesResponseType(typeof(ApiErrorResponse), 404)]
         public async Task<ActionResult<ApiGetResponse<Schedule>>> Get(
-            [FromRoute] Guid Id,
+            [FromRoute] Guid id,
             [FromHeader] string Authorization
         )
         {
             Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
             string privileges = Privileges.GetUserRoleFromToken(Authorization);
 
-            var query = new GetScheduleSettingsQuery(Id, filteredId, privileges);
+            var query = new GetScheduleSettingsQuery(id, filteredId, privileges);
             try
             {
                 ScheduleSettings? result = await _mediator.Send(query);

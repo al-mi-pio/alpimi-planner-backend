@@ -3,7 +3,6 @@ using AlpimiAPI.Entities.EDayOff.DTO;
 using AlpimiAPI.Entities.EScheduleSettings;
 using AlpimiAPI.Entities.EScheduleSettings.Queries;
 using AlpimiAPI.Responses;
-using AlpimiAPI.Utilities;
 using alpimi_planner_backend.API.Locales;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -35,7 +34,8 @@ namespace AlpimiAPI.Entities.EDayOff.Commands
                     SELECT
                     ss.[Id], [SchoolHour], [SchoolYearStart], [SchoolYearEnd], [ScheduleId]
                     FROM [ScheduleSettings] ss
-                    INNER JOIN [DayOff] do ON do.[ScheduleSettingsId]=ss.[Id] WHERE do.[Id]=@Id ;",
+                    INNER JOIN [DayOff] do ON do.[ScheduleSettingsId]=ss.[Id]
+                    WHERE do.[Id]=@Id ;",
                 request
             );
 
@@ -82,10 +82,16 @@ namespace AlpimiAPI.Entities.EDayOff.Commands
                     dayOff = await _dbService.Update<DayOff?>(
                         $@"
                             UPDATE [DayOff] 
-                            SET [Name]=CASE WHEN @Name IS NOT NULL THEN @Name ELSE [Name] END,
+                            SET 
+                            [Name]=CASE WHEN @Name IS NOT NULL THEN @Name ELSE [Name] END,
                             [From]=CASE WHEN @From IS NOT NULL THEN @From ELSE [From] END,
                             [To]=CASE WHEN @To IS NOT NULL THEN @To ELSE [To] END
-                            OUTPUT INSERTED.[Id], INSERTED.[Name],INSERTED.[From],INSERTED.[To],INSERTED.[ScheduleSettingsId]
+                            OUTPUT
+                            INSERTED.[Id], 
+                            INSERTED.[Name],
+                            INSERTED.[From],
+                            INSERTED.[To],
+                            INSERTED.[ScheduleSettingsId]
                             WHERE [Id] = '{request.Id}';",
                         request.dto
                     );

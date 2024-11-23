@@ -1,4 +1,9 @@
-﻿namespace alpimi_planner_backend.API.Entities.ELessonPeriod.DTO
+﻿namespace AlpimiAPI.Entities.ELessonPeriod.DTO
 {
-    public class UpdateLessonPeriodDTO { }
+    public class UpdateLessonPeriodDTO
+    {
+        public TimeOnly? Start { get; set; }
+
+        public TimeOnly? Finish { get; set; }
+    }
 }

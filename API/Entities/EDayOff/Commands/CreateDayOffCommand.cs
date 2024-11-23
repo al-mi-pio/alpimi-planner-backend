@@ -29,20 +29,13 @@ namespace AlpimiAPI.Entities.EDayOff.Commands
             CancellationToken cancellationToken
         )
         {
-            DateTime to = new DateTime();
-            if (request.dto.NumberOfDays == null)
+            if (request.dto.To == null)
             {
-                to = request.dto.Date;
+                request.dto.To = request.dto.From;
             }
-            else if (request.dto.NumberOfDays < 1)
+            else if (request.dto.To < request.dto.From)
             {
-                throw new ApiErrorException(
-                    [new ErrorObject(_str["badParameter", "NumberOfDays"])]
-                );
-            }
-            else
-            {
-                to = request.dto.Date.AddDays(Convert.ToDouble(request.dto.NumberOfDays - 1));
+                throw new ApiErrorException([new ErrorObject(_str["scheduleDate"])]);
             }
 
             GetScheduleSettingsByScheduleIdHandler getScheduleSettingsByScheduleIdHandler =
@@ -66,8 +59,8 @@ namespace AlpimiAPI.Entities.EDayOff.Commands
                 );
             }
             if (
-                request.dto.Date < scheduleSettings.Value!.SchoolYearStart
-                || to > scheduleSettings.Value.SchoolYearEnd
+                request.dto.From < scheduleSettings.Value!.SchoolYearStart
+                || request.dto.To > scheduleSettings.Value.SchoolYearEnd
             )
             {
                 throw new ApiErrorException(
@@ -92,8 +85,8 @@ namespace AlpimiAPI.Entities.EDayOff.Commands
                     VALUES (
                     '{request.Id}',
                     @Name,
-                    @Date,
-                    '{to.ToString("yyyy-MM-dd HH:mm:ss")}',
+                    @From,
+                    @To,
                     '{scheduleSettings.Value.Id}');",
                 request.dto
             );

@@ -59,8 +59,8 @@ namespace AlpimiTest.TestUtilities
             {
                 Id = new Guid(),
                 SchoolHour = 10,
-                SchoolYearStart = new DateTime(2020, 11, 19),
-                SchoolYearEnd = new DateTime(2025, 11, 19),
+                SchoolYearStart = new DateOnly(2020, 11, 19),
+                SchoolYearEnd = new DateOnly(2025, 11, 19),
                 ScheduleId = new Guid(),
                 Schedule = GetScheduleDetails()
             };
@@ -74,8 +74,8 @@ namespace AlpimiTest.TestUtilities
             {
                 Id = new Guid(),
                 Name = "Marek_Fest",
-                From = new DateTime(2022, 12, 12),
-                To = new DateTime(2025, 12, 12),
+                From = new DateOnly(2022, 12, 12),
+                To = new DateOnly(2023, 12, 12),
                 ScheduleSettingsId = new Guid(),
                 ScheduleSettings = null!
             };
@@ -115,8 +115,8 @@ namespace AlpimiTest.TestUtilities
             return new UpdateScheduleSettingsDTO()
             {
                 SchoolHour = 29,
-                SchoolYearStart = new DateTime(2020, 10, 1),
-                SchoolYearEnd = new DateTime(2022, 1, 10)
+                SchoolYearStart = new DateOnly(2020, 10, 1),
+                SchoolYearEnd = new DateOnly(2022, 1, 10)
             };
         }
 
@@ -131,8 +131,8 @@ namespace AlpimiTest.TestUtilities
             {
                 Name = "Second_Name",
                 SchoolHour = 431,
-                SchoolYearStart = new DateTime(2022, 11, 19),
-                SchoolYearEnd = new DateTime(2025, 11, 19),
+                SchoolYearStart = new DateOnly(2022, 11, 19),
+                SchoolYearEnd = new DateOnly(2025, 11, 19),
             };
         }
 
@@ -158,8 +158,8 @@ namespace AlpimiTest.TestUtilities
             return new CreateDayOffDTO()
             {
                 Name = dayOff.Name,
-                Date = dayOff.From,
-                NumberOfDays = 2,
+                From = dayOff.From,
+                To = dayOff.To,
                 ScheduleId = scheduleId
             };
         }
@@ -170,7 +170,7 @@ namespace AlpimiTest.TestUtilities
             return new CreateDayOffDTO()
             {
                 Name = "second_name",
-                Date = new DateTime(2021, 8, 8),
+                From = new DateOnly(2021, 8, 8),
                 ScheduleId = scheduleId
             };
         }
@@ -179,8 +179,8 @@ namespace AlpimiTest.TestUtilities
         {
             return new UpdateDayOffDTO()
             {
-                From = new DateTime(2023, 11, 22),
-                To = new DateTime(2023, 11, 23),
+                From = new DateOnly(2023, 11, 22),
+                To = new DateOnly(2023, 11, 23),
                 Name = "Inny_fest"
             };
         }

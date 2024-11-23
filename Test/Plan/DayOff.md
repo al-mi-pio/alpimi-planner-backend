@@ -19,8 +19,8 @@
 - [ThrowsErrorWhenWrongScheduleIdIsGiven()](../Entities/EDayOff/CreateDayOffCommand.unit.cs) - **unit** 
   Check if returns an error when incorrect id is provided
 
-- [ThrowsErrorWhenNumberOfDaysIsIncorrect()](../Entities/EDayOff/CreateDayOffCommand.unit.cs) - **unit** 
-  Check if returns an error when incorrect number of days is provided
+- [ThrowsErrorWhenDateStartIsAfterDateEnd()](../Entities/EDayOff/CreateDayOffCommand.unit.cs) - **unit** 
+  Check if returns an error when start date is after end date
 
 ## `GET` `api/DayOff`
 

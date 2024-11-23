@@ -17,7 +17,7 @@
   Check if returns an error when a taken name is provided
 
 - [ThrowsErrorWhenDateStartIsAfterDateEnd()](../Entities/ESchedule/Commands/CreateScheduleCommand.unit.cs) - **unit**  
-  Check if returns an error when incorrect dates are provided
+  Check if returns an error when start date is after end date
 
 ## `GET` `api/Schedule`
 

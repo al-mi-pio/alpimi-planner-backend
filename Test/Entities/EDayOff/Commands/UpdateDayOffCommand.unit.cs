@@ -28,7 +28,7 @@ namespace AlpimiTest.Entities.EDayOff.Commands
         public async Task ThrowsErrorWhenOutOfRangeDateIsProvided()
         {
             var dto = MockData.GetUpdateDayOffDTODetails();
-            dto.From = new DateTime(1000, 1, 1);
+            dto.From = new DateOnly(1000, 1, 1);
 
             var scheduleSettings = MockData.GetScheduleSettingsDetails();
             var dayOff = MockData.GetDayOffDetails();
@@ -56,8 +56,8 @@ namespace AlpimiTest.Entities.EDayOff.Commands
         public async Task ThrowsErrorWhenDateStartIsAfterDateEnd()
         {
             var dto = MockData.GetUpdateDayOffDTODetails();
-            dto.From = new DateTime(2020, 1, 1);
-            dto.To = new DateTime(2019, 1, 1);
+            dto.From = new DateOnly(2020, 1, 1);
+            dto.To = new DateOnly(2019, 1, 1);
 
             var scheduleSettings = MockData.GetScheduleSettingsDetails();
             _dbService

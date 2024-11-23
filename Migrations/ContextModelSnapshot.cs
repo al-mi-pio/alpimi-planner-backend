@@ -57,7 +57,7 @@ namespace alpimi_planner_backend.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("From")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("DATE");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -67,7 +67,7 @@ namespace alpimi_planner_backend.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("To")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("DATE");
 
                     b.HasKey("Id");
 
@@ -109,10 +109,10 @@ namespace alpimi_planner_backend.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("SchoolYearEnd")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("DATE");
 
                     b.Property<DateTime>("SchoolYearStart")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("DATE");
 
                     b.HasKey("Id");
 

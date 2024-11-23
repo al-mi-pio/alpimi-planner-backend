@@ -162,4 +162,10 @@
   <data name="dateOutOfRange" xml:space="preserve">
     <value>Data musi mieścić się w zakresie od {0} do {1}</value>
   </data>
+  <data name="scheduleTime" xml:space="preserve">
+    <value>Czas zakończenia nie może być przed czasem rozpoczęcia</value>
+  </data>
+  <data name="timeOverlap" xml:space="preserve">
+    <value>Nakładający się czas</value>
+  </data>
 </root>

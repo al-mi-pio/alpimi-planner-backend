@@ -162,4 +162,10 @@
   <data name="dateOutOfRange" xml:space="preserve">
     <value>Date must be in between {0} and {1}</value>
   </data>
+  <data name="scheduleTime" xml:space="preserve">
+    <value>The end time cannot happen before the start time</value>
+  </data>
+  <data name="timeOverlap" xml:space="preserve">
+    <value>Overlapping time</value>
+  </data>
 </root>

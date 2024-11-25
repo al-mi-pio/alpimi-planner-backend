@@ -1,4 +1,5 @@
 ﻿using AlpimiAPI.Database;
+using AlpimiAPI.Entities.EDayOff;
 using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Entities.ESchedule.Queries;
 using AlpimiAPI.Entities.EScheduleSettings.DTO;
@@ -56,6 +57,28 @@ namespace AlpimiAPI.Entities.EScheduleSettings.Commands
             )
             {
                 throw new ApiErrorException([new ErrorObject(_str["scheduleDate"])]);
+            }
+
+            request.dto.SchoolYearStart =
+                request.dto.SchoolYearStart
+                ?? scheduleSettingsSchoolYearPeriod.Value!.SchoolYearStart;
+            request.dto.SchoolYearEnd =
+                request.dto.SchoolYearEnd ?? scheduleSettingsSchoolYearPeriod.Value!.SchoolYearEnd;
+
+            var daysOffOutOfRange = await _dbService.GetAll<Guid>(
+                $@"
+                    SELECT
+                    do.[Id] 
+                    FROM [DayOff] do
+                    INNER JOIN [ScheduleSettings] ss ON ss.[Id] = do.[ScheduleSettingsId]
+                    WHERE ss.[ScheduleId] = '{request.ScheduleId}'
+                    AND (do.[To] > @SchoolYearEnd OR do.[From] < @SchoolYearStart)",
+                request.dto
+            );
+
+            if (daysOffOutOfRange!.Any())
+            {
+                throw new ApiErrorException([new ErrorObject(_str["outOfRange"])]);
             }
 
             ScheduleSettings? scheduleSettings;

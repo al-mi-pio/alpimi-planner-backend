@@ -285,6 +285,9 @@ namespace AlpimiTest.Entities.ETeacher
                 MockData.GetUpdateTeacherDTODetails()
             );
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+
+            response = await _client.GetAsync($"/api/Teacher/{new Guid()}");
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         }
 
         [Fact]
@@ -314,6 +317,9 @@ namespace AlpimiTest.Entities.ETeacher
                 $"/api/Teacher/{new Guid()}",
                 MockData.GetUpdateTeacherDTODetails()
             );
+            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
+
+            response = await _client.GetAsync($"/api/Teacher/{new Guid()}");
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
         }
     }

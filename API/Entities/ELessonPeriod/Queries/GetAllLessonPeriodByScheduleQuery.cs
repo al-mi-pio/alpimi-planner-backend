@@ -9,7 +9,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 
-namespace AlpimiAPI.Entities.ELessonPeriod.Quereis
+namespace AlpimiAPI.Entities.ELessonPeriod.Queries
 {
     public record GetAllLessonPeriodByScheduleQuery(
         Guid ScheduleId,

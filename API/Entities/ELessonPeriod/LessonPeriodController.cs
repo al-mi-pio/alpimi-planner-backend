@@ -1,6 +1,6 @@
 ﻿using AlpimiAPI.Entities.ELessonPeriod.Commands;
 using AlpimiAPI.Entities.ELessonPeriod.DTO;
-using AlpimiAPI.Entities.ELessonPeriod.Quereis;
+using AlpimiAPI.Entities.ELessonPeriod.Queries;
 using AlpimiAPI.Entities.ELessonPerioid;
 using AlpimiAPI.Responses;
 using AlpimiAPI.Utilities;

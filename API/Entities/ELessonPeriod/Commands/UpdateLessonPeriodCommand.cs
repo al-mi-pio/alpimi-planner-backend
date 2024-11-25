@@ -52,7 +52,7 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Commands
                 return null;
             }
 
-            var originaLessonPeriod = await _dbService.Get<LessonPeriod?>(
+            var originalLessonPeriod = await _dbService.Get<LessonPeriod?>(
                 @"
                     SELECT 
                     [Id],[Start],[Finish],[ScheduleSettingsId]
@@ -62,15 +62,15 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Commands
             );
 
             if (
-                (request.dto.Start ?? originaLessonPeriod!.Start)
-                > (request.dto.Finish ?? originaLessonPeriod!.Finish)
+                (request.dto.Start ?? originalLessonPeriod!.Start)
+                > (request.dto.Finish ?? originalLessonPeriod!.Finish)
             )
             {
                 throw new ApiErrorException([new ErrorObject(_str["scheduleDate"])]);
             }
 
-            request.dto.Start = request.dto.Start ?? originaLessonPeriod!.Start;
-            request.dto.Finish = request.dto.Finish ?? originaLessonPeriod!.Finish;
+            request.dto.Start = request.dto.Start ?? originalLessonPeriod!.Start;
+            request.dto.Finish = request.dto.Finish ?? originalLessonPeriod!.Finish;
 
             var lessonPeriodOverlap = await _dbService.GetAll<Guid>(
                 $@"
@@ -79,7 +79,7 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Commands
                     FROM [LessonPeriod] lp
                     INNER JOIN [ScheduleSettings] ss ON ss.[Id] = lp.[ScheduleSettingsId]
                     INNER JOIN [Schedule] s ON s.[Id]=ss.[ScheduleId]
-                    WHERE s.[UserId] = '{request.FilteredId}' AND ss.[Id] = '{originaLessonPeriod!.ScheduleSettingsId}'
+                    WHERE s.[UserId] = '{request.FilteredId}' AND ss.[Id] = '{originalLessonPeriod!.ScheduleSettingsId}'
                     AND lp.[Id] != '{request.Id}'
                     AND ((([Start] > @Start AND [Start] < @Finish) 
                     OR ([Finish] > @Start AND [Finish] < @Finish))

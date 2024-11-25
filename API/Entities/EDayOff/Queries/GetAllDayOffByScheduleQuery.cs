@@ -101,7 +101,7 @@ namespace AlpimiAPI.Entities.EDayOff.Queries
                             FROM [DayOff] do
                             INNER JOIN [ScheduleSettings] ss ON ss.[Id] = do.[ScheduleSettingsId]
                             INNER JOIN [Schedule] s ON s.[Id]=ss.[ScheduleId]
-                            WHERE s.[UserId] = @FilteredId AND ss.[ScheduleId] =@ScheduleId
+                            WHERE s.[UserId] = @FilteredId AND ss.[ScheduleId] = @ScheduleId
                             ",
                         request
                     );

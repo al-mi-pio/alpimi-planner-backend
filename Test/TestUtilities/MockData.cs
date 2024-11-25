@@ -8,6 +8,8 @@ using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Entities.ESchedule.DTO;
 using AlpimiAPI.Entities.EScheduleSettings;
 using AlpimiAPI.Entities.EScheduleSettings.DTO;
+using AlpimiAPI.Entities.ETeacher;
+using AlpimiAPI.Entities.ETeacher.DTO;
 using AlpimiAPI.Entities.EUser;
 using AlpimiAPI.Entities.EUser.DTO;
 
@@ -83,7 +85,18 @@ namespace AlpimiTest.TestUtilities
                 Start = new TimeOnly(10, 00, 00),
                 Finish = new TimeOnly(11, 00, 00),
                 ScheduleSettingsId = new Guid(),
-                ScheduleSettings = null!
+                ScheduleSettings = GetScheduleSettingsDetails()
+            };
+        }
+
+        public static Teacher GetTeacherDetails()
+        {
+            return new Teacher()
+            {
+                Name = "Jac",
+                Surname = "Pie",
+                ScheduleId = new Guid(),
+                Schedule = GetScheduleDetails()
             };
         }
 
@@ -217,6 +230,32 @@ namespace AlpimiTest.TestUtilities
                 Start = new TimeOnly(8, 00, 00),
                 Finish = new TimeOnly(9, 00, 00),
             };
+        }
+
+        public static CreateTeacherDTO GetCreateTeacherDTODetails(Guid scheduleId)
+        {
+            var teacher = GetTeacherDetails();
+            return new CreateTeacherDTO()
+            {
+                Name = teacher.Name,
+                Surname = teacher.Surname,
+                ScheduleId = scheduleId
+            };
+        }
+
+        public static CreateTeacherDTO GetCreateSecondTeacherDTODetails(Guid scheduleId)
+        {
+            return new CreateTeacherDTO()
+            {
+                Name = "Mariusz",
+                Surname = "Mazeowski",
+                ScheduleId = scheduleId
+            };
+        }
+
+        public static UpdateTeacherDTO GetUpdateTeacherDTODetails()
+        {
+            return new UpdateTeacherDTO() { Name = "Pan", Surname = "Jan" };
         }
     }
 }

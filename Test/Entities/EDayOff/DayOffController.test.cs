@@ -144,8 +144,6 @@ namespace AlpimiTest.Entities.EDayOff
                 dayOffUpdateRequest
             );
 
-            var jsonResponse = await response.Content.ReadFromJsonAsync<ApiGetResponse<Schedule>>();
-
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 

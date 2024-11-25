@@ -166,6 +166,6 @@
     <value>The end time cannot happen before the start time</value>
   </data>
   <data name="timeOverlap" xml:space="preserve">
-    <value>Overlapping time</value>
+    <value>Start time and end time cannot overlap</value>
   </data>
 </root>

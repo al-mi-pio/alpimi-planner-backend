@@ -88,7 +88,7 @@ namespace AlpimiTest.Entities.ELessonPeriod.Commands
                     )
             );
 
-            Assert.Contains("Overlapping time", result.errors.First().message);
+            Assert.Equal("Start time and end time cannot overlap", result.errors.First().message);
         }
 
         [Fact]

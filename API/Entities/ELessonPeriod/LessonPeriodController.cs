@@ -56,12 +56,12 @@ namespace AlpimiAPI.Entities.ELessonPeriod
                 filteredId,
                 privileges
             );
-            //try
-            //{
-            var result = await _mediator.Send(command);
-            var response = new ApiGetResponse<Guid>(result);
-            return Ok(response);
-            /*}
+            try
+            {
+                var result = await _mediator.Send(command);
+                var response = new ApiGetResponse<Guid>(result);
+                return Ok(response);
+            }
             catch (ApiErrorException ex)
             {
                 return BadRequest(new ApiErrorResponse(400, ex.errors));
@@ -71,7 +71,7 @@ namespace AlpimiAPI.Entities.ELessonPeriod
                 return BadRequest(
                     new ApiErrorResponse(400, [new ErrorObject(_str["unknownError", ex])])
                 );
-            }*/
+            }
         }
 
         /// <summary>

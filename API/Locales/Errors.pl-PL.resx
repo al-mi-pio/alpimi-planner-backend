@@ -166,6 +166,6 @@
     <value>Czas zakończenia nie może być przed czasem rozpoczęcia</value>
   </data>
   <data name="timeOverlap" xml:space="preserve">
-    <value>Nakładający się czas</value>
+    <value>Czas rozpoczęcia oraz czas zakończenia nie mogą nakładać się na siebie</value>
   </data>
 </root>

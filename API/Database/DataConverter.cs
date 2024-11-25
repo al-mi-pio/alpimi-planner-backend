@@ -8,7 +8,7 @@ public class DateOnlyTypeHandler : SqlMapper.TypeHandler<DateOnly>
         {
             return DateOnly.FromDateTime(dateTime);
         }
-        throw new InvalidCastException($"Unable to cast {value.GetType()} to DateOnly");
+        return new DateOnly(0, 0, 0);
     }
 
     public override void SetValue(System.Data.IDbDataParameter parameter, DateOnly value)
@@ -29,8 +29,7 @@ public class TimeOnlyTypeHandler : SqlMapper.TypeHandler<TimeOnly>
         {
             return TimeOnly.FromDateTime(dateTime);
         }
-
-        throw new InvalidCastException($"Unable to cast {value.GetType()} to TimeOnly");
+        return new TimeOnly(0, 0, 0);
     }
 
     public override void SetValue(System.Data.IDbDataParameter parameter, TimeOnly value)

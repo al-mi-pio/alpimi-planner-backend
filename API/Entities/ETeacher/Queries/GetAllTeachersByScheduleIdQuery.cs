@@ -1,35 +1,35 @@
 ﻿using AlpimiAPI.Database;
-using AlpimiAPI.Entities.EScheduleSettings;
-using AlpimiAPI.Entities.EScheduleSettings.Queries;
+using AlpimiAPI.Entities.ESchedule;
+using AlpimiAPI.Entities.ESchedule.Queries;
 using AlpimiAPI.Responses;
 using alpimi_planner_backend.API.Locales;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 
-namespace AlpimiAPI.Entities.EDayOff.Queries
+namespace AlpimiAPI.Entities.ETeacher.Queries
 {
-    public record GetAllDayOffByScheduleQuery(
+    public record GetAllTeachersByScheduleQuery(
         Guid ScheduleId,
         Guid FilteredId,
         string Role,
         PaginationParams Pagination
-    ) : IRequest<(IEnumerable<DayOff>?, int)>;
+    ) : IRequest<(IEnumerable<Teacher>?, int)>;
 
-    public class GetAllDayOffByScheduleHandler
-        : IRequestHandler<GetAllDayOffByScheduleQuery, (IEnumerable<DayOff>?, int)>
+    public class GetAllTeachersByScheduleHandler
+        : IRequestHandler<GetAllTeachersByScheduleQuery, (IEnumerable<Teacher>?, int)>
     {
         private readonly IDbService _dbService;
         private readonly IStringLocalizer<Errors> _str;
 
-        public GetAllDayOffByScheduleHandler(IDbService dbService, IStringLocalizer<Errors> str)
+        public GetAllTeachersByScheduleHandler(IDbService dbService, IStringLocalizer<Errors> str)
         {
             _dbService = dbService;
             _str = str;
         }
 
-        public async Task<(IEnumerable<DayOff>?, int)> Handle(
-            GetAllDayOffByScheduleQuery request,
+        public async Task<(IEnumerable<Teacher>?, int)> Handle(
+            GetAllTeachersByScheduleQuery request,
             CancellationToken cancellationToken
         )
         {
@@ -51,8 +51,8 @@ namespace AlpimiAPI.Entities.EDayOff.Queries
             }
             if (
                 request.Pagination.SortBy.ToLower() != "id"
-                && request.Pagination.SortBy.ToLower() != "from"
-                && request.Pagination.SortBy.ToLower() != "to"
+                && request.Pagination.SortBy.ToLower() != "name"
+                && request.Pagination.SortBy.ToLower() != "surname"
             )
             {
                 errors.Add(new ErrorObject(_str["badParameter", "SortBy"]));
@@ -63,7 +63,7 @@ namespace AlpimiAPI.Entities.EDayOff.Queries
                 throw new ApiErrorException(errors);
             }
 
-            IEnumerable<DayOff>? daysOff;
+            IEnumerable<Teacher>? teachers;
             int count;
             switch (request.Role)
             {
@@ -72,18 +72,16 @@ namespace AlpimiAPI.Entities.EDayOff.Queries
                         @"
                             SELECT 
                             COUNT(*)
-                            FROM [DayOff] do
-                            INNER JOIN [ScheduleSettings] ss ON ss.[Id] = do.[ScheduleSettingsId]
-                            WHERE ss.[ScheduleId] = @ScheduleId",
+                            FROM [Teacher] 
+                            WHERE [ScheduleId] = @ScheduleId",
                         request
                     );
-                    daysOff = await _dbService.GetAll<DayOff>(
+                    teachers = await _dbService.GetAll<Teacher>(
                         $@"
                             SELECT
-                            do.[Id], do.[Name], [From],[To],[ScheduleSettingsId] 
-                            FROM [DayOff] do
-                            INNER JOIN [ScheduleSettings] ss ON ss.[Id] = do.[ScheduleSettingsId]
-                            WHERE ss.[ScheduleId] = @ScheduleId 
+                            [Id], [Name], [Surname],[ScheduleId] 
+                            FROM [Teacher]
+                            WHERE [ScheduleId] = @ScheduleId 
                             ORDER BY
                             {request.Pagination.SortBy}
                             {request.Pagination.SortOrder}
@@ -98,21 +96,19 @@ namespace AlpimiAPI.Entities.EDayOff.Queries
                     count = await _dbService.Get<int>(
                         @"
                             SELECT COUNT(*)
-                            FROM [DayOff] do
-                            INNER JOIN [ScheduleSettings] ss ON ss.[Id] = do.[ScheduleSettingsId]
-                            INNER JOIN [Schedule] s ON s.[Id]=ss.[ScheduleId]
-                            WHERE s.[UserId] = @FilteredId AND ss.[ScheduleId] = @ScheduleId
+                            FROM [Teacher] t
+                            INNER JOIN [Schedule] s ON s.[Id]=t.[ScheduleId]
+                            WHERE s.[UserId] = @FilteredId AND t.[ScheduleId] = @ScheduleId
                             ",
                         request
                     );
-                    daysOff = await _dbService.GetAll<DayOff>(
+                    teachers = await _dbService.GetAll<Teacher>(
                         $@"
                             SELECT 
-                            do.[Id], do.[Name], [From],[To],[ScheduleSettingsId]
-                            FROM [DayOff] do
-                            INNER JOIN [ScheduleSettings] ss ON ss.[Id] = do.[ScheduleSettingsId]
-                            INNER JOIN [Schedule] s ON s.[Id]=ss.[ScheduleId]
-                            WHERE s.[UserId] = @FilteredId AND ss.[ScheduleId] = @ScheduleId 
+                            t.[Id], t.[Name], [Surname],[ScheduleId] 
+                            FROM [Teacher] t
+                            INNER JOIN [Schedule] s ON s.[Id]=t.[ScheduleId]
+                            WHERE s.[UserId] = @FilteredId AND t.[ScheduleId] = @ScheduleId 
                             ORDER BY
                             {request.Pagination.SortBy}
                             {request.Pagination.SortOrder}
@@ -124,27 +120,24 @@ namespace AlpimiAPI.Entities.EDayOff.Queries
                     );
                     break;
             }
-            if (daysOff != null)
+            if (teachers != null)
             {
-                foreach (var dayOff in daysOff)
+                foreach (var teacher in teachers)
                 {
-                    GetScheduleSettingsHandler getScheduleSettingsHandler =
-                        new GetScheduleSettingsHandler(_dbService);
-                    GetScheduleSettingsQuery getScheduleSettingsQuery =
-                        new GetScheduleSettingsQuery(
-                            dayOff.ScheduleSettingsId,
-                            new Guid(),
-                            "Admin"
-                        );
-                    ActionResult<ScheduleSettings?> scheduleSettings =
-                        await getScheduleSettingsHandler.Handle(
-                            getScheduleSettingsQuery,
-                            cancellationToken
-                        );
-                    dayOff.ScheduleSettings = scheduleSettings.Value!;
+                    GetScheduleHandler getScheduleHandler = new GetScheduleHandler(_dbService);
+                    GetScheduleQuery getScheduleQuery = new GetScheduleQuery(
+                        teacher.ScheduleId,
+                        new Guid(),
+                        "Admin"
+                    );
+                    ActionResult<Schedule?> schedule = await getScheduleHandler.Handle(
+                        getScheduleQuery,
+                        cancellationToken
+                    );
+                    teacher.Schedule = schedule.Value!;
                 }
             }
-            return (daysOff, count);
+            return (teachers, count);
         }
     }
 }

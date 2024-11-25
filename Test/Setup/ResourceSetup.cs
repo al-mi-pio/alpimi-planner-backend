@@ -16,7 +16,11 @@ namespace AlpimiTest.TestSetup
             { "invalidPassword", "Invalid password" },
             { "scheduleDate", "The end date cannot happen before the start date" },
             { "timeOverlap", "Start time and end time cannot overlap" },
-            { "scheduleTime", "The end time cannot happen before the start time" }
+            { "scheduleTime", "The end time cannot happen before the start time" },
+            {
+                "outOfRange",
+                "There are days off outside of provided range. Please change them first"
+            }
         };
         private static readonly Dictionary<
             string,

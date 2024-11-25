@@ -55,7 +55,7 @@
 - [GetScheduleThrowsNotFoundWhenWrongIdIsGiven()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
   Check if returns an error when a schedule doesn't exists
 
-- [GetScheduleThrowsNotFoundErrorWhenWrongUserTokenIsGivent()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
+- [GetScheduleThrowsNotFoundErrorWhenWrongUserTokenIsGiven()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
   Check if returns an error when a schedule is inaccessible for user
 
 

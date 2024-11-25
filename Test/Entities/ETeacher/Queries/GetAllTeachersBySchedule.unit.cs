@@ -1,5 +1,5 @@
 ﻿using AlpimiAPI.Database;
-using AlpimiAPI.Entities.ELessonPeriod.Queries;
+using AlpimiAPI.Entities.ETeacher.Queries;
 using AlpimiAPI.Responses;
 using AlpimiTest.TestSetup;
 using alpimi_planner_backend.API.Locales;
@@ -8,15 +8,15 @@ using Moq;
 using Newtonsoft.Json;
 using Xunit;
 
-namespace AlpimiTest.Entities.ELessonPeriod.Queries
+namespace AlpimiTest.Entities.ETeacher.Queries
 {
     [Collection("Sequential Tests")]
-    public class GetAllLessonPeriodByScheduleQueryUnit
+    public class GetAllTeachersByScheduleQueryUnit
     {
         private readonly Mock<IDbService> _dbService = new();
         private readonly Mock<IStringLocalizer<Errors>> _str;
 
-        public GetAllLessonPeriodByScheduleQueryUnit()
+        public GetAllTeachersByScheduleQueryUnit()
         {
             _str = ResourceSetup.Setup();
         }
@@ -24,21 +24,21 @@ namespace AlpimiTest.Entities.ELessonPeriod.Queries
         [Fact]
         public async Task ThrowsErrorWhenIncorrectPerPageIsGiven()
         {
-            var getAllLessonPeriodByScheduleQuery = new GetAllLessonPeriodByScheduleQuery(
+            var getAllTeacherByScheduleQuery = new GetAllTeachersByScheduleQuery(
                 new Guid(),
                 new Guid(),
                 "Admin",
                 new PaginationParams(-20, 0, "Id", "ASC")
             );
-            var getAllLessonPeriodByScheduleHandler = new GetAllLessonPeriodByScheduleHandler(
+            var getAllTeacherByScheduleHandler = new GetAllTeachersByScheduleHandler(
                 _dbService.Object,
                 _str.Object
             );
 
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
-                    await getAllLessonPeriodByScheduleHandler.Handle(
-                        getAllLessonPeriodByScheduleQuery,
+                    await getAllTeacherByScheduleHandler.Handle(
+                        getAllTeacherByScheduleQuery,
                         new CancellationToken()
                     )
             );
@@ -54,21 +54,21 @@ namespace AlpimiTest.Entities.ELessonPeriod.Queries
         [Fact]
         public async Task ThrowsErrorWhenIncorrectPageIsGiven()
         {
-            var getAllLessonPeriodByScheduleQuery = new GetAllLessonPeriodByScheduleQuery(
+            var getAllTeacherByScheduleQuery = new GetAllTeachersByScheduleQuery(
                 new Guid(),
                 new Guid(),
                 "Admin",
                 new PaginationParams(20, -1, "Id", "ASC")
             );
-            var getAllLessonPeriodByScheduleHandler = new GetAllLessonPeriodByScheduleHandler(
+            var getAllTeacherByScheduleHandler = new GetAllTeachersByScheduleHandler(
                 _dbService.Object,
                 _str.Object
             );
 
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
-                    await getAllLessonPeriodByScheduleHandler.Handle(
-                        getAllLessonPeriodByScheduleQuery,
+                    await getAllTeacherByScheduleHandler.Handle(
+                        getAllTeacherByScheduleQuery,
                         new CancellationToken()
                     )
             );
@@ -84,21 +84,21 @@ namespace AlpimiTest.Entities.ELessonPeriod.Queries
         [Fact]
         public async Task ThrowsErrorWhenIncorrectSortByIsGiven()
         {
-            var getAllLessonPeriodByScheduleQuery = new GetAllLessonPeriodByScheduleQuery(
+            var getAllTeacherByScheduleQuery = new GetAllTeachersByScheduleQuery(
                 new Guid(),
                 new Guid(),
                 "Admin",
                 new PaginationParams(20, 0, "wrong", "ASC")
             );
-            var getAllLessonPeriodByScheduleHandler = new GetAllLessonPeriodByScheduleHandler(
+            var getAllTeacherByScheduleHandler = new GetAllTeachersByScheduleHandler(
                 _dbService.Object,
                 _str.Object
             );
 
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
-                    await getAllLessonPeriodByScheduleHandler.Handle(
-                        getAllLessonPeriodByScheduleQuery,
+                    await getAllTeacherByScheduleHandler.Handle(
+                        getAllTeacherByScheduleQuery,
                         new CancellationToken()
                     )
             );
@@ -114,21 +114,21 @@ namespace AlpimiTest.Entities.ELessonPeriod.Queries
         [Fact]
         public async Task ThrowsErrorWhenIncorrectSortOrderIsGiven()
         {
-            var getAllLessonPeriodByScheduleQuery = new GetAllLessonPeriodByScheduleQuery(
+            var getAllTeacherByScheduleQuery = new GetAllTeachersByScheduleQuery(
                 new Guid(),
                 new Guid(),
                 "Admin",
                 new PaginationParams(20, 0, "Id", "wrong")
             );
-            var getAllLessonPeriodByScheduleHandler = new GetAllLessonPeriodByScheduleHandler(
+            var getAllTeacherByScheduleHandler = new GetAllTeachersByScheduleHandler(
                 _dbService.Object,
                 _str.Object
             );
 
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
-                    await getAllLessonPeriodByScheduleHandler.Handle(
-                        getAllLessonPeriodByScheduleQuery,
+                    await getAllTeacherByScheduleHandler.Handle(
+                        getAllTeacherByScheduleQuery,
                         new CancellationToken()
                     )
             );
@@ -144,21 +144,21 @@ namespace AlpimiTest.Entities.ELessonPeriod.Queries
         [Fact]
         public async Task ThrowsMultipleErrorMessages()
         {
-            var getAllLessonPeriodByScheduleQuery = new GetAllLessonPeriodByScheduleQuery(
+            var getAllTeacherByScheduleQuery = new GetAllTeachersByScheduleQuery(
                 new Guid(),
                 new Guid(),
                 "Admin",
                 new PaginationParams(20, 0, "wrong", "wrong")
             );
-            var getAllLessonPeriodByScheduleHandler = new GetAllLessonPeriodByScheduleHandler(
+            var getAllTeacherByScheduleHandler = new GetAllTeachersByScheduleHandler(
                 _dbService.Object,
                 _str.Object
             );
 
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
-                    await getAllLessonPeriodByScheduleHandler.Handle(
-                        getAllLessonPeriodByScheduleQuery,
+                    await getAllTeacherByScheduleHandler.Handle(
+                        getAllTeacherByScheduleQuery,
                         new CancellationToken()
                     )
             );

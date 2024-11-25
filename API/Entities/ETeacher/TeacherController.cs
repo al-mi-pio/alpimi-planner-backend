@@ -1,7 +1,7 @@
-﻿using AlpimiAPI.Entities.ELessonPeriod.Commands;
-using AlpimiAPI.Entities.ELessonPeriod.DTO;
-using AlpimiAPI.Entities.ELessonPeriod.Queries;
-using AlpimiAPI.Entities.ELessonPerioid;
+﻿using AlpimiAPI.Entities.ELessonPerioid;
+using AlpimiAPI.Entities.ETeacher.Commands;
+using AlpimiAPI.Entities.ETeacher.DTO;
+using AlpimiAPI.Entities.ETeacher.Queries;
 using AlpimiAPI.Responses;
 using AlpimiAPI.Utilities;
 using alpimi_planner_backend.API.Locales;
@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Localization;
 
-namespace AlpimiAPI.Entities.ELessonPeriod
+namespace AlpimiAPI.Entities.ETeacher
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -21,19 +21,19 @@ namespace AlpimiAPI.Entities.ELessonPeriod
     [Produces("application/json")]
     [ProducesResponseType(typeof(ApiErrorResponse), 429)]
     [EnableRateLimiting("FixedWindow")]
-    public class LessonPeriodController : ControllerBase
+    public class TeacherController : ControllerBase
     {
         private readonly IMediator _mediator;
         private readonly IStringLocalizer<Errors> _str;
 
-        public LessonPeriodController(IMediator mediator, IStringLocalizer<Errors> str)
+        public TeacherController(IMediator mediator, IStringLocalizer<Errors> str)
         {
             _mediator = mediator;
             _str = str;
         }
 
         /// <summary>
-        /// Creates a LessonPeriod
+        /// Creates a Teacher
         /// </summary>
         /// <remarks>
         /// - JWT token is required
@@ -43,19 +43,14 @@ namespace AlpimiAPI.Entities.ELessonPeriod
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
         public async Task<ActionResult<ApiGetResponse<Guid>>> Post(
-            [FromBody] CreateLessonPeriodDTO request,
+            [FromBody] CreateTeacherDTO request,
             [FromHeader] string Authorization
         )
         {
             Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
             string privileges = Privileges.GetUserRoleFromToken(Authorization);
 
-            var command = new CreateLessonPeriodCommand(
-                Guid.NewGuid(),
-                request,
-                filteredId,
-                privileges
-            );
+            var command = new CreateTeacherCommand(Guid.NewGuid(), request, filteredId, privileges);
             try
             {
                 var result = await _mediator.Send(command);
@@ -75,7 +70,7 @@ namespace AlpimiAPI.Entities.ELessonPeriod
         }
 
         /// <summary>
-        /// Deletes a LessonPeriod
+        /// Deletes a Teacher
         /// </summary>
         /// <remarks>
         /// - JWT is required
@@ -91,7 +86,7 @@ namespace AlpimiAPI.Entities.ELessonPeriod
             Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
             string privileges = Privileges.GetUserRoleFromToken(Authorization);
 
-            var command = new DeleteLessonPeriodCommand(id, filteredId, privileges);
+            var command = new DeleteTeacherCommand(id, filteredId, privileges);
             try
             {
                 await _mediator.Send(command);
@@ -107,7 +102,7 @@ namespace AlpimiAPI.Entities.ELessonPeriod
         }
 
         /// <summary>
-        /// Updates a LessonPeriod
+        /// Updates a Teacher
         /// </summary>
         /// <remarks>
         /// - JWT token is required
@@ -117,8 +112,8 @@ namespace AlpimiAPI.Entities.ELessonPeriod
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
         [ProducesResponseType(typeof(ApiErrorResponse), 404)]
-        public async Task<ActionResult<ApiGetResponse<LessonPeriod>>> Patch(
-            [FromBody] UpdateLessonPeriodDTO request,
+        public async Task<ActionResult<ApiGetResponse<Teacher>>> Patch(
+            [FromBody] UpdateTeacherDTO request,
             [FromRoute] Guid id,
             [FromHeader] string Authorization
         )
@@ -126,20 +121,17 @@ namespace AlpimiAPI.Entities.ELessonPeriod
             Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
             string privileges = Privileges.GetUserRoleFromToken(Authorization);
 
-            var command = new UpdateLessonPeriodCommand(id, request, filteredId, privileges);
+            var command = new UpdateTeacherCommand(id, request, filteredId, privileges);
             try
             {
-                LessonPeriod? result = await _mediator.Send(command);
+                Teacher? result = await _mediator.Send(command);
                 if (result == null)
                 {
                     return NotFound(
-                        new ApiErrorResponse(
-                            404,
-                            [new ErrorObject(_str["notFound", "LessonPeriod"])]
-                        )
+                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "Teacher"])])
                     );
                 }
-                var response = new ApiGetResponse<LessonPeriod>(result);
+                var response = new ApiGetResponse<Teacher>(result);
                 return Ok(response);
             }
             catch (ApiErrorException ex)
@@ -155,7 +147,7 @@ namespace AlpimiAPI.Entities.ELessonPeriod
         }
 
         /// <summary>
-        /// Gets all LessonPeriod by ScheduleId
+        /// Gets all Teachers by ScheduleId
         /// </summary>
         /// <remarks>
         /// - JWT token is required
@@ -164,7 +156,7 @@ namespace AlpimiAPI.Entities.ELessonPeriod
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
-        public async Task<ActionResult<ApiGetAllResponse<IEnumerable<LessonPeriod>>>> GetAll(
+        public async Task<ActionResult<ApiGetAllResponse<IEnumerable<Teacher>>>> GetAll(
             [FromHeader] string Authorization,
             [FromQuery] Guid scheduleId,
             [FromQuery] int perPage = PaginationSettings.perPage,
@@ -176,7 +168,7 @@ namespace AlpimiAPI.Entities.ELessonPeriod
             Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
             string privileges = Privileges.GetUserRoleFromToken(Authorization);
 
-            var query = new GetAllLessonPeriodByScheduleQuery(
+            var query = new GetAllTeachersByScheduleQuery(
                 scheduleId,
                 filteredId,
                 privileges,
@@ -184,8 +176,8 @@ namespace AlpimiAPI.Entities.ELessonPeriod
             );
             try
             {
-                (IEnumerable<LessonPeriod>?, int) result = await _mediator.Send(query);
-                var response = new ApiGetAllResponse<IEnumerable<LessonPeriod>>(
+                (IEnumerable<Teacher>?, int) result = await _mediator.Send(query);
+                var response = new ApiGetAllResponse<IEnumerable<Teacher>>(
                     result.Item1!,
                     new Pagination(result.Item2, perPage, page, sortBy, sortOrder)
                 );
@@ -194,6 +186,47 @@ namespace AlpimiAPI.Entities.ELessonPeriod
             catch (ApiErrorException ex)
             {
                 return BadRequest(new ApiErrorResponse(400, ex.errors));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(
+                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError", ex])])
+                );
+            }
+        }
+
+        /// <summary>
+        /// Gets a Teacher
+        /// </summary>
+        /// <remarks>
+        /// - JWT token is required
+        /// </remarks>
+        [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 400)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 401)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 404)]
+        public async Task<ActionResult<ApiGetResponse<Teacher>>> GetOne(
+            [FromRoute] Guid id,
+            [FromHeader] string Authorization
+        )
+        {
+            Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
+            string privileges = Privileges.GetUserRoleFromToken(Authorization);
+
+            var query = new GetTeacherQuery(id, filteredId, privileges);
+            try
+            {
+                Teacher? result = await _mediator.Send(query);
+                if (result == null)
+                {
+                    return NotFound(
+                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "Teacher"])])
+                    );
+                }
+                var response = new ApiGetResponse<Teacher>(result);
+
+                return Ok(response);
             }
             catch (Exception ex)
             {

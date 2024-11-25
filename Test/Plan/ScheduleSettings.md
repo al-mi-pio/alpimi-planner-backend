@@ -8,7 +8,7 @@
 - [ScheduleSettingsControllerThrowsUnauthorized()](../Entities/EScheduleSettings/ScheduleSettingsController.test.cs) - **integrity**  
   Check if returns an error when token is not provided
 
-## `POST` `api/ScheduleSettings`
+## `PATCH` `api/ScheduleSettings/{scheduleId}`
 
 - [UpdateScheduleSettingsReturnsUpdatedSchedule()](../EntitiesEScheduleSettings/ScheduleSettingsController.test.cs) - **integrity**  			
   Check if returns an updated schedule settings when provided with correct data
@@ -22,8 +22,8 @@
 - [ThrowsErrorWhenDateStartIsAfterDateEnd()](../Entities/EScheduleSettings/Commands/UpdateEScheduleSettingsCommand.unit.cs) - **unit**  
   Check if returns an error when incorrect dates are provided
 
-- [ThrowsErrorWhenNumberOfDaysIsIncorrect()](../Entities/EScheduleSettings/Commands/UpdateEScheduleSettingsCommand.unit.cs) - **unit**  
-  Check if returns an error when a incorrect number of days is provided
+- [ThrowsErrorDaysOffAreOutsideOfDateRange()](../Entities/EScheduleSettings/Commands/UpdateEScheduleSettingsCommand.unit.cs) - **unit**  
+  Check if returns an error when a day off is outside of new range
   
 ## `GET` `api/ScheduleSettings/bySchedule/{scheduleId}`
 

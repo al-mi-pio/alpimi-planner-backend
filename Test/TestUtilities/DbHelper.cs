@@ -3,6 +3,7 @@ using AlpimiAPI.Database;
 using AlpimiAPI.Entities.EDayOff.DTO;
 using AlpimiAPI.Entities.ELessonPeriod.DTO;
 using AlpimiAPI.Entities.ESchedule.DTO;
+using AlpimiAPI.Entities.ETeacher.DTO;
 using AlpimiAPI.Entities.EUser.DTO;
 using AlpimiAPI.Responses;
 using AlpimiAPI.Utilities;
@@ -94,6 +95,23 @@ namespace AlpimiTest.TestUtilities
             >();
 
             return jsonLessonPeriodId!.Content;
+        }
+
+        public static async Task<Guid> SetupTeacher(
+            HttpClient _client,
+            CreateTeacherDTO teacherRequest
+        )
+        {
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "Bob", new Guid())
+            );
+
+            var teacher = await _client.PostAsJsonAsync("/api/Teacher", teacherRequest);
+
+            var jsonTeacherId = await teacher.Content.ReadFromJsonAsync<ApiGetResponse<Guid>>();
+
+            return jsonTeacherId!.Content;
         }
     }
 }

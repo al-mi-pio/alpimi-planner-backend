@@ -1,13 +1,12 @@
 ﻿using AlpimiAPI.Entities.EScheduleSettings;
 
-namespace AlpimiAPI.Entities.EDayOff
+namespace AlpimiAPI.Entities.ELessonPerioid
 {
-    public class DayOff
+    public class LessonPeriod
     {
         public Guid Id { get; set; }
-        public required string Name { get; set; }
-        public required DateOnly From { get; set; }
-        public required DateOnly To { get; set; }
+        public required TimeOnly Start { get; set; }
+        public required TimeOnly Finish { get; set; }
         public Guid ScheduleSettingsId { get; set; }
         public required ScheduleSettings ScheduleSettings { get; set; }
     }

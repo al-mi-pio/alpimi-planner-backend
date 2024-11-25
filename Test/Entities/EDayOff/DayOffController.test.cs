@@ -70,7 +70,6 @@ namespace AlpimiTest.Entities.EDayOff
             );
 
             var response = await _client.PostAsJsonAsync("/api/DayOff", dayOffRequest);
-            var jsonScheduleId = await response.Content.ReadFromJsonAsync<ApiGetResponse<Guid>>();
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var query = $"?scheduleId={scheduleId}";

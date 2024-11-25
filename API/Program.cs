@@ -218,6 +218,9 @@ try
 
     app.MapControllers();
 
+    Dapper.SqlMapper.AddTypeHandler(new DateOnlyTypeHandler());
+    Dapper.SqlMapper.AddTypeHandler(new TimeOnlyTypeHandler());
+
     app.Run();
 }
 catch (ApiErrorException ex)

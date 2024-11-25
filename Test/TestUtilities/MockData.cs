@@ -2,6 +2,8 @@
 using AlpimiAPI.Entities.EAuth.DTO;
 using AlpimiAPI.Entities.EDayOff;
 using AlpimiAPI.Entities.EDayOff.DTO;
+using AlpimiAPI.Entities.ELessonPeriod.DTO;
+using AlpimiAPI.Entities.ELessonPerioid;
 using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Entities.ESchedule.DTO;
 using AlpimiAPI.Entities.EScheduleSettings;
@@ -15,32 +17,28 @@ namespace AlpimiTest.TestUtilities
     {
         public static User GetUserDetails()
         {
-            var user = new User()
+            return new User()
             {
                 Id = new Guid(),
                 Login = "Marek",
                 CustomURL = "44f"
             };
-
-            return user;
         }
 
         public static Schedule GetScheduleDetails()
         {
-            var schedule = new Schedule()
+            return new Schedule()
             {
                 Id = new Guid(),
                 Name = "Plan_Marka",
                 UserId = new Guid(),
                 User = GetUserDetails()
             };
-
-            return schedule;
         }
 
         public static Auth GetAuthDetails()
         {
-            var auth = new Auth()
+            return new Auth()
             {
                 Password = "sssSSS1!",
                 Id = new Guid(),
@@ -49,37 +47,44 @@ namespace AlpimiTest.TestUtilities
                 UserId = new Guid(),
                 User = GetUserDetails()
             };
-
-            return auth;
         }
 
         public static ScheduleSettings GetScheduleSettingsDetails()
         {
-            var scheduleSettings = new ScheduleSettings()
+            return new ScheduleSettings()
             {
                 Id = new Guid(),
                 SchoolHour = 10,
-                SchoolYearStart = new DateTime(2020, 11, 19),
-                SchoolYearEnd = new DateTime(2025, 11, 19),
+                SchoolYearStart = new DateOnly(2020, 11, 19),
+                SchoolYearEnd = new DateOnly(2025, 11, 19),
                 ScheduleId = new Guid(),
                 Schedule = GetScheduleDetails()
             };
-
-            return scheduleSettings;
         }
 
         public static DayOff GetDayOffDetails()
         {
-            var dayOff = new DayOff()
+            return new DayOff()
             {
                 Id = new Guid(),
                 Name = "Marek_Fest",
-                From = new DateTime(2022, 12, 12),
-                To = new DateTime(2025, 12, 12),
+                From = new DateOnly(2022, 12, 12),
+                To = new DateOnly(2023, 12, 12),
                 ScheduleSettingsId = new Guid(),
                 ScheduleSettings = null!
             };
-            return dayOff;
+        }
+
+        public static LessonPeriod GetLessonPeriodDetails()
+        {
+            return new LessonPeriod()
+            {
+                Id = new Guid(),
+                Start = new TimeOnly(10, 00, 00),
+                Finish = new TimeOnly(11, 00, 00),
+                ScheduleSettingsId = new Guid(),
+                ScheduleSettings = null!
+            };
         }
 
         public static CreateUserDTO GetCreateUserDTODetails()
@@ -115,8 +120,8 @@ namespace AlpimiTest.TestUtilities
             return new UpdateScheduleSettingsDTO()
             {
                 SchoolHour = 29,
-                SchoolYearStart = new DateTime(2020, 10, 1),
-                SchoolYearEnd = new DateTime(2022, 1, 10)
+                SchoolYearStart = new DateOnly(2020, 10, 1),
+                SchoolYearEnd = new DateOnly(2022, 1, 10)
             };
         }
 
@@ -131,8 +136,8 @@ namespace AlpimiTest.TestUtilities
             {
                 Name = "Second_Name",
                 SchoolHour = 431,
-                SchoolYearStart = new DateTime(2022, 11, 19),
-                SchoolYearEnd = new DateTime(2025, 11, 19),
+                SchoolYearStart = new DateOnly(2022, 11, 19),
+                SchoolYearEnd = new DateOnly(2025, 11, 19),
             };
         }
 
@@ -158,19 +163,18 @@ namespace AlpimiTest.TestUtilities
             return new CreateDayOffDTO()
             {
                 Name = dayOff.Name,
-                Date = dayOff.From,
-                NumberOfDays = 2,
+                From = dayOff.From,
+                To = dayOff.To,
                 ScheduleId = scheduleId
             };
         }
 
         public static CreateDayOffDTO GetCreateSecondDayOffDTODetails(Guid scheduleId)
         {
-            var dayOff = GetDayOffDetails();
             return new CreateDayOffDTO()
             {
                 Name = "second_name",
-                Date = new DateTime(2021, 8, 8),
+                From = new DateOnly(2021, 8, 8),
                 ScheduleId = scheduleId
             };
         }
@@ -179,9 +183,39 @@ namespace AlpimiTest.TestUtilities
         {
             return new UpdateDayOffDTO()
             {
-                From = new DateTime(2023, 11, 22),
-                To = new DateTime(2023, 11, 23),
+                From = new DateOnly(2023, 11, 22),
+                To = new DateOnly(2023, 11, 23),
                 Name = "Inny_fest"
+            };
+        }
+
+        public static CreateLessonPeriodDTO GetCreateLessonPeriodDTODetails(Guid scheduleId)
+        {
+            var lessonPeriod = GetLessonPeriodDetails();
+            return new CreateLessonPeriodDTO()
+            {
+                Start = lessonPeriod.Start,
+                Finish = lessonPeriod.Finish,
+                ScheduleId = scheduleId
+            };
+        }
+
+        public static CreateLessonPeriodDTO GetCreateSecondLessonPeriodDTODetails(Guid scheduleId)
+        {
+            return new CreateLessonPeriodDTO()
+            {
+                Start = new TimeOnly(11, 00, 00),
+                Finish = new TimeOnly(12, 00, 00),
+                ScheduleId = scheduleId
+            };
+        }
+
+        public static UpdateLessonPeriodDTO GetUpdateLessonPeriodDTODetails()
+        {
+            return new UpdateLessonPeriodDTO()
+            {
+                Start = new TimeOnly(8, 00, 00),
+                Finish = new TimeOnly(9, 00, 00),
             };
         }
     }

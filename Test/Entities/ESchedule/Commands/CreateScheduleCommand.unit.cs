@@ -66,7 +66,7 @@ namespace AlpimiTest.Entities.ESchedule.Commands
         public async Task ThrowsErrorWhenDateStartIsAfterDateEnd()
         {
             var dto = MockData.GetCreateScheduleDTODetails();
-            dto.SchoolYearStart = new DateTime(2050, 10, 10);
+            dto.SchoolYearStart = new DateOnly(2050, 10, 10);
 
             var scheduleSettings = MockData.GetScheduleSettingsDetails();
 

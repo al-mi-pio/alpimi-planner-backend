@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace alpimi_planner_backend.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20241121195425_AddedDayOff")]
-    partial class AddedDayOff
+    [Migration("20241123182138_AddedLessonPeriod")]
+    partial class AddedLessonPeriod
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -59,8 +59,8 @@ namespace alpimi_planner_backend.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("From")
-                        .HasColumnType("datetime2");
+                    b.Property<DateOnly>("From")
+                        .HasColumnType("date");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -69,14 +69,36 @@ namespace alpimi_planner_backend.Migrations
                     b.Property<Guid>("ScheduleSettingsId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("To")
-                        .HasColumnType("datetime2");
+                    b.Property<DateOnly>("To")
+                        .HasColumnType("date");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ScheduleSettingsId");
 
                     b.ToTable("DayOff");
+                });
+
+            modelBuilder.Entity("AlpimiAPI.Entities.ELessonPerioid.LessonPeriod", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<TimeOnly>("Finish")
+                        .HasColumnType("time");
+
+                    b.Property<Guid>("ScheduleSettingsId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<TimeOnly>("Start")
+                        .HasColumnType("time");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ScheduleSettingsId");
+
+                    b.ToTable("LessonPeriod");
                 });
 
             modelBuilder.Entity("AlpimiAPI.Entities.ESchedule.Schedule", b =>
@@ -111,11 +133,11 @@ namespace alpimi_planner_backend.Migrations
                     b.Property<int>("SchoolHour")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("SchoolYearEnd")
-                        .HasColumnType("datetime2");
+                    b.Property<DateOnly>("SchoolYearEnd")
+                        .HasColumnType("date");
 
-                    b.Property<DateTime>("SchoolYearStart")
-                        .HasColumnType("datetime2");
+                    b.Property<DateOnly>("SchoolYearStart")
+                        .HasColumnType("date");
 
                     b.HasKey("Id");
 
@@ -154,6 +176,17 @@ namespace alpimi_planner_backend.Migrations
                 });
 
             modelBuilder.Entity("AlpimiAPI.Entities.EDayOff.DayOff", b =>
+                {
+                    b.HasOne("AlpimiAPI.Entities.EScheduleSettings.ScheduleSettings", "ScheduleSettings")
+                        .WithMany()
+                        .HasForeignKey("ScheduleSettingsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ScheduleSettings");
+                });
+
+            modelBuilder.Entity("AlpimiAPI.Entities.ELessonPerioid.LessonPeriod", b =>
                 {
                     b.HasOne("AlpimiAPI.Entities.EScheduleSettings.ScheduleSettings", "ScheduleSettings")
                         .WithMany()

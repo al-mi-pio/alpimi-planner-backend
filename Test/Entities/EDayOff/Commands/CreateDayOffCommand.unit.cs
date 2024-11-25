@@ -52,7 +52,7 @@ namespace AlpimiTest.Entities.EDayOff.Commands
         public async Task ThrowsErrorWhenOutOfRangeDateIsProvided()
         {
             var dto = MockData.GetCreateDayOffDTODetails(new Guid());
-            dto.Date = new DateTime(2000, 1, 1);
+            dto.From = new DateOnly(2000, 1, 1);
 
             var scheduleSettings = MockData.GetScheduleSettingsDetails();
             _dbService
@@ -72,10 +72,10 @@ namespace AlpimiTest.Entities.EDayOff.Commands
         }
 
         [Fact]
-        public async Task ThrowsErrorWhenNumberOfDaysIsIncorrect()
+        public async Task ThrowsErrorWhenDateStartIsAfterDateEnd()
         {
             var dto = MockData.GetCreateDayOffDTODetails(new Guid());
-            dto.NumberOfDays = 0;
+            dto.To = new DateOnly(1999, 10, 10);
 
             var scheduleSettings = MockData.GetScheduleSettingsDetails();
             _dbService
@@ -93,7 +93,10 @@ namespace AlpimiTest.Entities.EDayOff.Commands
 
             Assert.Equal(
                 JsonConvert.SerializeObject(
-                    new ErrorObject[] { new ErrorObject("NumberOfDays parameter is invalid") }
+                    new ErrorObject[]
+                    {
+                        new ErrorObject("The end date cannot happen before the start date")
+                    }
                 ),
                 JsonConvert.SerializeObject(result.errors)
             );

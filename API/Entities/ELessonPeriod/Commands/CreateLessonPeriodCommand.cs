@@ -1,5 +1,5 @@
 ﻿using AlpimiAPI.Database;
-using AlpimiAPI.Entities.EDayOff.DTO;
+using AlpimiAPI.Entities.ELessonPeriod.DTO;
 using AlpimiAPI.Entities.EScheduleSettings;
 using AlpimiAPI.Entities.EScheduleSettings.Queries;
 using AlpimiAPI.Responses;
@@ -8,34 +8,34 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 
-namespace AlpimiAPI.Entities.EDayOff.Commands
+namespace AlpimiAPI.Entities.ELessonPeriod.Commands
 {
-    public record CreateDayOffCommand(Guid Id, CreateDayOffDTO dto, Guid FilteredId, string Role)
-        : IRequest<Guid>;
+    public record CreateLessonPeriodCommand(
+        Guid Id,
+        CreateLessonPeriodDTO dto,
+        Guid FilteredId,
+        string Role
+    ) : IRequest<Guid>;
 
-    public class CreateDayOffHandler : IRequestHandler<CreateDayOffCommand, Guid>
+    public class CreateLessonPeriodHandler : IRequestHandler<CreateLessonPeriodCommand, Guid>
     {
         private readonly IDbService _dbService;
         private readonly IStringLocalizer<Errors> _str;
 
-        public CreateDayOffHandler(IDbService dbService, IStringLocalizer<Errors> str)
+        public CreateLessonPeriodHandler(IDbService dbService, IStringLocalizer<Errors> str)
         {
             _dbService = dbService;
             _str = str;
         }
 
         public async Task<Guid> Handle(
-            CreateDayOffCommand request,
+            CreateLessonPeriodCommand request,
             CancellationToken cancellationToken
         )
         {
-            if (request.dto.To == null)
+            if (request.dto.Finish < request.dto.Start)
             {
-                request.dto.To = request.dto.From;
-            }
-            else if (request.dto.To < request.dto.From)
-            {
-                throw new ApiErrorException([new ErrorObject(_str["scheduleDate"])]);
+                throw new ApiErrorException([new ErrorObject(_str["scheduleTime"])]);
             }
 
             GetScheduleSettingsByScheduleIdHandler getScheduleSettingsByScheduleIdHandler =
@@ -58,35 +58,35 @@ namespace AlpimiAPI.Entities.EDayOff.Commands
                     [new ErrorObject(_str["notFound", "ScheduleSettings"])]
                 );
             }
-            if (
-                request.dto.From < scheduleSettings.Value!.SchoolYearStart
-                || request.dto.To > scheduleSettings.Value.SchoolYearEnd
-            )
+
+            var lessonPeriodOverlap = await _dbService.GetAll<Guid>(
+                $@"
+                    SELECT 
+                    lp.[Id]
+                    FROM [LessonPeriod] lp
+                    INNER JOIN [ScheduleSettings] ss ON ss.[Id] = lp.[ScheduleSettingsId]
+                    INNER JOIN [Schedule] s ON s.[Id]=ss.[ScheduleId]
+                    WHERE s.[UserId] = '{request.FilteredId}' AND ss.[ScheduleId] = @ScheduleId
+                    AND ((([Start] > @Start AND [Start] < @Finish) 
+                    OR ([Finish] > @Start AND [Finish] < @Finish))
+                    OR ([Start] = @Start AND [Finish] = @Finish));",
+                request.dto
+            );
+            if (lessonPeriodOverlap!.Any())
             {
-                throw new ApiErrorException(
-                    [
-                        new ErrorObject(
-                            _str[
-                                "dateOutOfRange",
-                                scheduleSettings.Value!.SchoolYearStart.ToString("dd/MM/yyyy"),
-                                scheduleSettings.Value.SchoolYearEnd.ToString("dd/MM/yyyy")
-                            ]
-                        )
-                    ]
-                );
+                throw new ApiErrorException([new ErrorObject(_str["timeOverlap"])]);
             }
 
             var insertedId = await _dbService.Post<Guid>(
                 $@"
-                    INSERT INTO [DayOff] 
-                    ([Id],[Name],[From],[To],[ScheduleSettingsId])
+                    INSERT INTO [LessonPeriod] 
+                    ([Id],[Start],[Finish],[ScheduleSettingsId])
                     OUTPUT 
                     INSERTED.Id                    
                     VALUES (
                     '{request.Id}',
-                    @Name,
-                    @From,
-                    @To,
+                    @Start,
+                    @Finish,
                     '{scheduleSettings.Value.Id}');",
                 request.dto
             );

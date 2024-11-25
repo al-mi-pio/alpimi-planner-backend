@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace alpimi_planner_backend.Migrations
 {
     /// <inheritdoc />
-    public partial class AddedScheduleSettings : Migration
+    public partial class AddedDayOff : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -21,8 +21,8 @@ namespace alpimi_planner_backend.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     SchoolHour = table.Column<int>(type: "int", nullable: false),
-                    SchoolYearStart = table.Column<DateOnly>(type: "date", nullable: false),
-                    SchoolYearEnd = table.Column<DateOnly>(type: "date", nullable: false),
+                    SchoolYearStart = table.Column<DateTime>(type: "DATE", nullable: false),
+                    SchoolYearEnd = table.Column<DateTime>(type: "DATE", nullable: false),
                     ScheduleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
@@ -36,6 +36,32 @@ namespace alpimi_planner_backend.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "DayOff",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    From = table.Column<DateTime>(type: "DATE", nullable: false),
+                    To = table.Column<DateTime>(type: "DATE", nullable: false),
+                    ScheduleSettingsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DayOff", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DayOff_ScheduleSettings_ScheduleSettingsId",
+                        column: x => x.ScheduleSettingsId,
+                        principalTable: "ScheduleSettings",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DayOff_ScheduleSettingsId",
+                table: "DayOff",
+                column: "ScheduleSettingsId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_ScheduleSettings_ScheduleId",
                 table: "ScheduleSettings",
@@ -45,6 +71,9 @@ namespace alpimi_planner_backend.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "DayOff");
+
             migrationBuilder.DropTable(
                 name: "ScheduleSettings");
 

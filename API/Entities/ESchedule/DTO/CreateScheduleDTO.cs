@@ -11,9 +11,9 @@ namespace AlpimiAPI.Entities.ESchedule.DTO
         public required int SchoolHour { get; set; }
 
         [Required]
-        public required DateTime SchoolYearStart { get; set; }
+        public required DateOnly SchoolYearStart { get; set; }
 
         [Required]
-        public required DateTime SchoolYearEnd { get; set; }
+        public required DateOnly SchoolYearEnd { get; set; }
     }
 }

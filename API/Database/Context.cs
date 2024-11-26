@@ -1,5 +1,6 @@
 ﻿using AlpimiAPI.Entities.EAuth;
 using AlpimiAPI.Entities.EDayOff;
+using AlpimiAPI.Entities.EGroup;
 using AlpimiAPI.Entities.ELessonPerioid;
 using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Entities.EScheduleSettings;
@@ -22,6 +23,7 @@ namespace AlpimiAPI.Database
         public DbSet<DayOff> DayOff { get; set; }
         public DbSet<LessonPeriod> LessonPeriod { get; set; }
         public DbSet<Teacher> Teacher { get; set; }
+        public DbSet<Group> Group { get; set; }
         #endregion
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

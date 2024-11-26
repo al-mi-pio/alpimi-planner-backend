@@ -1,6 +1,5 @@
 ﻿using AlpimiAPI.Database;
 using AlpimiAPI.Entities.ESchedule;
-using AlpimiAPI.Entities.EScheduleSettings;
 using AlpimiAPI.Entities.ETeacher.Commands;
 using AlpimiAPI.Responses;
 using AlpimiTest.TestSetup;

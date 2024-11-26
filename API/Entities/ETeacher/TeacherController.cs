@@ -1,5 +1,4 @@
-﻿using AlpimiAPI.Entities.ELessonPerioid;
-using AlpimiAPI.Entities.ETeacher.Commands;
+﻿using AlpimiAPI.Entities.ETeacher.Commands;
 using AlpimiAPI.Entities.ETeacher.DTO;
 using AlpimiAPI.Entities.ETeacher.Queries;
 using AlpimiAPI.Responses;

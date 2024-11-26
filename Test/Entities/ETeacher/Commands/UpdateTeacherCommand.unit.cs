@@ -1,6 +1,5 @@
 ﻿using AlpimiAPI.Database;
 using AlpimiAPI.Entities.ESchedule;
-using AlpimiAPI.Entities.ETeacher;
 using AlpimiAPI.Entities.ETeacher.Commands;
 using AlpimiAPI.Responses;
 using AlpimiTest.TestSetup;
@@ -8,7 +7,6 @@ using AlpimiTest.TestUtilities;
 using alpimi_planner_backend.API.Locales;
 using Microsoft.Extensions.Localization;
 using Moq;
-using Newtonsoft.Json;
 using Xunit;
 
 namespace AlpimiTest.Entities.ETeacher.Commands

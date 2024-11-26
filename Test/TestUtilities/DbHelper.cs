@@ -1,6 +1,7 @@
 ﻿using System.Net.Http.Headers;
 using AlpimiAPI.Database;
 using AlpimiAPI.Entities.EDayOff.DTO;
+using AlpimiAPI.Entities.EGroup.DTO;
 using AlpimiAPI.Entities.ELessonPeriod.DTO;
 using AlpimiAPI.Entities.ESchedule.DTO;
 using AlpimiAPI.Entities.ETeacher.DTO;
@@ -112,6 +113,20 @@ namespace AlpimiTest.TestUtilities
             var jsonTeacherId = await teacher.Content.ReadFromJsonAsync<ApiGetResponse<Guid>>();
 
             return jsonTeacherId!.Content;
+        }
+
+        public static async Task<Guid> SetupGroup(HttpClient _client, CreateGroupDTO groupRequest)
+        {
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "Bob", new Guid())
+            );
+
+            var group = await _client.PostAsJsonAsync("/api/Group", groupRequest);
+
+            var jsonGroupId = await group.Content.ReadFromJsonAsync<ApiGetResponse<Guid>>();
+
+            return jsonGroupId!.Content;
         }
     }
 }

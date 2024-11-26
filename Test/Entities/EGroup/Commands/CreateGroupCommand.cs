@@ -1,6 +1,6 @@
 ﻿using AlpimiAPI.Database;
+using AlpimiAPI.Entities.EGroup.Commands;
 using AlpimiAPI.Entities.ESchedule;
-using AlpimiAPI.Entities.ETeacher.Commands;
 using AlpimiAPI.Responses;
 using AlpimiTest.TestSetup;
 using AlpimiTest.TestUtilities;
@@ -10,15 +10,15 @@ using Moq;
 using Newtonsoft.Json;
 using Xunit;
 
-namespace AlpimiTest.Entities.ETeacher.Commands
+namespace AlpimiTest.Entities.EGroup.Commands
 {
     [Collection("Sequential Tests")]
-    public class CreateTeacherCommandUnit
+    public class CreateGroupCommandUnit
     {
         private readonly Mock<IDbService> _dbService = new();
         private readonly Mock<IStringLocalizer<Errors>> _str;
 
-        public CreateTeacherCommandUnit()
+        public CreateGroupCommandUnit()
         {
             _str = ResourceSetup.Setup();
         }
@@ -26,18 +26,18 @@ namespace AlpimiTest.Entities.ETeacher.Commands
         [Fact]
         public async Task ThrowsErrorWhenWrongScheduleIdIsGiven()
         {
-            var createTeacherCommand = new CreateTeacherCommand(
+            var createGroupCommand = new CreateGroupCommand(
                 new Guid(),
-                MockData.GetCreateTeacherDTODetails(new Guid()),
+                MockData.GetCreateGroupDTODetails(new Guid()),
                 new Guid(),
                 "User"
             );
 
-            var createTeacherHandler = new CreateTeacherHandler(_dbService.Object, _str.Object);
+            var createGroupHandler = new CreateGroupHandler(_dbService.Object, _str.Object);
 
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
-                    await createTeacherHandler.Handle(createTeacherCommand, new CancellationToken())
+                    await createGroupHandler.Handle(createGroupCommand, new CancellationToken())
             );
 
             Assert.Equal(
@@ -49,9 +49,9 @@ namespace AlpimiTest.Entities.ETeacher.Commands
         }
 
         [Fact]
-        public async Task ThrowsErrorWhenNameAndSurnameIsAlreadyTaken()
+        public async Task ThrowsErrorWhenNameIsAlreadyTaken()
         {
-            var dto = MockData.GetCreateTeacherDTODetails(new Guid());
+            var dto = MockData.GetCreateGroupDTODetails(new Guid());
             var schedule = MockData.GetScheduleDetails();
 
             _dbService
@@ -61,24 +61,37 @@ namespace AlpimiTest.Entities.ETeacher.Commands
                 .Setup(s => s.GetAll<Guid>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(new List<Guid> { new Guid() });
 
-            var createTeacherCommand = new CreateTeacherCommand(
-                new Guid(),
-                dto,
-                new Guid(),
-                "User"
-            );
+            var createGroupCommand = new CreateGroupCommand(new Guid(), dto, new Guid(), "User");
 
-            var createTeacherHandler = new CreateTeacherHandler(_dbService.Object, _str.Object);
+            var createGroupHandler = new CreateGroupHandler(_dbService.Object, _str.Object);
 
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
-                    await createTeacherHandler.Handle(createTeacherCommand, new CancellationToken())
+                    await createGroupHandler.Handle(createGroupCommand, new CancellationToken())
             );
 
             Assert.Equal(
-                "There is already a Teacher with the name Jac Pie",
+                "There is already a Group with the name 13K2",
                 result.errors.First().message
             );
+        }
+
+        [Fact]
+        public async Task ThrowsErrorWhenStudentCountIsLessThan1()
+        {
+            var dto = MockData.GetCreateGroupDTODetails(new Guid());
+            dto.StudentCount = -1;
+
+            var createGroupCommand = new CreateGroupCommand(new Guid(), dto, new Guid(), "User");
+
+            var createGroupHandler = new CreateGroupHandler(_dbService.Object, _str.Object);
+
+            var result = await Assert.ThrowsAsync<ApiErrorException>(
+                async () =>
+                    await createGroupHandler.Handle(createGroupCommand, new CancellationToken())
+            );
+
+            Assert.Equal("StudentCount parameter is invalid", result.errors.First().message);
         }
     }
 }

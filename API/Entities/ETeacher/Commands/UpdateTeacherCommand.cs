@@ -1,7 +1,6 @@
 ﻿using AlpimiAPI.Database;
 using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Entities.ESchedule.Queries;
-using AlpimiAPI.Entities.ETeacher;
 using AlpimiAPI.Entities.ETeacher.DTO;
 using AlpimiAPI.Entities.ETeacher.Queries;
 using AlpimiAPI.Responses;

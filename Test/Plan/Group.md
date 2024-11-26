@@ -19,6 +19,10 @@
 - [ThrowsErrorWhenWrongScheduleIdIsGiven()](../Entities/EGroup/CreateGroupCommand.unit.cs) - **unit** 
   Check if returns an error when incorrect id is provided
 
+- [ThrowsErrorWhenStudentCountIsLessThan1()](../Entities/EGroup/Commands/CreateGroupCommand.unit.cs) - **unit** 
+  Check if returns an error when student count is less than 1
+
+
 -nowy!!!!
 
 ## `GET` `api/Group`
@@ -77,6 +81,7 @@
 - [ThrowsErrorWhenNameIsAlreadyTaken()](../Entities/EGroup/Commands/UpdateGroupCommand.unit.cs) - **unit**  
   Check if returns an error when out of range date is provided
 
-  --- nowy
+- [ThrowsErrorWhenStudentCountIsLessThan1()](../Entities/EGroup/Commands/UpdateGroupCommand.unit.cs) - **unit** 
+  Check if returns an error when student count is less than 1
 
 

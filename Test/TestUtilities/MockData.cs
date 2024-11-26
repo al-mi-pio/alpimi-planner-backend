@@ -2,6 +2,8 @@
 using AlpimiAPI.Entities.EAuth.DTO;
 using AlpimiAPI.Entities.EDayOff;
 using AlpimiAPI.Entities.EDayOff.DTO;
+using AlpimiAPI.Entities.EGroup;
+using AlpimiAPI.Entities.EGroup.DTO;
 using AlpimiAPI.Entities.ELessonPeriod.DTO;
 using AlpimiAPI.Entities.ELessonPerioid;
 using AlpimiAPI.Entities.ESchedule;
@@ -95,6 +97,17 @@ namespace AlpimiTest.TestUtilities
             {
                 Name = "Jac",
                 Surname = "Pie",
+                ScheduleId = new Guid(),
+                Schedule = GetScheduleDetails()
+            };
+        }
+
+        public static Group GetGroupDetails()
+        {
+            return new Group()
+            {
+                Name = "13K2",
+                StudentCount = 32,
                 ScheduleId = new Guid(),
                 Schedule = GetScheduleDetails()
             };
@@ -256,6 +269,32 @@ namespace AlpimiTest.TestUtilities
         public static UpdateTeacherDTO GetUpdateTeacherDTODetails()
         {
             return new UpdateTeacherDTO() { Name = "Pan", Surname = "Jan" };
+        }
+
+        public static CreateGroupDTO GetCreateGroupDTODetails(Guid scheduleId)
+        {
+            var group = GetGroupDetails();
+            return new CreateGroupDTO()
+            {
+                Name = group.Name,
+                StudentCount = group.StudentCount,
+                ScheduleId = scheduleId
+            };
+        }
+
+        public static CreateGroupDTO GetCreateSecondGroupDTODetails(Guid scheduleId)
+        {
+            return new CreateGroupDTO()
+            {
+                Name = "11C2",
+                StudentCount = 1,
+                ScheduleId = scheduleId
+            };
+        }
+
+        public static UpdateGroupDTO GetUpdateGroupDTODetails()
+        {
+            return new UpdateGroupDTO() { Name = "24L4", StudentCount = 8 };
         }
     }
 }

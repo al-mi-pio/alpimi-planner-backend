@@ -4,6 +4,7 @@ using AlpimiAPI.Entities.EGroup;
 using AlpimiAPI.Entities.ELessonPerioid;
 using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Entities.EScheduleSettings;
+using AlpimiAPI.Entities.ESubgroup;
 using AlpimiAPI.Entities.ETeacher;
 using AlpimiAPI.Entities.EUser;
 using AlpimiAPI.Utilities;
@@ -24,6 +25,7 @@ namespace AlpimiAPI.Database
         public DbSet<LessonPeriod> LessonPeriod { get; set; }
         public DbSet<Teacher> Teacher { get; set; }
         public DbSet<Group> Group { get; set; }
+        public DbSet<Subgroup> Subgroup { get; set; }
         #endregion
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

@@ -171,4 +171,7 @@
   <data name="outOfRange" xml:space="preserve">
     <value>Isnieją dni wolne poza podanym zakresem. Proszę je najpierw zmienić</value>
   </data>
+  <data name="tooManyStudents" xml:space="preserve">
+    <value>Za dużo studentów</value>
+  </data>
 </root>

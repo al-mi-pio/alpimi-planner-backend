@@ -10,6 +10,8 @@ using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Entities.ESchedule.DTO;
 using AlpimiAPI.Entities.EScheduleSettings;
 using AlpimiAPI.Entities.EScheduleSettings.DTO;
+using AlpimiAPI.Entities.ESubgroup;
+using AlpimiAPI.Entities.ESubgroup.DTO;
 using AlpimiAPI.Entities.ETeacher;
 using AlpimiAPI.Entities.ETeacher.DTO;
 using AlpimiAPI.Entities.EUser;
@@ -110,6 +112,17 @@ namespace AlpimiTest.TestUtilities
                 StudentCount = 32,
                 ScheduleId = new Guid(),
                 Schedule = GetScheduleDetails()
+            };
+        }
+
+        public static Subgroup GetSubgroupDetails()
+        {
+            return new Subgroup()
+            {
+                Name = "K03",
+                StudentCount = 16,
+                GroupId = new Guid(),
+                Group = GetGroupDetails()
             };
         }
 
@@ -295,6 +308,32 @@ namespace AlpimiTest.TestUtilities
         public static UpdateGroupDTO GetUpdateGroupDTODetails()
         {
             return new UpdateGroupDTO() { Name = "24L4", StudentCount = 8 };
+        }
+
+        public static CreateSubgroupDTO GetCreateSubgroupDTODetails(Guid groupId)
+        {
+            var subgroup = GetSubgroupDetails();
+            return new CreateSubgroupDTO()
+            {
+                Name = subgroup.Name,
+                StudentCount = subgroup.StudentCount,
+                GroupId = groupId
+            };
+        }
+
+        public static CreateSubgroupDTO GetCreateSecondSubgroupDTODetails(Guid groupId)
+        {
+            return new CreateSubgroupDTO()
+            {
+                Name = "K04",
+                StudentCount = 3,
+                GroupId = groupId
+            };
+        }
+
+        public static UpdateSubgroupDTO GetUpdateSubgroupDTODetails()
+        {
+            return new UpdateSubgroupDTO() { Name = "L02", StudentCount = 8 };
         }
     }
 }

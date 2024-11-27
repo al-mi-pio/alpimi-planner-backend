@@ -13,8 +13,8 @@
 - [GroupIsCreated()](../Entities/EGroup/GroupController.test.cs) - **integrity**  
   Check if group is created when provided with correct data
 
-- [ThrowsErrorWhenNameIsAlreadyTaken()](../Entities/EGroup/CreateGroupCommand.unit.cs) - **unit**  
-  Check if returns an error when a taken name and surname is provided
+- [ThrowsErrorWhenNameIsAlreadyTakenByGroup()](../Entities/EGroup/CreateGroupCommand.unit.cs) - **unit**  
+  Check if returns an error when a taken by group name is provided
 
 - [ThrowsErrorWhenWrongScheduleIdIsGiven()](../Entities/EGroup/CreateGroupCommand.unit.cs) - **unit** 
   Check if returns an error when incorrect id is provided
@@ -22,8 +22,9 @@
 - [ThrowsErrorWhenStudentCountIsLessThan1()](../Entities/EGroup/Commands/CreateGroupCommand.unit.cs) - **unit** 
   Check if returns an error when student count is less than 1
 
+- [ThrowsErrorWhenNameIsAlreadyTakenBySubgroup()](../Entities/EGroup/Commands/UpdateGroupCommand.unit.cs) - **unit**  
+  Check if returns an error when a taken by subgroup name is provided
 
--nowy!!!!
 
 ## `GET` `api/Group`
 
@@ -72,16 +73,21 @@
 - [UpdateGroupReturnsUpdatedGroup()](../Entities/EGroup/GroupController.test.cs) - **integrity**  
   Check if returns an updated day off when provided with correct data
 
-- [pdateGroupThrowsNotFoundErrorWhenWrongIdIsGiven()](../Entities/EGroup/GroupController.test.cs) - **integrity**  
+- [updateGroupThrowsNotFoundErrorWhenWrongIdIsGiven()](../Entities/EGroup/GroupController.test.cs) - **integrity**  
   Check if returns an error when day off doesn't exists
 
 - [UpdateGroupThrowsNotFoundErrorWhenWrongUserAttemptsUpdate()](../Entities/EGroup/GroupController.test.cs) - **integrity**  
   Check if returns an error when day off is inaccessible for user
 
-- [ThrowsErrorWhenNameIsAlreadyTaken()](../Entities/EGroup/Commands/UpdateGroupCommand.unit.cs) - **unit**  
-  Check if returns an error when out of range date is provided
+- [ThrowsErrorWhenNameIsAlreadyTakenByGroup()](../Entities/EGroup/Commands/UpdateGroupCommand.unit.cs) - **unit**  
+  Check if returns an error when a taken by group name is provided
+
+- [ThrowsErrorWhenNameIsAlreadyTakenBySubgroup()](../Entities/EGroup/Commands/UpdateGroupCommand.unit.cs) - **unit**  
+  Check if returns an error when a taken by subgroup name is provided
 
 - [ThrowsErrorWhenStudentCountIsLessThan1()](../Entities/EGroup/Commands/UpdateGroupCommand.unit.cs) - **unit** 
   Check if returns an error when student count is less than 1
 
+- [ThrowsErrorWhenStudentCountInGroupIsLessThanSubgroup()](../Entities/EGroup/Commands/UpdateGroupCommand.unit.cs) - **unit** 
+  Check if returns an error when updated student count is less student count of a subgroup
 

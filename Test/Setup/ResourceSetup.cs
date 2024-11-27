@@ -20,7 +20,8 @@ namespace AlpimiTest.TestSetup
             {
                 "outOfRange",
                 "There are days off outside of provided range. Please change them first"
-            }
+            },
+            { "tooManyStudents", "There are too many students" }
         };
         private static readonly Dictionary<
             string,

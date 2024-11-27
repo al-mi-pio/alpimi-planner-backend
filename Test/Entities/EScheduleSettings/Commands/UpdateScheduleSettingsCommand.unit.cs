@@ -1,4 +1,5 @@
 ﻿using AlpimiAPI.Database;
+using AlpimiAPI.Entities.EDayOff;
 using AlpimiAPI.Entities.EScheduleSettings;
 using AlpimiAPI.Entities.EScheduleSettings.Commands;
 using AlpimiAPI.Responses;
@@ -71,8 +72,8 @@ namespace AlpimiTest.Entities.EScheduleSettings.Commands
             dto.SchoolYearEnd = new DateOnly(2024, 10, 10);
 
             _dbService
-                .Setup(s => s.GetAll<Guid>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(new List<Guid> { new Guid(), new Guid() });
+                .Setup(s => s.GetAll<DayOff>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(new List<DayOff> { MockData.GetDayOffDetails() });
 
             var updateScheduleSettingsCommand = new UpdateScheduleSettingsCommand(
                 new Guid(),

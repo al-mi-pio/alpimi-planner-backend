@@ -1,5 +1,6 @@
 ﻿using AlpimiAPI.Database;
 using AlpimiAPI.Entities.ELessonPeriod.Commands;
+using AlpimiAPI.Entities.ELessonPerioid;
 using AlpimiAPI.Entities.EScheduleSettings;
 using AlpimiAPI.Responses;
 using AlpimiTest.TestSetup;
@@ -62,8 +63,8 @@ namespace AlpimiTest.Entities.ELessonPeriod.Commands
             var scheduleSettings = MockData.GetScheduleSettingsDetails();
 
             _dbService
-                .Setup(s => s.GetAll<Guid>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(new List<Guid> { new Guid(), new Guid() });
+                .Setup(s => s.GetAll<LessonPeriod>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(new List<LessonPeriod> { MockData.GetLessonPeriodDetails() });
             _dbService
                 .Setup(s => s.Get<ScheduleSettings>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(scheduleSettings);

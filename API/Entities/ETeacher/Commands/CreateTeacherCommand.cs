@@ -45,7 +45,7 @@ namespace AlpimiAPI.Entities.ETeacher.Commands
                 throw new ApiErrorException([new ErrorObject(_str["notFound", "Schedule"])]);
             }
 
-            var teacherName = await _dbService.GetAll<Guid>(
+            var teacherName = await _dbService.GetAll<Teacher>(
                 @"
                     SELECT 
                     [Id]

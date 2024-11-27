@@ -49,7 +49,7 @@ namespace AlpimiAPI.Entities.ETeacher.Commands
             GetTeacherQuery getTeacherQuery = new GetTeacherQuery(
                 request.Id,
                 request.FilteredId,
-                request.Role
+                "Admin"
             );
 
             ActionResult<Teacher?> originalTeacher = await getTeacherHandler.Handle(
@@ -60,7 +60,7 @@ namespace AlpimiAPI.Entities.ETeacher.Commands
             request.dto.Name = request.dto.Name ?? originalTeacher.Value!.Name;
             request.dto.Surname = request.dto.Surname ?? originalTeacher.Value!.Surname;
 
-            var teacherName = await _dbService.GetAll<Guid>(
+            var teacherName = await _dbService.GetAll<Teacher>(
                 $@"
                     SELECT 
                     [Id]

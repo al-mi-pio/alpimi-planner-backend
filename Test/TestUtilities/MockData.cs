@@ -10,6 +10,8 @@ using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Entities.ESchedule.DTO;
 using AlpimiAPI.Entities.EScheduleSettings;
 using AlpimiAPI.Entities.EScheduleSettings.DTO;
+using AlpimiAPI.Entities.EStudent;
+using AlpimiAPI.Entities.EStudent.DTO;
 using AlpimiAPI.Entities.ESubgroup;
 using AlpimiAPI.Entities.ESubgroup.DTO;
 using AlpimiAPI.Entities.ETeacher;
@@ -121,6 +123,16 @@ namespace AlpimiTest.TestUtilities
             {
                 Name = "K03",
                 StudentCount = 16,
+                GroupId = new Guid(),
+                Group = GetGroupDetails()
+            };
+        }
+
+        public static Student GetStudentDetails()
+        {
+            return new Student()
+            {
+                AlbumNumber = "88776655",
                 GroupId = new Guid(),
                 Group = GetGroupDetails()
             };
@@ -334,6 +346,22 @@ namespace AlpimiTest.TestUtilities
         public static UpdateSubgroupDTO GetUpdateSubgroupDTODetails()
         {
             return new UpdateSubgroupDTO() { Name = "L02", StudentCount = 8 };
+        }
+
+        public static CreateStudentDTO GetCreateStudentDTODetails(Guid groupId)
+        {
+            var student = GetStudentDetails();
+            return new CreateStudentDTO() { AlbumNumber = student.AlbumNumber, GroupId = groupId };
+        }
+
+        public static CreateStudentDTO GetCreateSecondStudentDTODetails(Guid groupId)
+        {
+            return new CreateStudentDTO() { AlbumNumber = "11223344", GroupId = groupId };
+        }
+
+        public static UpdateStudentDTO GetUpdateStudentDTODetails()
+        {
+            return new UpdateStudentDTO() { AlbumNumber = "newNumber" };
         }
     }
 }

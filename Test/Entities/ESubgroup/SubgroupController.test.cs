@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using System.Net.Http.Headers;
-using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Entities.ESubgroup;
 using AlpimiAPI.Responses;
 using AlpimiAPI.Settings;
@@ -152,7 +151,7 @@ namespace AlpimiTest.Entities.ESubgroup
         }
 
         [Fact]
-        public async Task GetAllSubgroupByScheduleReturnsSubgroups()
+        public async Task GetAllSubgroupByGroupReturnsSubgroups()
         {
             var subgroupRequest1 = MockData.GetCreateSubgroupDTODetails(groupId);
             var subgroupRequest2 = MockData.GetCreateSecondSubgroupDTODetails(groupId);
@@ -173,7 +172,7 @@ namespace AlpimiTest.Entities.ESubgroup
         }
 
         [Fact]
-        public async Task GetAllSubgroupByScheduleReturnsEmptyContentWhenWrongUserAttemptsGet()
+        public async Task GetAllSubgroupByGroupReturnsEmptyContentWhenWrongUserAttemptsGet()
         {
             var subgroupRequest1 = MockData.GetCreateSubgroupDTODetails(groupId);
             var subgroupRequest2 = MockData.GetCreateSecondSubgroupDTODetails(groupId);
@@ -194,7 +193,7 @@ namespace AlpimiTest.Entities.ESubgroup
         }
 
         [Fact]
-        public async Task GetAllSubgroupByScheduleReturnsEmptyContentWhenWrongIdIsGiven()
+        public async Task GetAllSubgroupByGroupReturnsEmptyContentWhenWrongIdIsGiven()
         {
             var subgroupRequest1 = MockData.GetCreateSubgroupDTODetails(groupId);
             var subgroupRequest2 = MockData.GetCreateSecondSubgroupDTODetails(groupId);
@@ -234,7 +233,7 @@ namespace AlpimiTest.Entities.ESubgroup
         }
 
         [Fact]
-        public async Task GetScheduleThrowsNotFoundWhenWrongIdIsGiven()
+        public async Task GetSubgroupThrowsNotFoundWhenWrongIdIsGiven()
         {
             var subgroupRequest = MockData.GetCreateSubgroupDTODetails(groupId);
 
@@ -251,7 +250,7 @@ namespace AlpimiTest.Entities.ESubgroup
         }
 
         [Fact]
-        public async Task GetScheduleThrowsNotFoundErrorWhenWrongUserTokenIsGiven()
+        public async Task GetSubgroupThrowsNotFoundErrorWhenWrongUserTokenIsGiven()
         {
             var subgroupRequest = MockData.GetCreateSubgroupDTODetails(groupId);
 

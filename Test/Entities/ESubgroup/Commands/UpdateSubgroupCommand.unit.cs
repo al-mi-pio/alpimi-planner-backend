@@ -1,6 +1,5 @@
 ﻿using AlpimiAPI.Database;
 using AlpimiAPI.Entities.EGroup;
-using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Entities.ESubgroup;
 using AlpimiAPI.Entities.ESubgroup.Commands;
 using AlpimiAPI.Responses;

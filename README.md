@@ -19,7 +19,7 @@
   - **Trust server certificate**: `checked`
   - **New database name**: `provide_any_name_here`
 
-- After a successful connection, right click the database, select `Properties` and copy the connection string
+- After , right click the database, select `Properties` and copy the connection string
 
 - Create a `.env` file inside the root of the project containing:
 
@@ -43,7 +43,7 @@ dotnet ef database update
 
 - Create a second database following steps 3 and 4 from the previous `Setup for development` section
 
-- Paste your new connection string in a new `.runsettings` file like this:
+- Paste connection string in a new `.runsettings` file like this:
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>

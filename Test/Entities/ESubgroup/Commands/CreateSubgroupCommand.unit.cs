@@ -176,7 +176,10 @@ namespace AlpimiTest.Entities.ESubgroup.Commands
                     )
             );
 
-            Assert.Equal("There are too many students", result.errors.First().message);
+            Assert.Equal(
+                "Student count in a subgroup cannot be greater than the student count in a group",
+                result.errors.First().message
+            );
         }
     }
 }

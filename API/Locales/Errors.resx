@@ -172,6 +172,6 @@
     <value>There are days off outside of provided range. Please change them first</value>
   </data>
   <data name="tooManyStudents" xml:space="preserve">
-    <value>There are too many students</value>
+    <value>Student count in a subgroup cannot be greater than the student count in a group</value>
   </data>
 </root>

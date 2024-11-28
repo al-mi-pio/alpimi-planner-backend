@@ -22,7 +22,7 @@
 - [ThrowsErrorWhenStudentCountIsLessThan1()](../Entities/EGroup/Commands/CreateGroupCommand.unit.cs) - **unit** 
   Check if returns an error when student count is less than 1
 
-- [ThrowsErrorWhenNameIsAlreadyTakenBySubgroup()](../Entities/EGroup/Commands/UpdateGroupCommand.unit.cs) - **unit**  
+- [ThrowsErrorWhenNameIsAlreadyTakenBySubgroup()](../Entities/EGroup/Commands/CreateGroupCommand.unit.cs) - **unit**  
   Check if returns an error when a taken by subgroup name is provided
 
 
@@ -73,7 +73,7 @@
 - [UpdateGroupReturnsUpdatedGroup()](../Entities/EGroup/GroupController.test.cs) - **integrity**  
   Check if returns an updated day off when provided with correct data
 
-- [updateGroupThrowsNotFoundErrorWhenWrongIdIsGiven()](../Entities/EGroup/GroupController.test.cs) - **integrity**  
+- [UpdateGroupThrowsNotFoundErrorWhenWrongIdIsGiven()](../Entities/EGroup/GroupController.test.cs) - **integrity**  
   Check if returns an error when day off doesn't exists
 
 - [UpdateGroupThrowsNotFoundErrorWhenWrongUserAttemptsUpdate()](../Entities/EGroup/GroupController.test.cs) - **integrity**  

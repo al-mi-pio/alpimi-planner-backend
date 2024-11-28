@@ -123,7 +123,10 @@ namespace AlpimiTest.Entities.EGroup.Commands
                     await updateGroupHandler.Handle(updateGroupCommand, new CancellationToken())
             );
 
-            Assert.Equal("There are too many students", result.errors.First().message);
+            Assert.Equal(
+                "Student count in a subgroup cannot be greater than the student count in a group",
+                result.errors.First().message
+            );
         }
     }
 }

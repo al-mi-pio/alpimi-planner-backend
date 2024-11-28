@@ -4,6 +4,7 @@ using AlpimiAPI.Entities.EDayOff.DTO;
 using AlpimiAPI.Entities.EGroup.DTO;
 using AlpimiAPI.Entities.ELessonPeriod.DTO;
 using AlpimiAPI.Entities.ESchedule.DTO;
+using AlpimiAPI.Entities.EStudent.DTO;
 using AlpimiAPI.Entities.ESubgroup.DTO;
 using AlpimiAPI.Entities.ETeacher.DTO;
 using AlpimiAPI.Entities.EUser.DTO;
@@ -145,6 +146,23 @@ namespace AlpimiTest.TestUtilities
             var jsonSubgroupId = await subgroup.Content.ReadFromJsonAsync<ApiGetResponse<Guid>>();
 
             return jsonSubgroupId!.Content;
+        }
+
+        public static async Task<Guid> SetupStudent(
+            HttpClient _client,
+            CreateStudentDTO studentRequest
+        )
+        {
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "Bob", new Guid())
+            );
+
+            var student = await _client.PostAsJsonAsync("/api/Student", studentRequest);
+
+            var jsonStudentId = await student.Content.ReadFromJsonAsync<ApiGetResponse<Guid>>();
+
+            return jsonStudentId!.Content;
         }
     }
 }

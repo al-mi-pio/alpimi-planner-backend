@@ -16,7 +16,7 @@
 - [ThrowsErrorWhenNameIsAlreadyTakenBySubgroup()](../Entities/ESubgroup/CreateSubgroupCommand.unit.cs) - **unit**  
   Check if returns an error when a taken by subgroup name is provided
 
-- [ThrowsErrorWhenWrongScheduleIdIsGiven()](../Entities/ESubgroup/CreateSubgroupCommand.unit.cs) - **unit** 
+- [ThrowsErrorWhenWrongGroupIdIsGiven()](../Entities/ESubgroup/CreateSubgroupCommand.unit.cs) - **unit** 
   Check if returns an error when incorrect id is provided
 
 - [ThrowsErrorWhenStudentCountIsLessThan1()](../Entities/ESubgroup/Commands/CreateSubgroupCommand.unit.cs) - **unit** 
@@ -30,14 +30,14 @@
 
 ## `GET` `api/Subgroup`
 
-- [GetAllSubgroupsByScheduleReturnsSubgroups()](../Entities/ESubgroup/SubgroupController.test.cs) - **integrity**  
+- [GetAllSubgroupsByGroupReturnsSubgroups()](../Entities/ESubgroup/SubgroupController.test.cs) - **integrity**  
   Check if returns two subgroups when a valid token is provided
 
-- [GetAllSubgroupsByScheduleReturnsEmptyContentWhenWrongUserAttemptsGet()](../Entities/ESubgroup/SubgroupController.test.cs) - **integrity**  
+- [GetAllSubgroupsByGroupReturnsEmptyContentWhenWrongUserAttemptsGet()](../Entities/ESubgroup/SubgroupController.test.cs) - **integrity**  
   Check if returns no subgroups when other user's token is provided
 
-- [GetAllSubgroupsByScheduleReturnsEmptyContentWhenWrongIdIsGiven()](../Entities/ESubgroup/SubgroupController.test.cs) - **integrity**  
-  Check if returns no subgroups when wrong schedule id is provided
+- [GetAllSubgroupsByGroupReturnsEmptyContentWhenWrongIdIsGiven()](../Entities/ESubgroup/SubgroupController.test.cs) - **integrity**  
+  Check if returns no subgroups when wrong group id is provided
 
 - [ThrowsErrorWhenIncorrectPerPageIsGiven()](../Entities/ESubgroup/Queries/GetAllSubgroup.unit.cs) - **unit**  
   Check if returns an error when provided with invalid perPage
@@ -60,7 +60,7 @@
   Check if returns a subgroup when a valid token is provided
 
 - [GetSubgroupThrowsNotFoundErrorWhenWrongUserTokenIsGiven()](../Entities/ESubgroup/SubgroupController.test.cs) - **integrity** 
-  Check if returns an error when a schedule is inaccessible for user
+  Check if returns an error when a group is inaccessible for user
 
 - [GetSubgroupThrowsNotFoundWhenWrongIdIsGiven()](../Entities/ESubgroup/SubgroupController.test.cs) - **integrity**  
   Check if returns no days off when wrong id is provided
@@ -68,7 +68,7 @@
 ## `DELETE` `api/Subgroup/{id}`
 
 - [SubgroupIsDeleted()](../Entities/ESubgroup/SubgroupController.test.cs) - **integrity**  
-  Check if schedule is deleted when a valid token is provided
+  Check if subgroup is deleted when a valid token is provided
 
 ## `PATCH` `api/Subgroup/{id}`
 

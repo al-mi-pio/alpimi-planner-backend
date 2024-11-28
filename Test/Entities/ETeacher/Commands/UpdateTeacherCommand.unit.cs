@@ -1,5 +1,6 @@
 ﻿using AlpimiAPI.Database;
 using AlpimiAPI.Entities.ESchedule;
+using AlpimiAPI.Entities.ETeacher;
 using AlpimiAPI.Entities.ETeacher.Commands;
 using AlpimiAPI.Responses;
 using AlpimiTest.TestSetup;
@@ -33,8 +34,8 @@ namespace AlpimiTest.Entities.ETeacher.Commands
                 .Setup(s => s.Get<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(schedule);
             _dbService
-                .Setup(s => s.GetAll<Guid>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(new List<Guid> { new Guid() });
+                .Setup(s => s.GetAll<Teacher>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(new List<Teacher> { MockData.GetTeacherDetails() });
 
             var updateTeacherCommand = new UpdateTeacherCommand(
                 new Guid(),

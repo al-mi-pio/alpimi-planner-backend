@@ -20,6 +20,10 @@ namespace AlpimiTest.TestSetup
             {
                 "outOfRange",
                 "There are days off outside of provided range. Please change them first"
+            },
+            {
+                "tooManyStudents",
+                "Student count in a subgroup cannot be greater than the student count in a group"
             }
         };
         private static readonly Dictionary<

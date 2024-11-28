@@ -1,6 +1,8 @@
 ﻿using AlpimiAPI.Database;
+using AlpimiAPI.Entities.EGroup;
 using AlpimiAPI.Entities.EGroup.Commands;
 using AlpimiAPI.Entities.ESchedule;
+using AlpimiAPI.Entities.ESubgroup;
 using AlpimiAPI.Responses;
 using AlpimiTest.TestSetup;
 using AlpimiTest.TestUtilities;
@@ -49,17 +51,16 @@ namespace AlpimiTest.Entities.EGroup.Commands
         }
 
         [Fact]
-        public async Task ThrowsErrorWhenNameIsAlreadyTaken()
+        public async Task ThrowsErrorWhenNameIsAlreadyTakenByGroup()
         {
             var dto = MockData.GetCreateGroupDTODetails(new Guid());
-            var schedule = MockData.GetScheduleDetails();
 
             _dbService
                 .Setup(s => s.Get<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(schedule);
+                .ReturnsAsync(MockData.GetScheduleDetails());
             _dbService
-                .Setup(s => s.GetAll<Guid>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(new List<Guid> { new Guid() });
+                .Setup(s => s.GetAll<Group>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(new List<Group> { MockData.GetGroupDetails() });
 
             var createGroupCommand = new CreateGroupCommand(new Guid(), dto, new Guid(), "User");
 
@@ -72,6 +73,33 @@ namespace AlpimiTest.Entities.EGroup.Commands
 
             Assert.Equal(
                 "There is already a Group with the name 13K2",
+                result.errors.First().message
+            );
+        }
+
+        [Fact]
+        public async Task ThrowsErrorWhenNameIsAlreadyTakenBySubgroup()
+        {
+            var dto = MockData.GetCreateGroupDTODetails(new Guid());
+
+            _dbService
+                .Setup(s => s.Get<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetScheduleDetails());
+            _dbService
+                .Setup(s => s.GetAll<Subgroup>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(new List<Subgroup> { MockData.GetSubgroupDetails() });
+
+            var createGroupCommand = new CreateGroupCommand(new Guid(), dto, new Guid(), "User");
+
+            var createGroupHandler = new CreateGroupHandler(_dbService.Object, _str.Object);
+
+            var result = await Assert.ThrowsAsync<ApiErrorException>(
+                async () =>
+                    await createGroupHandler.Handle(createGroupCommand, new CancellationToken())
+            );
+
+            Assert.Equal(
+                "There is already a Subgroup with the name 13K2",
                 result.errors.First().message
             );
         }

@@ -3,6 +3,7 @@ using AlpimiAPI.Entities.EGroup.DTO;
 using AlpimiAPI.Entities.EGroup.Queries;
 using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Entities.ESchedule.Queries;
+using AlpimiAPI.Entities.ESubgroup;
 using AlpimiAPI.Responses;
 using alpimi_planner_backend.API.Locales;
 using MediatR;
@@ -56,7 +57,7 @@ namespace AlpimiAPI.Entities.EGroup.Commands
             GetGroupQuery getGroupQuery = new GetGroupQuery(
                 request.Id,
                 request.FilteredId,
-                request.Role
+                "Admin"
             );
 
             ActionResult<Group?> originalGroup = await getGroupHandler.Handle(
@@ -65,8 +66,10 @@ namespace AlpimiAPI.Entities.EGroup.Commands
             );
 
             request.dto.Name = request.dto.Name ?? originalGroup.Value!.Name;
+            request.dto.StudentCount =
+                request.dto.StudentCount ?? originalGroup.Value!.StudentCount;
 
-            var groupName = await _dbService.GetAll<Guid>(
+            var groupName = await _dbService.GetAll<Group>(
                 $@"
                     SELECT 
                     [Id]
@@ -80,6 +83,37 @@ namespace AlpimiAPI.Entities.EGroup.Commands
                 throw new ApiErrorException(
                     [new ErrorObject(_str["alreadyExists", "Group", request.dto.Name])]
                 );
+            }
+
+            var subgroupName = await _dbService.GetAll<Subgroup>(
+                $@"
+                    SELECT 
+                    sg.[Id]
+                    FROM [Subgroup] sg
+                    INNER JOIN [Group] g ON g.[Id] = sg.[GroupId]
+                    WHERE sg.[Name] = @Name AND g.[ScheduleId] = '{schedule.Id}';",
+                request.dto
+            );
+
+            if (subgroupName!.Any())
+            {
+                throw new ApiErrorException(
+                    [new ErrorObject(_str["alreadyExists", "Subgroup", request.dto.Name])]
+                );
+            }
+
+            var studentCount = await _dbService.GetAll<Guid>(
+                $@"
+                    SELECT 
+                    [Id]
+                    FROM [Subgroup] 
+                    WHERE [StudentCount]>@StudentCount AND [GroupId] = '{originalGroup .Value! .Id}';",
+                request.dto
+            );
+
+            if (studentCount!.Any())
+            {
+                throw new ApiErrorException([new ErrorObject(_str["tooManyStudents"])]);
             }
 
             Group? group;

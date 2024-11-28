@@ -72,7 +72,7 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Commands
             request.dto.Start = request.dto.Start ?? originalLessonPeriod!.Start;
             request.dto.Finish = request.dto.Finish ?? originalLessonPeriod!.Finish;
 
-            var lessonPeriodOverlap = await _dbService.GetAll<Guid>(
+            var lessonPeriodOverlap = await _dbService.GetAll<LessonPeriod>(
                 $@"
                     SELECT 
                     lp.[Id]

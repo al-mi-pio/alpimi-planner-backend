@@ -38,8 +38,8 @@ namespace AlpimiTest.Entities.ELessonPeriod.Commands
                 .Setup(s => s.Get<ScheduleSettings>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(scheduleSettings);
             _dbService
-                .Setup(s => s.GetAll<Guid>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(new List<Guid> { new Guid(), new Guid() });
+                .Setup(s => s.GetAll<LessonPeriod>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(new List<LessonPeriod> { MockData.GetLessonPeriodDetails() });
             _dbService
                 .Setup(s => s.Get<LessonPeriod>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetLessonPeriodDetails());

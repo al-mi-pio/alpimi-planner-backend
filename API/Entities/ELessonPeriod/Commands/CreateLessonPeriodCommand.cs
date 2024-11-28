@@ -1,5 +1,6 @@
 ﻿using AlpimiAPI.Database;
 using AlpimiAPI.Entities.ELessonPeriod.DTO;
+using AlpimiAPI.Entities.ELessonPerioid;
 using AlpimiAPI.Entities.EScheduleSettings;
 using AlpimiAPI.Entities.EScheduleSettings.Queries;
 using AlpimiAPI.Responses;
@@ -59,7 +60,7 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Commands
                 );
             }
 
-            var lessonPeriodOverlap = await _dbService.GetAll<Guid>(
+            var lessonPeriodOverlap = await _dbService.GetAll<LessonPeriod>(
                 $@"
                     SELECT 
                     lp.[Id]

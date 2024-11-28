@@ -147,7 +147,7 @@ namespace AlpimiTest.Entities.EGroup
         }
 
         [Fact]
-        public async Task GetAllGroupByScheduleReturnsDaysOff()
+        public async Task GetAllGroupByScheduleReturnsGroups()
         {
             var groupRequest1 = MockData.GetCreateGroupDTODetails(scheduleId);
             var groupRequest2 = MockData.GetCreateSecondGroupDTODetails(scheduleId);

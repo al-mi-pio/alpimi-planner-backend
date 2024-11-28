@@ -1,32 +1,35 @@
 ﻿using AlpimiAPI.Database;
-using AlpimiAPI.Entities.EGroup.DTO;
-using AlpimiAPI.Entities.ESchedule;
-using AlpimiAPI.Entities.ESchedule.Queries;
-using AlpimiAPI.Entities.ESubgroup;
+using AlpimiAPI.Entities.EGroup;
+using AlpimiAPI.Entities.EGroup.Queries;
+using AlpimiAPI.Entities.ESubgroup.DTO;
 using AlpimiAPI.Responses;
 using alpimi_planner_backend.API.Locales;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 
-namespace AlpimiAPI.Entities.EGroup.Commands
+namespace AlpimiAPI.Entities.ESubgroup.Commands
 {
-    public record CreateGroupCommand(Guid Id, CreateGroupDTO dto, Guid FilteredId, string Role)
-        : IRequest<Guid>;
+    public record CreateSubgroupCommand(
+        Guid Id,
+        CreateSubgroupDTO dto,
+        Guid FilteredId,
+        string Role
+    ) : IRequest<Guid>;
 
-    public class CreateGroupHandler : IRequestHandler<CreateGroupCommand, Guid>
+    public class CreateSubgroupHandler : IRequestHandler<CreateSubgroupCommand, Guid>
     {
         private readonly IDbService _dbService;
         private readonly IStringLocalizer<Errors> _str;
 
-        public CreateGroupHandler(IDbService dbService, IStringLocalizer<Errors> str)
+        public CreateSubgroupHandler(IDbService dbService, IStringLocalizer<Errors> str)
         {
             _dbService = dbService;
             _str = str;
         }
 
         public async Task<Guid> Handle(
-            CreateGroupCommand request,
+            CreateSubgroupCommand request,
             CancellationToken cancellationToken
         )
         {
@@ -37,28 +40,33 @@ namespace AlpimiAPI.Entities.EGroup.Commands
                 );
             }
 
-            GetScheduleHandler getScheduleHandler = new GetScheduleHandler(_dbService);
-            GetScheduleQuery getScheduleQuery = new GetScheduleQuery(
-                request.dto.ScheduleId,
+            GetGroupHandler getGroupHandler = new GetGroupHandler(_dbService);
+            GetGroupQuery getGroupQuery = new GetGroupQuery(
+                request.dto.GroupId,
                 request.FilteredId,
                 request.Role
             );
-
-            ActionResult<Schedule?> schedule = await getScheduleHandler.Handle(
-                getScheduleQuery,
+            ActionResult<Group?> group = await getGroupHandler.Handle(
+                getGroupQuery,
                 cancellationToken
             );
-            if (schedule.Value == null)
+
+            if (group.Value == null)
             {
-                throw new ApiErrorException([new ErrorObject(_str["notFound", "Schedule"])]);
+                throw new ApiErrorException([new ErrorObject(_str["notFound", "Group"])]);
+            }
+
+            if (group.Value.StudentCount < request.dto.StudentCount)
+            {
+                throw new ApiErrorException([new ErrorObject(_str["tooManyStudents"])]);
             }
 
             var groupName = await _dbService.GetAll<Group>(
-                @"
+                $@"
                     SELECT 
                     [Id]
                     FROM [Group] 
-                    WHERE [Name] = @Name AND [ScheduleId] = @ScheduleId;",
+                    WHERE [Name] = @Name AND [ScheduleId]='{group.Value.ScheduleId}';",
                 request.dto
             );
 
@@ -70,12 +78,11 @@ namespace AlpimiAPI.Entities.EGroup.Commands
             }
 
             var subgroupName = await _dbService.GetAll<Subgroup>(
-                $@"
+                @"
                     SELECT 
-                    sg.[Id]
-                    FROM [Subgroup] sg
-                    INNER JOIN [Group] g ON g.[Id] = sg.[GroupId]
-                    WHERE sg.[Name] = @Name AND g.[ScheduleId] = @ScheduleId;",
+                    [Id]
+                    FROM [Subgroup] 
+                    WHERE [Name] = @Name AND [GroupId] = @GroupId;",
                 request.dto
             );
 
@@ -88,15 +95,15 @@ namespace AlpimiAPI.Entities.EGroup.Commands
 
             var insertedId = await _dbService.Post<Guid>(
                 $@"
-                    INSERT INTO [Group] 
-                    ([Id],[Name],[StudentCount],[ScheduleId])
+                    INSERT INTO [Subgroup] 
+                    ([Id],[Name],[StudentCount],[GroupId])
                     OUTPUT 
                     INSERTED.Id                    
                     VALUES (
                     '{request.Id}',   
                     @Name,
                     @StudentCount,
-                    @ScheduleId);",
+                    @GroupId);",
                 request.dto
             );
 

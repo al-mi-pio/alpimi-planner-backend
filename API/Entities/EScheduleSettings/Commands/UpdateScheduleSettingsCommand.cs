@@ -65,7 +65,7 @@ namespace AlpimiAPI.Entities.EScheduleSettings.Commands
             request.dto.SchoolYearEnd =
                 request.dto.SchoolYearEnd ?? scheduleSettingsSchoolYearPeriod.Value!.SchoolYearEnd;
 
-            var daysOffOutOfRange = await _dbService.GetAll<Guid>(
+            var daysOffOutOfRange = await _dbService.GetAll<DayOff>(
                 $@"
                     SELECT
                     do.[Id] 

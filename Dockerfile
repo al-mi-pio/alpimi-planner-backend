@@ -9,7 +9,7 @@ RUN dotnet restore
 # Build and publish a release
 COPY . .
 RUN dotnet publish -c Release -o /app --no-restore
-
+asdfgsdfg
 
 # final stage/image
 FROM mcr.microsoft.com/dotnet/aspnet:8.0

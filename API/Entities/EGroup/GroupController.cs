@@ -1,10 +1,10 @@
 ﻿using AlpimiAPI.Entities.EGroup.Commands;
 using AlpimiAPI.Entities.EGroup.DTO;
 using AlpimiAPI.Entities.EGroup.Queries;
+using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
+using AlpimiAPI.Settings;
 using AlpimiAPI.Utilities;
-using alpimi_planner_backend.API.Locales;
-using alpimi_planner_backend.API.Settings;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

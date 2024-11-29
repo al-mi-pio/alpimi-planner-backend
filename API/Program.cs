@@ -4,10 +4,10 @@ using System.Reflection;
 using System.Text;
 using AlpimiAPI;
 using AlpimiAPI.Database;
+using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
 using AlpimiAPI.Settings;
 using AlpimiAPI.Utilities;
-using alpimi_planner_backend.API.Locales;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Data.SqlClient;
@@ -185,10 +185,10 @@ try
     });
 
     var app = builder.Build();
-    var adminInit = new AdminInit(app.Services.GetService<IStringLocalizer<General>>()!);
 
     if (!app.Environment.IsEnvironment("Testing"))
     {
+        var adminInit = new AdminInit(app.Services.GetService<IStringLocalizer<General>>()!);
         await adminInit.StartupBase();
     }
 

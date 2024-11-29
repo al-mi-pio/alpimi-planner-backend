@@ -1,10 +1,9 @@
 ﻿using AlpimiAPI.Database;
-using AlpimiAPI.Entities.EDayOff;
 using AlpimiAPI.Entities.ELessonPerioid;
 using AlpimiAPI.Entities.EScheduleSettings;
 using AlpimiAPI.Entities.EScheduleSettings.Queries;
+using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
-using alpimi_planner_backend.API.Locales;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;

@@ -10,9 +10,10 @@ using AlpimiAPI.Entities.ETeacher.DTO;
 using AlpimiAPI.Entities.EUser.DTO;
 using AlpimiAPI.Responses;
 using AlpimiAPI.Utilities;
+using AlpimiTest.TestUtilities;
 using Microsoft.Data.SqlClient;
 
-namespace AlpimiTest.TestUtilities
+namespace AlpimiTest.TestSetup
 {
     public static class DbHelper
     {

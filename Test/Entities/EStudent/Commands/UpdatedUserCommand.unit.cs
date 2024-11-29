@@ -2,10 +2,10 @@
 using AlpimiAPI.Entities.EGroup;
 using AlpimiAPI.Entities.EStudent;
 using AlpimiAPI.Entities.EStudent.Commands;
+using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
 using AlpimiTest.TestSetup;
 using AlpimiTest.TestUtilities;
-using alpimi_planner_backend.API.Locales;
 using Microsoft.Extensions.Localization;
 using Moq;
 using Xunit;

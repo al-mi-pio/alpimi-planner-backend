@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Net.Http.Headers;
 using AlpimiAPI.Settings;
+using AlpimiTest.TestSetup;
 using AlpimiTest.TestUtilities;
 using Xunit;
 

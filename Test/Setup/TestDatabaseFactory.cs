@@ -3,7 +3,7 @@ using AlpimiAPI.Utilities;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Data.SqlClient;
 
-namespace AlpimiTest.TestUtilities
+namespace AlpimiTest.TestSetup
 {
     public class CustomWebApplicationFactory<TProgram> : WebApplicationFactory<TProgram>
         where TProgram : class

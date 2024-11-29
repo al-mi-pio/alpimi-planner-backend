@@ -2,8 +2,8 @@
 using AlpimiAPI.Entities.EGroup;
 using AlpimiAPI.Entities.EGroup.Queries;
 using AlpimiAPI.Entities.ESubgroup.DTO;
+using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
-using alpimi_planner_backend.API.Locales;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;

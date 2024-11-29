@@ -2,10 +2,10 @@
 using AlpimiAPI.Entities.EDayOff;
 using AlpimiAPI.Entities.EScheduleSettings;
 using AlpimiAPI.Entities.EScheduleSettings.Commands;
+using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
 using AlpimiTest.TestSetup;
 using AlpimiTest.TestUtilities;
-using alpimi_planner_backend.API.Locales;
 using Microsoft.Extensions.Localization;
 using Moq;
 using Newtonsoft.Json;

@@ -82,7 +82,7 @@ namespace AlpimiTest.Entities.EStudent
             var response = await _client.PostAsJsonAsync("/api/Student", studentRequest);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-            var query = $"?Id={groupId1}";
+            var query = $"?id={groupId1}";
             response = await _client.GetAsync($"/api/Student{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.Contains(studentRequest.AlbumNumber, stringResponse);
@@ -168,7 +168,7 @@ namespace AlpimiTest.Entities.EStudent
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)
             );
-            var query = $"?Id={groupId1}";
+            var query = $"?id={groupId1}";
             var response = await _client.GetAsync($"/api/Student{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
 
@@ -189,7 +189,7 @@ namespace AlpimiTest.Entities.EStudent
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)
             );
-            var query = $"?Id={scheduleId}";
+            var query = $"?id={scheduleId}";
             var response = await _client.GetAsync($"/api/Student{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
 

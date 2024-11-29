@@ -58,7 +58,7 @@ namespace AlpimiTest.Entities.ESubgroup
             var response = await _client.DeleteAsync($"/api/Subgroup/{subgroupId}");
             Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
 
-            var query = $"?groupId={groupId}";
+            var query = $"?id={groupId}";
             response = await _client.GetAsync($"/api/Subgroup");
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.DoesNotContain(subgroupRequest.Name, stringResponse);
@@ -77,7 +77,7 @@ namespace AlpimiTest.Entities.ESubgroup
             var response = await _client.PostAsJsonAsync("/api/Subgroup", subgroupRequest);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-            var query = $"?groupId={groupId}";
+            var query = $"?id={groupId}";
             response = await _client.GetAsync($"/api/Subgroup{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.Contains(subgroupRequest.Name, stringResponse);
@@ -164,7 +164,7 @@ namespace AlpimiTest.Entities.ESubgroup
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)
             );
-            var query = $"?groupId={groupId}";
+            var query = $"?id={groupId}";
             var response = await _client.GetAsync($"/api/Subgroup{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
 

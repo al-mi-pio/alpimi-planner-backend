@@ -5,7 +5,6 @@ using System.Text;
 using AlpimiAPI;
 using AlpimiAPI.Database;
 using AlpimiAPI.Locales;
-using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
 using AlpimiAPI.Settings;
 using AlpimiAPI.Utilities;

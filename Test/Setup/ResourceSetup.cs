@@ -1,4 +1,4 @@
-﻿using alpimi_planner_backend.API.Locales;
+﻿using AlpimiAPI.Locales;
 using Microsoft.Extensions.Localization;
 using Moq;
 

@@ -3,6 +3,7 @@ using System.Net.Http.Headers;
 using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Responses;
 using AlpimiAPI.Settings;
+using AlpimiTest.TestSetup;
 using AlpimiTest.TestUtilities;
 using Xunit;
 

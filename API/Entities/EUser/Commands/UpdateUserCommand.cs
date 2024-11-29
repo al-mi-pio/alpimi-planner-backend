@@ -1,8 +1,8 @@
 ﻿using AlpimiAPI.Database;
 using AlpimiAPI.Entities.EUser.DTO;
+using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
 using AlpimiAPI.Utilities;
-using alpimi_planner_backend.API.Locales;
 using MediatR;
 using Microsoft.Extensions.Localization;
 

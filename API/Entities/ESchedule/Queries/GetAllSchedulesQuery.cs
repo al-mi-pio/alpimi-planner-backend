@@ -1,13 +1,11 @@
 ﻿using AlpimiAPI.Database;
 using AlpimiAPI.Entities.EUser;
 using AlpimiAPI.Entities.EUser.Queries;
+using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
-using AlpimiAPI.Utilities;
-using alpimi_planner_backend.API.Locales;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace AlpimiAPI.Entities.ESchedule.Queries
 {

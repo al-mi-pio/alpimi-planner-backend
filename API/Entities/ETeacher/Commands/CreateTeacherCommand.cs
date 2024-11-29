@@ -2,8 +2,8 @@
 using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Entities.ESchedule.Queries;
 using AlpimiAPI.Entities.ETeacher.DTO;
+using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
-using alpimi_planner_backend.API.Locales;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;

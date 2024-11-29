@@ -1,4 +1,4 @@
-﻿namespace alpimi_planner_backend.API.Settings
+﻿namespace AlpimiAPI.Settings
 {
     public static class PaginationSettings
     {

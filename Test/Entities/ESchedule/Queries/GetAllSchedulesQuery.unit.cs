@@ -1,8 +1,8 @@
 ﻿using AlpimiAPI.Database;
 using AlpimiAPI.Entities.ESchedule.Queries;
+using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
 using AlpimiTest.TestSetup;
-using alpimi_planner_backend.API.Locales;
 using Microsoft.Extensions.Localization;
 using Moq;
 using Newtonsoft.Json;

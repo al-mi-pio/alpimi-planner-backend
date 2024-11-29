@@ -1,5 +1,4 @@
 ﻿using AlpimiAPI.Settings;
-using alpimi_planner_backend.API.Settings;
 
 namespace AlpimiAPI.Responses
 {

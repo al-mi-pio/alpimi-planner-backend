@@ -1,4 +1,4 @@
-﻿namespace alpimi_planner_backend.API.Locales
+﻿namespace AlpimiAPI.Locales
 {
     public class General { }
 }

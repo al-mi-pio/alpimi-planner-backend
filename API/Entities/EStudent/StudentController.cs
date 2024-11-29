@@ -146,7 +146,7 @@ namespace AlpimiAPI.Entities.EStudent
         }
 
         /// <summary>
-        /// Gets all Students by GroupId or ScheduleId
+        /// Gets all Students by GroupId, ScheduleId or SubgroupId
         /// </summary>
         /// <remarks>
         /// - JWT token is required

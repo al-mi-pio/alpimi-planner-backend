@@ -146,7 +146,7 @@ namespace AlpimiAPI.Entities.EStudent
         }
 
         /// <summary>
-        /// Gets all Students by GroupId or ScheduleId
+        /// Gets all Students by GroupId, ScheduleId or SubgroupId
         /// </summary>
         /// <remarks>
         /// - JWT token is required
@@ -157,7 +157,7 @@ namespace AlpimiAPI.Entities.EStudent
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
         public async Task<ActionResult<ApiGetAllResponse<IEnumerable<Student>>>> GetAll(
             [FromHeader] string Authorization,
-            [FromQuery] Guid Id,
+            [FromQuery] Guid id,
             [FromQuery] int perPage = PaginationSettings.perPage,
             [FromQuery] int page = PaginationSettings.page,
             [FromQuery] string sortBy = PaginationSettings.sortBy,
@@ -168,7 +168,7 @@ namespace AlpimiAPI.Entities.EStudent
             string privileges = Privileges.GetUserRoleFromToken(Authorization);
 
             var query = new GetAllStudentsQuery(
-                Id,
+                id,
                 filteredId,
                 privileges,
                 new PaginationParams(perPage, (page - 1) * perPage, sortBy, sortOrder)

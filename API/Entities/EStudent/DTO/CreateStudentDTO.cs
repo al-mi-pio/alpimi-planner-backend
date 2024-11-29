@@ -9,5 +9,7 @@ namespace AlpimiAPI.Entities.EStudent.DTO
 
         [Required]
         public required Guid GroupId { get; set; }
+
+        public IEnumerable<Guid>? SubgroupIds { get; set; }
     }
 }

@@ -151,7 +151,7 @@ namespace AlpimiAPI.Entities.ESubgroup
         }
 
         /// <summary>
-        /// Gets all Subgroups by GroupId
+        /// Gets all Subgroups by GroupId or StudentId
         /// </summary>
         /// <remarks>
         /// - JWT token is required
@@ -162,7 +162,7 @@ namespace AlpimiAPI.Entities.ESubgroup
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
         public async Task<ActionResult<ApiGetAllResponse<IEnumerable<Subgroup>>>> GetAll(
             [FromHeader] string Authorization,
-            [FromQuery] Guid groupId,
+            [FromQuery] Guid id,
             [FromQuery] int perPage = PaginationSettings.perPage,
             [FromQuery] int page = PaginationSettings.page,
             [FromQuery] string sortBy = PaginationSettings.sortBy,
@@ -172,8 +172,8 @@ namespace AlpimiAPI.Entities.ESubgroup
             Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
             string privileges = Privileges.GetUserRoleFromToken(Authorization);
 
-            var query = new GetAllSubgroupsByGroupQuery(
-                groupId,
+            var query = new GetAllSubgroups(
+                id,
                 filteredId,
                 privileges,
                 new PaginationParams(perPage, (page - 1) * perPage, sortBy, sortOrder)

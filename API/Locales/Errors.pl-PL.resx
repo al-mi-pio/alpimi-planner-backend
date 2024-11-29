@@ -174,4 +174,10 @@
   <data name="tooManyStudents" xml:space="preserve">
     <value>Liczba studentów w podgrupie nie może być większa niż liczba studentów w grupie</value>
   </data>
+  <data name="duplicateData" xml:space="preserve">
+    <value>Nie można wielokrotnie dodać {0} o wartości {1}</value>
+  </data>
+  <data name="studentInGroup" xml:space="preserve">
+    <value>Student należy już do grupy o id {0}</value>
+  </data>
 </root>

@@ -1,4 +1,5 @@
 ﻿using AlpimiAPI.Database;
+using AlpimiAPI.Entities.EStudentSubgroup;
 using MediatR;
 
 namespace AlpimiAPI.Entities.ESubgroup.Commands
@@ -21,6 +22,12 @@ namespace AlpimiAPI.Entities.ESubgroup.Commands
                 case "Admin":
                     await _dbService.Delete(
                         @"
+                            DELETE FROM[StudentSubgroup]
+                            WHERE [SubgroupId] = @Id;",
+                        request
+                    );
+                    await _dbService.Delete(
+                        @"
                             DELETE [Subgroup] 
                             WHERE [Id] = @Id;",
                         request
@@ -29,9 +36,19 @@ namespace AlpimiAPI.Entities.ESubgroup.Commands
                 default:
                     await _dbService.Delete(
                         @"
+                            DELETE ssg
+                            FROM [StudentSubgroup] ssg
+                            INNER JOIN [Subgroup] sg ON sg.[Id] = ssg.[SubgroupId]
+                            INNER JOIN [Group] g ON g.[Id] = sg.[GroupId]
+                            INNER JOIN [Schedule] s ON s.[Id] = g.[ScheduleId]
+                            WHERE s.[UserId] = @FilteredId AND ssg.[Id] = @Id;",
+                        request
+                    );
+                    await _dbService.Delete(
+                        @"
                             DELETE sg
                             FROM [Subgroup] sg
-                            INNER JOIN [Group] g on g.[Id] = sg.[GroupId]
+                            INNER JOIN [Group] g ON g.[Id] = sg.[GroupId]
                             INNER JOIN [Schedule] s ON s.[Id] = g.[ScheduleId]
                             WHERE s.[UserId] = @FilteredId AND sg.[Id] = @Id;",
                         request

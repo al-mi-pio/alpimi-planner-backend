@@ -73,16 +73,20 @@ namespace AlpimiAPI.Entities.EStudent.Queries
                             COUNT(*)
                             FROM [Student] st
                             INNER JOIN [Group] g ON g.[Id] = st.[GroupId]
-                            WHERE [GroupId] = @Id OR g.[ScheduleId] = @Id",
+                            LEFT JOIN [StudentSubgroup] ssg ON ssg.[StudentId] = st.[Id]
+                            LEFT JOIN [Subgroup] sg ON sg.[Id] = ssg.[SubgroupId]
+                            WHERE st.[GroupId] = @Id OR g.[ScheduleId] = @Id OR sg.[Id] = @Id",
                         request
                     );
                     students = await _dbService.GetAll<Student>(
                         $@"
                             SELECT
-                            st.[Id], [AlbumNumber], [GroupId] 
+                            st.[Id], [AlbumNumber], st.[GroupId] 
                             FROM [Student] st
                             INNER JOIN [Group] g ON g.[Id] = st.[GroupId]
-                            WHERE [GroupId] = @Id OR g.[ScheduleId] = @Id
+                            LEFT JOIN [StudentSubgroup] ssg ON ssg.[StudentId] = st.[Id]
+                            LEFT JOIN [Subgroup] sg ON sg.[Id] = ssg.[SubgroupId]
+                            WHERE st.[GroupId] = @Id OR g.[ScheduleId] = @Id OR sg.[Id] = @Id
                             ORDER BY
                             {request.Pagination.SortBy}
                             {request.Pagination.SortOrder}
@@ -100,18 +104,22 @@ namespace AlpimiAPI.Entities.EStudent.Queries
                             FROM [Student] st
                             INNER JOIN [Group] g ON g.[Id] = st.[GroupId]
                             INNER JOIN [Schedule] s ON s.[Id] = g.[ScheduleId]
-                            WHERE s.[UserId] = @FilteredId AND (st.[GroupId] = @Id OR g.[ScheduleId] = @Id)
+                            LEFT JOIN [StudentSubgroup] ssg ON ssg.[StudentId] = st.[Id]
+                            LEFT JOIN [Subgroup] sg ON sg.[Id] = ssg.[SubgroupId]
+                            WHERE s.[UserId] = @FilteredId AND (st.[GroupId] = @Id OR g.[ScheduleId] = @Id OR sg.[Id] = @Id)
                             ",
                         request
                     );
                     students = await _dbService.GetAll<Student>(
                         $@"
                             SELECT 
-                            st.[Id], [AlbumNumber], [GroupId] 
+                            st.[Id], [AlbumNumber], st.[GroupId] 
                             FROM [Student] st
                             INNER JOIN [Group] g ON g.[Id] = st.[GroupId]
                             INNER JOIN [Schedule] s ON s.[Id] = g.[ScheduleId]
-                            WHERE s.[UserId] = @FilteredId AND (st.[GroupId] = @Id OR g.[ScheduleId] = @Id)
+                            LEFT JOIN [StudentSubgroup] ssg ON ssg.[StudentId] = st.[Id]
+                            LEFT JOIN [Subgroup] sg ON sg.[Id] = ssg.[SubgroupId]
+                            WHERE s.[UserId] = @FilteredId AND (st.[GroupId] = @Id OR g.[ScheduleId] = @Id OR sg.[Id] = @Id)
                             ORDER BY
                             {request.Pagination.SortBy}
                             {request.Pagination.SortOrder}

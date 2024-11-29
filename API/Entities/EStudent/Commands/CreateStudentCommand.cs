@@ -1,7 +1,12 @@
-﻿using AlpimiAPI.Database;
+﻿using System;
+using AlpimiAPI.Database;
 using AlpimiAPI.Entities.EGroup;
 using AlpimiAPI.Entities.EGroup.Queries;
 using AlpimiAPI.Entities.EStudent.DTO;
+using AlpimiAPI.Entities.EStudentSubgroup.Commands;
+using AlpimiAPI.Entities.EStudentSubgroup.DTO;
+using AlpimiAPI.Entities.ESubgroup;
+using AlpimiAPI.Entities.ESubgroup.Queries;
 using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
 using MediatR;
@@ -62,6 +67,58 @@ namespace AlpimiAPI.Entities.EStudent.Commands
                 );
             }
 
+            List<ErrorObject> errors = new List<ErrorObject>();
+            if (request.dto.SubgroupIds != null)
+            {
+                var duplicates = request
+                    .dto.SubgroupIds.GroupBy(g => g)
+                    .Where(g => g.Count() > 1)
+                    .Select(g => g.Key);
+
+                if (duplicates.Any())
+                {
+                    List<ErrorObject> duplicateErrors = new List<ErrorObject>();
+                    foreach (var duplicate in duplicates)
+                    {
+                        duplicateErrors.Add(
+                            new ErrorObject(_str["duplicateData", "Subgroup", duplicate])
+                        );
+                    }
+                    throw new ApiErrorException(duplicateErrors);
+                }
+
+                foreach (var subgroupId in request.dto.SubgroupIds)
+                {
+                    GetSubgroupHandler getSubgroupHandler = new GetSubgroupHandler(_dbService);
+                    GetSubgroupQuery getSubgroupQuery = new GetSubgroupQuery(
+                        subgroupId,
+                        request.FilteredId,
+                        request.Role
+                    );
+                    ActionResult<Subgroup?> subgroup = await getSubgroupHandler.Handle(
+                        getSubgroupQuery,
+                        cancellationToken
+                    );
+
+                    if (subgroup.Value == null)
+                    {
+                        errors.Add(
+                            new ErrorObject(_str["notFound", $"Subgroup Id = {subgroupId}"])
+                        );
+                    }
+                    else if (subgroup.Value.GroupId != request.dto.GroupId)
+                    {
+                        errors.Add(
+                            new ErrorObject(_str["notFound", $"Subgroup Id = {subgroupId}"])
+                        );
+                    }
+                }
+            }
+            if (errors.Count != 0)
+            {
+                throw new ApiErrorException(errors);
+            }
+
             var insertedId = await _dbService.Post<Guid>(
                 $@"
                     INSERT INTO [Student] 
@@ -74,6 +131,27 @@ namespace AlpimiAPI.Entities.EStudent.Commands
                     @GroupId);",
                 request.dto
             );
+
+            if (request.dto.SubgroupIds != null)
+            {
+                CreateStudentSubgroupDTO studentSubgroupDTO = new CreateStudentSubgroupDTO()
+                {
+                    StudentId = insertedId,
+                    SubgroupIds = request.dto.SubgroupIds
+                };
+                CreateStudentSubgroupHandler createStudentSubgroupHandler =
+                    new CreateStudentSubgroupHandler(_dbService, _str);
+                CreateStudentSubgroupCommand createStudentSubgroupCommand =
+                    new CreateStudentSubgroupCommand(
+                        studentSubgroupDTO,
+                        request.FilteredId,
+                        request.Role
+                    );
+                await createStudentSubgroupHandler.Handle(
+                    createStudentSubgroupCommand,
+                    cancellationToken
+                );
+            }
 
             return insertedId;
         }

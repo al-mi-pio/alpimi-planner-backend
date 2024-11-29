@@ -24,13 +24,13 @@ namespace AlpimiTest.Entities.ESubgroup.Queries
         [Fact]
         public async Task ThrowsErrorWhenIncorrectPerPageIsGiven()
         {
-            var getAllSubgroupByGroupQuery = new GetAllSubgroupsByGroupQuery(
+            var getAllSubgroupByGroupQuery = new GetAllSubgroups(
                 new Guid(),
                 new Guid(),
                 "Admin",
                 new PaginationParams(-20, 0, "Id", "ASC")
             );
-            var getAllSubgroupByGroupHandler = new GetAllSubgroupsByGroupHandler(
+            var getAllSubgroupByGroupHandler = new GetAllSubgroupsHandler(
                 _dbService.Object,
                 _str.Object
             );
@@ -54,13 +54,13 @@ namespace AlpimiTest.Entities.ESubgroup.Queries
         [Fact]
         public async Task ThrowsErrorWhenIncorrectPageIsGiven()
         {
-            var getAllSubgroupByGroupQuery = new GetAllSubgroupsByGroupQuery(
+            var getAllSubgroupByGroupQuery = new GetAllSubgroups(
                 new Guid(),
                 new Guid(),
                 "Admin",
                 new PaginationParams(20, -1, "Id", "ASC")
             );
-            var getAllSubgroupByGroupHandler = new GetAllSubgroupsByGroupHandler(
+            var getAllSubgroupByGroupHandler = new GetAllSubgroupsHandler(
                 _dbService.Object,
                 _str.Object
             );
@@ -84,13 +84,13 @@ namespace AlpimiTest.Entities.ESubgroup.Queries
         [Fact]
         public async Task ThrowsErrorWhenIncorrectSortByIsGiven()
         {
-            var getAllSubgroupByGroupQuery = new GetAllSubgroupsByGroupQuery(
+            var getAllSubgroupByGroupQuery = new GetAllSubgroups(
                 new Guid(),
                 new Guid(),
                 "Admin",
                 new PaginationParams(20, 0, "wrong", "ASC")
             );
-            var getAllSubgroupByGroupHandler = new GetAllSubgroupsByGroupHandler(
+            var getAllSubgroupByGroupHandler = new GetAllSubgroupsHandler(
                 _dbService.Object,
                 _str.Object
             );
@@ -114,13 +114,13 @@ namespace AlpimiTest.Entities.ESubgroup.Queries
         [Fact]
         public async Task ThrowsErrorWhenIncorrectSortOrderIsGiven()
         {
-            var getAllSubgroupByGroupQuery = new GetAllSubgroupsByGroupQuery(
+            var getAllSubgroupByGroupQuery = new GetAllSubgroups(
                 new Guid(),
                 new Guid(),
                 "Admin",
                 new PaginationParams(20, 0, "Id", "wrong")
             );
-            var getAllSubgroupByGroupHandler = new GetAllSubgroupsByGroupHandler(
+            var getAllSubgroupByGroupHandler = new GetAllSubgroupsHandler(
                 _dbService.Object,
                 _str.Object
             );
@@ -144,13 +144,13 @@ namespace AlpimiTest.Entities.ESubgroup.Queries
         [Fact]
         public async Task ThrowsMultipleErrorMessages()
         {
-            var getAllSubgroupByGroupQuery = new GetAllSubgroupsByGroupQuery(
+            var getAllSubgroupByGroupQuery = new GetAllSubgroups(
                 new Guid(),
                 new Guid(),
                 "Admin",
                 new PaginationParams(20, 0, "wrong", "wrong")
             );
-            var getAllSubgroupByGroupHandler = new GetAllSubgroupsByGroupHandler(
+            var getAllSubgroupByGroupHandler = new GetAllSubgroupsHandler(
                 _dbService.Object,
                 _str.Object
             );

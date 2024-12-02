@@ -24,7 +24,7 @@ namespace AlpimiTest.Entities.ESubgroup.Queries
         [Fact]
         public async Task ThrowsErrorWhenIncorrectPerPageIsGiven()
         {
-            var getAllSubgroupByGroupQuery = new GetAllSubgroups(
+            var getAllSubgroupByGroupQuery = new GetAllSubgroupsQuery(
                 new Guid(),
                 new Guid(),
                 "Admin",
@@ -54,7 +54,7 @@ namespace AlpimiTest.Entities.ESubgroup.Queries
         [Fact]
         public async Task ThrowsErrorWhenIncorrectPageIsGiven()
         {
-            var getAllSubgroupByGroupQuery = new GetAllSubgroups(
+            var getAllSubgroupByGroupQuery = new GetAllSubgroupsQuery(
                 new Guid(),
                 new Guid(),
                 "Admin",
@@ -84,7 +84,7 @@ namespace AlpimiTest.Entities.ESubgroup.Queries
         [Fact]
         public async Task ThrowsErrorWhenIncorrectSortByIsGiven()
         {
-            var getAllSubgroupByGroupQuery = new GetAllSubgroups(
+            var getAllSubgroupByGroupQuery = new GetAllSubgroupsQuery(
                 new Guid(),
                 new Guid(),
                 "Admin",
@@ -114,7 +114,7 @@ namespace AlpimiTest.Entities.ESubgroup.Queries
         [Fact]
         public async Task ThrowsErrorWhenIncorrectSortOrderIsGiven()
         {
-            var getAllSubgroupByGroupQuery = new GetAllSubgroups(
+            var getAllSubgroupByGroupQuery = new GetAllSubgroupsQuery(
                 new Guid(),
                 new Guid(),
                 "Admin",
@@ -144,7 +144,7 @@ namespace AlpimiTest.Entities.ESubgroup.Queries
         [Fact]
         public async Task ThrowsMultipleErrorMessages()
         {
-            var getAllSubgroupByGroupQuery = new GetAllSubgroups(
+            var getAllSubgroupByGroupQuery = new GetAllSubgroupsQuery(
                 new Guid(),
                 new Guid(),
                 "Admin",

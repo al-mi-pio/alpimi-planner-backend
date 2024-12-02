@@ -30,13 +30,16 @@
 
 ## `GET` `api/Subgroup`
 
-- [GetAllSubgroupsByGroupReturnsSubgroups()](../Entities/ESubgroup/SubgroupController.test.cs) - **integrity**  
-  Check if returns two subgroups when a valid token is provided
+- [GetAllSubgroupsReturnsSubgroupsFromStudentIfStudentIdIsProvided()](../Entities/ESubgroup/SubgroupController.test.cs) - **integrity**  
+  Check if returns two subgroups when a valid student id provided
 
-- [GetAllSubgroupsByGroupReturnsEmptyContentWhenWrongUserAttemptsGet()](../Entities/ESubgroup/SubgroupController.test.cs) - **integrity**  
+- [GetAllSubgroupsReturnsSubgroupsFromGroupIfGroupIdIsProvided()](../Entities/ESubgroup/SubgroupController.test.cs) - **integrity**  
+  Check if returns two subgroups when a valid group id provided
+
+- [GetAllSubgroupsReturnsEmptyContentWhenWrongUserAttemptsGet()](../Entities/ESubgroup/SubgroupController.test.cs) - **integrity**  
   Check if returns no subgroups when other user's token is provided
 
-- [GetAllSubgroupsByGroupReturnsEmptyContentWhenWrongIdIsGiven()](../Entities/ESubgroup/SubgroupController.test.cs) - **integrity**  
+- [GetAllSubgroupsReturnsEmptyContentWhenWrongIdIsGiven()](../Entities/ESubgroup/SubgroupController.test.cs) - **integrity**  
   Check if returns no subgroups when wrong group id is provided
 
 - [ThrowsErrorWhenIncorrectPerPageIsGiven()](../Entities/ESubgroup/Queries/GetAllSubgroup.unit.cs) - **unit**  

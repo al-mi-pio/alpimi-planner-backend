@@ -152,7 +152,7 @@ namespace AlpimiTest.Entities.ESubgroup
         }
 
         [Fact]
-        public async Task GetAllSubgroupByGroupReturnsSubgroups()
+        public async Task GetAllSubgroupsReturnsSubgroupsFromGroupIfGroupIdIsProvided()
         {
             var subgroupRequest1 = MockData.GetCreateSubgroupDTODetails(groupId);
             var subgroupRequest2 = MockData.GetCreateSecondSubgroupDTODetails(groupId);
@@ -173,7 +173,33 @@ namespace AlpimiTest.Entities.ESubgroup
         }
 
         [Fact]
-        public async Task GetAllSubgroupByGroupReturnsEmptyContentWhenWrongUserAttemptsGet()
+        public async Task GetAllSubgroupsReturnsSubgroupsFromStudentIfStudentIdIsProvided()
+        {
+            var subgroupRequest1 = MockData.GetCreateSubgroupDTODetails(groupId);
+            var subgroupRequest2 = MockData.GetCreateSecondSubgroupDTODetails(groupId);
+
+            var subgroupId = await DbHelper.SetupSubgroup(_client, subgroupRequest1);
+            await DbHelper.SetupSubgroup(_client, subgroupRequest2);
+
+            var studentRequest = MockData.GetCreateStudentDTODetails(groupId);
+            studentRequest.SubgroupIds = [subgroupId];
+
+            var studentId = await DbHelper.SetupStudent(_client, studentRequest);
+
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", userId)
+            );
+            var query = $"?id={studentId}";
+            var response = await _client.GetAsync($"/api/Subgroup{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+
+            Assert.Contains(subgroupRequest1.Name, stringResponse);
+            Assert.DoesNotContain(subgroupRequest2.Name, stringResponse);
+        }
+
+        [Fact]
+        public async Task GetAllSubgroupsReturnsEmptyContentWhenWrongUserAttemptsGet()
         {
             var subgroupRequest1 = MockData.GetCreateSubgroupDTODetails(groupId);
             var subgroupRequest2 = MockData.GetCreateSecondSubgroupDTODetails(groupId);
@@ -194,7 +220,7 @@ namespace AlpimiTest.Entities.ESubgroup
         }
 
         [Fact]
-        public async Task GetAllSubgroupByGroupReturnsEmptyContentWhenWrongIdIsGiven()
+        public async Task GetAllSubgroupsReturnsEmptyContentWhenWrongIdIsGiven()
         {
             var subgroupRequest1 = MockData.GetCreateSubgroupDTODetails(groupId);
             var subgroupRequest2 = MockData.GetCreateSecondSubgroupDTODetails(groupId);

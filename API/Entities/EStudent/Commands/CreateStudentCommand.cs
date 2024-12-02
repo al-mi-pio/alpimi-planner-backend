@@ -1,10 +1,7 @@
-﻿using System;
-using AlpimiAPI.Database;
+﻿using AlpimiAPI.Database;
 using AlpimiAPI.Entities.EGroup;
 using AlpimiAPI.Entities.EGroup.Queries;
 using AlpimiAPI.Entities.EStudent.DTO;
-using AlpimiAPI.Entities.EStudentSubgroup.Commands;
-using AlpimiAPI.Entities.EStudentSubgroup.DTO;
 using AlpimiAPI.Entities.ESubgroup;
 using AlpimiAPI.Entities.ESubgroup.Queries;
 using AlpimiAPI.Locales;
@@ -134,23 +131,21 @@ namespace AlpimiAPI.Entities.EStudent.Commands
 
             if (request.dto.SubgroupIds != null)
             {
-                CreateStudentSubgroupDTO studentSubgroupDTO = new CreateStudentSubgroupDTO()
+                foreach (Guid subgroupId in request.dto.SubgroupIds)
                 {
-                    StudentId = insertedId,
-                    SubgroupIds = request.dto.SubgroupIds
-                };
-                CreateStudentSubgroupHandler createStudentSubgroupHandler =
-                    new CreateStudentSubgroupHandler(_dbService, _str);
-                CreateStudentSubgroupCommand createStudentSubgroupCommand =
-                    new CreateStudentSubgroupCommand(
-                        studentSubgroupDTO,
-                        request.FilteredId,
-                        request.Role
+                    await _dbService.Post<Guid>(
+                        $@"
+                            INSERT INTO [StudentSubgroup] 
+                            ([Id],[StudentId],[SubgroupId])
+                            OUTPUT 
+                            INSERTED.Id                    
+                            VALUES (
+                            '{Guid.NewGuid()}',   
+                            '{insertedId}',
+                            '{subgroupId}');",
+                        ""
                     );
-                await createStudentSubgroupHandler.Handle(
-                    createStudentSubgroupCommand,
-                    cancellationToken
-                );
+                }
             }
 
             return insertedId;

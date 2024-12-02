@@ -54,5 +54,65 @@ namespace AlpimiTest.Entities.EStudent.Commands
                 result.errors.First().message
             );
         }
+
+        [Fact]
+        public async Task ThrowsErrorWhenDuplicatedSubgroupIdsAreGiven()
+        {
+            var dto = MockData.GetUpdateStudentDTODetails();
+            dto.SubgroupIds = [new Guid(), new Guid()];
+
+            _dbService
+                .Setup(s => s.Get<Group>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetGroupDetails());
+
+            var createStudentCommand = new UpdateStudentCommand(
+                new Guid(),
+                dto,
+                new Guid(),
+                "User"
+            );
+
+            var createStudentHandler = new UpdateStudentHandler(_dbService.Object, _str.Object);
+
+            var result = await Assert.ThrowsAsync<ApiErrorException>(
+                async () =>
+                    await createStudentHandler.Handle(createStudentCommand, new CancellationToken())
+            );
+
+            Assert.Equal(
+                "Cannot add multiple Subgroup with the value 00000000-0000-0000-0000-000000000000",
+                result.errors.First().message
+            );
+        }
+
+        [Fact]
+        public async Task ThrowsErrorWhenWrongSubgroupIdIsGiven()
+        {
+            var dto = MockData.GetUpdateStudentDTODetails();
+            dto.SubgroupIds = [new Guid()];
+
+            _dbService
+                .Setup(s => s.Get<Group>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetGroupDetails());
+
+            var createStudentCommand = new UpdateStudentCommand(
+                new Guid(),
+                dto,
+                new Guid(),
+                "User"
+            );
+
+            var createStudentHandler = new UpdateStudentHandler(_dbService.Object, _str.Object);
+
+            var result = await Assert.ThrowsAsync<ApiErrorException>(
+                async () =>
+                    await createStudentHandler.Handle(createStudentCommand, new CancellationToken())
+            );
+
+            Assert.Equal(
+                "Subgroup Id = 00000000-0000-0000-0000-000000000000 was not found",
+                result.errors.First().message
+            );
+        }
     }
 }

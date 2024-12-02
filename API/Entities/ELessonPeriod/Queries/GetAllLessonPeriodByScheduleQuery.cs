@@ -54,9 +54,9 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Queries
                 errors.Add(new ErrorObject(_str["badParameter", "SortOrder"]));
             }
             if (
-                request.Pagination.SortBy.ToLower() != "id"
-                && request.Pagination.SortBy.ToLower() != "start"
-                && request.Pagination.SortBy.ToLower() != "finish"
+                request.Pagination.SortBy != "Id"
+                && request.Pagination.SortBy != "Start"
+                && request.Pagination.SortBy != "Finish"
             )
             {
                 errors.Add(new ErrorObject(_str["badParameter", "SortBy"]));

@@ -177,7 +177,4 @@
   <data name="duplicateData" xml:space="preserve">
     <value>Cannot add multiple {0} with the value {1}</value>
   </data>
-  <data name="studentInGroup" xml:space="preserve">
-    <value>Student is already in a group with an id of {0}</value>
-  </data>
 </root>

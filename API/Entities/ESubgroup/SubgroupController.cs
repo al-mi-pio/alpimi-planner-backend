@@ -172,7 +172,7 @@ namespace AlpimiAPI.Entities.ESubgroup
             Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
             string privileges = Privileges.GetUserRoleFromToken(Authorization);
 
-            var query = new GetAllSubgroups(
+            var query = new GetAllSubgroupsQuery(
                 id,
                 filteredId,
                 privileges,

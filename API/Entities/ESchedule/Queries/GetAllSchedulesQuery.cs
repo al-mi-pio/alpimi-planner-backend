@@ -45,10 +45,7 @@ namespace AlpimiAPI.Entities.ESchedule.Queries
             {
                 errors.Add(new ErrorObject(_str["badParameter", "SortOrder"]));
             }
-            if (
-                request.Pagination.SortBy.ToLower() != "id"
-                && request.Pagination.SortBy.ToLower() != "name"
-            )
+            if (request.Pagination.SortBy != "Id" && request.Pagination.SortBy != "Name")
             {
                 errors.Add(new ErrorObject(_str["badParameter", "SortBy"]));
             }

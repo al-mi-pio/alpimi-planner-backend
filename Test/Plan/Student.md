@@ -13,19 +13,30 @@
 - [StudentIsCreated()](../Entities/EStudent/StudentController.test.cs) - **integrity**  
   Check if student is created when provided with correct data
 
+- [StudentIsCreatedWithSubgroups()](../Entities/EStudent/StudentController.test.cs) - **integrity**  
+  Check if student is created with subgroups when provided with correct data
+
 - [ThrowsErrorWhenAlbumNumberIsAlreadyTaken](../Entities/EStudent/CreateStudentCommand.unit.cs) - **unit**  
   Check if returns an error when a taken album number is provided
 
 - [ThrowsErrorWhenWrongGroupIdIsGiven()](../Entities/EStudent/CreateStudentCommand.unit.cs) - **unit** 
-  Check if returns an error when incorrect id is provided
+  Check if returns an error when incorrect group id is provided
 
+- [ThrowsErrorWhenWrongSubgroupIdIsGiven()](../Entities/EStudent/CreateStudentCommand.unit.cs) - **unit**
+  Check if returns an error when incorrect subgroup id is provided
+
+- [ThrowsErrorWhenDuplicatedSubgroupIdsAreGiven()](../Entities/EStudent/CreateStudentCommand.unit.cs) - **unit**
+  Check if returns an error when duplicated subgroup ids are provided
 ## `GET` `api/Student`
 
 - [GetAllStudentsReturnsStudentsFromGroupIfGroupIdIsProvided()](../Entities/EStudent/StudentController.test.cs) - **integrity**  
   Check if returns one student when a valid group id is provided
 
-- [GetAllStudentsReturnsStudentsFromScheduleIfScheduleIsProvided()](../Entities/EStudent/StudentController.test.cs) - **integrity**  
+- [GetAllStudentsReturnsStudentsFromScheduleIfScheduleIdIsProvided()](../Entities/EStudent/StudentController.test.cs) - **integrity**  
   Check if returns two students when a valid schedule id provided
+
+- [GetAllStudentsReturnsStudentsFromSubgroupIfSubgroupIdIsProvided()](../Entities/EStudent/StudentController.test.cs) - **integrity**  
+  Check if returns one students when a valid subgroup id provided
 
 - [GetAllStudentsReturnsEmptyContentWhenWrongUserAttemptsGet()](../Entities/EStudent/StudentController.test.cs) - **integrity**  
   Check if returns no students when other user's token is provided
@@ -67,16 +78,25 @@
 ## `PATCH` `api/Student/{id}`
 
 - [UpdateStudentReturnsUpdatedStudent()](../Entities/EStudent/StudentController.test.cs) - **integrity**  
-  Check if returns an updated day off when provided with correct data
+  Check if returns an updated student when provided with correct data
+
+- [UpdateStudentUpdatesStudentsSubgroups()](../Entities/EStudent/StudentController.test.cs) - **integrity**  
+  Check if returns updates students subgroups when provided with correct data
 
 - [updateStudentThrowsNotFoundErrorWhenWrongIdIsGiven()](../Entities/EStudent/StudentController.test.cs) - **integrity**  
-  Check if returns an error when day off doesn't exists
+  Check if returns an error when student doesn't exists
 
 - [UpdateStudentThrowsNotFoundErrorWhenWrongUserAttemptsUpdate()](../Entities/EStudent/StudentController.test.cs) - **integrity**  
-  Check if returns an error when day off is inaccessible for user
+  Check if returns an error when student is inaccessible for user
 
 - [ThrowsErrorWhenAlbumNumberIsAlreadyTaken()](../Entities/EStudent/Commands/UpdateStudentCommand.unit.cs) - **unit**  
   Check if returns an error when a taken album number is provided
+
+- [ThrowsErrorWhenWrongSubgroupIdIsGiven()](../Entities/EStudent/CreateStudentCommand.unit.cs) - **unit**
+  Check if returns an error when incorrect subgroup id is provided
+
+- [ThrowsErrorWhenDuplicatedSubgroupIdsAreGiven()](../Entities/EStudent/CreateStudentCommand.unit.cs) - **unit**
+  Check if returns an error when duplicated subgroup ids are provided
 
 
 

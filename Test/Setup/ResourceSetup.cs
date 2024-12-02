@@ -79,6 +79,13 @@ namespace AlpimiTest.TestSetup
                     "dateOutofRange",
                     string.Format("Date must be in between {0} and {1}", args[0], args[1])
                 )
+            },
+            {
+                "duplicateData",
+                args => new LocalizedString(
+                    "duplicateData",
+                    string.Format("Cannot add multiple {0} with the value {1}", args[0], args[1])
+                )
             }
         };
 

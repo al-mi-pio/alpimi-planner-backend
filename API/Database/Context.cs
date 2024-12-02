@@ -5,10 +5,10 @@ using AlpimiAPI.Entities.ELessonPerioid;
 using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Entities.EScheduleSettings;
 using AlpimiAPI.Entities.EStudent;
-using AlpimiAPI.Entities.EStudentSubgroup;
 using AlpimiAPI.Entities.ESubgroup;
 using AlpimiAPI.Entities.ETeacher;
 using AlpimiAPI.Entities.EUser;
+using AlpimiAPI.Relations;
 using AlpimiAPI.Utilities;
 using Microsoft.EntityFrameworkCore;
 

@@ -50,9 +50,9 @@ namespace AlpimiAPI.Entities.ETeacher.Queries
                 errors.Add(new ErrorObject(_str["badParameter", "SortOrder"]));
             }
             if (
-                request.Pagination.SortBy.ToLower() != "id"
-                && request.Pagination.SortBy.ToLower() != "name"
-                && request.Pagination.SortBy.ToLower() != "surname"
+                request.Pagination.SortBy != "Id"
+                && request.Pagination.SortBy != "Name"
+                && request.Pagination.SortBy != "Surname"
             )
             {
                 errors.Add(new ErrorObject(_str["badParameter", "SortBy"]));

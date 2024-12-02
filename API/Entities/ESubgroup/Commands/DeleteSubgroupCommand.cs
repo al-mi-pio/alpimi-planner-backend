@@ -1,5 +1,4 @@
 ﻿using AlpimiAPI.Database;
-using AlpimiAPI.Entities.EStudentSubgroup;
 using MediatR;
 
 namespace AlpimiAPI.Entities.ESubgroup.Commands

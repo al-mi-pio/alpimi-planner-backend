@@ -9,7 +9,7 @@ using Microsoft.Extensions.Localization;
 
 namespace AlpimiAPI.Entities.ESubgroup.Queries
 {
-    public record GetAllSubgroups(
+    public record GetAllSubgroupsQuery(
         Guid Id,
         Guid FilteredId,
         string Role,
@@ -17,7 +17,7 @@ namespace AlpimiAPI.Entities.ESubgroup.Queries
     ) : IRequest<(IEnumerable<Subgroup>?, int)>;
 
     public class GetAllSubgroupsHandler
-        : IRequestHandler<GetAllSubgroups, (IEnumerable<Subgroup>?, int)>
+        : IRequestHandler<GetAllSubgroupsQuery, (IEnumerable<Subgroup>?, int)>
     {
         private readonly IDbService _dbService;
         private readonly IStringLocalizer<Errors> _str;
@@ -29,7 +29,7 @@ namespace AlpimiAPI.Entities.ESubgroup.Queries
         }
 
         public async Task<(IEnumerable<Subgroup>?, int)> Handle(
-            GetAllSubgroups request,
+            GetAllSubgroupsQuery request,
             CancellationToken cancellationToken
         )
         {
@@ -50,9 +50,9 @@ namespace AlpimiAPI.Entities.ESubgroup.Queries
                 errors.Add(new ErrorObject(_str["badParameter", "SortOrder"]));
             }
             if (
-                request.Pagination.SortBy.ToLower() != "id"
-                && request.Pagination.SortBy.ToLower() != "name"
-                && request.Pagination.SortBy.ToLower() != "surname"
+                request.Pagination.SortBy != "Id"
+                && request.Pagination.SortBy != "Name"
+                && request.Pagination.SortBy != "StudentCount"
             )
             {
                 errors.Add(new ErrorObject(_str["badParameter", "SortBy"]));

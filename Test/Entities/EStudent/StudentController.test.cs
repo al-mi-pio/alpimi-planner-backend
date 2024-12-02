@@ -18,6 +18,7 @@ namespace AlpimiTest.Entities.EStudent
         Guid scheduleId;
         Guid groupId1;
         Guid groupId2;
+        Guid subgroupId;
 
         public StudentControllerTest()
         {
@@ -41,6 +42,10 @@ namespace AlpimiTest.Entities.EStudent
             groupId2 = await DbHelper.SetupGroup(
                 _client,
                 MockData.GetCreateSecondGroupDTODetails(scheduleId)
+            );
+            subgroupId = await DbHelper.SetupSubgroup(
+                _client,
+                MockData.GetCreateSubgroupDTODetails(groupId1)
             );
         }
 
@@ -89,6 +94,26 @@ namespace AlpimiTest.Entities.EStudent
         }
 
         [Fact]
+        public async Task StudentIsCreatedWithSubgroups()
+        {
+            var studentRequest = MockData.GetCreateStudentDTODetails(groupId1);
+            studentRequest.SubgroupIds = [subgroupId];
+
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", userId)
+            );
+
+            var response = await _client.PostAsJsonAsync("/api/Student", studentRequest);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            var query = $"?id={subgroupId}";
+            response = await _client.GetAsync($"/api/Student{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            Assert.Contains(studentRequest.AlbumNumber, stringResponse);
+        }
+
+        [Fact]
         public async Task UpdateStudentReturnsUpdatedStudent()
         {
             var studentUpdateRequest = MockData.GetUpdateStudentDTODetails();
@@ -109,6 +134,29 @@ namespace AlpimiTest.Entities.EStudent
             var jsonResponse = await response.Content.ReadFromJsonAsync<ApiGetResponse<Student>>();
 
             Assert.Equal(studentUpdateRequest.AlbumNumber, jsonResponse!.Content.AlbumNumber);
+        }
+
+        [Fact]
+        public async Task UpdateStudentUpdatesStudentsSubgroups()
+        {
+            var studentUpdateRequest = MockData.GetUpdateStudentDTODetails();
+            studentUpdateRequest.SubgroupIds = [subgroupId];
+            var studentId = await DbHelper.SetupStudent(
+                _client,
+                MockData.GetCreateStudentDTODetails(groupId1)
+            );
+
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "Bob", userId)
+            );
+
+            await _client.PatchAsJsonAsync($"/api/Student/{studentId}", studentUpdateRequest);
+
+            var query = $"?id={subgroupId}";
+            var response = await _client.GetAsync($"/api/Student{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            Assert.Contains(studentUpdateRequest.AlbumNumber!, stringResponse);
         }
 
         [Fact]

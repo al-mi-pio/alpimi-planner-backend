@@ -1,7 +1,6 @@
 ﻿using AlpimiAPI.Entities.EStudent;
-using AlpimiAPI.Entities.ESubgroup;
 
-namespace AlpimiAPI.Entities.EStudentSubgroup
+namespace AlpimiAPI.Relations
 {
     public class StudentSubgroup
     {

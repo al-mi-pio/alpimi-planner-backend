@@ -50,9 +50,10 @@ namespace AlpimiAPI.Entities.EDayOff.Queries
                 errors.Add(new ErrorObject(_str["badParameter", "SortOrder"]));
             }
             if (
-                request.Pagination.SortBy.ToLower() != "id"
-                && request.Pagination.SortBy.ToLower() != "from"
-                && request.Pagination.SortBy.ToLower() != "to"
+                request.Pagination.SortBy != "Id"
+                && request.Pagination.SortBy != "Name"
+                && request.Pagination.SortBy != "From"
+                && request.Pagination.SortBy != "To"
             )
             {
                 errors.Add(new ErrorObject(_str["badParameter", "SortBy"]));

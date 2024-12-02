@@ -49,7 +49,7 @@ namespace AlpimiAPI.Entities.EStudent.Queries
             {
                 errors.Add(new ErrorObject(_str["badParameter", "SortOrder"]));
             }
-            if (request.Pagination.SortBy != "id" && request.Pagination.SortBy != "AlbumNumber")
+            if (request.Pagination.SortBy != "Id" && request.Pagination.SortBy != "AlbumNumber")
             {
                 errors.Add(new ErrorObject(_str["badParameter", "SortBy"]));
             }

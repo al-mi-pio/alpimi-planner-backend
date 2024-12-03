@@ -69,6 +69,9 @@ namespace AlpimiTest.Entities.ESubgroup.Commands
             var dto = MockData.GetUpdateSubgroupDTODetails();
 
             _dbService
+                .Setup(s => s.Get<Subgroup>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetSubgroupDetails());
+            _dbService
                 .Setup(s => s.Get<Group>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetGroupDetails());
             _dbService
@@ -130,6 +133,9 @@ namespace AlpimiTest.Entities.ESubgroup.Commands
             var dto = MockData.GetUpdateSubgroupDTODetails();
             dto.StudentCount = 100;
 
+            _dbService
+                .Setup(s => s.Get<Subgroup>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetSubgroupDetails());
             _dbService
                 .Setup(s => s.Get<Group>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetGroupDetails());

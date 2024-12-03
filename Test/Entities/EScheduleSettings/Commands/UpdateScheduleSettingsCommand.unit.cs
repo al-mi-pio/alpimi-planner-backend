@@ -31,6 +31,10 @@ namespace AlpimiTest.Entities.EScheduleSettings.Commands
             dto.SchoolYearStart = new DateOnly(2020, 10, 10);
             dto.SchoolYearEnd = new DateOnly(2000, 10, 10);
 
+            _dbService
+                .Setup(s => s.Get<ScheduleSettings>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetScheduleSettingsDetails());
+
             var scheduleSettings = MockData.GetScheduleSettingsDetails();
 
             var updateScheduleSettingsCommand = new UpdateScheduleSettingsCommand(
@@ -71,6 +75,9 @@ namespace AlpimiTest.Entities.EScheduleSettings.Commands
             dto.SchoolYearStart = new DateOnly(2024, 10, 10);
             dto.SchoolYearEnd = new DateOnly(2024, 10, 10);
 
+            _dbService
+                .Setup(s => s.Get<ScheduleSettings>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetScheduleSettingsDetails());
             _dbService
                 .Setup(s => s.GetAll<DayOff>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(new List<DayOff> { MockData.GetDayOffDetails() });

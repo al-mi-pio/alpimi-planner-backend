@@ -43,7 +43,12 @@ namespace AlpimiTest.Entities.EStudent.Commands
 
             Assert.Equal(
                 JsonConvert.SerializeObject(
-                    new ErrorObject[] { new ErrorObject("Group was not found") }
+                    new ErrorObject[]
+                    {
+                        new ErrorObject(
+                            "Group with id 00000000-0000-0000-0000-000000000000 was not found"
+                        )
+                    }
                 ),
                 JsonConvert.SerializeObject(result.errors)
             );
@@ -58,8 +63,8 @@ namespace AlpimiTest.Entities.EStudent.Commands
                 .Setup(s => s.Get<Group>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetGroupDetails());
             _dbService
-                .Setup(s => s.GetAll<Student>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(new List<Student> { MockData.GetStudentDetails() });
+                .Setup(s => s.Get<Student>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetStudentDetails());
 
             var createStudentCommand = new CreateStudentCommand(
                 new Guid(),
@@ -136,7 +141,7 @@ namespace AlpimiTest.Entities.EStudent.Commands
             );
 
             Assert.Equal(
-                "Subgroup Id = 00000000-0000-0000-0000-000000000000 was not found",
+                "Subgroup with id 00000000-0000-0000-0000-000000000000 was not found",
                 result.errors.First().message
             );
         }

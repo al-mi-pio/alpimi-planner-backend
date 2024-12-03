@@ -59,10 +59,9 @@ namespace AlpimiTest.Entities.EDayOff.Commands
             dto.From = new DateOnly(2020, 1, 1);
             dto.To = new DateOnly(2019, 1, 1);
 
-            var scheduleSettings = MockData.GetScheduleSettingsDetails();
             _dbService
-                .Setup(s => s.Get<ScheduleSettings>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(scheduleSettings);
+                .Setup(s => s.Get<DayOff>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetDayOffDetails());
 
             var updateDayOffCommand = new UpdateDayOffCommand(new Guid(), dto, new Guid(), "User");
 

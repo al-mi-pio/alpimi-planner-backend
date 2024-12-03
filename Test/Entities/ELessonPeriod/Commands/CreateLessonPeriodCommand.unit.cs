@@ -49,7 +49,12 @@ namespace AlpimiTest.Entities.ELessonPeriod.Commands
 
             Assert.Equal(
                 JsonConvert.SerializeObject(
-                    new ErrorObject[] { new ErrorObject("ScheduleSettings was not found") }
+                    new ErrorObject[]
+                    {
+                        new ErrorObject(
+                            "ScheduleSettings with id 00000000-0000-0000-0000-000000000000 was not found"
+                        )
+                    }
                 ),
                 JsonConvert.SerializeObject(result.errors)
             );

@@ -46,7 +46,12 @@ namespace AlpimiTest.Entities.ESubgroup.Commands
 
             Assert.Equal(
                 JsonConvert.SerializeObject(
-                    new ErrorObject[] { new ErrorObject("Group was not found") }
+                    new ErrorObject[]
+                    {
+                        new ErrorObject(
+                            "Group with id 00000000-0000-0000-0000-000000000000 was not found"
+                        )
+                    }
                 ),
                 JsonConvert.SerializeObject(result.errors)
             );

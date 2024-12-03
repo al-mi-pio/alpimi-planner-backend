@@ -44,7 +44,12 @@ namespace AlpimiTest.Entities.EGroup.Commands
 
             Assert.Equal(
                 JsonConvert.SerializeObject(
-                    new ErrorObject[] { new ErrorObject("Schedule was not found") }
+                    new ErrorObject[]
+                    {
+                        new ErrorObject(
+                            "Schedule with id 00000000-0000-0000-0000-000000000000 was not found"
+                        )
+                    }
                 ),
                 JsonConvert.SerializeObject(result.errors)
             );
@@ -59,8 +64,8 @@ namespace AlpimiTest.Entities.EGroup.Commands
                 .Setup(s => s.Get<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetScheduleDetails());
             _dbService
-                .Setup(s => s.GetAll<Group>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(new List<Group> { MockData.GetGroupDetails() });
+                .Setup(s => s.Get<Group>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetGroupDetails());
 
             var createGroupCommand = new CreateGroupCommand(new Guid(), dto, new Guid(), "User");
 
@@ -86,8 +91,8 @@ namespace AlpimiTest.Entities.EGroup.Commands
                 .Setup(s => s.Get<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetScheduleDetails());
             _dbService
-                .Setup(s => s.GetAll<Subgroup>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(new List<Subgroup> { MockData.GetSubgroupDetails() });
+                .Setup(s => s.Get<Subgroup>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetSubgroupDetails());
 
             var createGroupCommand = new CreateGroupCommand(new Guid(), dto, new Guid(), "User");
 

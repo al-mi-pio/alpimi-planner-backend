@@ -29,6 +29,9 @@ namespace AlpimiTest.Entities.EStudent.Commands
             var dto = MockData.GetUpdateStudentDTODetails();
 
             _dbService
+                .Setup(s => s.Get<Student>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetStudentDetails());
+            _dbService
                 .Setup(s => s.Get<Group>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetGroupDetails());
             _dbService
@@ -62,6 +65,12 @@ namespace AlpimiTest.Entities.EStudent.Commands
             dto.SubgroupIds = [new Guid(), new Guid()];
 
             _dbService
+                .Setup(s => s.Get<Student>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetStudentDetails());
+            _dbService
+                .Setup(s => s.Get<Group>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetGroupDetails());
+            _dbService
                 .Setup(s => s.Get<Group>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetGroupDetails());
 
@@ -92,6 +101,9 @@ namespace AlpimiTest.Entities.EStudent.Commands
             dto.SubgroupIds = [new Guid()];
 
             _dbService
+                .Setup(s => s.Get<Student>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetStudentDetails());
+            _dbService
                 .Setup(s => s.Get<Group>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetGroupDetails());
 
@@ -110,7 +122,7 @@ namespace AlpimiTest.Entities.EStudent.Commands
             );
 
             Assert.Equal(
-                "Subgroup Id = 00000000-0000-0000-0000-000000000000 was not found",
+                "Subgroup with id 00000000-0000-0000-0000-000000000000 was not found",
                 result.errors.First().message
             );
         }

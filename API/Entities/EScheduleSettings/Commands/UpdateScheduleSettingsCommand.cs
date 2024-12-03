@@ -39,31 +39,33 @@ namespace AlpimiAPI.Entities.EScheduleSettings.Commands
             GetScheduleSettingsByScheduleIdHandler getScheduleSettingsByScheduleIdHandler =
                 new GetScheduleSettingsByScheduleIdHandler(_dbService);
             GetScheduleSettingsByScheduleIdQuery getScheduleSettingsByScheduleIdQuery =
-                new GetScheduleSettingsByScheduleIdQuery(request.ScheduleId, new Guid(), "Admin");
-            ActionResult<ScheduleSettings?> scheduleSettingsSchoolYearPeriod =
+                new GetScheduleSettingsByScheduleIdQuery(
+                    request.ScheduleId,
+                    request.FilteredId,
+                    request.Role
+                );
+            ActionResult<ScheduleSettings?> originalScheduleSettings =
                 await getScheduleSettingsByScheduleIdHandler.Handle(
                     getScheduleSettingsByScheduleIdQuery,
                     cancellationToken
                 );
-            if (
-                (
-                    request.dto.SchoolYearStart
-                    ?? scheduleSettingsSchoolYearPeriod.Value!.SchoolYearStart
-                )
-                > (
-                    request.dto.SchoolYearEnd
-                    ?? scheduleSettingsSchoolYearPeriod.Value!.SchoolYearEnd
-                )
-            )
+
+            if (originalScheduleSettings.Value == null)
+            {
+                return null;
+            }
+
+            request.dto.SchoolHour =
+                request.dto.SchoolHour ?? originalScheduleSettings.Value.SchoolHour;
+            request.dto.SchoolYearStart =
+                request.dto.SchoolYearStart ?? originalScheduleSettings.Value.SchoolYearStart;
+            request.dto.SchoolYearEnd =
+                request.dto.SchoolYearEnd ?? originalScheduleSettings.Value?.SchoolYearEnd;
+
+            if (request.dto.SchoolYearStart > request.dto.SchoolYearEnd)
             {
                 throw new ApiErrorException([new ErrorObject(_str["scheduleDate"])]);
             }
-
-            request.dto.SchoolYearStart =
-                request.dto.SchoolYearStart
-                ?? scheduleSettingsSchoolYearPeriod.Value!.SchoolYearStart;
-            request.dto.SchoolYearEnd =
-                request.dto.SchoolYearEnd ?? scheduleSettingsSchoolYearPeriod.Value!.SchoolYearEnd;
 
             var daysOffOutOfRange = await _dbService.GetAll<DayOff>(
                 $@"
@@ -81,63 +83,33 @@ namespace AlpimiAPI.Entities.EScheduleSettings.Commands
                 throw new ApiErrorException([new ErrorObject(_str["outOfRange"])]);
             }
 
-            ScheduleSettings? scheduleSettings;
-            switch (request.Role)
-            {
-                case "Admin":
-                    scheduleSettings = await _dbService.Update<ScheduleSettings?>(
-                        $@"
-                            UPDATE [ScheduleSettings] 
-                            SET 
-                            [SchoolHour]=CASE WHEN @SchoolHour IS NOT NULL THEN @SchoolHour ELSE [SchoolHour] END,
-                            [SchoolYearStart]=CASE WHEN @SchoolYearStart IS NOT NULL THEN @SchoolYearStart ELSE [SchoolYearStart] END, 
-                            [SchoolYearEnd]=CASE WHEN @SchoolYearEnd IS NOT NULL THEN @SchoolYearEnd ELSE [SchoolYearEnd] END 
-                            OUTPUT 
-                            INSERTED.[Id], 
-                            INSERTED.[SchoolHour], 
-                            INSERTED.[SchoolYearStart], 
-                            INSERTED.[SchoolYearEnd], 
-                            INSERTED.[ScheduleId]
-                            WHERE [ScheduleId] = '{request.ScheduleId}';",
-                        request.dto
-                    );
-                    break;
-                default:
-                    scheduleSettings = await _dbService.Update<ScheduleSettings?>(
-                        $@"
-                            UPDATE ss
-                            SET
-                            [SchoolHour]=CASE WHEN @SchoolHour IS NOT NULL THEN @SchoolHour ELSE [SchoolHour] END,
-                            [SchoolYearStart]=CASE WHEN @SchoolYearStart IS NOT NULL THEN @SchoolYearStart ELSE [SchoolYearStart] END, 
-                            [SchoolYearEnd]=CASE WHEN @SchoolYearEnd IS NOT NULL THEN @SchoolYearEnd ELSE [SchoolYearEnd] END 
-                            OUTPUT 
-                            INSERTED.[Id],
-                            INSERTED.[SchoolHour], 
-                            INSERTED.[SchoolYearStart], 
-                            INSERTED.[SchoolYearEnd], 
-                            INSERTED.[ScheduleId]
-                            FROM [ScheduleSettings] ss
-                            INNER JOIN [Schedule] s ON s.[Id] = ss.[ScheduleId]
-                            WHERE s.[UserId] = '{request.FilteredId}' AND ss.[ScheduleId] = '{request.ScheduleId}';",
-                        request.dto
-                    );
-                    break;
-            }
+            var scheduleSettings = await _dbService.Update<ScheduleSettings?>(
+                $@"
+                    UPDATE [ScheduleSettings] 
+                    SET 
+                    [SchoolHour] = @SchoolHour, [SchoolYearStart] = @SchoolYearStart, [SchoolYearEnd] = @SchoolYearEnd
+                    OUTPUT 
+                    INSERTED.[Id], 
+                    INSERTED.[SchoolHour], 
+                    INSERTED.[SchoolYearStart], 
+                    INSERTED.[SchoolYearEnd], 
+                    INSERTED.[ScheduleId]
+                    WHERE [ScheduleId] = '{request.ScheduleId}';",
+                request.dto
+            );
 
-            if (scheduleSettings != null)
-            {
-                GetScheduleHandler getScheduleHandler = new GetScheduleHandler(_dbService);
-                GetScheduleQuery getScheduleQuery = new GetScheduleQuery(
-                    scheduleSettings.ScheduleId,
-                    new Guid(),
-                    "Admin"
-                );
-                ActionResult<Schedule?> user = await getScheduleHandler.Handle(
-                    getScheduleQuery,
-                    cancellationToken
-                );
-                scheduleSettings.Schedule = user.Value!;
-            }
+            GetScheduleHandler getScheduleHandler = new GetScheduleHandler(_dbService);
+            GetScheduleQuery getScheduleQuery = new GetScheduleQuery(
+                scheduleSettings!.ScheduleId,
+                new Guid(),
+                "Admin"
+            );
+            ActionResult<Schedule?> user = await getScheduleHandler.Handle(
+                getScheduleQuery,
+                cancellationToken
+            );
+            scheduleSettings.Schedule = user.Value!;
+
             return scheduleSettings;
         }
     }

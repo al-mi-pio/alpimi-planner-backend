@@ -39,8 +39,11 @@ namespace AlpimiTest.TestSetup
                 )
             },
             {
-                "notFound",
-                args => new LocalizedString("notFound", string.Format("{0} was not found", args[0]))
+                "resourceNotFound",
+                args => new LocalizedString(
+                    "resourceNotFound",
+                    string.Format("{0} with id {1} was not found", args[0], args[1])
+                )
             },
             {
                 "longPassword",

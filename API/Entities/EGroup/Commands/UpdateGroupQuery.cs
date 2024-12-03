@@ -38,32 +38,22 @@ namespace AlpimiAPI.Entities.EGroup.Commands
                 );
             }
 
-            var schedule = await _dbService.Get<Schedule?>(
-                @"
-                    SELECT
-                    s.[Id], s.[Name], [UserId]
-                    FROM [Schedule] s
-                    INNER JOIN [Group] g ON g.[ScheduleId]=s.[Id]
-                    WHERE g.[Id]=@Id;",
-                request
-            );
-
-            if (schedule == null)
-            {
-                return null;
-            }
-
             GetGroupHandler getGroupHandler = new GetGroupHandler(_dbService);
             GetGroupQuery getGroupQuery = new GetGroupQuery(
                 request.Id,
                 request.FilteredId,
-                "Admin"
+                request.Role
             );
 
             ActionResult<Group?> originalGroup = await getGroupHandler.Handle(
                 getGroupQuery,
                 cancellationToken
             );
+
+            if (originalGroup.Value == null)
+            {
+                return null;
+            }
 
             request.dto.Name = request.dto.Name ?? originalGroup.Value!.Name;
             request.dto.StudentCount =
@@ -74,7 +64,7 @@ namespace AlpimiAPI.Entities.EGroup.Commands
                     SELECT 
                     [Id]
                     FROM [Group] 
-                    WHERE [Name] = @Name AND [ScheduleId] = '{schedule.Id}';",
+                    WHERE [Name] = @Name AND [ScheduleId] = '{originalGroup.Value.ScheduleId}';",
                 request.dto
             );
 
@@ -91,7 +81,7 @@ namespace AlpimiAPI.Entities.EGroup.Commands
                     sg.[Id]
                     FROM [Subgroup] sg
                     INNER JOIN [Group] g ON g.[Id] = sg.[GroupId]
-                    WHERE sg.[Name] = @Name AND g.[ScheduleId] = '{schedule.Id}';",
+                    WHERE sg.[Name] = @Name AND g.[ScheduleId] = '{originalGroup .Value .ScheduleId}';",
                 request.dto
             );
 
@@ -116,59 +106,31 @@ namespace AlpimiAPI.Entities.EGroup.Commands
                 throw new ApiErrorException([new ErrorObject(_str["tooManyStudents"])]);
             }
 
-            Group? group;
-            switch (request.Role)
-            {
-                case "Admin":
-                    group = await _dbService.Update<Group?>(
-                        $@"
+            var group = await _dbService.Update<Group?>(
+                $@"
                             UPDATE [Group] 
                             SET
-                            [Name]=CASE WHEN @Name IS NOT NULL THEN @Name ELSE [Name] END,
-                            [StudentCount]=CASE WHEN @StudentCount IS NOT NULL THEN @StudentCount ELSE [StudentCount] END
+                            [Name] = @Name, [StudentCount] = @StudentCount 
                             OUTPUT
                             INSERTED.[Id],
                             INSERTED.[Name],
                             INSERTED.[StudentCount],
                             INSERTED.[ScheduleId]
                             WHERE [Id] = '{request.Id}';",
-                        request.dto
-                    );
-                    break;
-                default:
-                    group = await _dbService.Update<Group?>(
-                        $@"
-                            UPDATE g
-                            SET
-                            g.[Name]=CASE WHEN @Name IS NOT NULL THEN @Name ELSE g.[Name] END,
-                            [StudentCount]=CASE WHEN @StudentCount IS NOT NULL THEN @StudentCount ELSE [StudentCount] END
-                            OUTPUT
-                            INSERTED.[Id],
-                            INSERTED.[Name],
-                            INSERTED.[StudentCount],
-                            INSERTED.[ScheduleId]
-                            FROM [Group] g
-                            INNER JOIN [Schedule] s ON s.[Id] = g.[ScheduleId]
-                            WHERE s.[UserId] = '{request.FilteredId}' AND g.[Id] = '{request.Id}';",
-                        request.dto
-                    );
-                    break;
-            }
+                request.dto
+            );
 
-            if (group != null)
-            {
-                GetScheduleHandler getScheduleHandler = new GetScheduleHandler(_dbService);
-                GetScheduleQuery getScheduleQuery = new GetScheduleQuery(
-                    group.ScheduleId,
-                    new Guid(),
-                    "Admin"
-                );
-                ActionResult<Schedule?> toInsertSchedule = await getScheduleHandler.Handle(
-                    getScheduleQuery,
-                    cancellationToken
-                );
-                group.Schedule = toInsertSchedule.Value!;
-            }
+            GetScheduleHandler getScheduleHandler = new GetScheduleHandler(_dbService);
+            GetScheduleQuery getScheduleQuery = new GetScheduleQuery(
+                group!.ScheduleId,
+                new Guid(),
+                "Admin"
+            );
+            ActionResult<Schedule?> toInsertSchedule = await getScheduleHandler.Handle(
+                getScheduleQuery,
+                cancellationToken
+            );
+            group.Schedule = toInsertSchedule.Value!;
 
             return group;
         }

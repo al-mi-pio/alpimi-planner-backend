@@ -30,8 +30,8 @@ namespace AlpimiTest.Entities.EGroup.Commands
             var dto = MockData.GetUpdateGroupDTODetails();
 
             _dbService
-                .Setup(s => s.Get<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(MockData.GetScheduleDetails());
+                .Setup(s => s.Get<Group>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetGroupDetails());
             _dbService
                 .Setup(s => s.GetAll<Group>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(new List<Group> { MockData.GetGroupDetails() });
@@ -57,8 +57,8 @@ namespace AlpimiTest.Entities.EGroup.Commands
             var dto = MockData.GetUpdateGroupDTODetails();
 
             _dbService
-                .Setup(s => s.Get<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(MockData.GetScheduleDetails());
+                .Setup(s => s.Get<Group>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetGroupDetails());
             _dbService
                 .Setup(s => s.GetAll<Subgroup>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(new List<Subgroup> { MockData.GetSubgroupDetails() });
@@ -101,10 +101,6 @@ namespace AlpimiTest.Entities.EGroup.Commands
         {
             var dto = MockData.GetUpdateGroupDTODetails();
             dto.StudentCount = 1;
-
-            _dbService
-                .Setup(s => s.Get<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(MockData.GetScheduleDetails());
 
             _dbService
                 .Setup(s => s.Get<Group>(It.IsAny<string>(), It.IsAny<object>()))

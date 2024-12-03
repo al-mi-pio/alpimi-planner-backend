@@ -1,5 +1,7 @@
 ﻿using AlpimiAPI.Database;
 using AlpimiAPI.Entities.EDayOff.DTO;
+using AlpimiAPI.Entities.ESchedule;
+using AlpimiAPI.Entities.ESchedule.Queries;
 using AlpimiAPI.Entities.EScheduleSettings;
 using AlpimiAPI.Entities.EScheduleSettings.Queries;
 using AlpimiAPI.Locales;
@@ -29,37 +31,64 @@ namespace AlpimiAPI.Entities.EDayOff.Commands
             CancellationToken cancellationToken
         )
         {
-            var scheduleSettings = await _dbService.Get<ScheduleSettings?>(
-                @"
-                    SELECT
-                    ss.[Id], [SchoolHour], [SchoolYearStart], [SchoolYearEnd], [ScheduleId]
-                    FROM [ScheduleSettings] ss
-                    INNER JOIN [DayOff] do ON do.[ScheduleSettingsId]=ss.[Id]
-                    WHERE do.[Id]=@Id ;",
-                request
-            );
+            DayOff? originalDayOff;
+            switch (request.Role)
+            {
+                case "Admin":
+                    originalDayOff = await _dbService.Get<DayOff?>(
+                        @"
+                            SELECT 
+                            [Id],[Name],[From],[To],[ScheduleSettingsId]
+                            FROM [DayOff] 
+                            WHERE [Id]=@Id;",
+                        request
+                    );
+                    break;
+                default:
+                    originalDayOff = await _dbService.Get<DayOff?>(
+                        @"
+                            SELECT 
+                            do.[Id],do.[Name],do.[From],do.[To],do.[ScheduleSettingsId]
+                            FROM [DayOff] do
+                            INNER JOIN [ScheduleSettings] ss ON ss.[Id] = do.[ScheduleSettingsId]
+                            INNER JOIN [Schedule] s ON s.[Id] = ss.[ScheduleId]
+                            WHERE s.[UserId] = @FilteredId AND do.[Id] = @Id;",
+                        request
+                    );
+                    break;
+            }
 
-            if (scheduleSettings == null)
+            if (originalDayOff == null)
             {
                 return null;
             }
 
-            var originalDayOff = await _dbService.Get<DayOff?>(
-                @"
-                    SELECT 
-                    [Id],[Name],[From],[To],[ScheduleSettingsId]
-                    FROM [DayOff] 
-                    WHERE [Id]=@Id;",
-                request
-            );
+            request.dto.Name = request.dto.Name ?? originalDayOff.Name;
+            request.dto.From = request.dto.From ?? originalDayOff.From;
+            request.dto.To = request.dto.To ?? originalDayOff.To;
 
-            if ((request.dto.From ?? originalDayOff!.From) > (request.dto.To ?? originalDayOff!.To))
+            if (request.dto.From > request.dto.To)
             {
                 throw new ApiErrorException([new ErrorObject(_str["scheduleDate"])]);
             }
+
+            GetScheduleSettingsHandler getScheduleSettingsHandler = new GetScheduleSettingsHandler(
+                _dbService
+            );
+            GetScheduleSettingsQuery getScheduleSettingsQuery = new GetScheduleSettingsQuery(
+                originalDayOff.ScheduleSettingsId,
+                request.FilteredId,
+                request.Role
+            );
+            ActionResult<ScheduleSettings?> scheduleSettings =
+                await getScheduleSettingsHandler.Handle(
+                    getScheduleSettingsQuery,
+                    cancellationToken
+                );
+
             if (
-                (request.dto.From ?? originalDayOff!.From) < scheduleSettings.SchoolYearStart
-                || (request.dto.To ?? originalDayOff!.To) > scheduleSettings.SchoolYearEnd
+                request.dto.From < scheduleSettings.Value!.SchoolYearStart
+                || request.dto.To > scheduleSettings.Value.SchoolYearEnd
             )
             {
                 throw new ApiErrorException(
@@ -67,74 +96,30 @@ namespace AlpimiAPI.Entities.EDayOff.Commands
                         new ErrorObject(
                             _str[
                                 "dateOutOfRange",
-                                scheduleSettings.SchoolYearStart.ToString("dd/MM/yyyy"),
-                                scheduleSettings.SchoolYearEnd.ToString("dd/MM/yyyy")
+                                scheduleSettings.Value.SchoolYearStart.ToString("dd/MM/yyyy"),
+                                scheduleSettings.Value.SchoolYearEnd.ToString("dd/MM/yyyy")
                             ]
                         )
                     ]
                 );
             }
 
-            DayOff? dayOff;
-            switch (request.Role)
-            {
-                case "Admin":
-                    dayOff = await _dbService.Update<DayOff?>(
-                        $@"
-                            UPDATE [DayOff] 
-                            SET 
-                            [Name]=CASE WHEN @Name IS NOT NULL THEN @Name ELSE [Name] END,
-                            [From]=CASE WHEN @From IS NOT NULL THEN @From ELSE [From] END,
-                            [To]=CASE WHEN @To IS NOT NULL THEN @To ELSE [To] END
-                            OUTPUT
-                            INSERTED.[Id], 
-                            INSERTED.[Name],
-                            INSERTED.[From],
-                            INSERTED.[To],
-                            INSERTED.[ScheduleSettingsId]
-                            WHERE [Id] = '{request.Id}';",
-                        request.dto
-                    );
-                    break;
-                default:
-                    dayOff = await _dbService.Update<DayOff?>(
-                        $@"
-                            UPDATE do
-                            SET 
-                            [Name] = CASE WHEN @Name IS NOT NULL THEN @Name ELSE do.[Name] END,
-                            [From]=CASE WHEN @From IS NOT NULL THEN @From ELSE [From] END,
-                            [To]=CASE WHEN @To IS NOT NULL THEN @To ELSE [To] END
-                            OUTPUT 
-                            INSERTED.[Id], 
-                            INSERTED.[Name], 
-                            INSERTED.[From], 
-                            INSERTED.[To],
-                            INSERTED.[ScheduleSettingsId]
-                            FROM [DayOff] do
-                            INNER JOIN [ScheduleSettings] ss ON ss.[Id] = do.[ScheduleSettingsId]
-                            INNER JOIN [Schedule] s ON s.[Id] = ss.[ScheduleId]
-                            WHERE s.[UserId] = '{request.FilteredId}' AND do.[Id] = '{request.Id}';",
-                        request.dto
-                    );
-                    break;
-            }
+            var dayOff = await _dbService.Update<DayOff?>(
+                $@"
+                    UPDATE [DayOff] 
+                    SET 
+                    [Name] = @Name ,[From] = @From, [To] = @To 
+                    OUTPUT
+                    INSERTED.[Id], 
+                    INSERTED.[Name],
+                    INSERTED.[From],
+                    INSERTED.[To],
+                    INSERTED.[ScheduleSettingsId]
+                    WHERE [Id] = '{request.Id}';",
+                request.dto
+            );
 
-            if (dayOff != null)
-            {
-                GetScheduleSettingsHandler getScheduleSettingsHandler =
-                    new GetScheduleSettingsHandler(_dbService);
-                GetScheduleSettingsQuery getScheduleSettingsQuery = new GetScheduleSettingsQuery(
-                    dayOff.ScheduleSettingsId,
-                    new Guid(),
-                    "Admin"
-                );
-                ActionResult<ScheduleSettings?> toInsertScheduleSettings =
-                    await getScheduleSettingsHandler.Handle(
-                        getScheduleSettingsQuery,
-                        cancellationToken
-                    );
-                dayOff.ScheduleSettings = toInsertScheduleSettings.Value!;
-            }
+            dayOff!.ScheduleSettings = scheduleSettings.Value!;
 
             return dayOff;
         }

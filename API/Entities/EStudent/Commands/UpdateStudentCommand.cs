@@ -32,48 +32,32 @@ namespace AlpimiAPI.Entities.EStudent.Commands
             CancellationToken cancellationToken
         )
         {
-            Group? group;
-            switch (request.Role)
-            {
-                case "Admin":
-                    group = await _dbService.Get<Group?>(
-                        @"
-                            SELECT
-                            g.[Id], g.[Name],g.[StudentCount], g.[ScheduleId]
-                            FROM [Group] g
-                            INNER JOIN [Student] st ON st.[GroupId]=g.[Id]
-                            WHERE st.[Id] = @Id;",
-                        request
-                    );
-                    break;
-                default:
-                    group = await _dbService.Get<Group?>(
-                        @"
-                            SELECT
-                            g.[Id], g.[Name],g.[StudentCount], g.[ScheduleId]
-                            FROM [Group] g
-                            INNER JOIN [Student] st ON st.[GroupId]=g.[Id]
-                            INNER JOIN [Schedule] s ON s.[Id] = g.[ScheduleId]
-                            WHERE st.[Id] = @Id AND s.[UserId] = @FilteredId;",
-                        request
-                    );
-                    break;
-            }
-
-            if (group == null)
-            {
-                return null;
-            }
-
             GetStudentHandler getStudentHandler = new GetStudentHandler(_dbService);
             GetStudentQuery getStudentQuery = new GetStudentQuery(
                 request.Id,
                 request.FilteredId,
-                "User"
+                request.Role
             );
 
             ActionResult<Student?> originalStudent = await getStudentHandler.Handle(
                 getStudentQuery,
+                cancellationToken
+            );
+
+            if (originalStudent.Value == null)
+            {
+                return null;
+            }
+
+            GetGroupHandler getGroupHandler = new GetGroupHandler(_dbService);
+            GetGroupQuery getGroupQuery = new GetGroupQuery(
+                originalStudent.Value.GroupId,
+                request.FilteredId,
+                request.Role
+            );
+
+            ActionResult<Group?> group = await getGroupHandler.Handle(
+                getGroupQuery,
                 cancellationToken
             );
 
@@ -85,7 +69,7 @@ namespace AlpimiAPI.Entities.EStudent.Commands
                     st.[Id]
                     FROM [Student] st
                     INNER JOIN [Group] g on g.[Id] = st.[GroupId]
-                    WHERE [AlbumNumber] = @AlbumNumber AND g.[ScheduleId] = '{group.ScheduleId}' AND st.[Id] != '{request.Id}';",
+                    WHERE [AlbumNumber] = @AlbumNumber AND g.[ScheduleId] = '{group .Value! .ScheduleId}' AND st.[Id] != '{request.Id}';",
                 request.dto
             );
 
@@ -117,17 +101,6 @@ namespace AlpimiAPI.Entities.EStudent.Commands
 
                 List<ErrorObject> errors = new List<ErrorObject>();
 
-                var subgroups = await _dbService.GetAll<Guid>(
-                    $@"
-                        SELECT
-                        sg.[Id]
-                        FROM [Subgroup] sg
-                        LEFT JOIN [StudentSubgroup] ssg ON ssg.[SubgroupId] = sg.[Id]
-                        LEFT JOIN [Student] st ON st.[Id] = ssg.[StudentId]
-                        WHERE st.[Id] = @Id",
-                    request
-                );
-
                 foreach (Guid subgroupId in request.dto.SubgroupIds)
                 {
                     GetSubgroupHandler getSubgroupHandler = new GetSubgroupHandler(_dbService);
@@ -144,13 +117,13 @@ namespace AlpimiAPI.Entities.EStudent.Commands
                     if (subgroup.Value == null)
                     {
                         errors.Add(
-                            new ErrorObject(_str["notFound", $"Subgroup Id = {subgroupId}"])
+                            new ErrorObject(_str["resourceNotFound", "Subgroup", subgroupId])
                         );
                     }
-                    else if (subgroup.Value.GroupId != group.Id)
+                    else if (subgroup.Value.GroupId != group.Value.Id)
                     {
                         errors.Add(
-                            new ErrorObject(_str["notFound", $"Subgroup Id = {subgroupId}"])
+                            new ErrorObject(_str["resourceNotFound", "Subgroup", subgroupId])
                         );
                     }
                 }
@@ -159,6 +132,17 @@ namespace AlpimiAPI.Entities.EStudent.Commands
                 {
                     throw new ApiErrorException(errors);
                 }
+
+                var subgroups = await _dbService.GetAll<Guid>(
+                    $@"
+                        SELECT
+                        sg.[Id]
+                        FROM [Subgroup] sg
+                        LEFT JOIN [StudentSubgroup] ssg ON ssg.[SubgroupId] = sg.[Id]
+                        LEFT JOIN [Student] st ON st.[Id] = ssg.[StudentId]
+                        WHERE st.[Id] = @Id",
+                    request
+                );
 
                 subgroups = subgroups ?? [];
                 foreach (Guid subgroupId in request.dto.SubgroupIds)
@@ -206,13 +190,7 @@ namespace AlpimiAPI.Entities.EStudent.Commands
                 request.dto
             );
 
-            GetGroupHandler getGroupHandler = new GetGroupHandler(_dbService);
-            GetGroupQuery getGroupQuery = new GetGroupQuery(student!.GroupId, new Guid(), "Admin");
-            ActionResult<Group?> toInsertGroup = await getGroupHandler.Handle(
-                getGroupQuery,
-                cancellationToken
-            );
-            student.Group = toInsertGroup.Value!;
+            student!.Group = group.Value!;
 
             return student;
         }

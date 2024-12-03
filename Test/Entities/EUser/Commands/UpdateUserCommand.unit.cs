@@ -1,4 +1,5 @@
 ﻿using AlpimiAPI.Database;
+using AlpimiAPI.Entities.EUser;
 using AlpimiAPI.Entities.EUser.Commands;
 using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
@@ -29,6 +30,9 @@ namespace AlpimiTest.Entities.EUser.Commands
 
             var user = MockData.GetUserDetails();
 
+            _dbService
+                .Setup(s => s.Get<User>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(user);
             _dbService
                 .Setup(s => s.Get<string>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(user.CustomURL);

@@ -74,10 +74,9 @@ namespace AlpimiTest.Entities.ELessonPeriod.Commands
             dto.Finish = new TimeOnly(10, 00, 00);
             dto.Start = new TimeOnly(11, 00, 00);
 
-            var scheduleSettings = MockData.GetScheduleSettingsDetails();
             _dbService
-                .Setup(s => s.Get<ScheduleSettings>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(scheduleSettings);
+                .Setup(s => s.Get<LessonPeriod>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetLessonPeriodDetails());
 
             var updateLessonPeriodCommand = new UpdateLessonPeriodCommand(
                 new Guid(),

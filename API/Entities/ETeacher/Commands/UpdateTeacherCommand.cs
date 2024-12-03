@@ -30,46 +30,35 @@ namespace AlpimiAPI.Entities.ETeacher.Commands
             CancellationToken cancellationToken
         )
         {
-            var schedule = await _dbService.Get<Schedule?>(
-                @"
-                    SELECT
-                    s.[Id], s.[Name], [UserId]
-                    FROM [Schedule] s
-                    INNER JOIN [Teacher] t ON t.[ScheduleId]=s.[Id]
-                    WHERE t.[Id]=@Id;",
-                request
-            );
-
-            if (schedule == null)
-            {
-                return null;
-            }
-
             GetTeacherHandler getTeacherHandler = new GetTeacherHandler(_dbService);
             GetTeacherQuery getTeacherQuery = new GetTeacherQuery(
                 request.Id,
                 request.FilteredId,
-                "Admin"
+                request.Role
             );
-
             ActionResult<Teacher?> originalTeacher = await getTeacherHandler.Handle(
                 getTeacherQuery,
                 cancellationToken
             );
 
+            if (originalTeacher.Value == null)
+            {
+                return null;
+            }
+
             request.dto.Name = request.dto.Name ?? originalTeacher.Value!.Name;
             request.dto.Surname = request.dto.Surname ?? originalTeacher.Value!.Surname;
 
-            var teacherName = await _dbService.GetAll<Teacher>(
+            var teacherName = await _dbService.Get<Teacher>(
                 $@"
                     SELECT 
                     [Id]
                     FROM [Teacher] 
-                    WHERE [Name] = @Name AND [Surname] = @Surname  AND [ScheduleId] = '{schedule.Id}';",
+                    WHERE [Name] = @Name AND [Surname] = @Surname  AND [ScheduleId] = '{originalTeacher .Value .ScheduleId}';",
                 request.dto
             );
 
-            if (teacherName!.Any())
+            if (teacherName != null)
             {
                 throw new ApiErrorException(
                     [
@@ -84,59 +73,31 @@ namespace AlpimiAPI.Entities.ETeacher.Commands
                 );
             }
 
-            Teacher? teacher;
-            switch (request.Role)
-            {
-                case "Admin":
-                    teacher = await _dbService.Update<Teacher?>(
-                        $@"
-                            UPDATE [Teacher] 
-                            SET
-                            [Name]=CASE WHEN @Name IS NOT NULL THEN @Name ELSE [Name] END,
-                            [Surname]=CASE WHEN @Surname IS NOT NULL THEN @Surname ELSE [Surname] END
-                            OUTPUT
-                            INSERTED.[Id],
-                            INSERTED.[Name],
-                            INSERTED.[Surname],
-                            INSERTED.[ScheduleId]
-                            WHERE [Id] = '{request.Id}';",
-                        request.dto
-                    );
-                    break;
-                default:
-                    teacher = await _dbService.Update<Teacher?>(
-                        $@"
-                            UPDATE t
-                            SET
-                            t.[Name]=CASE WHEN @Name IS NOT NULL THEN @Name ELSE t.[Name] END,
-                            [Surname]=CASE WHEN @Surname IS NOT NULL THEN @Surname ELSE [Surname] END
-                            OUTPUT
-                            INSERTED.[Id],
-                            INSERTED.[Name],
-                            INSERTED.[Surname],
-                            INSERTED.[ScheduleId]
-                            FROM [Teacher] t
-                            INNER JOIN [Schedule] s ON s.[Id] = t.[ScheduleId]
-                            WHERE s.[UserId] = '{request.FilteredId}' AND t.[Id] = '{request.Id}';",
-                        request.dto
-                    );
-                    break;
-            }
+            var teacher = await _dbService.Update<Teacher?>(
+                $@"
+                    UPDATE [Teacher] 
+                    SET
+                    [Name] = @Name, [Surname] = @Surname 
+                    OUTPUT
+                    INSERTED.[Id],
+                    INSERTED.[Name],
+                    INSERTED.[Surname],
+                    INSERTED.[ScheduleId]
+                    WHERE [Id] = '{request.Id}';",
+                request.dto
+            );
 
-            if (teacher != null)
-            {
-                GetScheduleHandler getScheduleHandler = new GetScheduleHandler(_dbService);
-                GetScheduleQuery getScheduleQuery = new GetScheduleQuery(
-                    teacher.ScheduleId,
-                    new Guid(),
-                    "Admin"
-                );
-                ActionResult<Schedule?> toInsertSchedule = await getScheduleHandler.Handle(
-                    getScheduleQuery,
-                    cancellationToken
-                );
-                teacher.Schedule = toInsertSchedule.Value!;
-            }
+            GetScheduleHandler getScheduleHandler = new GetScheduleHandler(_dbService);
+            GetScheduleQuery getScheduleQuery = new GetScheduleQuery(
+                teacher!.ScheduleId,
+                new Guid(),
+                "Admin"
+            );
+            ActionResult<Schedule?> toInsertSchedule = await getScheduleHandler.Handle(
+                getScheduleQuery,
+                cancellationToken
+            );
+            teacher.Schedule = toInsertSchedule.Value!;
 
             return teacher;
         }

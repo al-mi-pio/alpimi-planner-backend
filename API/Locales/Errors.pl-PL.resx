@@ -133,7 +133,7 @@
     <value>Hasło nie może być dłuższe niż {0} znaków</value>
   </data>
   <data name="notFound" xml:space="preserve">
-    <value>{0} nie został znaleziony</value>
+    <value>Encja nie została znaleziona</value>
   </data>
   <data name="passwordMustContain" xml:space="preserve">
     <value>Hasło musi zawierać po jednym z następujących: {0}</value>
@@ -176,5 +176,8 @@
   </data>
   <data name="duplicateData" xml:space="preserve">
     <value>Nie można wielokrotnie dodać {0} o wartości {1}</value>
+  </data>
+  <data name="resourceNotFound" xml:space="preserve">
+    <value>{0} z id {1} nie został znaleziony</value>
   </data>
 </root>

@@ -34,6 +34,21 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
             CancellationToken cancellationToken
         )
         {
+            GetScheduleHandler getScheduleHandler = new GetScheduleHandler(_dbService);
+            GetScheduleQuery getScheduleQuery = new GetScheduleQuery(
+                request.Id,
+                request.FilteredId,
+                request.Role
+            );
+            ActionResult<Schedule?> originalSchedule = await getScheduleHandler.Handle(
+                getScheduleQuery,
+                cancellationToken
+            );
+            if (originalSchedule.Value == null)
+            {
+                return null;
+            }
+
             if (request.dto.Name != null)
             {
                 GetScheduleByNameHandler getScheduleByNameHandler = new GetScheduleByNameHandler(
@@ -57,47 +72,26 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
                 }
             }
 
-            Schedule? schedule;
-            switch (request.Role)
-            {
-                case "Admin":
-                    schedule = await _dbService.Update<Schedule?>(
-                        $@"
-                            UPDATE [Schedule] 
-                            SET 
-                            [Name]=CASE WHEN @Name IS NOT NULL THEN @Name ELSE [Name] END
-                            OUTPUT
-                            INSERTED.[Id], 
-                            INSERTED.[Name], 
-                            INSERTED.[UserId]
-                            WHERE [Id] = '{request.Id}';",
-                        request.dto
-                    );
-                    break;
-                default:
-                    schedule = await _dbService.Update<Schedule?>(
-                        $@"
-                            UPDATE [Schedule] 
-                            SET 
-                            [Name]=CASE WHEN @Name IS NOT NULL THEN @Name ELSE [Name] END
-                            OUTPUT 
-                            INSERTED.[Id], INSERTED.[Name], INSERTED.[UserId]
-                            WHERE [Id] = '{request.Id}' and [UserId] = '{request.FilteredId}';",
-                        request.dto
-                    );
-                    break;
-            }
+            request.dto.Name = request.dto.Name ?? originalSchedule.Value.Name;
 
-            if (schedule != null)
-            {
-                GetUserHandler getUserHandler = new GetUserHandler(_dbService);
-                GetUserQuery getUserQuery = new GetUserQuery(schedule.UserId, new Guid(), "Admin");
-                ActionResult<User?> user = await getUserHandler.Handle(
-                    getUserQuery,
-                    cancellationToken
-                );
-                schedule.User = user.Value!;
-            }
+            var schedule = await _dbService.Update<Schedule?>(
+                $@"
+                    UPDATE [Schedule] 
+                    SET 
+                    [Name] = @Name 
+                    OUTPUT
+                    INSERTED.[Id], 
+                    INSERTED.[Name], 
+                    INSERTED.[UserId]
+                    WHERE [Id] = '{request.Id}';",
+                request.dto
+            );
+
+            GetUserHandler getUserHandler = new GetUserHandler(_dbService);
+            GetUserQuery getUserQuery = new GetUserQuery(schedule!.UserId, new Guid(), "Admin");
+            ActionResult<User?> user = await getUserHandler.Handle(getUserQuery, cancellationToken);
+            schedule.User = user.Value!;
+
             return schedule;
         }
     }

@@ -28,11 +28,9 @@ namespace AlpimiTest.Entities.ETeacher.Commands
         {
             var dto = MockData.GetUpdateTeacherDTODetails();
 
-            var schedule = MockData.GetScheduleDetails();
-
             _dbService
-                .Setup(s => s.Get<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(schedule);
+                .Setup(s => s.Get<Teacher>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetTeacherDetails());
             _dbService
                 .Setup(s => s.GetAll<Teacher>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(new List<Teacher> { MockData.GetTeacherDetails() });

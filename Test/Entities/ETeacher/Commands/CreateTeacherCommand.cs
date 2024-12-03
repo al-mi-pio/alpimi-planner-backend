@@ -43,7 +43,12 @@ namespace AlpimiTest.Entities.ETeacher.Commands
 
             Assert.Equal(
                 JsonConvert.SerializeObject(
-                    new ErrorObject[] { new ErrorObject("Schedule was not found") }
+                    new ErrorObject[]
+                    {
+                        new ErrorObject(
+                            "Schedule with id 00000000-0000-0000-0000-000000000000 was not found"
+                        )
+                    }
                 ),
                 JsonConvert.SerializeObject(result.errors)
             );
@@ -59,8 +64,8 @@ namespace AlpimiTest.Entities.ETeacher.Commands
                 .Setup(s => s.Get<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(schedule);
             _dbService
-                .Setup(s => s.GetAll<Teacher>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(new List<Teacher> { MockData.GetTeacherDetails() });
+                .Setup(s => s.Get<Teacher>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetTeacherDetails());
 
             var createTeacherCommand = new CreateTeacherCommand(
                 new Guid(),

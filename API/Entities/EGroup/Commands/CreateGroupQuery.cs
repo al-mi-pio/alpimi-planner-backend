@@ -50,10 +50,12 @@ namespace AlpimiAPI.Entities.EGroup.Commands
             );
             if (schedule.Value == null)
             {
-                throw new ApiErrorException([new ErrorObject(_str["notFound", "Schedule"])]);
+                throw new ApiErrorException(
+                    [new ErrorObject(_str["resourceNotFound", "Schedule", request.dto.ScheduleId])]
+                );
             }
 
-            var groupName = await _dbService.GetAll<Group>(
+            var groupName = await _dbService.Get<Group>(
                 @"
                     SELECT 
                     [Id]
@@ -62,14 +64,14 @@ namespace AlpimiAPI.Entities.EGroup.Commands
                 request.dto
             );
 
-            if (groupName!.Any())
+            if (groupName != null)
             {
                 throw new ApiErrorException(
                     [new ErrorObject(_str["alreadyExists", "Group", request.dto.Name])]
                 );
             }
 
-            var subgroupName = await _dbService.GetAll<Subgroup>(
+            var subgroupName = await _dbService.Get<Subgroup>(
                 $@"
                     SELECT 
                     sg.[Id]
@@ -79,7 +81,7 @@ namespace AlpimiAPI.Entities.EGroup.Commands
                 request.dto
             );
 
-            if (subgroupName!.Any())
+            if (subgroupName != null)
             {
                 throw new ApiErrorException(
                     [new ErrorObject(_str["alreadyExists", "Subgroup", request.dto.Name])]

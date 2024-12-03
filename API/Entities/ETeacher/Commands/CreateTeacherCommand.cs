@@ -42,10 +42,12 @@ namespace AlpimiAPI.Entities.ETeacher.Commands
             );
             if (schedule.Value == null)
             {
-                throw new ApiErrorException([new ErrorObject(_str["notFound", "Schedule"])]);
+                throw new ApiErrorException(
+                    [new ErrorObject(_str["resourceNotFound", "Schedule", request.dto.ScheduleId])]
+                );
             }
 
-            var teacherName = await _dbService.GetAll<Teacher>(
+            var teacherName = await _dbService.Get<Teacher>(
                 @"
                     SELECT 
                     [Id]
@@ -54,7 +56,7 @@ namespace AlpimiAPI.Entities.ETeacher.Commands
                 request.dto
             );
 
-            if (teacherName!.Any())
+            if (teacherName != null)
             {
                 throw new ApiErrorException(
                     [

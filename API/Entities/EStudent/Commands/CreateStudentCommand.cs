@@ -44,10 +44,12 @@ namespace AlpimiAPI.Entities.EStudent.Commands
 
             if (group.Value == null)
             {
-                throw new ApiErrorException([new ErrorObject(_str["notFound", "Group"])]);
+                throw new ApiErrorException(
+                    [new ErrorObject(_str["resourceNotFound", "Group", request.dto.GroupId])]
+                );
             }
 
-            var studentAlbum = await _dbService.GetAll<Student>(
+            var studentAlbum = await _dbService.Get<Student>(
                 $@"
                     SELECT 
                     st.[Id]
@@ -57,7 +59,7 @@ namespace AlpimiAPI.Entities.EStudent.Commands
                 request.dto
             );
 
-            if (studentAlbum!.Any())
+            if (studentAlbum != null)
             {
                 throw new ApiErrorException(
                     [new ErrorObject(_str["alreadyExists", "Student", request.dto.AlbumNumber])]
@@ -100,13 +102,13 @@ namespace AlpimiAPI.Entities.EStudent.Commands
                     if (subgroup.Value == null)
                     {
                         errors.Add(
-                            new ErrorObject(_str["notFound", $"Subgroup Id = {subgroupId}"])
+                            new ErrorObject(_str["resourceNotFound", "Subgroup", subgroupId])
                         );
                     }
                     else if (subgroup.Value.GroupId != request.dto.GroupId)
                     {
                         errors.Add(
-                            new ErrorObject(_str["notFound", $"Subgroup Id = {subgroupId}"])
+                            new ErrorObject(_str["resourceNotFound", "Subgroup", subgroupId])
                         );
                     }
                 }

@@ -41,26 +41,11 @@ namespace AlpimiAPI.Entities.ESubgroup.Commands
                 );
             }
 
-            var group = await _dbService.Get<Group?>(
-                @"
-                    SELECT
-                    g.[Id], g.[Name],g.[StudentCount], [ScheduleId]
-                    FROM [Group] g
-                    INNER JOIN [Subgroup] sg ON sg.[GroupId]=g.[Id]
-                    WHERE sg.[Id]=@Id;",
-                request
-            );
-
-            if (group == null)
-            {
-                return null;
-            }
-
             GetSubgroupHandler getSubgroupHandler = new GetSubgroupHandler(_dbService);
             GetSubgroupQuery getSubgroupQuery = new GetSubgroupQuery(
                 request.Id,
                 request.FilteredId,
-                "Admin"
+                request.Role
             );
 
             ActionResult<Subgroup?> originalSubgroup = await getSubgroupHandler.Handle(
@@ -68,11 +53,28 @@ namespace AlpimiAPI.Entities.ESubgroup.Commands
                 cancellationToken
             );
 
+            if (originalSubgroup.Value == null)
+            {
+                return null;
+            }
+
             request.dto.Name = request.dto.Name ?? originalSubgroup.Value!.Name;
             request.dto.StudentCount =
                 request.dto.StudentCount ?? originalSubgroup.Value!.StudentCount;
 
-            if (group.StudentCount < request.dto.StudentCount)
+            GetGroupHandler getGroupHandler = new GetGroupHandler(_dbService);
+            GetGroupQuery getGroupQuery = new GetGroupQuery(
+                originalSubgroup.Value.GroupId,
+                request.FilteredId,
+                request.Role
+            );
+
+            ActionResult<Group?> group = await getGroupHandler.Handle(
+                getGroupQuery,
+                cancellationToken
+            );
+
+            if (group.Value!.StudentCount < request.dto.StudentCount)
             {
                 throw new ApiErrorException([new ErrorObject(_str["tooManyStudents"])]);
             }
@@ -82,7 +84,7 @@ namespace AlpimiAPI.Entities.ESubgroup.Commands
                     SELECT 
                     [Id]
                     FROM [Group] 
-                    WHERE [Name] = @Name AND [ScheduleId]='{group.ScheduleId}';",
+                    WHERE [Name] = @Name AND [ScheduleId]='{group.Value.ScheduleId}';",
                 request.dto
             );
 
@@ -109,60 +111,21 @@ namespace AlpimiAPI.Entities.ESubgroup.Commands
                 );
             }
 
-            Subgroup? subgroup;
-            switch (request.Role)
-            {
-                case "Admin":
-                    subgroup = await _dbService.Update<Subgroup?>(
-                        $@"
-                            UPDATE [Subgroup] 
-                            SET
-                            [Name]=CASE WHEN @Name IS NOT NULL THEN @Name ELSE [Name] END,
-                            [StudentCount]=CASE WHEN @StudentCount IS NOT NULL THEN @StudentCount ELSE [StudentCount] END
-                            OUTPUT
-                            INSERTED.[Id],
-                            INSERTED.[Name],
-                            INSERTED.[StudentCount],
-                            INSERTED.[GroupId]
-                            WHERE [Id] = '{request.Id}';",
-                        request.dto
-                    );
-                    break;
-                default:
-                    subgroup = await _dbService.Update<Subgroup?>(
-                        $@"
-                            UPDATE sg
-                            SET
-                            sg.[Name]=CASE WHEN @Name IS NOT NULL THEN @Name ELSE sg.[Name] END,
-                            sg.[StudentCount]=CASE WHEN @StudentCount IS NOT NULL THEN @StudentCount ELSE sg.[StudentCount] END
-                            OUTPUT
-                            INSERTED.[Id],
-                            INSERTED.[Name],
-                            INSERTED.[StudentCount],
-                            INSERTED.[GroupId]
-                            FROM [Subgroup] sg
-                            INNER JOIN [Group] g on g.[Id] = sg.[GroupId]
-                            INNER JOIN [Schedule] s ON s.[Id] = g.[ScheduleId]
-                            WHERE s.[UserId] = '{request.FilteredId}' AND sg.[Id] = '{request.Id}';",
-                        request.dto
-                    );
-                    break;
-            }
+            var subgroup = await _dbService.Update<Subgroup?>(
+                $@"
+                    UPDATE [Subgroup] 
+                    SET
+                    [Name] = @Name, [StudentCount] = @StudentCount 
+                    OUTPUT
+                    INSERTED.[Id],
+                    INSERTED.[Name],
+                    INSERTED.[StudentCount],
+                    INSERTED.[GroupId]
+                    WHERE [Id] = '{request.Id}';",
+                request.dto
+            );
 
-            if (subgroup != null)
-            {
-                GetGroupHandler getGroupHandler = new GetGroupHandler(_dbService);
-                GetGroupQuery getGroupQuery = new GetGroupQuery(
-                    subgroup.GroupId,
-                    new Guid(),
-                    "Admin"
-                );
-                ActionResult<Group?> toInsertGroup = await getGroupHandler.Handle(
-                    getGroupQuery,
-                    cancellationToken
-                );
-                subgroup.Group = toInsertGroup.Value!;
-            }
+            subgroup!.Group = group.Value!;
 
             return subgroup;
         }

@@ -53,7 +53,9 @@ namespace AlpimiAPI.Entities.ESubgroup.Commands
 
             if (group.Value == null)
             {
-                throw new ApiErrorException([new ErrorObject(_str["notFound", "Group"])]);
+                throw new ApiErrorException(
+                    [new ErrorObject(_str["resourceNotFound", "Group", request.dto.GroupId])]
+                );
             }
 
             if (group.Value.StudentCount < request.dto.StudentCount)

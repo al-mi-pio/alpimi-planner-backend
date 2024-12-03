@@ -60,6 +60,7 @@ namespace AlpimiAPI.Entities.EUser.Commands
             {
                 errors.Add(new ErrorObject(_str["alreadyExists", "URL", request.dto.CustomURL]));
             }
+
             if (request.dto.Password.Length < AuthSettings.MinimumPasswordLength)
             {
                 errors.Add(

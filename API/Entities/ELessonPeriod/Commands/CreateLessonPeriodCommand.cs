@@ -56,7 +56,11 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Commands
             if (scheduleSettings.Value == null)
             {
                 throw new ApiErrorException(
-                    [new ErrorObject(_str["notFound", "ScheduleSettings"])]
+                    [
+                        new ErrorObject(
+                            _str["resourceNotFound", "ScheduleSettings", request.dto.ScheduleId]
+                        )
+                    ]
                 );
             }
 

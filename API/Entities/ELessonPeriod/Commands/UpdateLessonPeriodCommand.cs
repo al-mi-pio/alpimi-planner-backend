@@ -37,40 +37,45 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Commands
             CancellationToken cancellationToken
         )
         {
-            var scheduleSettings = await _dbService.Get<ScheduleSettings?>(
-                @"
-                    SELECT
-                    ss.[Id], [SchoolHour], [SchoolYearStart], [SchoolYearEnd], [ScheduleId]
-                    FROM [ScheduleSettings] ss
-                    INNER JOIN [LessonPeriod] lp ON lp.[ScheduleSettingsId]=ss.[Id]
-                    WHERE lp.[Id]=@Id ;",
-                request
-            );
+            LessonPeriod? originalLessonPeriod;
+            switch (request.Role)
+            {
+                case "Admin":
+                    originalLessonPeriod = await _dbService.Get<LessonPeriod?>(
+                        @"
+                            SELECT 
+                            [Id],[Start],[Finish],[ScheduleSettingsId]
+                            FROM [LessonPeriod] 
+                            WHERE [Id]=@Id;",
+                        request
+                    );
+                    break;
+                default:
+                    originalLessonPeriod = await _dbService.Get<LessonPeriod?>(
+                        @"
+                            SELECT 
+                            lp.[Id],lp.[Start],lp.[Finish],lp.[ScheduleSettingsId]
+                            FROM [LessonPeriod] lp
+                            INNER JOIN [ScheduleSettings] ss ON ss.[Id] = lp.[ScheduleSettingsId]
+                            INNER JOIN [Schedule] s ON s.[Id] = ss.[ScheduleId]
+                            WHERE s.[UserId] = @FilteredId AND lp.[Id] = @Id;",
+                        request
+                    );
+                    break;
+            }
 
-            if (scheduleSettings == null)
+            if (originalLessonPeriod == null)
             {
                 return null;
             }
 
-            var originalLessonPeriod = await _dbService.Get<LessonPeriod?>(
-                @"
-                    SELECT 
-                    [Id],[Start],[Finish],[ScheduleSettingsId]
-                    FROM [LessonPeriod] 
-                    WHERE [Id]=@Id;",
-                request
-            );
+            request.dto.Start = request.dto.Start ?? originalLessonPeriod.Start;
+            request.dto.Finish = request.dto.Finish ?? originalLessonPeriod.Finish;
 
-            if (
-                (request.dto.Start ?? originalLessonPeriod!.Start)
-                > (request.dto.Finish ?? originalLessonPeriod!.Finish)
-            )
+            if (request.dto.Start > request.dto.Finish)
             {
                 throw new ApiErrorException([new ErrorObject(_str["scheduleDate"])]);
             }
-
-            request.dto.Start = request.dto.Start ?? originalLessonPeriod!.Start;
-            request.dto.Finish = request.dto.Finish ?? originalLessonPeriod!.Finish;
 
             var lessonPeriodOverlap = await _dbService.GetAll<LessonPeriod>(
                 $@"
@@ -79,7 +84,7 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Commands
                     FROM [LessonPeriod] lp
                     INNER JOIN [ScheduleSettings] ss ON ss.[Id] = lp.[ScheduleSettingsId]
                     INNER JOIN [Schedule] s ON s.[Id]=ss.[ScheduleId]
-                    WHERE s.[UserId] = '{request.FilteredId}' AND ss.[Id] = '{originalLessonPeriod!.ScheduleSettingsId}'
+                    WHERE s.[UserId] = '{request.FilteredId}' AND ss.[Id] = '{originalLessonPeriod.ScheduleSettingsId}'
                     AND lp.[Id] != '{request.Id}'
                     AND ((([Start] > @Start AND [Start] < @Finish) 
                     OR ([Finish] > @Start AND [Finish] < @Finish))
@@ -91,62 +96,34 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Commands
                 throw new ApiErrorException([new ErrorObject(_str["timeOverlap"])]);
             }
 
-            LessonPeriod? lessonPeriod;
-            switch (request.Role)
-            {
-                case "Admin":
-                    lessonPeriod = await _dbService.Update<LessonPeriod?>(
-                        $@"
-                            UPDATE [LessonPeriod] 
-                            SET
-                            [Start]=CASE WHEN @Start IS NOT NULL THEN @Start ELSE [Start] END,
-                            [Finish]=CASE WHEN @Finish IS NOT NULL THEN @Finish ELSE [Finish] END
-                            OUTPUT
-                            INSERTED.[Id],
-                            INSERTED.[Start],
-                            INSERTED.[Finish],
-                            INSERTED.[ScheduleSettingsId]
-                            WHERE [Id] = '{request.Id}';",
-                        request.dto
-                    );
-                    break;
-                default:
-                    lessonPeriod = await _dbService.Update<LessonPeriod?>(
-                        $@"
-                            UPDATE lp
-                            SET 
-                            [Start]=CASE WHEN @Start IS NOT NULL THEN @Start ELSE [Start] END,
-                            [Finish]=CASE WHEN @Finish IS NOT NULL THEN @Finish ELSE [Finish] END
-                            OUTPUT 
-                            INSERTED.[Id],
-                            INSERTED.[Start],
-                            INSERTED.[Finish],
-                            INSERTED.[ScheduleSettingsId]
-                            FROM [LessonPeriod] lp
-                            INNER JOIN [ScheduleSettings] ss ON ss.[Id] = lp.[ScheduleSettingsId]
-                            INNER JOIN [Schedule] s ON s.[Id] = ss.[ScheduleId]
-                            WHERE s.[UserId] = '{request.FilteredId}' AND lp.[Id] = '{request.Id}';",
-                        request.dto
-                    );
-                    break;
-            }
+            var lessonPeriod = await _dbService.Update<LessonPeriod?>(
+                $@"
+                    UPDATE [LessonPeriod] 
+                    SET
+                    [Start] = @Start, [Finish] = @Finish
+                    OUTPUT
+                    INSERTED.[Id],
+                    INSERTED.[Start],
+                    INSERTED.[Finish],
+                    INSERTED.[ScheduleSettingsId]
+                    WHERE [Id] = '{request.Id}';",
+                request.dto
+            );
 
-            if (lessonPeriod != null)
-            {
-                GetScheduleSettingsHandler getScheduleSettingsHandler =
-                    new GetScheduleSettingsHandler(_dbService);
-                GetScheduleSettingsQuery getScheduleSettingsQuery = new GetScheduleSettingsQuery(
-                    lessonPeriod.ScheduleSettingsId,
-                    new Guid(),
-                    "Admin"
+            GetScheduleSettingsHandler getScheduleSettingsHandler = new GetScheduleSettingsHandler(
+                _dbService
+            );
+            GetScheduleSettingsQuery getScheduleSettingsQuery = new GetScheduleSettingsQuery(
+                lessonPeriod!.ScheduleSettingsId,
+                new Guid(),
+                "Admin"
+            );
+            ActionResult<ScheduleSettings?> toInsertScheduleSettings =
+                await getScheduleSettingsHandler.Handle(
+                    getScheduleSettingsQuery,
+                    cancellationToken
                 );
-                ActionResult<ScheduleSettings?> toInsertScheduleSettings =
-                    await getScheduleSettingsHandler.Handle(
-                        getScheduleSettingsQuery,
-                        cancellationToken
-                    );
-                lessonPeriod.ScheduleSettings = toInsertScheduleSettings.Value!;
-            }
+            lessonPeriod.ScheduleSettings = toInsertScheduleSettings.Value!;
 
             return lessonPeriod;
         }

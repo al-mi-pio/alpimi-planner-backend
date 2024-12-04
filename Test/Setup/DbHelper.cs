@@ -1,5 +1,6 @@
 ﻿using System.Net.Http.Headers;
 using AlpimiAPI.Database;
+using AlpimiAPI.Entities.EClassroomType.DTO;
 using AlpimiAPI.Entities.EDayOff.DTO;
 using AlpimiAPI.Entities.EGroup.DTO;
 using AlpimiAPI.Entities.ELessonPeriod.DTO;
@@ -164,6 +165,28 @@ namespace AlpimiTest.TestSetup
             var jsonStudentId = await student.Content.ReadFromJsonAsync<ApiGetResponse<Guid>>();
 
             return jsonStudentId!.Content;
+        }
+
+        public static async Task<Guid> SetupClassroomType(
+            HttpClient _client,
+            CreateClassroomTypeDTO classroomTypeRequest
+        )
+        {
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "Bob", new Guid())
+            );
+
+            var classroomType = await _client.PostAsJsonAsync(
+                "/api/ClassroomType",
+                classroomTypeRequest
+            );
+
+            var jsonClassroomTypeId = await classroomType.Content.ReadFromJsonAsync<
+                ApiGetResponse<Guid>
+            >();
+
+            return jsonClassroomTypeId!.Content;
         }
     }
 }

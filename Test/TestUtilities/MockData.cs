@@ -1,5 +1,7 @@
 ﻿using AlpimiAPI.Entities.EAuth;
 using AlpimiAPI.Entities.EAuth.DTO;
+using AlpimiAPI.Entities.EClassroom;
+using AlpimiAPI.Entities.EClassroom.DTO;
 using AlpimiAPI.Entities.EClassroomType;
 using AlpimiAPI.Entities.EClassroomType.DTO;
 using AlpimiAPI.Entities.EDayOff;
@@ -145,6 +147,17 @@ namespace AlpimiTest.TestUtilities
             return new ClassroomType()
             {
                 Name = "Komputerowa",
+                ScheduleId = new Guid(),
+                Schedule = GetScheduleDetails()
+            };
+        }
+
+        public static Classroom GetClassroomDetails()
+        {
+            return new Classroom()
+            {
+                Name = "G120",
+                Capacity = 100,
                 ScheduleId = new Guid(),
                 Schedule = GetScheduleDetails()
             };
@@ -394,6 +407,32 @@ namespace AlpimiTest.TestUtilities
         public static UpdateClassroomTypeDTO GetUpdateClassroomTypeDTODetails()
         {
             return new UpdateClassroomTypeDTO() { Name = "Hartowanie" };
+        }
+
+        public static CreateClassroomDTO GetCreateClassroomDTODetails(Guid scheduleId)
+        {
+            var classroom = GetClassroomDetails();
+            return new CreateClassroomDTO()
+            {
+                Name = classroom.Name,
+                Capacity = classroom.Capacity,
+                ScheduleId = scheduleId
+            };
+        }
+
+        public static CreateClassroomDTO GetCreateSecondClassroomDTODetails(Guid scheduleId)
+        {
+            return new CreateClassroomDTO()
+            {
+                Name = "G119",
+                Capacity = 10,
+                ScheduleId = scheduleId
+            };
+        }
+
+        public static UpdateClassroomDTO GetUpdateClassroomDTODetails()
+        {
+            return new UpdateClassroomDTO() { Name = "E5", Capacity = 25 };
         }
     }
 }

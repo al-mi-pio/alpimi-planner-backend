@@ -1,4 +1,5 @@
 ﻿using AlpimiAPI.Entities.EAuth;
+using AlpimiAPI.Entities.EClassroom;
 using AlpimiAPI.Entities.EClassroomType;
 using AlpimiAPI.Entities.EDayOff;
 using AlpimiAPI.Entities.EGroup;
@@ -32,6 +33,7 @@ namespace AlpimiAPI.Database
         public DbSet<Student> Student { get; set; }
         public DbSet<StudentSubgroup> StudentSubgroup { get; set; }
         public DbSet<ClassroomType> ClassroomType { get; set; }
+        public DbSet<Classroom> Classroom { get; set; }
         #endregion
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

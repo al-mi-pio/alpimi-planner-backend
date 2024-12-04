@@ -4,56 +4,55 @@ using AlpimiAPI.Entities.ESchedule.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AlpimiAPI.Entities.EClassroomType.Queries
+namespace AlpimiAPI.Entities.EClassroom.Queries
 {
-    public record GetClassroomTypeQuery(Guid Id, Guid FilteredId, string Role)
-        : IRequest<ClassroomType?>;
+    public record GetClassroomQuery(Guid Id, Guid FilteredId, string Role) : IRequest<Classroom?>;
 
-    public class GetClassroomTypeHandler : IRequestHandler<GetClassroomTypeQuery, ClassroomType?>
+    public class GetClassroomHandler : IRequestHandler<GetClassroomQuery, Classroom?>
     {
         private readonly IDbService _dbService;
 
-        public GetClassroomTypeHandler(IDbService dbService)
+        public GetClassroomHandler(IDbService dbService)
         {
             _dbService = dbService;
         }
 
-        public async Task<ClassroomType?> Handle(
-            GetClassroomTypeQuery request,
+        public async Task<Classroom?> Handle(
+            GetClassroomQuery request,
             CancellationToken cancellationToken
         )
         {
-            ClassroomType? classroomType;
+            Classroom? classroom;
             switch (request.Role)
             {
                 case "Admin":
-                    classroomType = await _dbService.Get<ClassroomType?>(
+                    classroom = await _dbService.Get<Classroom?>(
                         @"
                             SELECT 
-                            [Id], [Name], [ScheduleId] 
-                            FROM [ClassroomType] 
+                            [Id], [Name], [Capacity], [ScheduleId] 
+                            FROM [Classroom] 
                             WHERE [Id] = @Id;",
                         request
                     );
                     break;
                 default:
-                    classroomType = await _dbService.Get<ClassroomType?>(
+                    classroom = await _dbService.Get<Classroom?>(
                         @"
                             SELECT 
-                            ct.[Id], ct.[Name], [ScheduleId] 
-                            FROM [ClassroomType] ct
-                            INNER JOIN [Schedule] s ON ct.[ScheduleId] = s.[Id]
-                            WHERE ct.[Id] = @Id AND s.[UserId] = @FilteredId;",
+                            c.[Id], c.[Name], [Capacity], [ScheduleId] 
+                            FROM [Classroom] c
+                            INNER JOIN [Schedule] s ON c.[ScheduleId] = s.[Id]
+                            WHERE c.[Id] = @Id AND s.[UserId] = @FilteredId;",
                         request
                     );
                     break;
             }
 
-            if (classroomType != null)
+            if (classroom != null)
             {
                 GetScheduleHandler getScheduleHandler = new GetScheduleHandler(_dbService);
                 GetScheduleQuery getScheduleQuery = new GetScheduleQuery(
-                    classroomType.ScheduleId,
+                    classroom.ScheduleId,
                     new Guid(),
                     "Admin"
                 );
@@ -61,9 +60,9 @@ namespace AlpimiAPI.Entities.EClassroomType.Queries
                     getScheduleQuery,
                     cancellationToken
                 );
-                classroomType.Schedule = schedule.Value!;
+                classroom.Schedule = schedule.Value!;
             }
-            return classroomType;
+            return classroom;
         }
     }
 }

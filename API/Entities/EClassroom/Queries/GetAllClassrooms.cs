@@ -7,29 +7,29 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 
-namespace AlpimiAPI.Entities.EClassroomType.Queries
+namespace AlpimiAPI.Entities.EClassroom.Queries
 {
-    public record GetAllClassroomTypesQuery(
+    public record GetAllClassroomsQuery(
         Guid ScheduleId,
         Guid FilteredId,
         string Role,
         PaginationParams Pagination
-    ) : IRequest<(IEnumerable<ClassroomType>?, int)>;
+    ) : IRequest<(IEnumerable<Classroom>?, int)>;
 
-    public class GetAllClassroomTypesHandler
-        : IRequestHandler<GetAllClassroomTypesQuery, (IEnumerable<ClassroomType>?, int)>
+    public class GetAllClassroomsHandler
+        : IRequestHandler<GetAllClassroomsQuery, (IEnumerable<Classroom>?, int)>
     {
         private readonly IDbService _dbService;
         private readonly IStringLocalizer<Errors> _str;
 
-        public GetAllClassroomTypesHandler(IDbService dbService, IStringLocalizer<Errors> str)
+        public GetAllClassroomsHandler(IDbService dbService, IStringLocalizer<Errors> str)
         {
             _dbService = dbService;
             _str = str;
         }
 
-        public async Task<(IEnumerable<ClassroomType>?, int)> Handle(
-            GetAllClassroomTypesQuery request,
+        public async Task<(IEnumerable<Classroom>?, int)> Handle(
+            GetAllClassroomsQuery request,
             CancellationToken cancellationToken
         )
         {
@@ -49,7 +49,11 @@ namespace AlpimiAPI.Entities.EClassroomType.Queries
             {
                 errors.Add(new ErrorObject(_str["badParameter", "SortOrder"]));
             }
-            if (request.Pagination.SortBy != "Id" && request.Pagination.SortBy != "Name")
+            if (
+                request.Pagination.SortBy != "Id"
+                && request.Pagination.SortBy != "Name"
+                && request.Pagination.SortBy != "Capacity"
+            )
             {
                 errors.Add(new ErrorObject(_str["badParameter", "SortBy"]));
             }
@@ -59,7 +63,7 @@ namespace AlpimiAPI.Entities.EClassroomType.Queries
                 throw new ApiErrorException(errors);
             }
 
-            IEnumerable<ClassroomType>? classroomTypes;
+            IEnumerable<Classroom>? classrooms;
             int count;
             switch (request.Role)
             {
@@ -68,15 +72,15 @@ namespace AlpimiAPI.Entities.EClassroomType.Queries
                         @"
                             SELECT 
                             COUNT(*)
-                            FROM [ClassroomType] 
+                            FROM [Classroom] 
                             WHERE [ScheduleId] = @ScheduleId",
                         request
                     );
-                    classroomTypes = await _dbService.GetAll<ClassroomType>(
+                    classrooms = await _dbService.GetAll<Classroom>(
                         $@"
                             SELECT
                             [Id], [Name], [ScheduleId] 
-                            FROM [ClassroomType]
+                            FROM [Classroom]
                             WHERE [ScheduleId] = @ScheduleId 
                             ORDER BY
                             {request.Pagination.SortBy}
@@ -92,19 +96,19 @@ namespace AlpimiAPI.Entities.EClassroomType.Queries
                     count = await _dbService.Get<int>(
                         @"
                             SELECT COUNT(*)
-                            FROM [ClassroomType] ct
-                            INNER JOIN [Schedule] s ON s.[Id] = ct.[ScheduleId]
-                            WHERE s.[UserId] = @FilteredId AND ct.[ScheduleId] = @ScheduleId
+                            FROM [Classroom] c
+                            INNER JOIN [Schedule] s ON s.[Id] = c.[ScheduleId]
+                            WHERE s.[UserId] = @FilteredId AND c.[ScheduleId] = @ScheduleId
                             ",
                         request
                     );
-                    classroomTypes = await _dbService.GetAll<ClassroomType>(
+                    classrooms = await _dbService.GetAll<Classroom>(
                         $@"
                             SELECT 
-                            ct.[Id], ct.[Name], [ScheduleId] 
-                            FROM [ClassroomType] ct
-                            INNER JOIN [Schedule] s ON s.[Id] = ct.[ScheduleId]
-                            WHERE s.[UserId] = @FilteredId AND ct.[ScheduleId] = @ScheduleId 
+                            c.[Id], c.[Name], c.[Capacity], [ScheduleId] 
+                            FROM [Classroom] c
+                            INNER JOIN [Schedule] s ON s.[Id] = c.[ScheduleId]
+                            WHERE s.[UserId] = @FilteredId AND c.[ScheduleId] = @ScheduleId 
                             ORDER BY
                             {request.Pagination.SortBy}
                             {request.Pagination.SortOrder}
@@ -116,13 +120,13 @@ namespace AlpimiAPI.Entities.EClassroomType.Queries
                     );
                     break;
             }
-            if (classroomTypes != null)
+            if (classrooms != null)
             {
-                foreach (var classroomType in classroomTypes)
+                foreach (var classroom in classrooms)
                 {
                     GetScheduleHandler getScheduleHandler = new GetScheduleHandler(_dbService);
                     GetScheduleQuery getScheduleQuery = new GetScheduleQuery(
-                        classroomType.ScheduleId,
+                        classroom.ScheduleId,
                         new Guid(),
                         "Admin"
                     );
@@ -130,10 +134,10 @@ namespace AlpimiAPI.Entities.EClassroomType.Queries
                         getScheduleQuery,
                         cancellationToken
                     );
-                    classroomType.Schedule = schedule.Value!;
+                    classroom.Schedule = schedule.Value!;
                 }
             }
-            return (classroomTypes, count);
+            return (classrooms, count);
         }
     }
 }

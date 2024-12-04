@@ -105,9 +105,9 @@ namespace AlpimiAPI.Entities.ETeacher.Queries
                     teachers = await _dbService.GetAll<Teacher>(
                         $@"
                             SELECT 
-                            t.[Id], t.[Name], [Surname],[ScheduleId] 
+                            t.[Id], t.[Name], [Surname], [ScheduleId] 
                             FROM [Teacher] t
-                            INNER JOIN [Schedule] s ON s.[Id]=t.[ScheduleId]
+                            INNER JOIN [Schedule] s ON s.[Id] = t.[ScheduleId]
                             WHERE s.[UserId] = @FilteredId AND t.[ScheduleId] = @ScheduleId 
                             ORDER BY
                             {request.Pagination.SortBy}

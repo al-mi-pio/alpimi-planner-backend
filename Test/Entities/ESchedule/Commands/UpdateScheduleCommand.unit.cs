@@ -28,14 +28,12 @@ namespace AlpimiTest.Entities.ESchedule.Commands
         {
             var dto = MockData.GetUpdateScheduleDTODetails();
 
-            var schedule = MockData.GetScheduleDetails();
-
             _dbService
                 .Setup(s => s.Get<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(schedule);
+                .ReturnsAsync(MockData.GetScheduleDetails());
 
             var updateScheduleCommand = new UpdateScheduleCommand(
-                schedule.Id,
+                Guid.NewGuid(),
                 dto,
                 new Guid(),
                 "Admin"

@@ -1,5 +1,7 @@
 ﻿using AlpimiAPI.Entities.EAuth;
 using AlpimiAPI.Entities.EAuth.DTO;
+using AlpimiAPI.Entities.EClassroomType;
+using AlpimiAPI.Entities.EClassroomType.DTO;
 using AlpimiAPI.Entities.EDayOff;
 using AlpimiAPI.Entities.EDayOff.DTO;
 using AlpimiAPI.Entities.EGroup;
@@ -135,6 +137,16 @@ namespace AlpimiTest.TestUtilities
                 AlbumNumber = "88776655",
                 GroupId = new Guid(),
                 Group = GetGroupDetails()
+            };
+        }
+
+        public static ClassroomType GetClassroomTypeDetails()
+        {
+            return new ClassroomType()
+            {
+                Name = "Komputerowa",
+                ScheduleId = new Guid(),
+                Schedule = GetScheduleDetails()
             };
         }
 
@@ -362,6 +374,26 @@ namespace AlpimiTest.TestUtilities
         public static UpdateStudentDTO GetUpdateStudentDTODetails()
         {
             return new UpdateStudentDTO() { AlbumNumber = "newNumber" };
+        }
+
+        public static CreateClassroomTypeDTO GetCreateClassroomTypeDTODetails(Guid scheduleId)
+        {
+            var classroomType = GetClassroomTypeDetails();
+            return new CreateClassroomTypeDTO()
+            {
+                Name = classroomType.Name,
+                ScheduleId = scheduleId
+            };
+        }
+
+        public static CreateClassroomTypeDTO GetCreateSecondClassroomTypeDTODetails(Guid scheduleId)
+        {
+            return new CreateClassroomTypeDTO() { Name = "Wykładowa", ScheduleId = scheduleId };
+        }
+
+        public static UpdateClassroomTypeDTO GetUpdateClassroomTypeDTODetails()
+        {
+            return new UpdateClassroomTypeDTO() { Name = "Hartowanie" };
         }
     }
 }

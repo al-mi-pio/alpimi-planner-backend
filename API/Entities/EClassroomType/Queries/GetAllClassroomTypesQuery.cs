@@ -7,29 +7,29 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 
-namespace AlpimiAPI.Entities.ETeacher.Queries
+namespace AlpimiAPI.Entities.EClassroomType.Queries
 {
-    public record GetAllTeachersByScheduleQuery(
+    public record GetAllClassroomTypesQuery(
         Guid ScheduleId,
         Guid FilteredId,
         string Role,
         PaginationParams Pagination
-    ) : IRequest<(IEnumerable<Teacher>?, int)>;
+    ) : IRequest<(IEnumerable<ClassroomType>?, int)>;
 
-    public class GetAllTeachersByScheduleHandler
-        : IRequestHandler<GetAllTeachersByScheduleQuery, (IEnumerable<Teacher>?, int)>
+    public class GetAllClassroomTypesHandler
+        : IRequestHandler<GetAllClassroomTypesQuery, (IEnumerable<ClassroomType>?, int)>
     {
         private readonly IDbService _dbService;
         private readonly IStringLocalizer<Errors> _str;
 
-        public GetAllTeachersByScheduleHandler(IDbService dbService, IStringLocalizer<Errors> str)
+        public GetAllClassroomTypesHandler(IDbService dbService, IStringLocalizer<Errors> str)
         {
             _dbService = dbService;
             _str = str;
         }
 
-        public async Task<(IEnumerable<Teacher>?, int)> Handle(
-            GetAllTeachersByScheduleQuery request,
+        public async Task<(IEnumerable<ClassroomType>?, int)> Handle(
+            GetAllClassroomTypesQuery request,
             CancellationToken cancellationToken
         )
         {
@@ -49,11 +49,7 @@ namespace AlpimiAPI.Entities.ETeacher.Queries
             {
                 errors.Add(new ErrorObject(_str["badParameter", "SortOrder"]));
             }
-            if (
-                request.Pagination.SortBy != "Id"
-                && request.Pagination.SortBy != "Name"
-                && request.Pagination.SortBy != "Surname"
-            )
+            if (request.Pagination.SortBy != "Id" && request.Pagination.SortBy != "Name")
             {
                 errors.Add(new ErrorObject(_str["badParameter", "SortBy"]));
             }
@@ -63,7 +59,7 @@ namespace AlpimiAPI.Entities.ETeacher.Queries
                 throw new ApiErrorException(errors);
             }
 
-            IEnumerable<Teacher>? teachers;
+            IEnumerable<ClassroomType>? teachers;
             int count;
             switch (request.Role)
             {
@@ -72,15 +68,15 @@ namespace AlpimiAPI.Entities.ETeacher.Queries
                         @"
                             SELECT 
                             COUNT(*)
-                            FROM [Teacher] 
+                            FROM [ClassroomType] 
                             WHERE [ScheduleId] = @ScheduleId",
                         request
                     );
-                    teachers = await _dbService.GetAll<Teacher>(
+                    teachers = await _dbService.GetAll<ClassroomType>(
                         $@"
                             SELECT
-                            [Id], [Name], [Surname],[ScheduleId] 
-                            FROM [Teacher]
+                            [Id], [Name], [ScheduleId] 
+                            FROM [ClassroomType]
                             WHERE [ScheduleId] = @ScheduleId 
                             ORDER BY
                             {request.Pagination.SortBy}
@@ -96,19 +92,19 @@ namespace AlpimiAPI.Entities.ETeacher.Queries
                     count = await _dbService.Get<int>(
                         @"
                             SELECT COUNT(*)
-                            FROM [Teacher] t
+                            FROM [ClassroomType] t
                             INNER JOIN [Schedule] s ON s.[Id]=t.[ScheduleId]
                             WHERE s.[UserId] = @FilteredId AND t.[ScheduleId] = @ScheduleId
                             ",
                         request
                     );
-                    teachers = await _dbService.GetAll<Teacher>(
+                    teachers = await _dbService.GetAll<ClassroomType>(
                         $@"
                             SELECT 
-                            t.[Id], t.[Name], [Surname], [ScheduleId] 
-                            FROM [Teacher] t
-                            INNER JOIN [Schedule] s ON s.[Id] = t.[ScheduleId]
-                            WHERE s.[UserId] = @FilteredId AND t.[ScheduleId] = @ScheduleId 
+                            ct.[Id], ct.[Name], [ScheduleId] 
+                            FROM [ClassroomType] ct
+                            INNER JOIN [Schedule] s ON s.[Id] = ct.[ScheduleId]
+                            WHERE s.[UserId] = @FilteredId AND ct.[ScheduleId] = @ScheduleId 
                             ORDER BY
                             {request.Pagination.SortBy}
                             {request.Pagination.SortOrder}

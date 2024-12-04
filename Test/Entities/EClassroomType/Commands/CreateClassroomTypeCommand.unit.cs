@@ -64,11 +64,10 @@ namespace AlpimiTest.Entities.EClassroomType.Commands
         public async Task ThrowsErrorWhenNameIsAlreadyTaken()
         {
             var dto = MockData.GetCreateClassroomTypeDTODetails(new Guid());
-            var schedule = MockData.GetScheduleDetails();
 
             _dbService
                 .Setup(s => s.Get<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(schedule);
+                .ReturnsAsync(MockData.GetScheduleDetails());
             _dbService
                 .Setup(s => s.Get<ClassroomType>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetClassroomTypeDetails());

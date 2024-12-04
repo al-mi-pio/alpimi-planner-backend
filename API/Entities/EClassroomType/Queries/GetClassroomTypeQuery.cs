@@ -23,11 +23,11 @@ namespace AlpimiAPI.Entities.EClassroomType.Queries
             CancellationToken cancellationToken
         )
         {
-            ClassroomType? teacher;
+            ClassroomType? classroomType;
             switch (request.Role)
             {
                 case "Admin":
-                    teacher = await _dbService.Get<ClassroomType?>(
+                    classroomType = await _dbService.Get<ClassroomType?>(
                         @"
                             SELECT 
                             [Id], [Name], [ScheduleId] 
@@ -37,23 +37,23 @@ namespace AlpimiAPI.Entities.EClassroomType.Queries
                     );
                     break;
                 default:
-                    teacher = await _dbService.Get<ClassroomType?>(
+                    classroomType = await _dbService.Get<ClassroomType?>(
                         @"
                             SELECT 
                             ct.[Id], ct.[Name], [ScheduleId] 
                             FROM [ClassroomType] ct
-                            INNER JOIN [Schedule] s ON ct.[ScheduleId]=s.[Id]
+                            INNER JOIN [Schedule] s ON ct.[ScheduleId] = s.[Id]
                             WHERE ct.[Id] = @Id AND s.[UserId] = @FilteredId;",
                         request
                     );
                     break;
             }
 
-            if (teacher != null)
+            if (classroomType != null)
             {
                 GetScheduleHandler getScheduleHandler = new GetScheduleHandler(_dbService);
                 GetScheduleQuery getScheduleQuery = new GetScheduleQuery(
-                    teacher.ScheduleId,
+                    classroomType.ScheduleId,
                     new Guid(),
                     "Admin"
                 );
@@ -61,9 +61,9 @@ namespace AlpimiAPI.Entities.EClassroomType.Queries
                     getScheduleQuery,
                     cancellationToken
                 );
-                teacher.Schedule = schedule.Value!;
+                classroomType.Schedule = schedule.Value!;
             }
-            return teacher;
+            return classroomType;
         }
     }
 }

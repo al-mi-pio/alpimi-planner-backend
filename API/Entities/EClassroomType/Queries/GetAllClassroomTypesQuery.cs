@@ -59,7 +59,7 @@ namespace AlpimiAPI.Entities.EClassroomType.Queries
                 throw new ApiErrorException(errors);
             }
 
-            IEnumerable<ClassroomType>? teachers;
+            IEnumerable<ClassroomType>? classroomTypes;
             int count;
             switch (request.Role)
             {
@@ -72,7 +72,7 @@ namespace AlpimiAPI.Entities.EClassroomType.Queries
                             WHERE [ScheduleId] = @ScheduleId",
                         request
                     );
-                    teachers = await _dbService.GetAll<ClassroomType>(
+                    classroomTypes = await _dbService.GetAll<ClassroomType>(
                         $@"
                             SELECT
                             [Id], [Name], [ScheduleId] 
@@ -92,13 +92,13 @@ namespace AlpimiAPI.Entities.EClassroomType.Queries
                     count = await _dbService.Get<int>(
                         @"
                             SELECT COUNT(*)
-                            FROM [ClassroomType] t
-                            INNER JOIN [Schedule] s ON s.[Id]=t.[ScheduleId]
-                            WHERE s.[UserId] = @FilteredId AND t.[ScheduleId] = @ScheduleId
+                            FROM [ClassroomType] ct
+                            INNER JOIN [Schedule] s ON s.[Id] = ct.[ScheduleId]
+                            WHERE s.[UserId] = @FilteredId AND ct.[ScheduleId] = @ScheduleId
                             ",
                         request
                     );
-                    teachers = await _dbService.GetAll<ClassroomType>(
+                    classroomTypes = await _dbService.GetAll<ClassroomType>(
                         $@"
                             SELECT 
                             ct.[Id], ct.[Name], [ScheduleId] 
@@ -116,13 +116,13 @@ namespace AlpimiAPI.Entities.EClassroomType.Queries
                     );
                     break;
             }
-            if (teachers != null)
+            if (classroomTypes != null)
             {
-                foreach (var teacher in teachers)
+                foreach (var classroomType in classroomTypes)
                 {
                     GetScheduleHandler getScheduleHandler = new GetScheduleHandler(_dbService);
                     GetScheduleQuery getScheduleQuery = new GetScheduleQuery(
-                        teacher.ScheduleId,
+                        classroomType.ScheduleId,
                         new Guid(),
                         "Admin"
                     );
@@ -130,10 +130,10 @@ namespace AlpimiAPI.Entities.EClassroomType.Queries
                         getScheduleQuery,
                         cancellationToken
                     );
-                    teacher.Schedule = schedule.Value!;
+                    classroomType.Schedule = schedule.Value!;
                 }
             }
-            return (teachers, count);
+            return (classroomTypes, count);
         }
     }
 }

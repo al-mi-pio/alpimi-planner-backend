@@ -53,7 +53,7 @@ namespace AlpimiAPI.Entities.EClassroomType.Commands
 
             request.dto.Name = request.dto.Name ?? originalClassroomType.Value!.Name;
 
-            var teacherName = await _dbService.Get<ClassroomType>(
+            var classroomTypeName = await _dbService.Get<ClassroomType>(
                 $@"
                     SELECT 
                     [Id]
@@ -62,14 +62,14 @@ namespace AlpimiAPI.Entities.EClassroomType.Commands
                 request.dto
             );
 
-            if (teacherName != null)
+            if (classroomTypeName != null)
             {
                 throw new ApiErrorException(
                     [new ErrorObject(_str["alreadyExists", "ClassroomType", request.dto.Name])]
                 );
             }
 
-            var teacher = await _dbService.Update<ClassroomType?>(
+            var classroomType = await _dbService.Update<ClassroomType?>(
                 $@"
                     UPDATE [ClassroomType] 
                     SET
@@ -84,7 +84,7 @@ namespace AlpimiAPI.Entities.EClassroomType.Commands
 
             GetScheduleHandler getScheduleHandler = new GetScheduleHandler(_dbService);
             GetScheduleQuery getScheduleQuery = new GetScheduleQuery(
-                teacher!.ScheduleId,
+                classroomType!.ScheduleId,
                 new Guid(),
                 "Admin"
             );
@@ -92,9 +92,9 @@ namespace AlpimiAPI.Entities.EClassroomType.Commands
                 getScheduleQuery,
                 cancellationToken
             );
-            teacher.Schedule = toInsertSchedule.Value!;
+            classroomType.Schedule = toInsertSchedule.Value!;
 
-            return teacher;
+            return classroomType;
         }
     }
 }

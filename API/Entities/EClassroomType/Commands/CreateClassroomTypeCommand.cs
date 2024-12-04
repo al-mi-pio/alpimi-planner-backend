@@ -51,7 +51,7 @@ namespace AlpimiAPI.Entities.EClassroomType.Commands
                 );
             }
 
-            var teacherName = await _dbService.Get<ClassroomType>(
+            var classroomTypeName = await _dbService.Get<ClassroomType>(
                 @"
                     SELECT 
                     [Id]
@@ -60,7 +60,7 @@ namespace AlpimiAPI.Entities.EClassroomType.Commands
                 request.dto
             );
 
-            if (teacherName != null)
+            if (classroomTypeName != null)
             {
                 throw new ApiErrorException(
                     [new ErrorObject(_str["alreadyExists", "ClassroomType", request.dto.Name])]

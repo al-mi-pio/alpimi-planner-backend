@@ -47,11 +47,11 @@ namespace AlpimiAPI.Entities.EUser.Commands
             if (request.dto.CustomURL != null)
             {
                 var userURL = await _dbService.Get<string>(
-                    @"
+                    $@"
                         SELECT 
                         [CustomURL]
                         FROM [User]
-                        WHERE [CustomURL] = @CustomURL;",
+                        WHERE [CustomURL] = @CustomURL AND [Id] != '{request.Id}';",
                     request.dto
                 );
                 if (userURL != null)

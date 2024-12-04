@@ -100,7 +100,7 @@ namespace AlpimiAPI.Entities.ESubgroup.Commands
                     SELECT 
                     [Id]
                     FROM [Subgroup] 
-                    WHERE [Name] = @Name AND [GroupId] = '{originalSubgroup.Value!.GroupId}';",
+                    WHERE [Name] = @Name AND [GroupId] = '{originalSubgroup .Value! .GroupId}' AND [Id] != '{request.Id}';",
                 request.dto
             );
 

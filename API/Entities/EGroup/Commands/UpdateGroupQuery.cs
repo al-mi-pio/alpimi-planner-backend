@@ -64,7 +64,7 @@ namespace AlpimiAPI.Entities.EGroup.Commands
                     SELECT 
                     [Id]
                     FROM [Group] 
-                    WHERE [Name] = @Name AND [ScheduleId] = '{originalGroup.Value.ScheduleId}';",
+                    WHERE [Name] = @Name AND [ScheduleId] = '{originalGroup .Value .ScheduleId}' AND [Id] != '{request.Id}';",
                 request.dto
             );
 

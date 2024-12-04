@@ -66,9 +66,12 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
 
                 if (scheduleName.Value != null)
                 {
-                    throw new ApiErrorException(
-                        [new ErrorObject(_str["alreadyExists", "Schedule", request.dto.Name])]
-                    );
+                    if (scheduleName.Value.Id != request.Id)
+                    {
+                        throw new ApiErrorException(
+                            [new ErrorObject(_str["alreadyExists", "Schedule", request.dto.Name])]
+                        );
+                    }
                 }
             }
 

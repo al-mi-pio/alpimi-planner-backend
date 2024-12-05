@@ -4,6 +4,7 @@ using AlpimiAPI.Entities.EClassroomType;
 using AlpimiAPI.Entities.EDayOff;
 using AlpimiAPI.Entities.EGroup;
 using AlpimiAPI.Entities.ELessonPerioid;
+using AlpimiAPI.Entities.ELessonType;
 using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Entities.EScheduleSettings;
 using AlpimiAPI.Entities.EStudent;
@@ -34,6 +35,7 @@ namespace AlpimiAPI.Database
         public DbSet<StudentSubgroup> StudentSubgroup { get; set; }
         public DbSet<ClassroomType> ClassroomType { get; set; }
         public DbSet<Classroom> Classroom { get; set; }
+        public DbSet<LessonType> LessonType { get; set; }
         #endregion
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

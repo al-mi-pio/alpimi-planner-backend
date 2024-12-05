@@ -10,6 +10,8 @@ using AlpimiAPI.Entities.EGroup;
 using AlpimiAPI.Entities.EGroup.DTO;
 using AlpimiAPI.Entities.ELessonPeriod.DTO;
 using AlpimiAPI.Entities.ELessonPerioid;
+using AlpimiAPI.Entities.ELessonType;
+using AlpimiAPI.Entities.ELessonType.DTO;
 using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Entities.ESchedule.DTO;
 using AlpimiAPI.Entities.EScheduleSettings;
@@ -158,6 +160,17 @@ namespace AlpimiTest.TestUtilities
             {
                 Name = "G120",
                 Capacity = 100,
+                ScheduleId = new Guid(),
+                Schedule = GetScheduleDetails()
+            };
+        }
+
+        public static LessonType GetLessonTypeDetails()
+        {
+            return new LessonType()
+            {
+                Name = "Komputerowa",
+                Color = 10,
                 ScheduleId = new Guid(),
                 Schedule = GetScheduleDetails()
             };
@@ -433,6 +446,32 @@ namespace AlpimiTest.TestUtilities
         public static UpdateClassroomDTO GetUpdateClassroomDTODetails()
         {
             return new UpdateClassroomDTO() { Name = "E5", Capacity = 25 };
+        }
+
+        public static CreateLessonTypeDTO GetCreateLessonTypeDTODetails(Guid scheduleId)
+        {
+            var lessonType = GetLessonTypeDetails();
+            return new CreateLessonTypeDTO()
+            {
+                Name = lessonType.Name,
+                Color = lessonType.Color,
+                ScheduleId = scheduleId
+            };
+        }
+
+        public static CreateLessonTypeDTO GetCreateSecondLessonTypeDTODetails(Guid scheduleId)
+        {
+            return new CreateLessonTypeDTO()
+            {
+                Name = "G119",
+                Color = 10,
+                ScheduleId = scheduleId
+            };
+        }
+
+        public static UpdateLessonTypeDTO GetUpdateLessonTypeDTODetails()
+        {
+            return new UpdateLessonTypeDTO() { Name = "E5", Color = 2 };
         }
     }
 }

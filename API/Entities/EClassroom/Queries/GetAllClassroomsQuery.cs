@@ -79,7 +79,7 @@ namespace AlpimiAPI.Entities.EClassroom.Queries
                     classrooms = await _dbService.GetAll<Classroom>(
                         $@"
                             SELECT
-                            [Id], [Name], [ScheduleId] 
+                            [Id], [Name], [Capacity], [ScheduleId] 
                             FROM [Classroom]
                             WHERE [ScheduleId] = @ScheduleId 
                             ORDER BY

@@ -73,6 +73,9 @@
 - [SubgroupIsDeleted()](../Entities/ESubgroup/SubgroupController.test.cs) - **integrity**  
   Check if subgroup is deleted when a valid token is provided
 
+- [SubgroupsLessonsAreDeleted](../Entities/ESubgroup/SubgroupController.test.cs) - **integrity**  
+  Check if lessons of the subgroup are deleted
+
 ## `PATCH` `api/Subgroup/{id}`
 
 - [UpdateSubgroupReturnsUpdatedSubgroup()](../Entities/ESubgroup/SubgroupController.test.cs) - **integrity**  

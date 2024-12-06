@@ -65,6 +65,31 @@ namespace AlpimiTest.Entities.ESubgroup
         }
 
         [Fact]
+        public async Task SubgroupsLessonsAreDeleted()
+        {
+            var subgroupRequest = MockData.GetCreateSubgroupDTODetails(groupId);
+            var subgroupId = await DbHelper.SetupSubgroup(_client, subgroupRequest);
+            var lessonTypeId = await DbHelper.SetupLessonType(
+                _client,
+                MockData.GetCreateLessonTypeDTODetails(scheduleId)
+            );
+            var lessonRequest = MockData.GetCreateLessonDTODetails(subgroupId, lessonTypeId);
+
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", new Guid())
+            );
+
+            var response = await _client.DeleteAsync($"/api/Subgroup/{subgroupId}");
+            Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+
+            var query = $"?id={groupId}";
+            response = await _client.GetAsync($"/api/Lesson");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            Assert.DoesNotContain(lessonRequest.Name, stringResponse);
+        }
+
+        [Fact]
         public async Task SubgroupIsCreated()
         {
             var subgroupRequest = MockData.GetCreateSubgroupDTODetails(groupId);

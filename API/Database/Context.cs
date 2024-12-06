@@ -3,6 +3,7 @@ using AlpimiAPI.Entities.EClassroom;
 using AlpimiAPI.Entities.EClassroomType;
 using AlpimiAPI.Entities.EDayOff;
 using AlpimiAPI.Entities.EGroup;
+using AlpimiAPI.Entities.ELesson;
 using AlpimiAPI.Entities.ELessonPerioid;
 using AlpimiAPI.Entities.ELessonType;
 using AlpimiAPI.Entities.ESchedule;
@@ -36,6 +37,7 @@ namespace AlpimiAPI.Database
         public DbSet<ClassroomType> ClassroomType { get; set; }
         public DbSet<Classroom> Classroom { get; set; }
         public DbSet<LessonType> LessonType { get; set; }
+        public DbSet<Lesson> Lesson { get; set; }
         #endregion
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

@@ -8,6 +8,8 @@ using AlpimiAPI.Entities.EDayOff;
 using AlpimiAPI.Entities.EDayOff.DTO;
 using AlpimiAPI.Entities.EGroup;
 using AlpimiAPI.Entities.EGroup.DTO;
+using AlpimiAPI.Entities.ELesson;
+using AlpimiAPI.Entities.ELesson.DTO;
 using AlpimiAPI.Entities.ELessonPeriod.DTO;
 using AlpimiAPI.Entities.ELessonPerioid;
 using AlpimiAPI.Entities.ELessonType;
@@ -173,6 +175,18 @@ namespace AlpimiTest.TestUtilities
                 Color = 10,
                 ScheduleId = new Guid(),
                 Schedule = GetScheduleDetails()
+            };
+        }
+
+        public static Lesson GetLessonDetails()
+        {
+            return new Lesson()
+            {
+                Name = "Niski poziom",
+                AmountOfHours = 10,
+                SubgroupId = new Guid(),
+                LessonTypeId = new Guid(),
+                LessonType = GetLessonTypeDetails()
             };
         }
 
@@ -472,6 +486,37 @@ namespace AlpimiTest.TestUtilities
         public static UpdateLessonTypeDTO GetUpdateLessonTypeDTODetails()
         {
             return new UpdateLessonTypeDTO() { Name = "E5", Color = 2 };
+        }
+
+        public static CreateLessonDTO GetCreateLessonDTODetails(Guid subgroupId, Guid lessonTypeId)
+        {
+            var lesson = GetLessonDetails();
+            return new CreateLessonDTO()
+            {
+                Name = lesson.Name,
+                AmountOfHours = lesson.AmountOfHours,
+                LessonTypeId = lessonTypeId,
+                SubgroupId = subgroupId
+            };
+        }
+
+        public static CreateLessonDTO GetCreateSecondLessonDTODetails(
+            Guid subgroupId,
+            Guid lessonTypeId
+        )
+        {
+            return new CreateLessonDTO()
+            {
+                Name = "podstawy testowania",
+                AmountOfHours = 2,
+                LessonTypeId = lessonTypeId,
+                SubgroupId = subgroupId
+            };
+        }
+
+        public static UpdateLessonDTO GetUpdateLessonDTODetails()
+        {
+            return new UpdateLessonDTO() { Name = "Bazie Danych", AmountOfHours = 9 };
         }
     }
 }

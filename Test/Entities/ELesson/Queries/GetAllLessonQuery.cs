@@ -1,5 +1,5 @@
 ﻿using AlpimiAPI.Database;
-using AlpimiAPI.Entities.ESubgroup.Queries;
+using AlpimiAPI.Entities.ELesson.Queries;
 using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
 using AlpimiTest.TestSetup;
@@ -8,15 +8,15 @@ using Moq;
 using Newtonsoft.Json;
 using Xunit;
 
-namespace AlpimiTest.Entities.ESubgroup.Queries
+namespace AlpimiTest.Entities.ELesson.Queries
 {
     [Collection("Sequential Tests")]
-    public class GetAllSubgroupsByGroupQueryUnit
+    public class GetAllLessonsQueryUnit
     {
         private readonly Mock<IDbService> _dbService = new();
         private readonly Mock<IStringLocalizer<Errors>> _str;
 
-        public GetAllSubgroupsByGroupQueryUnit()
+        public GetAllLessonsQueryUnit()
         {
             _str = ResourceSetup.Setup();
         }
@@ -24,23 +24,17 @@ namespace AlpimiTest.Entities.ESubgroup.Queries
         [Fact]
         public async Task ThrowsErrorWhenIncorrectPerPageIsGiven()
         {
-            var getAllSubgroupByGroupQuery = new GetAllSubgroupsQuery(
+            var getAllLessonQuery = new GetAllLessonsQuery(
                 new Guid(),
                 new Guid(),
                 "Admin",
                 new PaginationParams(-20, 0, "Id", "ASC")
             );
-            var getAllSubgroupByGroupHandler = new GetAllSubgroupsHandler(
-                _dbService.Object,
-                _str.Object
-            );
+            var getAllLessonHandler = new GetAllLessonsHandler(_dbService.Object, _str.Object);
 
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
-                    await getAllSubgroupByGroupHandler.Handle(
-                        getAllSubgroupByGroupQuery,
-                        new CancellationToken()
-                    )
+                    await getAllLessonHandler.Handle(getAllLessonQuery, new CancellationToken())
             );
 
             Assert.Equal(
@@ -54,23 +48,17 @@ namespace AlpimiTest.Entities.ESubgroup.Queries
         [Fact]
         public async Task ThrowsErrorWhenIncorrectPageIsGiven()
         {
-            var getAllSubgroupByGroupQuery = new GetAllSubgroupsQuery(
+            var getAllLessonQuery = new GetAllLessonsQuery(
                 new Guid(),
                 new Guid(),
                 "Admin",
                 new PaginationParams(20, -1, "Id", "ASC")
             );
-            var getAllSubgroupByGroupHandler = new GetAllSubgroupsHandler(
-                _dbService.Object,
-                _str.Object
-            );
+            var getAllLessonHandler = new GetAllLessonsHandler(_dbService.Object, _str.Object);
 
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
-                    await getAllSubgroupByGroupHandler.Handle(
-                        getAllSubgroupByGroupQuery,
-                        new CancellationToken()
-                    )
+                    await getAllLessonHandler.Handle(getAllLessonQuery, new CancellationToken())
             );
 
             Assert.Equal(
@@ -84,23 +72,17 @@ namespace AlpimiTest.Entities.ESubgroup.Queries
         [Fact]
         public async Task ThrowsErrorWhenIncorrectSortByIsGiven()
         {
-            var getAllSubgroupByGroupQuery = new GetAllSubgroupsQuery(
+            var getAllLessonQuery = new GetAllLessonsQuery(
                 new Guid(),
                 new Guid(),
                 "Admin",
                 new PaginationParams(20, 0, "wrong", "ASC")
             );
-            var getAllSubgroupByGroupHandler = new GetAllSubgroupsHandler(
-                _dbService.Object,
-                _str.Object
-            );
+            var getAllLessonHandler = new GetAllLessonsHandler(_dbService.Object, _str.Object);
 
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
-                    await getAllSubgroupByGroupHandler.Handle(
-                        getAllSubgroupByGroupQuery,
-                        new CancellationToken()
-                    )
+                    await getAllLessonHandler.Handle(getAllLessonQuery, new CancellationToken())
             );
 
             Assert.Equal(
@@ -114,23 +96,17 @@ namespace AlpimiTest.Entities.ESubgroup.Queries
         [Fact]
         public async Task ThrowsErrorWhenIncorrectSortOrderIsGiven()
         {
-            var getAllSubgroupByGroupQuery = new GetAllSubgroupsQuery(
+            var getAllLessonQuery = new GetAllLessonsQuery(
                 new Guid(),
                 new Guid(),
                 "Admin",
                 new PaginationParams(20, 0, "Id", "wrong")
             );
-            var getAllSubgroupByGroupHandler = new GetAllSubgroupsHandler(
-                _dbService.Object,
-                _str.Object
-            );
+            var getAllLessonHandler = new GetAllLessonsHandler(_dbService.Object, _str.Object);
 
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
-                    await getAllSubgroupByGroupHandler.Handle(
-                        getAllSubgroupByGroupQuery,
-                        new CancellationToken()
-                    )
+                    await getAllLessonHandler.Handle(getAllLessonQuery, new CancellationToken())
             );
 
             Assert.Equal(
@@ -144,23 +120,17 @@ namespace AlpimiTest.Entities.ESubgroup.Queries
         [Fact]
         public async Task ThrowsMultipleErrorMessages()
         {
-            var getAllSubgroupByGroupQuery = new GetAllSubgroupsQuery(
+            var getAllLessonQuery = new GetAllLessonsQuery(
                 new Guid(),
                 new Guid(),
                 "Admin",
                 new PaginationParams(20, 0, "wrong", "wrong")
             );
-            var getAllSubgroupByGroupHandler = new GetAllSubgroupsHandler(
-                _dbService.Object,
-                _str.Object
-            );
+            var getAllLessonHandler = new GetAllLessonsHandler(_dbService.Object, _str.Object);
 
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
-                    await getAllSubgroupByGroupHandler.Handle(
-                        getAllSubgroupByGroupQuery,
-                        new CancellationToken()
-                    )
+                    await getAllLessonHandler.Handle(getAllLessonQuery, new CancellationToken())
             );
 
             Assert.Equal(

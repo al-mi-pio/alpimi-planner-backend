@@ -1,148 +1,76 @@
 ﻿using AlpimiAPI.Database;
-using AlpimiAPI.Entities.ELesson.Queries;
+using AlpimiAPI.Entities.EGroup;
+using AlpimiAPI.Entities.ELesson;
+using AlpimiAPI.Entities.ELesson.Commands;
 using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
 using AlpimiTest.TestSetup;
+using AlpimiTest.TestUtilities;
 using Microsoft.Extensions.Localization;
 using Moq;
-using Newtonsoft.Json;
 using Xunit;
 
-namespace AlpimiTest.Entities.ELesson.Queries
+namespace AlpimiTest.Entities.ELesson.Commands
 {
     [Collection("Sequential Tests")]
-    public class GetAllLessonsQueryUnit
+    public class UpdateLessonCommandUnit
     {
         private readonly Mock<IDbService> _dbService = new();
         private readonly Mock<IStringLocalizer<Errors>> _str;
 
-        public GetAllLessonsQueryUnit()
+        public UpdateLessonCommandUnit()
         {
             _str = ResourceSetup.Setup();
         }
 
         [Fact]
-        public async Task ThrowsErrorWhenIncorrectPerPageIsGiven()
+        public async Task ThrowsErrorWhenNameIsAlreadyTakenByLesson()
         {
-            var getAllLessonQuery = new GetAllLessonsQuery(
-                new Guid(),
-                new Guid(),
-                "Admin",
-                new PaginationParams(-20, 0, "Id", "ASC")
-            );
-            var getAllLessonHandler = new GetAllLessonsHandler(_dbService.Object, _str.Object);
+            var dto = MockData.GetUpdateLessonDTODetails();
+
+            _dbService
+                .Setup(s => s.Get<Group>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetGroupDetails());
+
+            _dbService
+                .Setup(s => s.Get<Lesson>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetLessonDetails());
+
+            _dbService
+                .Setup(s => s.GetAll<Lesson>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(new List<Lesson> { MockData.GetLessonDetails() });
+
+            var updateLessonCommand = new UpdateLessonCommand(new Guid(), dto, new Guid(), "Admin");
+
+            var updateLessonHandler = new UpdateLessonHandler(_dbService.Object, _str.Object);
 
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
-                    await getAllLessonHandler.Handle(getAllLessonQuery, new CancellationToken())
+                    await updateLessonHandler.Handle(updateLessonCommand, new CancellationToken())
             );
 
             Assert.Equal(
-                JsonConvert.SerializeObject(
-                    new ErrorObject[] { new ErrorObject("PerPage parameter is invalid") }
-                ),
-                JsonConvert.SerializeObject(result.errors)
+                "There is already a Lesson with the name Bazie Danych",
+                result.errors.First().message
             );
         }
 
         [Fact]
-        public async Task ThrowsErrorWhenIncorrectPageIsGiven()
+        public async Task ThrowsErrorWhenNumberOfHoursIsLessThan1()
         {
-            var getAllLessonQuery = new GetAllLessonsQuery(
-                new Guid(),
-                new Guid(),
-                "Admin",
-                new PaginationParams(20, -1, "Id", "ASC")
-            );
-            var getAllLessonHandler = new GetAllLessonsHandler(_dbService.Object, _str.Object);
+            var dto = MockData.GetUpdateLessonDTODetails();
+            dto.AmountOfHours = -1;
+
+            var updateLessonCommand = new UpdateLessonCommand(new Guid(), dto, new Guid(), "Admin");
+
+            var updateLessonHandler = new UpdateLessonHandler(_dbService.Object, _str.Object);
 
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
-                    await getAllLessonHandler.Handle(getAllLessonQuery, new CancellationToken())
+                    await updateLessonHandler.Handle(updateLessonCommand, new CancellationToken())
             );
 
-            Assert.Equal(
-                JsonConvert.SerializeObject(
-                    new ErrorObject[] { new ErrorObject("Page parameter is invalid") }
-                ),
-                JsonConvert.SerializeObject(result.errors)
-            );
-        }
-
-        [Fact]
-        public async Task ThrowsErrorWhenIncorrectSortByIsGiven()
-        {
-            var getAllLessonQuery = new GetAllLessonsQuery(
-                new Guid(),
-                new Guid(),
-                "Admin",
-                new PaginationParams(20, 0, "wrong", "ASC")
-            );
-            var getAllLessonHandler = new GetAllLessonsHandler(_dbService.Object, _str.Object);
-
-            var result = await Assert.ThrowsAsync<ApiErrorException>(
-                async () =>
-                    await getAllLessonHandler.Handle(getAllLessonQuery, new CancellationToken())
-            );
-
-            Assert.Equal(
-                JsonConvert.SerializeObject(
-                    new ErrorObject[] { new ErrorObject("SortBy parameter is invalid") }
-                ),
-                JsonConvert.SerializeObject(result.errors)
-            );
-        }
-
-        [Fact]
-        public async Task ThrowsErrorWhenIncorrectSortOrderIsGiven()
-        {
-            var getAllLessonQuery = new GetAllLessonsQuery(
-                new Guid(),
-                new Guid(),
-                "Admin",
-                new PaginationParams(20, 0, "Id", "wrong")
-            );
-            var getAllLessonHandler = new GetAllLessonsHandler(_dbService.Object, _str.Object);
-
-            var result = await Assert.ThrowsAsync<ApiErrorException>(
-                async () =>
-                    await getAllLessonHandler.Handle(getAllLessonQuery, new CancellationToken())
-            );
-
-            Assert.Equal(
-                JsonConvert.SerializeObject(
-                    new ErrorObject[] { new ErrorObject("SortOrder parameter is invalid") }
-                ),
-                JsonConvert.SerializeObject(result.errors)
-            );
-        }
-
-        [Fact]
-        public async Task ThrowsMultipleErrorMessages()
-        {
-            var getAllLessonQuery = new GetAllLessonsQuery(
-                new Guid(),
-                new Guid(),
-                "Admin",
-                new PaginationParams(20, 0, "wrong", "wrong")
-            );
-            var getAllLessonHandler = new GetAllLessonsHandler(_dbService.Object, _str.Object);
-
-            var result = await Assert.ThrowsAsync<ApiErrorException>(
-                async () =>
-                    await getAllLessonHandler.Handle(getAllLessonQuery, new CancellationToken())
-            );
-
-            Assert.Equal(
-                JsonConvert.SerializeObject(
-                    new ErrorObject[]
-                    {
-                        new ErrorObject("SortOrder parameter is invalid"),
-                        new ErrorObject("SortBy parameter is invalid")
-                    }
-                ),
-                JsonConvert.SerializeObject(result.errors)
-            );
+            Assert.Equal("AmountOfHours parameter is invalid", result.errors.First().message);
         }
     }
 }

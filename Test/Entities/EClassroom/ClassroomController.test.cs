@@ -5,7 +5,6 @@ using AlpimiAPI.Responses;
 using AlpimiAPI.Settings;
 using AlpimiTest.TestSetup;
 using AlpimiTest.TestUtilities;
-using Azure;
 using Xunit;
 
 namespace AlpimiTest.Entities.EClassroom

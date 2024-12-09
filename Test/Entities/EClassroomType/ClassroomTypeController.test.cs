@@ -53,7 +53,7 @@ namespace AlpimiTest.Entities.EClassroomType
             var response = await _client.DeleteAsync($"/api/ClassroomType/{classroomTypeId}");
             Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
 
-            var query = $"?scheduleId={scheduleId}";
+            var query = $"id={scheduleId}";
             response = await _client.GetAsync($"/api/ClassroomType");
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.DoesNotContain(classroomTypeRequest.Name, stringResponse);
@@ -75,7 +75,7 @@ namespace AlpimiTest.Entities.EClassroomType
             );
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-            var query = $"?scheduleId={scheduleId}";
+            var query = $"?id={scheduleId}";
             response = await _client.GetAsync($"/api/ClassroomType{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.Contains(classroomTypeRequest.Name, stringResponse);
@@ -151,24 +151,54 @@ namespace AlpimiTest.Entities.EClassroomType
         }
 
         [Fact]
-        public async Task GetAllClassroomTypeReturnsDaysOff()
+        public async Task GetAllClassroomTypesReturnsClassroomTypesFromScheduleIfScheduleIdIsProvided()
         {
             var classroomTypeRequest1 = MockData.GetCreateClassroomTypeDTODetails(scheduleId);
             var classroomTypeRequest2 = MockData.GetCreateSecondClassroomTypeDTODetails(scheduleId);
-
-            await DbHelper.SetupClassroomType(_client, classroomTypeRequest1);
-            await DbHelper.SetupClassroomType(_client, classroomTypeRequest2);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)
             );
-            var query = $"?scheduleId={scheduleId}";
+
+            await DbHelper.SetupClassroomType(_client, classroomTypeRequest1);
+            await DbHelper.SetupClassroomType(_client, classroomTypeRequest2);
+
+            var query = $"?id={scheduleId}";
             var response = await _client.GetAsync($"/api/ClassroomType{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
 
             Assert.Contains(classroomTypeRequest1.Name, stringResponse);
             Assert.Contains(classroomTypeRequest2.Name, stringResponse);
+        }
+
+        [Fact]
+        public async Task GetAllClassroomTypesReturnsClassroomTypesFromClassroomIfClassroomIdIsProvided()
+        {
+            var classroomTypeRequest1 = MockData.GetCreateClassroomTypeDTODetails(scheduleId);
+            var classroomTypeRequest2 = MockData.GetCreateSecondClassroomTypeDTODetails(scheduleId);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", userId)
+            );
+
+            var classroomTypeId = await DbHelper.SetupClassroomType(_client, classroomTypeRequest1);
+            await DbHelper.SetupClassroomType(_client, classroomTypeRequest2);
+
+            var classroomRequest = MockData.GetCreateClassroomDTODetails(scheduleId);
+            classroomRequest.ClassroomTypeIds = [classroomTypeId];
+
+            var classroomId = await DbHelper.SetupClassroom(_client, classroomRequest);
+            await DbHelper.SetupClassroom(
+                _client,
+                MockData.GetCreateClassroomDTODetails(scheduleId)
+            );
+
+            var query = $"?id={classroomId}";
+            var response = await _client.GetAsync($"/api/ClassroomType{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+
+            Assert.Contains(classroomTypeRequest1.Name, stringResponse);
+            Assert.DoesNotContain(classroomTypeRequest2.Name, stringResponse);
         }
 
         [Fact]
@@ -184,7 +214,7 @@ namespace AlpimiTest.Entities.EClassroomType
                 "Bearer",
                 TestAuthorization.GetToken("User", "User", new Guid())
             );
-            var query = $"?scheduleId={scheduleId}";
+            var query = $"?id={scheduleId}";
             var response = await _client.GetAsync($"/api/ClassroomType{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
 
@@ -205,7 +235,7 @@ namespace AlpimiTest.Entities.EClassroomType
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)
             );
-            var query = $"?scheduleId={new Guid()}";
+            var query = $"?id={new Guid()}";
             var response = await _client.GetAsync($"/api/ClassroomType{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
 
@@ -281,7 +311,7 @@ namespace AlpimiTest.Entities.EClassroomType
             );
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
 
-            var query = $"?scheduleId={new Guid()}";
+            var query = $"?id={new Guid()}";
             response = await _client.GetAsync($"/api/ClassroomType{query}");
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
 
@@ -314,7 +344,7 @@ namespace AlpimiTest.Entities.EClassroomType
             );
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
 
-            var query = $"?scheduleId={new Guid()}";
+            var query = $"?id={new Guid()}";
             response = await _client.GetAsync($"/api/ClassroomType{query}");
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
 

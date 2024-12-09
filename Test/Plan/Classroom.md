@@ -13,6 +13,9 @@
 - [ClassroomIsCreated()](../Entities/EClassroom/ClassroomController.test.cs) - **integrity**  
   Check if classroom is created when provided with correct data
 
+- [ClassroomIsCreatedWithClassroomTypes()](../Entities/EClassroom/ClassroomController.test.cs) - **integrity**  
+  Check if classroom is created with classroom types when provided with correct data
+
 - [ThrowsErrorWhenNameIsAlreadyTaken()](../Entities/EClassroom/CreateClassroomCommand.unit.cs) - **unit**  
   Check if returns an error when a taken name  is provided
 
@@ -22,15 +25,24 @@
 - [ThrowsErrorWhenCapacityIsLessThan1](../Entities/EClassroom/CreateClassroomCommand.unit.cs) - **unit** 
   Check if returns an error when incorrect capacity is provided
 
+- [ThrowsErrorWhenDuplicatedClassroomTypeIdsAreGiven()](../Entities/EClassroom/CreateClassroomCommand.unit.cs) - **unit** 			
+  Check if returns an error when duplicated classroom type ids are provided
+
+- [ThrowsErrorWhenWrongClassroomTypeIdIsGiven()](../Entities/EClassroom/CreateClassroomCommand.unit.cs) - **unit** 			
+  Check if returns an error when incorrect classroom type id is provided
+
 ## `GET` `api/Classroom`
 
-- [GetAllClassroomsByScheduleReturnsClassrooms()](../Entities/EClassroom/ClassroomController.test.cs) - **integrity**  
+- [GetAllClassroomsReturnsClassroomsFromScheduleIfShceduleIdIsProvided()](../Entities/EClassroom/ClassroomController.test.cs) - **integrity**  
   Check if returns two classrooms when a valid token is provided
 
-- [GetAllClassroomsByScheduleReturnsEmptyContentWhenWrongUserAttemptsGet()](../Entities/EClassroom/ClassroomController.test.cs) - **integrity**  
+- [GetAllClassroomsReturnsClassroomsFromClassroomTypeIfClassroomTypeIdIsProvided()](../Entities/EClassroom/ClassroomController.test.cs) - **integrity**  
+  Check if returns two classrooms when a valid token is provided
+
+- [GetAllClassroomsReturnsEmptyContentWhenWrongUserAttemptsGet()](../Entities/EClassroom/ClassroomController.test.cs) - **integrity**  
   Check if returns no classrooms when other user's token is provided
 
-- [GetAllClassroomsByScheduleReturnsEmptyContentWhenWrongIdIsGiven()](../Entities/EClassroom/ClassroomController.test.cs) - **integrity**  
+- [GetAllClassroomsReturnsEmptyContentWhenWrongIdIsGiven()](../Entities/EClassroom/ClassroomController.test.cs) - **integrity**  
   Check if returns no classrooms when wrong schedule id is provided
 
 - [ThrowsErrorWhenIncorrectPerPageIsGiven()](../Entities/EClassroom/Queries/GetAllClassroom.unit.cs) - **unit**  
@@ -69,7 +81,10 @@
 - [UpdateClassroomReturnsUpdatedClassroom()](../Entities/EClassroom/ClassroomController.test.cs) - **integrity**  
   Check if returns an updated day off when provided with correct data
 
-- [pdateClassroomThrowsNotFoundErrorWhenWrongIdIsGiven()](../Entities/EClassroom/ClassroomController.test.cs) - **integrity**  
+- [UpdateClassroomUpdatesClassroomsClassroomTypes()](../Entities/EClassroom/ClassroomController.test.cs) - **integrity**  
+  Check if updates classrooms classroom types when provided with correct data
+
+- [UpdateClassroomThrowsNotFoundErrorWhenWrongIdIsGiven()](../Entities/EClassroom/ClassroomController.test.cs) - **integrity**  
   Check if returns an error when day off doesn't exists
 
 - [UpdateClassroomThrowsNotFoundErrorWhenWrongUserAttemptsUpdate()](../Entities/EClassroom/ClassroomController.test.cs) - **integrity**  
@@ -80,5 +95,11 @@
 
 - [ThrowsErrorWhenCapacityIsLessThan1](../Entities/EClassroom/UpdateClassroomCommand.unit.cs) - **unit** 
   Check if returns an error when incorrect capacity is provided
+
+- [ThrowsErrorWhenDuplicatedClassroomTypeIdsAreGiven()](../Entities/EClassroom/UpdateClassroomCommand.unit.cs) - **unit** 			
+  Check if returns an error when duplicated classroom type ids are provided
+
+- [ThrowsErrorWhenWrongClassroomTypeIdIsGiven()](../Entities/EClassroom/UpdateClassroomCommand.unit.cs) - **unit** 			
+  Check if returns an error when incorrect classroom type id is provided
 
 

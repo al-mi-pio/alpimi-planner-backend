@@ -1,6 +1,7 @@
 ﻿using AlpimiAPI.Database;
 using AlpimiAPI.Entities.EClassroom;
 using AlpimiAPI.Entities.EClassroom.Commands;
+using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
 using AlpimiTest.TestSetup;
@@ -81,6 +82,72 @@ namespace AlpimiTest.Entities.EClassroom.Commands
             );
 
             Assert.Equal("Capacity parameter is invalid", result.errors.First().message);
+        }
+
+        [Fact]
+        public async Task ThrowsErrorWhenDuplicatedClassroomTypeIdsAreGiven()
+        {
+            var dto = MockData.GetUpdateClassroomDTODetails();
+            dto.ClassroomTypeIds = [new Guid(), new Guid()];
+
+            _dbService
+                .Setup(s => s.Get<Classroom>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetClassroomDetails());
+
+            var createClassroomCommand = new UpdateClassroomCommand(
+                new Guid(),
+                dto,
+                new Guid(),
+                "User"
+            );
+
+            var createClassroomHandler = new UpdateClassroomHandler(_dbService.Object, _str.Object);
+
+            var result = await Assert.ThrowsAsync<ApiErrorException>(
+                async () =>
+                    await createClassroomHandler.Handle(
+                        createClassroomCommand,
+                        new CancellationToken()
+                    )
+            );
+
+            Assert.Equal(
+                "Cannot add multiple ClassroomType with the value 00000000-0000-0000-0000-000000000000",
+                result.errors.First().message
+            );
+        }
+
+        [Fact]
+        public async Task ThrowsErrorWhenWrongClassroomTypeIdIsGiven()
+        {
+            var dto = MockData.GetUpdateClassroomDTODetails();
+            dto.ClassroomTypeIds = [new Guid()];
+
+            _dbService
+                .Setup(s => s.Get<Classroom>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetClassroomDetails());
+
+            var createClassroomCommand = new UpdateClassroomCommand(
+                new Guid(),
+                dto,
+                new Guid(),
+                "User"
+            );
+
+            var createClassroomHandler = new UpdateClassroomHandler(_dbService.Object, _str.Object);
+
+            var result = await Assert.ThrowsAsync<ApiErrorException>(
+                async () =>
+                    await createClassroomHandler.Handle(
+                        createClassroomCommand,
+                        new CancellationToken()
+                    )
+            );
+
+            Assert.Equal(
+                "ClassroomType with id 00000000-0000-0000-0000-000000000000 was not found",
+                result.errors.First().message
+            );
         }
     }
 }

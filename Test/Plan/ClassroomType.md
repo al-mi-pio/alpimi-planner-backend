@@ -21,13 +21,16 @@
 
 ## `GET` `api/ClassroomType`
 
-- [GetAllClassroomTypesByScheduleReturnsClassroomTypes()](../Entities/EClassroomType/ClassroomTypeController.test.cs) - **integrity**  
+- [GetAllClassroomTypesReturnsClassroomTypesFromScheduleIfScheduleIdIsProvided()](../Entities/EClassroomType/ClassroomTypeController.test.cs) - **integrity**  
   Check if returns two classroom types when a valid token is provided
 
-- [GetAllClassroomTypesByScheduleReturnsEmptyContentWhenWrongUserAttemptsGet()](../Entities/EClassroomType/ClassroomTypeController.test.cs) - **integrity**  
+- [GetAllClassroomTypesReturnsClassroomTypesFromClassroomIfClassroomIdIsProvided()](../Entities/EClassroomType/ClassroomTypeController.test.cs) - **integrity**  
+  Check if returns two classroom types when a valid token is provided
+
+- [GetAllClassroomTypesReturnsEmptyContentWhenWrongUserAttemptsGet()](../Entities/EClassroomType/ClassroomTypeController.test.cs) - **integrity**  
   Check if returns no classroom types when other user's token is provided
 
-- [GetAllClassroomTypesByScheduleReturnsEmptyContentWhenWrongIdIsGiven()](../Entities/EClassroomType/ClassroomTypeController.test.cs) - **integrity**  
+- [GetAllClassroomTypesReturnsEmptyContentWhenWrongIdIsGiven()](../Entities/EClassroomType/ClassroomTypeController.test.cs) - **integrity**  
   Check if returns no classroom types when wrong schedule id is provided
 
 - [ThrowsErrorWhenIncorrectPerPageIsGiven()](../Entities/EClassroomType/Queries/GetAllClassroomType.unit.cs) - **unit**  

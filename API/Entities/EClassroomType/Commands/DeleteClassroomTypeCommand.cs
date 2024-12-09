@@ -24,12 +24,27 @@ namespace AlpimiAPI.Entities.EClassroomType.Commands
                 case "Admin":
                     await _dbService.Delete(
                         @"
+                            DELETE [ClassroomClassroomType] 
+                            WHERE [ClassroomTypeId] = @Id;",
+                        request
+                    );
+                    await _dbService.Delete(
+                        @"
                             DELETE [ClassroomType] 
                             WHERE [Id] = @Id;",
                         request
                     );
                     break;
                 default:
+                    await _dbService.Delete(
+                        @"
+                            DELETE cct
+                            FROM [ClassroomClassroomType] cct
+                            INNER JOIN [ClassroomType] ct ON ct.[Id] = cct.[ClassroomTypeId]
+                            INNER JOIN [Schedule] s ON s.[Id] = ct.[ScheduleId]
+                            WHERE s.[UserId] = @FilteredId AND cct.[ClassroomTypeId] = @Id;",
+                        request
+                    );
                     await _dbService.Delete(
                         @"
                             DELETE ct

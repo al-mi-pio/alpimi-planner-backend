@@ -127,7 +127,6 @@ namespace AlpimiAPI.Entities.EStudent.Commands
                         );
                     }
                 }
-
                 if (errors.Any())
                 {
                     throw new ApiErrorException(errors);
@@ -181,7 +180,7 @@ namespace AlpimiAPI.Entities.EStudent.Commands
                 $@"
                     UPDATE [Student] 
                     SET
-                    [AlbumNumber]=CASE WHEN @AlbumNumber IS NOT NULL THEN @AlbumNumber ELSE [AlbumNumber] END
+                    [AlbumNumber] = @AlbumNumber 
                     OUTPUT
                     INSERTED.[Id],
                     INSERTED.[AlbumNumber],

@@ -81,7 +81,7 @@
   Check if returns an updated student when provided with correct data
 
 - [UpdateStudentUpdatesStudentsSubgroups()](../Entities/EStudent/StudentController.test.cs) - **integrity**  
-  Check if returns updates students subgroups when provided with correct data
+  Check if updates students subgroups when provided with correct data
 
 - [updateStudentThrowsNotFoundErrorWhenWrongIdIsGiven()](../Entities/EStudent/StudentController.test.cs) - **integrity**  
   Check if returns an error when student doesn't exists

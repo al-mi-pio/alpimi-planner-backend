@@ -154,7 +154,7 @@ namespace AlpimiAPI.Entities.EClassroomType
         }
 
         /// <summary>
-        /// Gets all ClassroomTypes by ScheduleId
+        /// Gets all ClassroomTypes by ScheduleId or ClassroomId
         /// </summary>
         /// <remarks>
         /// - JWT token is required
@@ -165,7 +165,7 @@ namespace AlpimiAPI.Entities.EClassroomType
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
         public async Task<ActionResult<ApiGetAllResponse<IEnumerable<ClassroomType>>>> GetAll(
             [FromHeader] string Authorization,
-            [FromQuery] Guid scheduleId,
+            [FromQuery] Guid id,
             [FromQuery] int perPage = PaginationSettings.perPage,
             [FromQuery] int page = PaginationSettings.page,
             [FromQuery] string sortBy = PaginationSettings.sortBy,
@@ -176,7 +176,7 @@ namespace AlpimiAPI.Entities.EClassroomType
             string privileges = Privileges.GetUserRoleFromToken(Authorization);
 
             var query = new GetAllClassroomTypesQuery(
-                scheduleId,
+                id,
                 filteredId,
                 privileges,
                 new PaginationParams(perPage, (page - 1) * perPage, sortBy, sortOrder)

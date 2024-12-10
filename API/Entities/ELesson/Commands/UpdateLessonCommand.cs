@@ -1,4 +1,6 @@
 ﻿using AlpimiAPI.Database;
+using AlpimiAPI.Entities.EClassroomType;
+using AlpimiAPI.Entities.EClassroomType.Queries;
 using AlpimiAPI.Entities.EGroup;
 using AlpimiAPI.Entities.EGroup.Queries;
 using AlpimiAPI.Entities.ELesson.DTO;
@@ -74,6 +76,101 @@ namespace AlpimiAPI.Entities.ELesson.Commands
                 throw new ApiErrorException(
                     [new ErrorObject(_str["alreadyExists", "Lesson", request.dto.Name])]
                 );
+            }
+
+            List<ErrorObject> errors = new List<ErrorObject>();
+            if (request.dto.ClassroomTypeIds != null)
+            {
+                var duplicates = request
+                    .dto.ClassroomTypeIds.GroupBy(g => g)
+                    .Where(g => g.Count() > 1)
+                    .Select(g => g.Key);
+
+                if (duplicates.Any())
+                {
+                    List<ErrorObject> duplicateErrors = new List<ErrorObject>();
+                    foreach (var duplicate in duplicates)
+                    {
+                        duplicateErrors.Add(
+                            new ErrorObject(_str["duplicateData", "ClassroomType", duplicate])
+                        );
+                    }
+                    throw new ApiErrorException(duplicateErrors);
+                }
+
+                foreach (var classroomTypeId in request.dto.ClassroomTypeIds)
+                {
+                    GetClassroomTypeHandler getClassroomTypeHandler = new GetClassroomTypeHandler(
+                        _dbService
+                    );
+                    GetClassroomTypeQuery getClassroomTypeQuery = new GetClassroomTypeQuery(
+                        classroomTypeId,
+                        request.FilteredId,
+                        request.Role
+                    );
+                    ActionResult<ClassroomType?> classroomType =
+                        await getClassroomTypeHandler.Handle(
+                            getClassroomTypeQuery,
+                            cancellationToken
+                        );
+
+                    if (classroomType.Value == null)
+                    {
+                        errors.Add(
+                            new ErrorObject(
+                                _str["resourceNotFound", "ClassroomType", classroomTypeId]
+                            )
+                        );
+                    }
+                }
+                if (errors.Count != 0)
+                {
+                    throw new ApiErrorException(errors);
+                }
+
+                var classroomTypes = await _dbService.GetAll<Guid>(
+                    $@"
+                        SELECT
+                        ct.[Id]
+                        FROM [ClassroomType] ct
+                        LEFT JOIN [LessonClassroomType] lct ON lct.[ClassroomTypeId] = ct.[Id]
+                        LEFT JOIN [Lesson] l ON l.[Id] = lct.[LessonId]
+                        WHERE l.[Id] = @Id",
+                    request
+                );
+
+                classroomTypes = classroomTypes ?? [];
+
+                foreach (Guid classroomTypeId in request.dto.ClassroomTypeIds)
+                {
+                    if (!classroomTypes.Contains(classroomTypeId))
+                    {
+                        await _dbService.Post<Guid>(
+                            $@"
+                                INSERT INTO [LessonClassroomType] 
+                                ([Id],[LessonId],[ClassroomTypeId])
+                                OUTPUT 
+                                INSERTED.Id                    
+                                VALUES (
+                                '{Guid.NewGuid()}',   
+                                @Id,
+                                '{classroomTypeId}');",
+                            request
+                        );
+                    }
+                }
+                foreach (Guid classroomType in classroomTypes)
+                {
+                    if (!request.dto.ClassroomTypeIds.Contains(classroomType))
+                    {
+                        await _dbService.Delete(
+                            $@"
+                                DELETE [LessonClassroomType] 
+                                WHERE [LessonId] = @Id AND [ClassroomTypeId] = '{classroomType}';",
+                            request
+                        );
+                    }
+                }
             }
 
             var lesson = await _dbService.Update<Lesson?>(

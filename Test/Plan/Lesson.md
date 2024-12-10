@@ -13,6 +13,9 @@
 - [LessonIsCreated()](../Entities/ELesson/LessonController.test.cs) - **integrity**  
   Check if lesson is created when provided with correct data
 
+- [LessonIsCreatedWithClassroomTypes()](../Entities/ELesson/LessonController.test.cs) - **integrity**  
+  Check if lesson is created with classroom types when provided with correct data
+
 - [ThrowsErrorWhenNameIsAlreadyTakenByLesson()](../Entities/ELesson/CreateLessonCommand.unit.cs) - **unit**  
   Check if returns an error when a taken by lesson name is provided
 
@@ -24,6 +27,12 @@
 
 - [ThrowsErrorWhenAmountOfHoursIsLessThan1()](../Entities/ELesson/Commands/CreateLessonCommand.unit.cs) - **unit** 
   Check if returns an error when student count is less than 1
+
+- [ThrowsErrorWhenDuplicatedClassroomTypeIdsAreGiven()](../Entities/ELesson/CreateLessonCommand.unit.cs) - **unit** 			
+  Check if returns an error when duplicated classroom type ids are provided
+
+- [ThrowsErrorWhenWrongClassroomTypeIdIsGiven()](../Entities/ELesson/CreateLessonCommand.unit.cs) - **unit** 			
+  Check if returns an error when incorrect classroom type id is provided
 
 
 ## `GET` `api/Lesson`
@@ -76,6 +85,9 @@
 - [UpdateLessonReturnsUpdatedLesson()](../Entities/ELesson/LessonController.test.cs) - **integrity**  
   Check if returns an updated day off when provided with correct data
 
+- [UpdateLessonUpdatesClassroomsClassroomTypes()](../Entities/EClassroom/ClassroomController.test.cs) - **integrity**  
+  Check if updates lesson classroom types when provided with correct data
+
 - [updateLessonThrowsNotFoundErrorWhenWrongIdIsGiven()](../Entities/ELesson/LessonController.test.cs) - **integrity**  
   Check if returns an error when day off doesn't exists
 
@@ -87,6 +99,13 @@
 
 - [ThrowsErrorWhenAmountOfHoursIsLessThan1()](../Entities/ELesson/Commands/UpdateLessonCommand.unit.cs) - **unit** 
   Check if returns an error when student count is less than 1
+
+- [ThrowsErrorWhenDuplicatedClassroomTypeIdsAreGiven()](../Entities/ELesson/UpdateLessonCommand.unit.cs) - **unit** 			
+  Check if returns an error when duplicated classroom type ids are provided
+
+- [ThrowsErrorWhenWrongClassroomTypeIdIsGiven()](../Entities/ELesson/UpdateLessonCommand.unit.cs) - **unit** 			
+  Check if returns an error when incorrect classroom type id is provided
+
 
 
 

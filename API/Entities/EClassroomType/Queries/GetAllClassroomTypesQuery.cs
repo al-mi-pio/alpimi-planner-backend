@@ -71,7 +71,9 @@ namespace AlpimiAPI.Entities.EClassroomType.Queries
                             FROM [ClassroomType] ct
                             LEFT JOIN [ClassroomClassroomType] cct ON cct.[ClassroomTypeId] = ct.[Id]
                             LEFT JOIN [Classroom] c ON c.[Id] = cct.[ClassroomId]
-                            WHERE ct.[ScheduleId] = @Id OR c.[Id] = @Id",
+                            LEFT JOIN [LessonClassroomType] lct ON lct.[ClassroomTypeId] = ct.[Id]
+                            LEFT JOIN [Lesson] l ON l.[Id] = lct.[LessonId]
+                            WHERE ct.[ScheduleId] = @Id OR c.[Id] = @Id OR l.[Id] = @Id",
                         request
                     );
                     classroomTypes = await _dbService.GetAll<ClassroomType>(
@@ -81,7 +83,9 @@ namespace AlpimiAPI.Entities.EClassroomType.Queries
                             FROM [ClassroomType] ct
                             LEFT JOIN [ClassroomClassroomType] cct ON cct.[ClassroomTypeId] = ct.[Id]
                             LEFT JOIN [Classroom] c ON c.[Id] = cct.[ClassroomId]
-                            WHERE ct.[ScheduleId] = @Id OR c.[Id] = @Id
+                            LEFT JOIN [LessonClassroomType] lct ON lct.[ClassroomTypeId] = ct.[Id]
+                            LEFT JOIN [Lesson] l ON l.[Id] = lct.[LessonId]
+                            WHERE ct.[ScheduleId] = @Id OR c.[Id] = @Id OR l.[Id] = @Id
                             ORDER BY
                             {request.Pagination.SortBy}
                             {request.Pagination.SortOrder}
@@ -100,18 +104,22 @@ namespace AlpimiAPI.Entities.EClassroomType.Queries
                             INNER JOIN [Schedule] s ON s.[Id] = ct.[ScheduleId]
                             LEFT JOIN [ClassroomClassroomType] cct ON cct.[ClassroomTypeId] = ct.[Id]
                             LEFT JOIN [Classroom] c ON c.[Id] = cct.[ClassroomId]
-                            WHERE s.[UserId] = @FilteredId AND (ct.[ScheduleId] = @Id OR c.[Id] = @Id); ",
+                            LEFT JOIN [LessonClassroomType] lct ON lct.[ClassroomTypeId] = ct.[Id]
+                            LEFT JOIN [Lesson] l ON l.[Id] = lct.[LessonId]
+                            WHERE s.[UserId] = @FilteredId AND (ct.[ScheduleId] = @Id OR c.[Id] = @Id OR l.[Id] = @Id); ",
                         request
                     );
                     classroomTypes = await _dbService.GetAll<ClassroomType>(
                         $@"
                             SELECT 
-                            ct.[Id], ct.[Name], [ScheduleId] 
+                            ct.[Id], ct.[Name], ct.[ScheduleId] 
                             FROM [ClassroomType] ct
                             INNER JOIN [Schedule] s ON s.[Id] = ct.[ScheduleId]
-                            INNER JOIN [ClassroomClassroomType] cct ON cct.[ClassroomTypeId] = ct.[Id]
-                            INNER JOIN [Classroom] c ON c.[Id] = cct.[ClassroomId]
-                            WHERE s.[UserId] = @FilteredId AND (ct.[ScheduleId] = @Id OR c.[Id] = @Id)
+                            LEFT JOIN [ClassroomClassroomType] cct ON cct.[ClassroomTypeId] = ct.[Id]
+                            LEFT JOIN [Classroom] c ON c.[Id] = cct.[ClassroomId]
+                            LEFT JOIN [LessonClassroomType] lct ON lct.[ClassroomTypeId] = ct.[Id]
+                            LEFT JOIN [Lesson] l ON l.[Id] = lct.[LessonId]
+                            WHERE s.[UserId] = @FilteredId AND (ct.[ScheduleId] = @Id OR c.[Id] = @Id OR l.[Id] = @Id)
                             ORDER BY
                             {request.Pagination.SortBy}
                             {request.Pagination.SortOrder}

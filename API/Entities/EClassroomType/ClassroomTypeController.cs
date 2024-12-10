@@ -154,7 +154,7 @@ namespace AlpimiAPI.Entities.EClassroomType
         }
 
         /// <summary>
-        /// Gets all ClassroomTypes by ScheduleId or ClassroomId
+        /// Gets all ClassroomTypes by ScheduleId, ClassroomId or LessonId
         /// </summary>
         /// <remarks>
         /// - JWT token is required

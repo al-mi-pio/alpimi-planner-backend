@@ -22,10 +22,13 @@
 ## `GET` `api/ClassroomType`
 
 - [GetAllClassroomTypesReturnsClassroomTypesFromScheduleIfScheduleIdIsProvided()](../Entities/EClassroomType/ClassroomTypeController.test.cs) - **integrity**  
-  Check if returns two classroom types when a valid token is provided
+  Check if returns two classroom types when a valid schedule id is provided
 
 - [GetAllClassroomTypesReturnsClassroomTypesFromClassroomIfClassroomIdIsProvided()](../Entities/EClassroomType/ClassroomTypeController.test.cs) - **integrity**  
-  Check if returns two classroom types when a valid token is provided
+  Check if returns one classroom type when a valid classroom id is provided
+
+- [GetAllClassroomTypesReturnsClassroomTypesFromLessonIfLessonIdIsProvided()](../Entities/EClassroomType/ClassroomTypeController.test.cs) - **integrity**  
+  Check if returns one classroom type when a valid lesson id is provided
 
 - [GetAllClassroomTypesReturnsEmptyContentWhenWrongUserAttemptsGet()](../Entities/EClassroomType/ClassroomTypeController.test.cs) - **integrity**  
   Check if returns no classroom types when other user's token is provided

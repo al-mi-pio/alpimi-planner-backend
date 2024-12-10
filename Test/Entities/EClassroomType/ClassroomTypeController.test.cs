@@ -202,6 +202,44 @@ namespace AlpimiTest.Entities.EClassroomType
         }
 
         [Fact]
+        public async Task GetAllClassroomTypesReturnsClassroomTypesFromLessonIfLessonIdIsProvided()
+        {
+            var classroomTypeRequest1 = MockData.GetCreateClassroomTypeDTODetails(scheduleId);
+            var classroomTypeRequest2 = MockData.GetCreateSecondClassroomTypeDTODetails(scheduleId);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", userId)
+            );
+
+            var classroomTypeId = await DbHelper.SetupClassroomType(_client, classroomTypeRequest1);
+            await DbHelper.SetupClassroomType(_client, classroomTypeRequest2);
+
+            var groupId = await DbHelper.SetupGroup(
+                _client,
+                MockData.GetCreateGroupDTODetails(scheduleId)
+            );
+            var subgroupId = await DbHelper.SetupSubgroup(
+                _client,
+                MockData.GetCreateSubgroupDTODetails(groupId)
+            );
+            var lessonTypeId = await DbHelper.SetupLessonType(
+                _client,
+                MockData.GetCreateLessonTypeDTODetails(scheduleId)
+            );
+
+            var lessonRequest = MockData.GetCreateLessonDTODetails(subgroupId, lessonTypeId);
+            lessonRequest.ClassroomTypeIds = [classroomTypeId];
+            var lessonId = await DbHelper.SetupLesson(_client, lessonRequest);
+
+            var query = $"?id={lessonId}";
+            var response = await _client.GetAsync($"/api/ClassroomType{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+
+            Assert.Contains(classroomTypeRequest1.Name, stringResponse);
+            Assert.DoesNotContain(classroomTypeRequest2.Name, stringResponse);
+        }
+
+        [Fact]
         public async Task GetAllClassroomTypeReturnsEmptyContentWhenWrongUserAttemptsGet()
         {
             var classroomTypeRequest1 = MockData.GetCreateClassroomTypeDTODetails(scheduleId);

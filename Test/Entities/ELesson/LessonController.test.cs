@@ -1,10 +1,14 @@
 ﻿using System.Net;
 using System.Net.Http.Headers;
 using AlpimiAPI.Entities.ELesson;
+using AlpimiAPI.Entities.ELessonType;
+using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
 using AlpimiAPI.Settings;
 using AlpimiTest.TestSetup;
 using AlpimiTest.TestUtilities;
+using Azure;
+using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
 using Xunit;
 
 namespace AlpimiTest.Entities.ELesson
@@ -99,7 +103,58 @@ namespace AlpimiTest.Entities.ELesson
         }
 
         [Fact]
+        public async Task LessonIsCreatedWithClassroomTypes()
+        {
+            var lessonRequest = MockData.GetCreateLessonDTODetails(subgroupId1, lessonTypeId);
+
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", userId)
+            );
+
+            var classroomTypeRequest = MockData.GetCreateClassroomTypeDTODetails(scheduleId);
+            var classroomTypeId = await DbHelper.SetupClassroomType(_client, classroomTypeRequest);
+            lessonRequest.ClassroomTypeIds = [classroomTypeId];
+
+            var response = await _client.PostAsJsonAsync("/api/Lesson", lessonRequest);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            var jsonLessonId = await response.Content.ReadFromJsonAsync<ApiGetResponse<Guid>>();
+
+            var query = $"?id={jsonLessonId!.Content}";
+            response = await _client.GetAsync($"/api/ClassroomType{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+
+            Assert.Contains(classroomTypeRequest.Name, stringResponse);
+        }
+
+        [Fact]
         public async Task UpdateLessonReturnsUpdatedLesson()
+        {
+            var lessonUpdateRequest = MockData.GetUpdateLessonDTODetails();
+
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "Bob", userId)
+            );
+
+            var lessonId = await DbHelper.SetupLesson(
+                _client,
+                MockData.GetCreateLessonDTODetails(subgroupId1, lessonTypeId)
+            );
+
+            var response = await _client.PatchAsJsonAsync(
+                $"/api/Lesson/{lessonId}",
+                lessonUpdateRequest
+            );
+            var jsonResponse = await response.Content.ReadFromJsonAsync<ApiGetResponse<Lesson>>();
+
+            Assert.Equal(lessonUpdateRequest.Name, jsonResponse!.Content.Name);
+            Assert.Equal(lessonUpdateRequest.AmountOfHours, jsonResponse!.Content.AmountOfHours);
+        }
+
+        [Fact]
+        public async Task UpdateLessonUpdatesClassroomsClassroomTypes()
         {
             var lessonUpdateRequest = MockData.GetUpdateLessonDTODetails();
             var lessonId = await DbHelper.SetupLesson(
@@ -112,14 +167,16 @@ namespace AlpimiTest.Entities.ELesson
                 TestAuthorization.GetToken("Admin", "Bob", userId)
             );
 
-            var response = await _client.PatchAsJsonAsync(
-                $"/api/Lesson/{lessonId}",
-                lessonUpdateRequest
-            );
-            var jsonResponse = await response.Content.ReadFromJsonAsync<ApiGetResponse<Lesson>>();
+            var classromTypeRequest = MockData.GetCreateClassroomTypeDTODetails(scheduleId);
+            var classroomTypeId = await DbHelper.SetupClassroomType(_client, classromTypeRequest);
+            lessonUpdateRequest.ClassroomTypeIds = [classroomTypeId];
 
-            Assert.Equal(lessonUpdateRequest.Name, jsonResponse!.Content.Name);
-            Assert.Equal(lessonUpdateRequest.AmountOfHours, jsonResponse!.Content.AmountOfHours);
+            await _client.PatchAsJsonAsync($"/api/Lesson/{lessonId}", lessonUpdateRequest);
+
+            var query = $"?id={lessonId}";
+            var response = await _client.GetAsync($"/api/ClassroomType{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            Assert.Contains(classromTypeRequest.Name!, stringResponse);
         }
 
         [Fact]

@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Net.Http.Headers;
 using AlpimiAPI.Entities.ELesson;
+using AlpimiAPI.Entities.ELesson.DTO;
 using AlpimiAPI.Entities.ELessonType;
 using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
@@ -147,7 +148,9 @@ namespace AlpimiTest.Entities.ELesson
                 $"/api/Lesson/{lessonId}",
                 lessonUpdateRequest
             );
-            var jsonResponse = await response.Content.ReadFromJsonAsync<ApiGetResponse<Lesson>>();
+            var jsonResponse = await response.Content.ReadFromJsonAsync<
+                ApiGetResponse<LessonDTO>
+            >();
 
             Assert.Equal(lessonUpdateRequest.Name, jsonResponse!.Content.Name);
             Assert.Equal(lessonUpdateRequest.AmountOfHours, jsonResponse!.Content.AmountOfHours);
@@ -332,7 +335,9 @@ namespace AlpimiTest.Entities.ELesson
             );
 
             var response = await _client.GetAsync($"/api/Lesson/{lessonId}");
-            var jsonResponse = await response.Content.ReadFromJsonAsync<ApiGetResponse<Lesson>>();
+            var jsonResponse = await response.Content.ReadFromJsonAsync<
+                ApiGetResponse<LessonDTO>
+            >();
 
             Assert.Equal(lessonRequest.Name, jsonResponse!.Content.Name);
             Assert.Equal(lessonRequest.AmountOfHours, jsonResponse!.Content.AmountOfHours);

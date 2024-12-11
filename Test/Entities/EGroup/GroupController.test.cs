@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Net.Http.Headers;
 using AlpimiAPI.Entities.EGroup;
+using AlpimiAPI.Entities.EGroup.DTO;
 using AlpimiAPI.Responses;
 using AlpimiAPI.Settings;
 using AlpimiTest.TestSetup;
@@ -96,7 +97,7 @@ namespace AlpimiTest.Entities.EGroup
                 $"/api/Group/{groupId}",
                 groupUpdateRequest
             );
-            var jsonResponse = await response.Content.ReadFromJsonAsync<ApiGetResponse<Group>>();
+            var jsonResponse = await response.Content.ReadFromJsonAsync<ApiGetResponse<GroupDTO>>();
 
             Assert.Equal(groupUpdateRequest.Name, jsonResponse!.Content.Name);
             Assert.Equal(groupUpdateRequest.StudentCount, jsonResponse!.Content.StudentCount);
@@ -222,7 +223,7 @@ namespace AlpimiTest.Entities.EGroup
             );
 
             var response = await _client.GetAsync($"/api/Group/{groupId}");
-            var jsonResponse = await response.Content.ReadFromJsonAsync<ApiGetResponse<Group>>();
+            var jsonResponse = await response.Content.ReadFromJsonAsync<ApiGetResponse<GroupDTO>>();
 
             Assert.Equal(groupRequest.Name, jsonResponse!.Content.Name);
             Assert.Equal(groupRequest.StudentCount, jsonResponse!.Content.StudentCount);

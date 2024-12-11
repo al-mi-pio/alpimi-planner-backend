@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Net.Http.Headers;
 using AlpimiAPI.Entities.EDayOff;
+using AlpimiAPI.Entities.EDayOff.DTO;
 using AlpimiAPI.Responses;
 using AlpimiAPI.Settings;
 using AlpimiTest.TestSetup;
@@ -96,7 +97,9 @@ namespace AlpimiTest.Entities.EDayOff
                 $"/api/DayOff/{dayOffId}",
                 dayOffUpdateRequest
             );
-            var jsonResponse = await response.Content.ReadFromJsonAsync<ApiGetResponse<DayOff>>();
+            var jsonResponse = await response.Content.ReadFromJsonAsync<
+                ApiGetResponse<DayOffDTO>
+            >();
 
             Assert.Equal(dayOffUpdateRequest.Name, jsonResponse!.Content.Name);
             Assert.Equal(dayOffUpdateRequest.From, jsonResponse!.Content.From);

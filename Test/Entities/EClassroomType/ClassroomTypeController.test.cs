@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Net.Http.Headers;
 using AlpimiAPI.Entities.EClassroomType;
+using AlpimiAPI.Entities.EClassroomType.DTO;
 using AlpimiAPI.Responses;
 using AlpimiAPI.Settings;
 using AlpimiTest.TestSetup;
@@ -100,7 +101,7 @@ namespace AlpimiTest.Entities.EClassroomType
                 classroomTypeUpdateRequest
             );
             var jsonResponse = await response.Content.ReadFromJsonAsync<
-                ApiGetResponse<ClassroomType>
+                ApiGetResponse<ClassroomTypeDTO>
             >();
 
             Assert.Equal(classroomTypeUpdateRequest.Name, jsonResponse!.Content.Name);
@@ -295,7 +296,7 @@ namespace AlpimiTest.Entities.EClassroomType
 
             var response = await _client.GetAsync($"/api/ClassroomType/{classroomTypeId}");
             var jsonResponse = await response.Content.ReadFromJsonAsync<
-                ApiGetResponse<ClassroomType>
+                ApiGetResponse<ClassroomTypeDTO>
             >();
 
             Assert.Equal(classroomTypeRequest.Name, jsonResponse!.Content.Name);

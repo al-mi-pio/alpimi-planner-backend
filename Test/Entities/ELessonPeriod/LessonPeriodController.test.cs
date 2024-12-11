@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Net.Http.Headers;
-using AlpimiAPI.Entities.ELessonPerioid;
+using AlpimiAPI.Entities.ELessonPeriod;
+using AlpimiAPI.Entities.ELessonPeriod.DTO;
 using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Responses;
 using AlpimiAPI.Settings;
@@ -98,7 +99,7 @@ namespace AlpimiTest.Entities.ELessonPeriod
                 lessonPeriodUpdateRequest
             );
             var jsonResponse = await response.Content.ReadFromJsonAsync<
-                ApiGetResponse<LessonPeriod>
+                ApiGetResponse<LessonPeriodDTO>
             >();
 
             Assert.Equal(lessonPeriodUpdateRequest.Start, jsonResponse!.Content.Start);

@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Net.Http.Headers;
 using AlpimiAPI.Entities.EStudent;
+using AlpimiAPI.Entities.EStudent.DTO;
 using AlpimiAPI.Responses;
 using AlpimiAPI.Settings;
 using AlpimiTest.TestSetup;
@@ -131,7 +132,9 @@ namespace AlpimiTest.Entities.EStudent
                 $"/api/Student/{studentId}",
                 studentUpdateRequest
             );
-            var jsonResponse = await response.Content.ReadFromJsonAsync<ApiGetResponse<Student>>();
+            var jsonResponse = await response.Content.ReadFromJsonAsync<
+                ApiGetResponse<StudentDTO>
+            >();
 
             Assert.Equal(studentUpdateRequest.AlbumNumber, jsonResponse!.Content.AlbumNumber);
         }
@@ -300,7 +303,9 @@ namespace AlpimiTest.Entities.EStudent
             );
 
             var response = await _client.GetAsync($"/api/Student/{studentId}");
-            var jsonResponse = await response.Content.ReadFromJsonAsync<ApiGetResponse<Student>>();
+            var jsonResponse = await response.Content.ReadFromJsonAsync<
+                ApiGetResponse<StudentDTO>
+            >();
 
             Assert.Equal(studentRequest.AlbumNumber, jsonResponse!.Content.AlbumNumber);
         }

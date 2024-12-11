@@ -116,7 +116,7 @@ namespace AlpimiAPI.Entities.ELessonType
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
         [ProducesResponseType(typeof(ApiErrorResponse), 404)]
-        public async Task<ActionResult<ApiGetResponse<LessonType>>> Patch(
+        public async Task<ActionResult<ApiGetResponse<LessonTypeDTO>>> Patch(
             [FromBody] UpdateLessonTypeDTO request,
             [FromRoute] Guid id,
             [FromHeader] string Authorization
@@ -135,7 +135,7 @@ namespace AlpimiAPI.Entities.ELessonType
                         new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "LessonType"])])
                     );
                 }
-                var response = new ApiGetResponse<LessonType>(result);
+                var response = new ApiGetResponse<LessonTypeDTO>(DataTrimmer.Trim(result));
                 return Ok(response);
             }
             catch (ApiErrorException ex)
@@ -160,7 +160,7 @@ namespace AlpimiAPI.Entities.ELessonType
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
-        public async Task<ActionResult<ApiGetAllResponse<IEnumerable<LessonType>>>> GetAll(
+        public async Task<ActionResult<ApiGetAllResponse<IEnumerable<LessonTypeDTO>>>> GetAll(
             [FromHeader] string Authorization,
             [FromQuery] Guid scheduleId,
             [FromQuery] int perPage = PaginationSettings.perPage,
@@ -181,8 +181,8 @@ namespace AlpimiAPI.Entities.ELessonType
             try
             {
                 (IEnumerable<LessonType>?, int) result = await _mediator.Send(query);
-                var response = new ApiGetAllResponse<IEnumerable<LessonType>>(
-                    result.Item1!,
+                var response = new ApiGetAllResponse<IEnumerable<LessonTypeDTO>>(
+                    result.Item1!.Select(DataTrimmer.Trim),
                     new Pagination(result.Item2, perPage, page, sortBy, sortOrder)
                 );
                 return Ok(response);
@@ -210,7 +210,7 @@ namespace AlpimiAPI.Entities.ELessonType
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
         [ProducesResponseType(typeof(ApiErrorResponse), 404)]
-        public async Task<ActionResult<ApiGetResponse<LessonType>>> GetOne(
+        public async Task<ActionResult<ApiGetResponse<LessonTypeDTO>>> GetOne(
             [FromRoute] Guid id,
             [FromHeader] string Authorization
         )
@@ -228,7 +228,7 @@ namespace AlpimiAPI.Entities.ELessonType
                         new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "LessonType"])])
                     );
                 }
-                var response = new ApiGetResponse<LessonType>(result);
+                var response = new ApiGetResponse<LessonTypeDTO>(DataTrimmer.Trim(result));
 
                 return Ok(response);
             }

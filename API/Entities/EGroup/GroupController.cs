@@ -111,7 +111,7 @@ namespace AlpimiAPI.Entities.EGroup
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
         [ProducesResponseType(typeof(ApiErrorResponse), 404)]
-        public async Task<ActionResult<ApiGetResponse<Group>>> Patch(
+        public async Task<ActionResult<ApiGetResponse<GroupDTO>>> Patch(
             [FromBody] UpdateGroupDTO request,
             [FromRoute] Guid id,
             [FromHeader] string Authorization
@@ -130,7 +130,7 @@ namespace AlpimiAPI.Entities.EGroup
                         new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "Group"])])
                     );
                 }
-                var response = new ApiGetResponse<Group>(result);
+                var response = new ApiGetResponse<GroupDTO>(DataTrimmer.Trim(result));
                 return Ok(response);
             }
             catch (ApiErrorException ex)
@@ -155,7 +155,7 @@ namespace AlpimiAPI.Entities.EGroup
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
-        public async Task<ActionResult<ApiGetAllResponse<IEnumerable<Group>>>> GetAll(
+        public async Task<ActionResult<ApiGetAllResponse<IEnumerable<GroupDTO>>>> GetAll(
             [FromHeader] string Authorization,
             [FromQuery] Guid scheduleId,
             [FromQuery] int perPage = PaginationSettings.perPage,
@@ -176,8 +176,8 @@ namespace AlpimiAPI.Entities.EGroup
             try
             {
                 (IEnumerable<Group>?, int) result = await _mediator.Send(query);
-                var response = new ApiGetAllResponse<IEnumerable<Group>>(
-                    result.Item1!,
+                var response = new ApiGetAllResponse<IEnumerable<GroupDTO>>(
+                    result.Item1!.Select(DataTrimmer.Trim),
                     new Pagination(result.Item2, perPage, page, sortBy, sortOrder)
                 );
                 return Ok(response);
@@ -205,7 +205,7 @@ namespace AlpimiAPI.Entities.EGroup
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
         [ProducesResponseType(typeof(ApiErrorResponse), 404)]
-        public async Task<ActionResult<ApiGetResponse<Group>>> GetOne(
+        public async Task<ActionResult<ApiGetResponse<GroupDTO>>> GetOne(
             [FromRoute] Guid id,
             [FromHeader] string Authorization
         )
@@ -223,7 +223,7 @@ namespace AlpimiAPI.Entities.EGroup
                         new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "Group"])])
                     );
                 }
-                var response = new ApiGetResponse<Group>(result);
+                var response = new ApiGetResponse<GroupDTO>(DataTrimmer.Trim(result));
 
                 return Ok(response);
             }

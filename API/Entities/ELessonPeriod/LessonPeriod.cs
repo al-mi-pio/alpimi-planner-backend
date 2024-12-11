@@ -1,6 +1,6 @@
 ﻿using AlpimiAPI.Entities.EScheduleSettings;
 
-namespace AlpimiAPI.Entities.ELessonPerioid
+namespace AlpimiAPI.Entities.ELessonPeriod
 {
     public class LessonPeriod
     {

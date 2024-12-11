@@ -1,7 +1,5 @@
 ﻿using AlpimiAPI.Database;
-using AlpimiAPI.Entities.EDayOff;
 using AlpimiAPI.Entities.ELessonPeriod.DTO;
-using AlpimiAPI.Entities.ELessonPerioid;
 using AlpimiAPI.Entities.EScheduleSettings;
 using AlpimiAPI.Entities.EScheduleSettings.Queries;
 using AlpimiAPI.Locales;
@@ -9,7 +7,6 @@ using AlpimiAPI.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
-using Microsoft.IdentityModel.Tokens;
 
 namespace AlpimiAPI.Entities.ELessonPeriod.Commands
 {

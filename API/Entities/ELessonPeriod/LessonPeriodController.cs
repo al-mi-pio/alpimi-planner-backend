@@ -1,7 +1,7 @@
-﻿using AlpimiAPI.Entities.ELessonPeriod.Commands;
+﻿using AlpimiAPI.Entities.ELessonPeriod;
+using AlpimiAPI.Entities.ELessonPeriod.Commands;
 using AlpimiAPI.Entities.ELessonPeriod.DTO;
 using AlpimiAPI.Entities.ELessonPeriod.Queries;
-using AlpimiAPI.Entities.ELessonPerioid;
 using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
 using AlpimiAPI.Settings;
@@ -117,7 +117,7 @@ namespace AlpimiAPI.Entities.ELessonPeriod
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
         [ProducesResponseType(typeof(ApiErrorResponse), 404)]
-        public async Task<ActionResult<ApiGetResponse<LessonPeriod>>> Patch(
+        public async Task<ActionResult<ApiGetResponse<LessonPeriodDTO>>> Patch(
             [FromBody] UpdateLessonPeriodDTO request,
             [FromRoute] Guid id,
             [FromHeader] string Authorization
@@ -139,7 +139,7 @@ namespace AlpimiAPI.Entities.ELessonPeriod
                         )
                     );
                 }
-                var response = new ApiGetResponse<LessonPeriod>(result);
+                var response = new ApiGetResponse<LessonPeriodDTO>(DataTrimmer.Trim(result));
                 return Ok(response);
             }
             catch (ApiErrorException ex)
@@ -164,7 +164,7 @@ namespace AlpimiAPI.Entities.ELessonPeriod
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
-        public async Task<ActionResult<ApiGetAllResponse<IEnumerable<LessonPeriod>>>> GetAll(
+        public async Task<ActionResult<ApiGetAllResponse<IEnumerable<LessonPeriodDTO>>>> GetAll(
             [FromHeader] string Authorization,
             [FromQuery] Guid scheduleId,
             [FromQuery] int perPage = PaginationSettings.perPage,
@@ -185,8 +185,8 @@ namespace AlpimiAPI.Entities.ELessonPeriod
             try
             {
                 (IEnumerable<LessonPeriod>?, int) result = await _mediator.Send(query);
-                var response = new ApiGetAllResponse<IEnumerable<LessonPeriod>>(
-                    result.Item1!,
+                var response = new ApiGetAllResponse<IEnumerable<LessonPeriodDTO>>(
+                    result.Item1!.Select(DataTrimmer.Trim),
                     new Pagination(result.Item2, perPage, page, sortBy, sortOrder)
                 );
                 return Ok(response);

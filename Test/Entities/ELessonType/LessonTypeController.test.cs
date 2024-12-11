@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Net.Http.Headers;
 using AlpimiAPI.Entities.ELessonType;
+using AlpimiAPI.Entities.ELessonType.DTO;
 using AlpimiAPI.Responses;
 using AlpimiAPI.Settings;
 using AlpimiTest.TestSetup;
@@ -97,7 +98,7 @@ namespace AlpimiTest.Entities.ELessonType
                 lessonTypeUpdateRequest
             );
             var jsonResponse = await response.Content.ReadFromJsonAsync<
-                ApiGetResponse<LessonType>
+                ApiGetResponse<LessonTypeDTO>
             >();
 
             Assert.Equal(lessonTypeUpdateRequest.Name, jsonResponse!.Content.Name);
@@ -224,7 +225,7 @@ namespace AlpimiTest.Entities.ELessonType
 
             var response = await _client.GetAsync($"/api/LessonType/{lessonTypeId}");
             var jsonResponse = await response.Content.ReadFromJsonAsync<
-                ApiGetResponse<LessonType>
+                ApiGetResponse<LessonTypeDTO>
             >();
 
             Assert.Equal(lessonTypeRequest.Name, jsonResponse!.Content.Name);

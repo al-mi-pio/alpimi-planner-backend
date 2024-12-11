@@ -111,7 +111,7 @@ namespace AlpimiAPI.Entities.EDayOff
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
         [ProducesResponseType(typeof(ApiErrorResponse), 404)]
-        public async Task<ActionResult<ApiGetResponse<DayOff>>> Patch(
+        public async Task<ActionResult<ApiGetResponse<DayOffDTO>>> Patch(
             [FromBody] UpdateDayOffDTO request,
             [FromRoute] Guid id,
             [FromHeader] string Authorization
@@ -130,7 +130,7 @@ namespace AlpimiAPI.Entities.EDayOff
                         new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "DayOff"])])
                     );
                 }
-                var response = new ApiGetResponse<DayOff>(result);
+                var response = new ApiGetResponse<DayOffDTO>(DataTrimmer.Trim(result));
                 return Ok(response);
             }
             catch (ApiErrorException ex)
@@ -155,7 +155,7 @@ namespace AlpimiAPI.Entities.EDayOff
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
-        public async Task<ActionResult<ApiGetAllResponse<IEnumerable<DayOff>>>> GetAll(
+        public async Task<ActionResult<ApiGetAllResponse<IEnumerable<DayOffDTO>>>> GetAll(
             [FromHeader] string Authorization,
             [FromQuery] Guid scheduleId,
             [FromQuery] int perPage = PaginationSettings.perPage,
@@ -176,8 +176,8 @@ namespace AlpimiAPI.Entities.EDayOff
             try
             {
                 (IEnumerable<DayOff>?, int) result = await _mediator.Send(query);
-                var response = new ApiGetAllResponse<IEnumerable<DayOff>>(
-                    result.Item1!,
+                var response = new ApiGetAllResponse<IEnumerable<DayOffDTO>>(
+                    result.Item1!.Select(DataTrimmer.Trim),
                     new Pagination(result.Item2, perPage, page, sortBy, sortOrder)
                 );
                 return Ok(response);

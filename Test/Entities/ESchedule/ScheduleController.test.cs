@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Net.Http.Headers;
 using AlpimiAPI.Entities.ESchedule;
+using AlpimiAPI.Entities.ESchedule.DTO;
 using AlpimiAPI.Responses;
 using AlpimiAPI.Settings;
 using AlpimiTest.TestSetup;
@@ -93,7 +94,9 @@ namespace AlpimiTest.Entities.ESchedule
                 scheduleUpdateRequest
             );
 
-            var jsonResponse = await response.Content.ReadFromJsonAsync<ApiGetResponse<Schedule>>();
+            var jsonResponse = await response.Content.ReadFromJsonAsync<
+                ApiGetResponse<ScheduleDTO>
+            >();
 
             Assert.Equal(scheduleUpdateRequest.Name, jsonResponse!.Content.Name);
         }
@@ -156,7 +159,9 @@ namespace AlpimiTest.Entities.ESchedule
                 TestAuthorization.GetToken("Admin", "User", userId)
             );
             var response = await _client.GetAsync($"/api/Schedule/byName/{scheduleRequest.Name}");
-            var jsonResponse = await response.Content.ReadFromJsonAsync<ApiGetResponse<Schedule>>();
+            var jsonResponse = await response.Content.ReadFromJsonAsync<
+                ApiGetResponse<ScheduleDTO>
+            >();
 
             Assert.Equal(scheduleRequest.Name, jsonResponse!.Content.Name);
         }
@@ -205,7 +210,9 @@ namespace AlpimiTest.Entities.ESchedule
                 TestAuthorization.GetToken("Admin", "User", userId)
             );
             var response = await _client.GetAsync($"/api/Schedule/{scheduleId}");
-            var jsonResponse = await response.Content.ReadFromJsonAsync<ApiGetResponse<Schedule>>();
+            var jsonResponse = await response.Content.ReadFromJsonAsync<
+                ApiGetResponse<ScheduleDTO>
+            >();
 
             Assert.Equal(scheduleRequest.Name, jsonResponse!.Content.Name);
         }

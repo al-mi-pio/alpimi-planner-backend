@@ -4,7 +4,7 @@ using AlpimiAPI.Entities.EClassroomType;
 using AlpimiAPI.Entities.EDayOff;
 using AlpimiAPI.Entities.EGroup;
 using AlpimiAPI.Entities.ELesson;
-using AlpimiAPI.Entities.ELessonPerioid;
+using AlpimiAPI.Entities.ELessonPeriod;
 using AlpimiAPI.Entities.ELessonType;
 using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Entities.EScheduleSettings;

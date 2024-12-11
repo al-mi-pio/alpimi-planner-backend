@@ -116,7 +116,7 @@ namespace AlpimiAPI.Entities.ESubgroup
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
         [ProducesResponseType(typeof(ApiErrorResponse), 404)]
-        public async Task<ActionResult<ApiGetResponse<Subgroup>>> Patch(
+        public async Task<ActionResult<ApiGetResponse<SubgroupDTO>>> Patch(
             [FromBody] UpdateSubgroupDTO request,
             [FromRoute] Guid id,
             [FromHeader] string Authorization
@@ -135,7 +135,7 @@ namespace AlpimiAPI.Entities.ESubgroup
                         new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "Subgroup"])])
                     );
                 }
-                var response = new ApiGetResponse<Subgroup>(result);
+                var response = new ApiGetResponse<SubgroupDTO>(DataTrimmer.Trim(result));
                 return Ok(response);
             }
             catch (ApiErrorException ex)
@@ -160,7 +160,7 @@ namespace AlpimiAPI.Entities.ESubgroup
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
-        public async Task<ActionResult<ApiGetAllResponse<IEnumerable<Subgroup>>>> GetAll(
+        public async Task<ActionResult<ApiGetAllResponse<IEnumerable<SubgroupDTO>>>> GetAll(
             [FromHeader] string Authorization,
             [FromQuery] Guid id,
             [FromQuery] int perPage = PaginationSettings.perPage,
@@ -181,8 +181,8 @@ namespace AlpimiAPI.Entities.ESubgroup
             try
             {
                 (IEnumerable<Subgroup>?, int) result = await _mediator.Send(query);
-                var response = new ApiGetAllResponse<IEnumerable<Subgroup>>(
-                    result.Item1!,
+                var response = new ApiGetAllResponse<IEnumerable<SubgroupDTO>>(
+                    result.Item1!.Select(DataTrimmer.Trim),
                     new Pagination(result.Item2, perPage, page, sortBy, sortOrder)
                 );
                 return Ok(response);
@@ -210,7 +210,7 @@ namespace AlpimiAPI.Entities.ESubgroup
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
         [ProducesResponseType(typeof(ApiErrorResponse), 404)]
-        public async Task<ActionResult<ApiGetResponse<Subgroup>>> GetOne(
+        public async Task<ActionResult<ApiGetResponse<SubgroupDTO>>> GetOne(
             [FromRoute] Guid id,
             [FromHeader] string Authorization
         )
@@ -228,7 +228,7 @@ namespace AlpimiAPI.Entities.ESubgroup
                         new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "Subgroup"])])
                     );
                 }
-                var response = new ApiGetResponse<Subgroup>(result);
+                var response = new ApiGetResponse<SubgroupDTO>(DataTrimmer.Trim(result));
 
                 return Ok(response);
             }

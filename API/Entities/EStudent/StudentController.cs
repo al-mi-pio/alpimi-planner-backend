@@ -111,7 +111,7 @@ namespace AlpimiAPI.Entities.EStudent
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
         [ProducesResponseType(typeof(ApiErrorResponse), 404)]
-        public async Task<ActionResult<ApiGetResponse<Student>>> Patch(
+        public async Task<ActionResult<ApiGetResponse<StudentDTO>>> Patch(
             [FromBody] UpdateStudentDTO request,
             [FromRoute] Guid id,
             [FromHeader] string Authorization
@@ -130,7 +130,7 @@ namespace AlpimiAPI.Entities.EStudent
                         new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "Student"])])
                     );
                 }
-                var response = new ApiGetResponse<Student>(result);
+                var response = new ApiGetResponse<StudentDTO>(DataTrimmer.Trim(result));
                 return Ok(response);
             }
             catch (ApiErrorException ex)
@@ -155,7 +155,7 @@ namespace AlpimiAPI.Entities.EStudent
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
-        public async Task<ActionResult<ApiGetAllResponse<IEnumerable<Student>>>> GetAll(
+        public async Task<ActionResult<ApiGetAllResponse<IEnumerable<StudentDTO>>>> GetAll(
             [FromHeader] string Authorization,
             [FromQuery] Guid id,
             [FromQuery] int perPage = PaginationSettings.perPage,
@@ -176,8 +176,8 @@ namespace AlpimiAPI.Entities.EStudent
             try
             {
                 (IEnumerable<Student>?, int) result = await _mediator.Send(query);
-                var response = new ApiGetAllResponse<IEnumerable<Student>>(
-                    result.Item1!,
+                var response = new ApiGetAllResponse<IEnumerable<StudentDTO>>(
+                    result.Item1!.Select(DataTrimmer.Trim),
                     new Pagination(result.Item2, perPage, page, sortBy, sortOrder)
                 );
                 return Ok(response);
@@ -205,7 +205,7 @@ namespace AlpimiAPI.Entities.EStudent
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
         [ProducesResponseType(typeof(ApiErrorResponse), 404)]
-        public async Task<ActionResult<ApiGetResponse<Student>>> GetOne(
+        public async Task<ActionResult<ApiGetResponse<StudentDTO>>> GetOne(
             [FromRoute] Guid id,
             [FromHeader] string Authorization
         )
@@ -223,7 +223,7 @@ namespace AlpimiAPI.Entities.EStudent
                         new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "Student"])])
                     );
                 }
-                var response = new ApiGetResponse<Student>(result);
+                var response = new ApiGetResponse<StudentDTO>(DataTrimmer.Trim(result));
 
                 return Ok(response);
             }

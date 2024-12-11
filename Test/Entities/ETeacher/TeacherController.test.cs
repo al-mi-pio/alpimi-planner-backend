@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Net.Http.Headers;
 using AlpimiAPI.Entities.ETeacher;
+using AlpimiAPI.Entities.ETeacher.DTO;
 using AlpimiAPI.Responses;
 using AlpimiAPI.Settings;
 using AlpimiTest.TestSetup;
@@ -96,7 +97,9 @@ namespace AlpimiTest.Entities.ETeacher
                 $"/api/Teacher/{teacherId}",
                 teacherUpdateRequest
             );
-            var jsonResponse = await response.Content.ReadFromJsonAsync<ApiGetResponse<Teacher>>();
+            var jsonResponse = await response.Content.ReadFromJsonAsync<
+                ApiGetResponse<TeacherDTO>
+            >();
 
             Assert.Equal(teacherUpdateRequest.Name, jsonResponse!.Content.Name);
             Assert.Equal(teacherUpdateRequest.Surname, jsonResponse!.Content.Surname);
@@ -222,7 +225,9 @@ namespace AlpimiTest.Entities.ETeacher
             );
 
             var response = await _client.GetAsync($"/api/Teacher/{teacherId}");
-            var jsonResponse = await response.Content.ReadFromJsonAsync<ApiGetResponse<Teacher>>();
+            var jsonResponse = await response.Content.ReadFromJsonAsync<
+                ApiGetResponse<TeacherDTO>
+            >();
 
             Assert.Equal(teacherRequest.Name, jsonResponse!.Content.Name);
             Assert.Equal(teacherRequest.Surname, jsonResponse!.Content.Surname);

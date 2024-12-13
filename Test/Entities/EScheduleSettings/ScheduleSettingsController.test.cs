@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Net.Http.Headers;
 using AlpimiAPI.Entities.EScheduleSettings;
+using AlpimiAPI.Entities.EScheduleSettings.DTO;
 using AlpimiAPI.Responses;
 using AlpimiAPI.Settings;
 using AlpimiTest.TestSetup;
@@ -54,7 +55,7 @@ namespace AlpimiTest.Entities.EScheduleSettings
                 updateScheduleSettings
             );
             var jsonResponse = await response.Content.ReadFromJsonAsync<
-                ApiGetResponse<ScheduleSettings>
+                ApiGetResponse<ScheduleSettingsDTO>
             >();
 
             Assert.Equal(
@@ -107,7 +108,7 @@ namespace AlpimiTest.Entities.EScheduleSettings
 
             var response = await _client.GetAsync($"/api/ScheduleSettings/bySchedule/{scheduleId}");
             var jsonResponse = await response.Content.ReadFromJsonAsync<
-                ApiGetResponse<ScheduleSettings>
+                ApiGetResponse<ScheduleSettingsDTO>
             >();
 
             Assert.Equal(jsonResponse!.Content.SchoolYearStart, scheduleSettings.SchoolYearStart);
@@ -149,7 +150,7 @@ namespace AlpimiTest.Entities.EScheduleSettings
                 $"/api/ScheduleSettings/bySchedule/{scheduleId}"
             );
             var jsonScheduleSettingsId = await scheduleSettingsId.Content.ReadFromJsonAsync<
-                ApiGetResponse<ScheduleSettings>
+                ApiGetResponse<ScheduleSettingsDTO>
             >();
 
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
@@ -161,7 +162,7 @@ namespace AlpimiTest.Entities.EScheduleSettings
                 $"/api/ScheduleSettings/{jsonScheduleSettingsId!.Content.Id}"
             );
             var jsonResponse = await response.Content.ReadFromJsonAsync<
-                ApiGetResponse<ScheduleSettings>
+                ApiGetResponse<ScheduleSettingsDTO>
             >();
 
             Assert.Equal(jsonResponse!.Content.SchoolYearStart, scheduleSettings.SchoolYearStart);
@@ -176,7 +177,7 @@ namespace AlpimiTest.Entities.EScheduleSettings
                 $"/api/ScheduleSettings/bySchedule/{scheduleId}"
             );
             var jsonScheduleSettingsId = await scheduleSettingsId.Content.ReadFromJsonAsync<
-                ApiGetResponse<ScheduleSettings>
+                ApiGetResponse<ScheduleSettingsDTO>
             >();
 
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(

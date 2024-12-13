@@ -5,5 +5,6 @@
         public int? SchoolHour { get; set; }
         public DateOnly? SchoolYearStart { get; set; }
         public DateOnly? SchoolYearEnd { get; set; }
+        public string? SchoolDays { get; set; }
     }
 }

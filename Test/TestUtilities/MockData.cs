@@ -73,6 +73,7 @@ namespace AlpimiTest.TestUtilities
                 SchoolHour = 10,
                 SchoolYearStart = new DateOnly(2020, 11, 19),
                 SchoolYearEnd = new DateOnly(2025, 11, 19),
+                SchoolDays = "1111100",
                 ScheduleId = new Guid(),
                 Schedule = GetScheduleDetails()
             };
@@ -97,7 +98,6 @@ namespace AlpimiTest.TestUtilities
             {
                 Id = new Guid(),
                 Start = new TimeOnly(10, 00, 00),
-                Finish = new TimeOnly(11, 00, 00),
                 ScheduleSettingsId = new Guid(),
                 ScheduleSettings = GetScheduleSettingsDetails()
             };
@@ -183,8 +183,10 @@ namespace AlpimiTest.TestUtilities
             return new Lesson()
             {
                 Name = "Niski poziom",
+                CurrentHours = 0,
                 AmountOfHours = 10,
                 SubgroupId = new Guid(),
+                Subgroup = GetSubgroupDetails(),
                 LessonTypeId = new Guid(),
                 LessonType = GetLessonTypeDetails()
             };
@@ -214,7 +216,8 @@ namespace AlpimiTest.TestUtilities
                 Name = scheduleSettings.Schedule.Name,
                 SchoolHour = scheduleSettings.SchoolHour,
                 SchoolYearStart = scheduleSettings.SchoolYearStart,
-                SchoolYearEnd = scheduleSettings.SchoolYearEnd
+                SchoolYearEnd = scheduleSettings.SchoolYearEnd,
+                SchoolDays = scheduleSettings.SchoolDays,
             };
         }
 
@@ -222,9 +225,9 @@ namespace AlpimiTest.TestUtilities
         {
             return new UpdateScheduleSettingsDTO()
             {
-                SchoolHour = 29,
+                SchoolHour = 10,
                 SchoolYearStart = new DateOnly(2020, 10, 1),
-                SchoolYearEnd = new DateOnly(2022, 1, 10)
+                SchoolYearEnd = new DateOnly(2022, 1, 10),
             };
         }
 
@@ -241,6 +244,7 @@ namespace AlpimiTest.TestUtilities
                 SchoolHour = 431,
                 SchoolYearStart = new DateOnly(2022, 11, 19),
                 SchoolYearEnd = new DateOnly(2025, 11, 19),
+                SchoolDays = "1111100"
             };
         }
 
@@ -298,7 +302,6 @@ namespace AlpimiTest.TestUtilities
             return new CreateLessonPeriodDTO()
             {
                 Start = lessonPeriod.Start,
-                Finish = lessonPeriod.Finish,
                 ScheduleId = scheduleId
             };
         }
@@ -308,18 +311,13 @@ namespace AlpimiTest.TestUtilities
             return new CreateLessonPeriodDTO()
             {
                 Start = new TimeOnly(11, 00, 00),
-                Finish = new TimeOnly(12, 00, 00),
                 ScheduleId = scheduleId
             };
         }
 
         public static UpdateLessonPeriodDTO GetUpdateLessonPeriodDTODetails()
         {
-            return new UpdateLessonPeriodDTO()
-            {
-                Start = new TimeOnly(8, 00, 00),
-                Finish = new TimeOnly(9, 00, 00),
-            };
+            return new UpdateLessonPeriodDTO() { Start = new TimeOnly(8, 00, 00), };
         }
 
         public static CreateTeacherDTO GetCreateTeacherDTODetails(Guid scheduleId)

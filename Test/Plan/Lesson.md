@@ -34,6 +34,12 @@
 - [ThrowsErrorWhenWrongClassroomTypeIdIsGiven()](../Entities/ELesson/CreateLessonCommand.unit.cs) - **unit** 			
   Check if returns an error when incorrect classroom type id is provided
 
+- [ThrowsErrorWhenScheduleIdsFromLessonTypeAndSubgroupDontMatch()](../Entities/ELesson/CreateLessonCommand.unit.cs) - **unit** 			
+  Check if returns an error when lesson type and subgroup are from different schedules
+
+- [ThrowsErrorWhenScheduleIdsFromClassroomTypeAndLessonDontMatch()](../Entities/ELesson/CreateLessonCommand.unit.cs) - **unit** 			
+  Check if returns an error when classroom type and lesson are from different schedules
+
 
 ## `GET` `api/Lesson`
 
@@ -88,7 +94,7 @@
 - [UpdateLessonUpdatesClassroomsClassroomTypes()](../Entities/EClassroom/ClassroomController.test.cs) - **integrity**  
   Check if updates lesson classroom types when provided with correct data
 
-- [updateLessonThrowsNotFoundErrorWhenWrongIdIsGiven()](../Entities/ELesson/LessonController.test.cs) - **integrity**  
+- [UpdateLessonThrowsNotFoundErrorWhenWrongIdIsGiven()](../Entities/ELesson/LessonController.test.cs) - **integrity**  
   Check if returns an error when day off doesn't exists
 
 - [UpdateLessonThrowsNotFoundErrorWhenWrongUserAttemptsUpdate()](../Entities/ELesson/LessonController.test.cs) - **integrity**  
@@ -106,6 +112,17 @@
 - [ThrowsErrorWhenWrongClassroomTypeIdIsGiven()](../Entities/ELesson/UpdateLessonCommand.unit.cs) - **unit** 			
   Check if returns an error when incorrect classroom type id is provided
 
+- [ThrowsErrorWhenWrongSubgroupIdIsGiven()](../Entities/ELesson/UpdateLessonCommand.unit.cs) - **unit** 			
+  Check if returns an error when incorrect subgroup  id is provided
+
+- [ThrowsErrorWhenWrongLessonTypeIdIsGiven()](../Entities/ELesson/UpdateLessonCommand.unit.cs) - **unit** 			
+  Check if returns an error when incorrect lesson type id is provided
+
+- [ThrowsErrorWhenScheduleIdsFromLessonTypeAndSubgroupDontMatch()](../Entities/ELesson/UpdateLessonCommand.unit.cs) - **unit** 			
+  Check if returns an error when lesson type and subgroup are from different schedules
+
+- [ThrowsErrorWhenScheduleIdsFromClassroomTypeAndLessonDontMatch()](../Entities/ELesson/UpdateLessonCommand.unit.cs) - **unit** 			
+  Check if returns an error when classroom type and lesson are from different schedules
 
 
 

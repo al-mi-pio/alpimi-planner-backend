@@ -64,79 +64,42 @@ namespace AlpimiTest.Entities.ELessonPeriod.Commands
         public async Task ThrowsErrorWhenLessonPeriodsOverlap()
         {
             var dto = MockData.GetCreateLessonPeriodDTODetails(new Guid());
-            dto.Finish = new TimeOnly(10, 00, 00);
             var scheduleSettings = MockData.GetScheduleSettingsDetails();
 
             _dbService
                 .Setup(s => s.GetAll<LessonPeriod>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(new List<LessonPeriod> { MockData.GetLessonPeriodDetails() });
-            _dbService
-                .Setup(s => s.Get<ScheduleSettings>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(scheduleSettings);
-
-            var createLessonPeriodCommand = new CreateLessonPeriodCommand(
-                new Guid(),
-                dto,
-                new Guid(),
-                "User"
-            );
-
-            var createLessonPeriodHandler = new CreateLessonPeriodHandler(
-                _dbService.Object,
-                _str.Object
-            );
-
-            var result = await Assert.ThrowsAsync<ApiErrorException>(
-                async () =>
-                    await createLessonPeriodHandler.Handle(
-                        createLessonPeriodCommand,
-                        new CancellationToken()
-                    )
-            );
-
-            Assert.Equal("Start time and end time cannot overlap", result.errors.First().message);
-        }
-
-        [Fact]
-        public async Task ThrowsErrorWhenTimeStartIsAfterTimeEnd()
-        {
-            var dto = MockData.GetCreateLessonPeriodDTODetails(new Guid());
-            dto.Start = new TimeOnly(23, 00, 00);
-
-            var scheduleSettings = MockData.GetScheduleSettingsDetails();
-            _dbService
-                .Setup(s => s.Get<ScheduleSettings>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(scheduleSettings);
-
-            var createLessonPeriodCommand = new CreateLessonPeriodCommand(
-                new Guid(),
-                dto,
-                new Guid(),
-                "User"
-            );
-
-            var createLessonPeriodHandler = new CreateLessonPeriodHandler(
-                _dbService.Object,
-                _str.Object
-            );
-
-            var result = await Assert.ThrowsAsync<ApiErrorException>(
-                async () =>
-                    await createLessonPeriodHandler.Handle(
-                        createLessonPeriodCommand,
-                        new CancellationToken()
-                    )
-            );
-
-            Assert.Equal(
-                JsonConvert.SerializeObject(
-                    new ErrorObject[]
+                .ReturnsAsync(
+                    new List<LessonPeriod>
                     {
-                        new ErrorObject("The end time cannot happen before the start time")
+                        MockData.GetLessonPeriodDetails(),
+                        MockData.GetLessonPeriodDetails()
                     }
-                ),
-                JsonConvert.SerializeObject(result.errors)
+                );
+            _dbService
+                .Setup(s => s.Get<ScheduleSettings>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(scheduleSettings);
+
+            var createLessonPeriodCommand = new CreateLessonPeriodCommand(
+                new Guid(),
+                dto,
+                new Guid(),
+                "User"
             );
+
+            var createLessonPeriodHandler = new CreateLessonPeriodHandler(
+                _dbService.Object,
+                _str.Object
+            );
+
+            var result = await Assert.ThrowsAsync<ApiErrorException>(
+                async () =>
+                    await createLessonPeriodHandler.Handle(
+                        createLessonPeriodCommand,
+                        new CancellationToken()
+                    )
+            );
+
+            Assert.Equal("LessonPeriods cannot overlap", result.errors.First().message);
         }
     }
 }

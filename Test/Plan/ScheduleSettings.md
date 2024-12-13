@@ -24,6 +24,18 @@
 
 - [ThrowsErrorDaysOffAreOutsideOfDateRange()](../Entities/EScheduleSettings/Commands/UpdateEScheduleSettingsCommand.unit.cs) - **unit**  
   Check if returns an error when a day off is outside of new range
+
+- [ThrowsErrorWhenSchoolHourIsLessThan1()](../Entities/EScheduleSettings/Commands/UpdateScheduleCommand.unit.cs) - **unit**  
+  Check if returns an error when school hour is less than one
+
+- [ThrowsErrorWhenSchoolDaysLengthIsOtherThan7()](../Entities/EScheduleSettings/Commands/UpdateScheduleSettingsCommand.unit.cs) - **unit**  
+  Check if returns an error when school days length is other than seven
+
+- [ThrowsErrorWhenSchoolDaysContainsSomethingOtherThan1Or0()](../Entities/EScheduleSettings/Commands/UpdateScheduleSettingsCommand.unit.cs) - **unit**  
+  Check if returns an error when school days contains symbols other than 1 or 0
+
+- [ThrowsErrorWhenLessonPeriodsOverlapAfterUpdatingSchoolHour()](../Entities/EScheduleSettings/Commands/UpdateScheduleSettingsCommand.unit.cs) - **unit**  
+  Check if returns an error lesson periods start to overlap after updating school hour
   
 ## `GET` `api/ScheduleSettings/bySchedule/{scheduleId}`
 

@@ -45,5 +45,17 @@ namespace AlpimiAPI.Database
         {
             optionsBuilder.UseSqlServer(Configuration.GetConnectionString());
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder
+                .Entity<Lesson>()
+                .HasOne(l => l.Subgroup)
+                .WithMany()
+                .HasForeignKey(l => l.SubgroupId)
+                .OnDelete(DeleteBehavior.NoAction);
+        }
     }
 }

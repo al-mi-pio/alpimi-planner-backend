@@ -19,6 +19,15 @@
 - [ThrowsErrorWhenDateStartIsAfterDateEnd()](../Entities/ESchedule/Commands/CreateScheduleCommand.unit.cs) - **unit**  
   Check if returns an error when start date is after end date
 
+- [ThrowsErrorWhenSchoolHourIsLessThan1()](../Entities/ESchedule/Commands/CreateScheduleCommand.unit.cs) - **unit**  
+  Check if returns an error when school hour is less than one
+
+- [ThrowsErrorWhenSchoolDaysLengthIsOtherThan7()](../Entities/ESchedule/Commands/CreateScheduleCommand.unit.cs) - **unit**  
+  Check if returns an error when school days length is other than seven
+
+- [ThrowsErrorWhenSchoolDaysContainsSomethingOtherThan1Or0()](../Entities/ESchedule/Commands/CreateScheduleCommand.unit.cs) - **unit**  
+  Check if returns an error when school days contains symbols other than 1 or 0
+
 ## `GET` `api/Schedule`
 
 - [GetAllScheduleReturnsSchedules()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  

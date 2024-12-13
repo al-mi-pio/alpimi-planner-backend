@@ -27,6 +27,10 @@
 
 - [ThrowsErrorWhenDuplicatedSubgroupIdsAreGiven()](../Entities/EStudent/CreateStudentCommand.unit.cs) - **unit**
   Check if returns an error when duplicated subgroup ids are provided
+
+- [ThrowsErrorWhenGroupIdsFromStudentAndSubgroupDontMatch()](../Entities/EStudent/CreateStudentCommand.unit.cs) - **unit**
+  Check if returns an error when student and subgroup are from different groups
+
 ## `GET` `api/Student`
 
 - [GetAllStudentsReturnsStudentsFromGroupIfGroupIdIsProvided()](../Entities/EStudent/StudentController.test.cs) - **integrity**  
@@ -92,11 +96,14 @@
 - [ThrowsErrorWhenAlbumNumberIsAlreadyTaken()](../Entities/EStudent/Commands/UpdateStudentCommand.unit.cs) - **unit**  
   Check if returns an error when a taken album number is provided
 
-- [ThrowsErrorWhenWrongSubgroupIdIsGiven()](../Entities/EStudent/CreateStudentCommand.unit.cs) - **unit**
+- [ThrowsErrorWhenWrongSubgroupIdIsGiven()](../Entities/EStudent/UpdateStudentCommand.unit.cs) - **unit**
   Check if returns an error when incorrect subgroup id is provided
 
-- [ThrowsErrorWhenDuplicatedSubgroupIdsAreGiven()](../Entities/EStudent/CreateStudentCommand.unit.cs) - **unit**
+- [ThrowsErrorWhenDuplicatedSubgroupIdsAreGiven()](../Entities/EStudent/UpdateStudentCommand.unit.cs) - **unit**
   Check if returns an error when duplicated subgroup ids are provided
+
+- [ThrowsErrorWhenGroupIdsFromStudentAndSubgroupDontMatch()](../Entities/EStudent/UpdateStudentCommand.unit.cs) - **unit**
+  Check if returns an error when student and subgroup are from different groups
 
 
 

@@ -36,9 +36,14 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
             CancellationToken cancellationToken
         )
         {
-            if (request.dto.Capacity < 1)
+            if (request.dto.Capacity != null)
             {
-                throw new ApiErrorException([new ErrorObject(_str["badParameter", "Capacity"])]);
+                if (request.dto.Capacity < 1)
+                {
+                    throw new ApiErrorException(
+                        [new ErrorObject(_str["badParameter", "Capacity"])]
+                    );
+                }
             }
 
             GetClassroomHandler getClassroomHandler = new GetClassroomHandler(_dbService);
@@ -116,6 +121,14 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
                         errors.Add(
                             new ErrorObject(
                                 _str["resourceNotFound", "ClassroomType", classroomTypeId]
+                            )
+                        );
+                    }
+                    else if (classroomType.Value.ScheduleId != originalClassroom.Value.ScheduleId)
+                    {
+                        errors.Add(
+                            new ErrorObject(
+                                _str["wrongSet", "ClassroomType", "Schedule", "Classroom"]
                             )
                         );
                     }

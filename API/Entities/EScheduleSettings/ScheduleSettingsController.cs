@@ -1,4 +1,5 @@
 ﻿using AlpimiAPI.Entities.ESchedule;
+using AlpimiAPI.Entities.ESchedule.DTO;
 using AlpimiAPI.Entities.EScheduleSettings.Commands;
 using AlpimiAPI.Entities.EScheduleSettings.DTO;
 using AlpimiAPI.Entities.EScheduleSettings.Queries;
@@ -42,7 +43,7 @@ namespace AlpimiAPI.Entities.EScheduleSettings
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
         [ProducesResponseType(typeof(ApiErrorResponse), 404)]
-        public async Task<ActionResult<ApiGetResponse<ScheduleSettings>>> Patch(
+        public async Task<ActionResult<ApiGetResponse<ScheduleSettingsDTO>>> Patch(
             [FromBody] UpdateScheduleSettingsDTO request,
             [FromRoute] Guid scheduleId,
             [FromHeader] string Authorization
@@ -64,7 +65,7 @@ namespace AlpimiAPI.Entities.EScheduleSettings
                         )
                     );
                 }
-                var response = new ApiGetResponse<ScheduleSettings>(result);
+                var response = new ApiGetResponse<ScheduleSettingsDTO>(DataTrimmer.Trim(result));
                 return Ok(response);
             }
             catch (ApiErrorException ex)
@@ -90,7 +91,7 @@ namespace AlpimiAPI.Entities.EScheduleSettings
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
         [ProducesResponseType(typeof(ApiErrorResponse), 404)]
-        public async Task<ActionResult<ApiGetResponse<Schedule>>> GetOneByScheduleId(
+        public async Task<ActionResult<ApiGetResponse<ScheduleDTO>>> GetOneByScheduleId(
             [FromRoute] Guid scheduleId,
             [FromHeader] string Authorization
         )
@@ -115,7 +116,7 @@ namespace AlpimiAPI.Entities.EScheduleSettings
                         )
                     );
                 }
-                var response = new ApiGetResponse<ScheduleSettings>(result);
+                var response = new ApiGetResponse<ScheduleSettingsDTO>(DataTrimmer.Trim(result));
                 return Ok(response);
             }
             catch (Exception ex)
@@ -137,7 +138,7 @@ namespace AlpimiAPI.Entities.EScheduleSettings
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
         [ProducesResponseType(typeof(ApiErrorResponse), 404)]
-        public async Task<ActionResult<ApiGetResponse<Schedule>>> Get(
+        public async Task<ActionResult<ApiGetResponse<ScheduleDTO>>> Get(
             [FromRoute] Guid id,
             [FromHeader] string Authorization
         )
@@ -158,7 +159,7 @@ namespace AlpimiAPI.Entities.EScheduleSettings
                         )
                     );
                 }
-                var response = new ApiGetResponse<ScheduleSettings>(result);
+                var response = new ApiGetResponse<ScheduleSettingsDTO>(DataTrimmer.Trim(result));
                 return Ok(response);
             }
             catch (Exception ex)

@@ -8,9 +8,6 @@ namespace AlpimiAPI.Entities.ELessonPeriod.DTO
         public required TimeOnly Start { get; set; }
 
         [Required]
-        public required TimeOnly Finish { get; set; }
-
-        [Required]
         public required Guid ScheduleId { get; set; }
     }
 }

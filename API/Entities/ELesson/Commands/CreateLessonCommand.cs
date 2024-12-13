@@ -80,6 +80,13 @@ namespace AlpimiAPI.Entities.ELesson.Commands
                 );
             }
 
+            if (subgroup.Value.Group.ScheduleId != lessonType.Value.ScheduleId)
+            {
+                throw new ApiErrorException(
+                    [new ErrorObject(_str["wrongSet", "Subgroup", "Schedule", "LessonType"])]
+                );
+            }
+
             var lessonName = await _dbService.GetAll<Lesson>(
                 @"
                     SELECT 
@@ -140,6 +147,12 @@ namespace AlpimiAPI.Entities.ELesson.Commands
                             )
                         );
                     }
+                    else if (classroomType.Value.ScheduleId != lessonType.Value.ScheduleId)
+                    {
+                        errors.Add(
+                            new ErrorObject(_str["wrongSet", "ClassroomType", "Schedule", "Lesson"])
+                        );
+                    }
                 }
                 if (errors.Count != 0)
                 {
@@ -150,12 +163,13 @@ namespace AlpimiAPI.Entities.ELesson.Commands
             var insertedId = await _dbService.Post<Guid>(
                 $@"
                     INSERT INTO [Lesson] 
-                    ([Id],[Name],[AmountOfHours],[LessonTypeId],[SubgroupId])
+                    ([Id],[Name],[CurrentHours],[AmountOfHours],[LessonTypeId],[SubgroupId])
                     OUTPUT 
                     INSERTED.Id                    
                     VALUES (
                     '{request.Id}',   
                     @Name,
+                    0,
                     @AmountOfHours,
                     @LessonTypeId,
                     @SubgroupId);",

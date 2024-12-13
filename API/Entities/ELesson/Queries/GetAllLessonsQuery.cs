@@ -1,6 +1,8 @@
 ﻿using AlpimiAPI.Database;
 using AlpimiAPI.Entities.ELessonType;
 using AlpimiAPI.Entities.ELessonType.Queries;
+using AlpimiAPI.Entities.ESubgroup;
+using AlpimiAPI.Entities.ESubgroup.Queries;
 using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
 using MediatR;
@@ -146,6 +148,18 @@ namespace AlpimiAPI.Entities.ELesson.Queries
                         cancellationToken
                     );
                     lesson.LessonType = lessonType.Value!;
+
+                    GetSubgroupHandler getSubgroupHandler = new GetSubgroupHandler(_dbService);
+                    GetSubgroupQuery getSubgroupQuery = new GetSubgroupQuery(
+                        lesson.SubgroupId,
+                        new Guid(),
+                        "Admin"
+                    );
+                    ActionResult<Subgroup?> subgroup = await getSubgroupHandler.Handle(
+                        getSubgroupQuery,
+                        cancellationToken
+                    );
+                    lesson.Subgroup = subgroup.Value!;
                 }
             }
             return (lessons, count);

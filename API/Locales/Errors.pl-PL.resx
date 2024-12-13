@@ -166,7 +166,7 @@
     <value>Czas zakończenia nie może być przed czasem rozpoczęcia</value>
   </data>
   <data name="timeOverlap" xml:space="preserve">
-    <value>Czas rozpoczęcia oraz czas zakończenia nie mogą nakładać się na siebie</value>
+    <value>{0} nie mogą nakładać się na siebie</value>
   </data>
   <data name="outOfRange" xml:space="preserve">
     <value>Isnieją dni wolne poza podanym zakresem. Proszę je najpierw zmienić</value>
@@ -179,5 +179,8 @@
   </data>
   <data name="resourceNotFound" xml:space="preserve">
     <value>{0} z id {1} nie został znaleziony</value>
+  </data>
+  <data name="wrongSet" xml:space="preserve">
+    <value>{0} musi należeć do tego samego {1} co {2}</value>
   </data>
 </root>

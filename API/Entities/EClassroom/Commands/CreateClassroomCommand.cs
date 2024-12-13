@@ -2,6 +2,7 @@
 using AlpimiAPI.Entities.EClassroom.DTO;
 using AlpimiAPI.Entities.EClassroomType;
 using AlpimiAPI.Entities.EClassroomType.Queries;
+using AlpimiAPI.Entities.ELessonType;
 using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Entities.ESchedule.Queries;
 using AlpimiAPI.Locales;
@@ -115,6 +116,14 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
                         errors.Add(
                             new ErrorObject(
                                 _str["resourceNotFound", "ClassroomType", classroomTypeId]
+                            )
+                        );
+                    }
+                    else if (classroomType.Value.ScheduleId != request.dto.ScheduleId)
+                    {
+                        errors.Add(
+                            new ErrorObject(
+                                _str["wrongSet", "ClassroomType", "Schedule", "Classroom"]
                             )
                         );
                     }

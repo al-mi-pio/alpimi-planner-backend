@@ -14,13 +14,11 @@
   Check if LessonPeriod is created when provided with correct data
 
 - [ThrowsErrorWhenLessonPeriodsOverlap()](../Entities/ELessonPeriod/CreateLessonPeriodCommand.unit.cs) - **unit**  
-  Check if returns an error when a out of range date is provided
+  Check if returns an error when lesson periods overlap
 
 - [ThrowsErrorWhenWrongScheduleIdIsGiven()](../Entities/ELessonPeriod/CreateLessonPeriodCommand.unit.cs) - **unit** 
   Check if returns an error when incorrect id is provided
 
-- [ThrowsErrorWhenTimeStartIsAfterTimeEnd()](../Entities/ELessonPeriod/CreateLessonPeriodCommand.unit.cs) - **unit** 
-  Check if returns an error when start date is after end date
 
 ## `GET` `api/LessonPeriod`
 
@@ -64,10 +62,8 @@
 - [UpdateLessonPeriodThrowsNotFoundErrorWhenWrongUserAttemptsUpdate()](../Entities/ELessonPeriod/LessonPeriodController.test.cs) - **integrity**  
   Check if returns an error when day off is inaccessible for user
 
-- [ ThrowsErrorWhenLessonPeriodsOverlap()](../Entities/ELessonPeriod/Commands/UpdateLessonPeriodCommand.unit.cs) - **unit**  
-  Check if returns an error when out of range date is provided
+- [ThrowsErrorWhenLessonPeriodsOverlap()](../Entities/ELessonPeriod/Commands/UpdateLessonPeriodCommand.unit.cs) - **unit**  
+  Check if returns an error when lesson periods overlap
 
-- [ThrowsErrorWhenTimeStartIsAfterTimeEnd()](../Entities/ELessonPeriod/Commands/UpdateLessonPeriodCommand.unit.cs) - **unit** 
-  Check if returns an error when date start is after date end  
 
 

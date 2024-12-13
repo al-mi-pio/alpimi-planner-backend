@@ -1,6 +1,7 @@
 ﻿using AlpimiAPI.Database;
 using AlpimiAPI.Entities.EClassroom;
 using AlpimiAPI.Entities.EClassroom.Commands;
+using AlpimiAPI.Entities.EClassroomType;
 using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
@@ -180,6 +181,44 @@ namespace AlpimiTest.Entities.EClassroom.Commands
 
             Assert.Equal(
                 "ClassroomType with id 00000000-0000-0000-0000-000000000000 was not found",
+                result.errors.First().message
+            );
+        }
+
+        [Fact]
+        public async Task ThrowsErrorWhenScheduleIdsFromClassroomAndClassroomTypeDontMatch()
+        {
+            var dto = MockData.GetCreateClassroomDTODetails(new Guid());
+            dto.ClassroomTypeIds = [new Guid()];
+            var classroomType = MockData.GetClassroomTypeDetails();
+            classroomType.ScheduleId = Guid.NewGuid();
+
+            _dbService
+                .Setup(s => s.Get<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetScheduleDetails());
+            _dbService
+                .Setup(s => s.Get<ClassroomType>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(classroomType);
+
+            var createClassroomCommand = new CreateClassroomCommand(
+                new Guid(),
+                dto,
+                new Guid(),
+                "User"
+            );
+
+            var createClassroomHandler = new CreateClassroomHandler(_dbService.Object, _str.Object);
+
+            var result = await Assert.ThrowsAsync<ApiErrorException>(
+                async () =>
+                    await createClassroomHandler.Handle(
+                        createClassroomCommand,
+                        new CancellationToken()
+                    )
+            );
+
+            Assert.Equal(
+                "ClassroomType must be in the same Schedule as Classroom",
                 result.errors.First().message
             );
         }

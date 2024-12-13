@@ -31,6 +31,9 @@
 - [ThrowsErrorWhenWrongClassroomTypeIdIsGiven()](../Entities/EClassroom/CreateClassroomCommand.unit.cs) - **unit** 			
   Check if returns an error when incorrect classroom type id is provided
 
+- [ThrowsErrorWhenScheduleIdsFromClassroomAndClassroomTypeDontMatch()](../Entities/EClassroom/CreateClassroomCommand.unit.cs) - **unit**
+  Check if returns an error when classroom and classroom type are from different groups
+
 ## `GET` `api/Classroom`
 
 - [GetAllClassroomsReturnsClassroomsFromScheduleIfShceduleIdIsProvided()](../Entities/EClassroom/ClassroomController.test.cs) - **integrity**  
@@ -102,4 +105,6 @@
 - [ThrowsErrorWhenWrongClassroomTypeIdIsGiven()](../Entities/EClassroom/UpdateClassroomCommand.unit.cs) - **unit** 			
   Check if returns an error when incorrect classroom type id is provided
 
+- [ThrowsErrorWhenScheduleIdsFromClassroomAndClassroomTypeDontMatch()](../Entities/EClassroom/UpdateClassroomCommand.unit.cs) - **unit**
+  Check if returns an error when classroom and classroom type are from different groups
 

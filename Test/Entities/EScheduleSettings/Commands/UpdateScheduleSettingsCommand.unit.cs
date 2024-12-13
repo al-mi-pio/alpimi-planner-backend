@@ -1,5 +1,7 @@
 ﻿using AlpimiAPI.Database;
 using AlpimiAPI.Entities.EDayOff;
+using AlpimiAPI.Entities.ELessonPeriod;
+using AlpimiAPI.Entities.ESchedule.Commands;
 using AlpimiAPI.Entities.EScheduleSettings;
 using AlpimiAPI.Entities.EScheduleSettings.Commands;
 using AlpimiAPI.Locales;
@@ -110,6 +112,152 @@ namespace AlpimiTest.Entities.EScheduleSettings.Commands
                             "There are days off outside of provided range. Please change them first"
                         )
                     }
+                ),
+                JsonConvert.SerializeObject(result.errors)
+            );
+        }
+
+        [Fact]
+        public async Task ThrowsErrorWhenSchoolHourIsLessThan1()
+        {
+            var dto = MockData.GetUpdateScheduleSettingsDTO();
+            dto.SchoolHour = 0;
+
+            var updateScheduleSettingsCommand = new UpdateScheduleSettingsCommand(
+                new Guid(),
+                dto,
+                new Guid(),
+                "Admin"
+            );
+
+            var updateScheduleSettingsHandler = new UpdateScheduleSettingsHandler(
+                _dbService.Object,
+                _str.Object
+            );
+
+            var result = await Assert.ThrowsAsync<ApiErrorException>(
+                async () =>
+                    await updateScheduleSettingsHandler.Handle(
+                        updateScheduleSettingsCommand,
+                        new CancellationToken()
+                    )
+            );
+
+            Assert.Equal(
+                JsonConvert.SerializeObject(
+                    new ErrorObject[] { new ErrorObject("SchoolHour parameter is invalid") }
+                ),
+                JsonConvert.SerializeObject(result.errors)
+            );
+        }
+
+        [Fact]
+        public async Task ThrowsErrorWhenSchoolDaysLengthIsOtherThan7()
+        {
+            var dto = MockData.GetUpdateScheduleSettingsDTO();
+            dto.SchoolDays = "11001";
+
+            var updateScheduleSettingsCommand = new UpdateScheduleSettingsCommand(
+                new Guid(),
+                dto,
+                new Guid(),
+                "Admin"
+            );
+
+            var updateScheduleSettingsHandler = new UpdateScheduleSettingsHandler(
+                _dbService.Object,
+                _str.Object
+            );
+
+            var result = await Assert.ThrowsAsync<ApiErrorException>(
+                async () =>
+                    await updateScheduleSettingsHandler.Handle(
+                        updateScheduleSettingsCommand,
+                        new CancellationToken()
+                    )
+            );
+
+            Assert.Equal(
+                JsonConvert.SerializeObject(
+                    new ErrorObject[] { new ErrorObject("SchoolDays parameter is invalid") }
+                ),
+                JsonConvert.SerializeObject(result.errors)
+            );
+        }
+
+        [Fact]
+        public async Task ThrowsErrorWhenSchoolDaysContainsSomethingOtherThan1Or0()
+        {
+            var dto = MockData.GetUpdateScheduleSettingsDTO();
+            dto.SchoolDays = "1100115";
+
+            var updateScheduleSettingsCommand = new UpdateScheduleSettingsCommand(
+                new Guid(),
+                dto,
+                new Guid(),
+                "Admin"
+            );
+
+            var updateScheduleSettingsHandler = new UpdateScheduleSettingsHandler(
+                _dbService.Object,
+                _str.Object
+            );
+
+            var result = await Assert.ThrowsAsync<ApiErrorException>(
+                async () =>
+                    await updateScheduleSettingsHandler.Handle(
+                        updateScheduleSettingsCommand,
+                        new CancellationToken()
+                    )
+            );
+
+            Assert.Equal(
+                JsonConvert.SerializeObject(
+                    new ErrorObject[] { new ErrorObject("SchoolDays parameter is invalid") }
+                ),
+                JsonConvert.SerializeObject(result.errors)
+            );
+        }
+
+        [Fact]
+        public async Task ThrowsErrorWhenLessonPeriodsOverlapAfterUpdatingSchoolHour()
+        {
+            var updateScheduleSettingsCommand = new UpdateScheduleSettingsCommand(
+                new Guid(),
+                MockData.GetUpdateScheduleSettingsDTO(),
+                new Guid(),
+                "Admin"
+            );
+
+            _dbService
+                .Setup(s => s.Get<ScheduleSettings>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetScheduleSettingsDetails());
+            _dbService
+                .Setup(s => s.GetAll<LessonPeriod>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(
+                    new List<LessonPeriod>
+                    {
+                        MockData.GetLessonPeriodDetails(),
+                        MockData.GetLessonPeriodDetails()
+                    }
+                );
+
+            var updateScheduleSettingsHandler = new UpdateScheduleSettingsHandler(
+                _dbService.Object,
+                _str.Object
+            );
+
+            var result = await Assert.ThrowsAsync<ApiErrorException>(
+                async () =>
+                    await updateScheduleSettingsHandler.Handle(
+                        updateScheduleSettingsCommand,
+                        new CancellationToken()
+                    )
+            );
+
+            Assert.Equal(
+                JsonConvert.SerializeObject(
+                    new ErrorObject[] { new ErrorObject("LessonPeriods are overlapping") }
                 ),
                 JsonConvert.SerializeObject(result.errors)
             );

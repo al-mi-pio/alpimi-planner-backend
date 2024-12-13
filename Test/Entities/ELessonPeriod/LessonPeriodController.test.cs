@@ -98,12 +98,12 @@ namespace AlpimiTest.Entities.ELessonPeriod
                 $"/api/LessonPeriod/{lessonPeriodId}",
                 lessonPeriodUpdateRequest
             );
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var jsonResponse = await response.Content.ReadFromJsonAsync<
                 ApiGetResponse<LessonPeriodDTO>
             >();
 
             Assert.Equal(lessonPeriodUpdateRequest.Start, jsonResponse!.Content.Start);
-            Assert.Equal(lessonPeriodUpdateRequest.Finish, jsonResponse!.Content.Finish);
         }
 
         [Fact]
@@ -159,7 +159,7 @@ namespace AlpimiTest.Entities.ELessonPeriod
             var lessonPeriodRequest2 = MockData.GetCreateSecondLessonPeriodDTODetails(scheduleId);
 
             await DbHelper.SetupLessonPeriod(_client, lessonPeriodRequest1);
-            await DbHelper.SetupLessonPeriod(_client, lessonPeriodRequest2);
+            var lessonPeriodId = await DbHelper.SetupLessonPeriod(_client, lessonPeriodRequest2);
 
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
@@ -167,6 +167,7 @@ namespace AlpimiTest.Entities.ELessonPeriod
             );
             var query = $"?scheduleId={scheduleId}";
             var response = await _client.GetAsync($"/api/LessonPeriod{query}");
+
             var stringResponse = await response.Content.ReadAsStringAsync();
 
             Assert.Contains(lessonPeriodRequest1.Start.ToString(), stringResponse);

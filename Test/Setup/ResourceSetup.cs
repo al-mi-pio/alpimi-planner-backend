@@ -15,7 +15,6 @@ namespace AlpimiTest.TestSetup
             { "invalidLoginOrPassword", "Invalid login or password" },
             { "invalidPassword", "Invalid password" },
             { "scheduleDate", "The end date cannot happen before the start date" },
-            { "timeOverlap", "Start time and end time cannot overlap" },
             { "scheduleTime", "The end time cannot happen before the start time" },
             {
                 "outOfRange",
@@ -60,6 +59,13 @@ namespace AlpimiTest.TestSetup
                 )
             },
             {
+                "timeOverlap",
+                args => new LocalizedString(
+                    "timeOverlap",
+                    string.Format("{0}s are overlapping", args[0])
+                )
+            },
+            {
                 "alreadyExists",
                 args => new LocalizedString(
                     "alreadyExists",
@@ -88,6 +94,13 @@ namespace AlpimiTest.TestSetup
                 args => new LocalizedString(
                     "duplicateData",
                     string.Format("Cannot add multiple {0} with the value {1}", args[0], args[1])
+                )
+            },
+            {
+                "wrongSet",
+                args => new LocalizedString(
+                    "wrongSet",
+                    string.Format("{0} must be in the same {1} as {2}", args[0], args[1], args[2])
                 )
             }
         };

@@ -163,12 +163,13 @@ namespace AlpimiAPI.Entities.ELesson.Commands
             var insertedId = await _dbService.Post<Guid>(
                 $@"
                     INSERT INTO [Lesson] 
-                    ([Id],[Name],[AmountOfHours],[LessonTypeId],[SubgroupId])
+                    ([Id],[Name],[CurrentHours],[AmountOfHours],[LessonTypeId],[SubgroupId])
                     OUTPUT 
                     INSERTED.Id                    
                     VALUES (
                     '{request.Id}',   
                     @Name,
+                    0,
                     @AmountOfHours,
                     @LessonTypeId,
                     @SubgroupId);",

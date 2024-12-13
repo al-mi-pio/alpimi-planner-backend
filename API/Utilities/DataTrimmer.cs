@@ -122,7 +122,7 @@ namespace AlpimiAPI.Utilities
                 Name = data.Name,
                 AmountOfHours = data.AmountOfHours,
                 LessonType = Trim(data.LessonType),
-                SubgroupId = data.SubgroupId //tu też trzeba to zmienić
+                Subgroup = Trim(data.Subgroup)
             };
         }
 

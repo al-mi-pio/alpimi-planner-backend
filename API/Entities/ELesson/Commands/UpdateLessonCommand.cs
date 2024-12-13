@@ -251,7 +251,8 @@ namespace AlpimiAPI.Entities.ELesson.Commands
                 request.dto
             );
 
-            lesson.LessonType = lessonType.Value!;
+            lesson!.LessonType = lessonType.Value!;
+            lesson.Subgroup = subgroup.Value;
 
             return lesson;
         }

@@ -123,7 +123,7 @@ namespace AlpimiAPI.Entities.EStudent.Commands
                     else if (subgroup.Value.GroupId != group.Value.Id)
                     {
                         errors.Add(
-                            new ErrorObject(_str["resourceNotFound", "Subgroup", subgroupId])
+                            new ErrorObject(_str["wrongSet", "Subgroup", "Group", "Student"])
                         );
                     }
                 }

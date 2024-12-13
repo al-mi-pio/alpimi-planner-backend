@@ -119,6 +119,14 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
                             )
                         );
                     }
+                    else if (classroomType.Value.ScheduleId != originalClassroom.Value.ScheduleId)
+                    {
+                        errors.Add(
+                            new ErrorObject(
+                                _str["wrongSet", "ClassroomType", "Schedule", "Classroom"]
+                            )
+                        );
+                    }
                 }
                 if (errors.Count != 0)
                 {

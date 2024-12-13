@@ -180,4 +180,7 @@
   <data name="resourceNotFound" xml:space="preserve">
     <value>{0} z id {1} nie został znaleziony</value>
   </data>
+  <data name="wrongSchedule" xml:space="preserve">
+    <value>{0} musi należeć do tego samego {1} co {2}</value>
+  </data>
 </root>

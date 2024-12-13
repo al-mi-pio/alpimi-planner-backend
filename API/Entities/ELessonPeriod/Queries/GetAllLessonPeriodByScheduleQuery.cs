@@ -53,11 +53,7 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Queries
             {
                 errors.Add(new ErrorObject(_str["badParameter", "SortOrder"]));
             }
-            if (
-                request.Pagination.SortBy != "Id"
-                && request.Pagination.SortBy != "Start"
-                && request.Pagination.SortBy != "Finish"
-            )
+            if (request.Pagination.SortBy != "Id" && request.Pagination.SortBy != "Start")
             {
                 errors.Add(new ErrorObject(_str["badParameter", "SortBy"]));
             }
@@ -84,7 +80,7 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Queries
                     lessonPeriods = await _dbService.GetAll<LessonPeriod>(
                         $@"
                             SELECT
-                            lp.[Id], [Start],[Finish],[ScheduleSettingsId] 
+                            lp.[Id], [Start], [ScheduleSettingsId] 
                             FROM [LessonPeriod] lp
                             INNER JOIN [ScheduleSettings] ss ON ss.[Id] = lp.[ScheduleSettingsId]
                             WHERE ss.[ScheduleId] = @ScheduleId 
@@ -112,7 +108,7 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Queries
                     lessonPeriods = await _dbService.GetAll<LessonPeriod>(
                         $@"
                             SELECT 
-                            lp.[Id], [Start],[Finish],[ScheduleSettingsId] 
+                            lp.[Id], [Start], [ScheduleSettingsId] 
                             FROM [LessonPeriod] lp
                             INNER JOIN [ScheduleSettings] ss ON ss.[Id] = lp.[ScheduleSettingsId]
                             INNER JOIN [Schedule] s ON s.[Id]=ss.[ScheduleId]

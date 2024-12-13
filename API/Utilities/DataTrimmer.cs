@@ -43,12 +43,7 @@ namespace AlpimiAPI.Utilities
 
         public static LessonPeriodDTO Trim(LessonPeriod data)
         {
-            return new LessonPeriodDTO
-            {
-                Id = data.Id,
-                Start = data.Start,
-                Finish = data.Finish
-            };
+            return new LessonPeriodDTO { Id = data.Id, Start = data.Start, };
         }
 
         public static ClassroomTypeDTO Trim(ClassroomType data)

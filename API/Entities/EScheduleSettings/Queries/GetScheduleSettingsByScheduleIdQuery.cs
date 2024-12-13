@@ -34,7 +34,7 @@ namespace AlpimiAPI.Entities.EScheduleSettings.Queries
                     scheduleSettings = await _dbService.Get<ScheduleSettings?>(
                         @"
                             SELECT
-                            [Id], [SchoolHour], [SchoolYearStart], [SchoolYearEnd], [ScheduleId] 
+                            [Id], [SchoolHour], [SchoolYearStart], [SchoolYearEnd], [ScheduleId], [SchoolDays]
                             FROM [ScheduleSettings] 
                             WHERE [ScheduleId] = @ScheduleId;",
                         request
@@ -44,7 +44,7 @@ namespace AlpimiAPI.Entities.EScheduleSettings.Queries
                     scheduleSettings = await _dbService.Get<ScheduleSettings?>(
                         @"
                             SELECT 
-                            ss.[Id], [SchoolHour], [SchoolYearStart], [SchoolYearEnd], [ScheduleId] 
+                            ss.[Id], [SchoolHour], [SchoolYearStart], [SchoolYearEnd], [ScheduleId], [SchoolDays]
                             FROM [ScheduleSettings] ss
                             JOIN [Schedule] s ON s.[Id]=ss.[ScheduleId]
                             WHERE [ScheduleId] = @ScheduleId AND s.[UserId] = @FilteredId;",

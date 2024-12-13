@@ -1,5 +1,8 @@
-﻿using AlpimiAPI.Database;
+﻿using System.Text.RegularExpressions;
+using AlpimiAPI.Database;
 using AlpimiAPI.Entities.EDayOff;
+using AlpimiAPI.Entities.ELessonPeriod;
+using AlpimiAPI.Entities.ELessonPeriod.Queries;
 using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Entities.ESchedule.Queries;
 using AlpimiAPI.Entities.EScheduleSettings.DTO;
@@ -36,14 +39,28 @@ namespace AlpimiAPI.Entities.EScheduleSettings.Commands
             CancellationToken cancellationToken
         )
         {
+            List<ErrorObject> errors = new List<ErrorObject>();
             if (request.dto.SchoolHour != null)
             {
                 if (request.dto.SchoolHour < 1)
                 {
-                    throw new ApiErrorException(
-                        [new ErrorObject(_str["badParameter", "SchoolHour"])]
-                    );
+                    errors.Add(new ErrorObject(_str["badParameter", "SchoolHour"]));
                 }
+            }
+
+            if (request.dto.SchoolDays != null)
+            {
+                if (
+                    Regex.IsMatch(request.dto.SchoolDays, @"^[^01]*$")
+                    || request.dto.SchoolDays.Length != 7
+                )
+                {
+                    errors.Add(new ErrorObject(_str["badParameter", "SchoolDays"]));
+                }
+            }
+            if (errors.Count != 0)
+            {
+                throw new ApiErrorException(errors);
             }
 
             GetScheduleSettingsByScheduleIdHandler getScheduleSettingsByScheduleIdHandler =
@@ -70,7 +87,9 @@ namespace AlpimiAPI.Entities.EScheduleSettings.Commands
             request.dto.SchoolYearStart =
                 request.dto.SchoolYearStart ?? originalScheduleSettings.Value.SchoolYearStart;
             request.dto.SchoolYearEnd =
-                request.dto.SchoolYearEnd ?? originalScheduleSettings.Value?.SchoolYearEnd;
+                request.dto.SchoolYearEnd ?? originalScheduleSettings.Value.SchoolYearEnd;
+            request.dto.SchoolDays =
+                request.dto.SchoolDays ?? originalScheduleSettings.Value.SchoolDays;
 
             if (request.dto.SchoolYearStart > request.dto.SchoolYearEnd)
             {
@@ -93,16 +112,48 @@ namespace AlpimiAPI.Entities.EScheduleSettings.Commands
                 throw new ApiErrorException([new ErrorObject(_str["outOfRange"])]);
             }
 
+            GetAllLessonPeriodByScheduleHandler getAllLessonPeriodByScheduleHandler =
+                new GetAllLessonPeriodByScheduleHandler(_dbService, _str);
+            GetAllLessonPeriodByScheduleQuery getAllLessonPeriodByScheduleQuery =
+                new GetAllLessonPeriodByScheduleQuery(
+                    originalScheduleSettings.Value.ScheduleId,
+                    request.FilteredId,
+                    request.Role,
+                    new PaginationParams(1440, 0, "Start", "ASC")
+                );
+            ActionResult<(IEnumerable<LessonPeriod>?, int)> allLessonsPeriods =
+                await getAllLessonPeriodByScheduleHandler.Handle(
+                    getAllLessonPeriodByScheduleQuery,
+                    cancellationToken
+                );
+
+            if (allLessonsPeriods.Value.Item1 != null)
+            {
+                for (int i = 0; i != allLessonsPeriods.Value.Item1.Count() - 1; i++)
+                {
+                    if (
+                        allLessonsPeriods
+                            .Value.Item1.ElementAt(i)
+                            .Start.AddMinutes(request.dto.SchoolHour.Value)
+                        > allLessonsPeriods.Value.Item1.ElementAt(i - 1).Start
+                    )
+                    {
+                        throw new ApiErrorException([new ErrorObject(_str["timeOverlap"])]);
+                    }
+                }
+            }
+
             var scheduleSettings = await _dbService.Update<ScheduleSettings?>(
                 $@"
                     UPDATE [ScheduleSettings] 
                     SET 
-                    [SchoolHour] = @SchoolHour, [SchoolYearStart] = @SchoolYearStart, [SchoolYearEnd] = @SchoolYearEnd
+                    [SchoolHour] = @SchoolHour, [SchoolYearStart] = @SchoolYearStart, [SchoolYearEnd] = @SchoolYearEnd, [SchoolDays] = @SchoolDays
                     OUTPUT 
                     INSERTED.[Id], 
                     INSERTED.[SchoolHour], 
                     INSERTED.[SchoolYearStart], 
                     INSERTED.[SchoolYearEnd], 
+                    INSERTED.[SchoolDays],
                     INSERTED.[ScheduleId]
                     WHERE [ScheduleId] = '{request.ScheduleId}';",
                 request.dto

@@ -14,6 +14,8 @@ using AlpimiAPI.Entities.ELessonType;
 using AlpimiAPI.Entities.ELessonType.DTO;
 using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Entities.ESchedule.DTO;
+using AlpimiAPI.Entities.EScheduleSettings;
+using AlpimiAPI.Entities.EScheduleSettings.DTO;
 using AlpimiAPI.Entities.EStudent;
 using AlpimiAPI.Entities.EStudent.DTO;
 using AlpimiAPI.Entities.ESubgroup;
@@ -121,6 +123,18 @@ namespace AlpimiAPI.Utilities
                 AmountOfHours = data.AmountOfHours,
                 LessonType = Trim(data.LessonType),
                 SubgroupId = data.SubgroupId //tu też trzeba to zmienić
+            };
+        }
+
+        public static ScheduleSettingsDTO Trim(ScheduleSettings data)
+        {
+            return new ScheduleSettingsDTO
+            {
+                Id = data.Id,
+                SchoolHour = data.SchoolHour,
+                SchoolYearStart = data.SchoolYearStart,
+                SchoolYearEnd = data.SchoolYearEnd,
+                SchoolDays = data.SchoolDays
             };
         }
     }

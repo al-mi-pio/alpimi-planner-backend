@@ -1,4 +1,5 @@
-﻿using AlpimiAPI.Database;
+﻿using System.Text.RegularExpressions;
+using AlpimiAPI.Database;
 using AlpimiAPI.Entities.ESchedule.DTO;
 using AlpimiAPI.Entities.ESchedule.Queries;
 using AlpimiAPI.Locales;
@@ -32,10 +33,25 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
             CancellationToken cancellationToken
         )
         {
+            List<ErrorObject> errors = new List<ErrorObject>();
             if (request.dto.SchoolHour < 1)
             {
-                throw new ApiErrorException([new ErrorObject(_str["badParameter", "SchoolHour"])]);
+                errors.Add(new ErrorObject(_str["badParameter", "SchoolHour"]));
             }
+
+            if (
+                Regex.IsMatch(request.dto.SchoolDays, @"^[^01]*$")
+                || request.dto.SchoolDays.Length != 7
+            )
+            {
+                errors.Add(new ErrorObject(_str["badParameter", "SchoolDays"]));
+            }
+
+            if (errors.Count != 0)
+            {
+                throw new ApiErrorException(errors);
+            }
+
             GetScheduleByNameHandler getScheduleByNameHandler = new GetScheduleByNameHandler(
                 _dbService
             );
@@ -75,7 +91,7 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
             await _dbService.Post<Guid>(
                 $@"
                     INSERT INTO [ScheduleSettings] 
-                    ([Id],[SchoolHour],[SchoolYearStart],[SchoolYearEnd],[ScheduleId])
+                    ([Id],[SchoolHour],[SchoolYearStart],[SchoolYearEnd],[ScheduleId],[SchoolDays])
                     OUTPUT 
                     INSERTED.Id
                     VALUES (
@@ -83,6 +99,7 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
                     @SchoolHour, 
                     @SchoolYearStart, 
                     @SchoolYearEnd,
+                    @SchoolDays
                     '{request.Id}');",
                 request.dto
             );

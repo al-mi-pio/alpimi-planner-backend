@@ -1,4 +1,5 @@
 ﻿using AlpimiAPI.Entities.ESchedule;
+using AlpimiAPI.Entities.ESchedule.DTO;
 using AlpimiAPI.Entities.EScheduleSettings.Commands;
 using AlpimiAPI.Entities.EScheduleSettings.DTO;
 using AlpimiAPI.Entities.EScheduleSettings.Queries;
@@ -64,7 +65,7 @@ namespace AlpimiAPI.Entities.EScheduleSettings
                         )
                     );
                 }
-                var response = new ApiGetResponse<ScheduleSettings>(result);
+                var response = new ApiGetResponse<ScheduleSettingsDTO>(DataTrimmer.Trim(result));
                 return Ok(response);
             }
             catch (ApiErrorException ex)
@@ -115,7 +116,7 @@ namespace AlpimiAPI.Entities.EScheduleSettings
                         )
                     );
                 }
-                var response = new ApiGetResponse<ScheduleSettings>(result);
+                var response = new ApiGetResponse<ScheduleSettingsDTO>(DataTrimmer.Trim(result));
                 return Ok(response);
             }
             catch (Exception ex)
@@ -158,7 +159,7 @@ namespace AlpimiAPI.Entities.EScheduleSettings
                         )
                     );
                 }
-                var response = new ApiGetResponse<ScheduleSettings>(result);
+                var response = new ApiGetResponse<ScheduleSettingsDTO>(DataTrimmer.Trim(result));
                 return Ok(response);
             }
             catch (Exception ex)

@@ -43,7 +43,7 @@ namespace AlpimiAPI.Entities.EScheduleSettings
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
         [ProducesResponseType(typeof(ApiErrorResponse), 404)]
-        public async Task<ActionResult<ApiGetResponse<ScheduleSettings>>> Patch(
+        public async Task<ActionResult<ApiGetResponse<ScheduleSettingsDTO>>> Patch(
             [FromBody] UpdateScheduleSettingsDTO request,
             [FromRoute] Guid scheduleId,
             [FromHeader] string Authorization
@@ -53,21 +53,21 @@ namespace AlpimiAPI.Entities.EScheduleSettings
             string Role = Privileges.GetUserRoleFromToken(Authorization);
 
             var command = new UpdateScheduleSettingsCommand(scheduleId, request, UserId, Role);
-            try
+            //try
+            //{
+            var result = await _mediator.Send(command);
+            if (result == null)
             {
-                var result = await _mediator.Send(command);
-                if (result == null)
-                {
-                    return NotFound(
-                        new ApiErrorResponse(
-                            404,
-                            [new ErrorObject(_str["notFound", "ScheduleSettings"])]
-                        )
-                    );
-                }
-                var response = new ApiGetResponse<ScheduleSettingsDTO>(DataTrimmer.Trim(result));
-                return Ok(response);
+                return NotFound(
+                    new ApiErrorResponse(
+                        404,
+                        [new ErrorObject(_str["notFound", "ScheduleSettings"])]
+                    )
+                );
             }
+            var response = new ApiGetResponse<ScheduleSettingsDTO>(DataTrimmer.Trim(result));
+            return Ok(response);
+            /*}
             catch (ApiErrorException ex)
             {
                 return BadRequest(new ApiErrorResponse(400, ex.errors));
@@ -77,7 +77,7 @@ namespace AlpimiAPI.Entities.EScheduleSettings
                 return BadRequest(
                     new ApiErrorResponse(400, [new ErrorObject(_str["unknownError", ex])])
                 );
-            }
+            }*/
         }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace AlpimiAPI.Entities.EScheduleSettings
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
         [ProducesResponseType(typeof(ApiErrorResponse), 404)]
-        public async Task<ActionResult<ApiGetResponse<Schedule>>> GetOneByScheduleId(
+        public async Task<ActionResult<ApiGetResponse<ScheduleDTO>>> GetOneByScheduleId(
             [FromRoute] Guid scheduleId,
             [FromHeader] string Authorization
         )
@@ -138,7 +138,7 @@ namespace AlpimiAPI.Entities.EScheduleSettings
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
         [ProducesResponseType(typeof(ApiErrorResponse), 404)]
-        public async Task<ActionResult<ApiGetResponse<Schedule>>> Get(
+        public async Task<ActionResult<ApiGetResponse<ScheduleDTO>>> Get(
             [FromRoute] Guid id,
             [FromHeader] string Authorization
         )

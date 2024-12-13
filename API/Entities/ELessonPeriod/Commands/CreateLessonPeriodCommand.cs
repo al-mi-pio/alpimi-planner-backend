@@ -77,16 +77,18 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Commands
 
             if (allLessonsPeriods.Value.Item1 != null)
             {
-                for (int i = 0; i != allLessonsPeriods.Value.Item1.Count() - 1; i++)
+                for (int i = 0; i < allLessonsPeriods.Value.Item1.Count() - 1; i++)
                 {
                     if (
                         allLessonsPeriods
                             .Value.Item1.ElementAt(i)
                             .Start.AddMinutes(scheduleSettings.Value.SchoolHour)
-                        > allLessonsPeriods.Value.Item1.ElementAt(i - 1).Start
+                        > allLessonsPeriods.Value.Item1.ElementAt(i + 1).Start
                     )
                     {
-                        throw new ApiErrorException([new ErrorObject(_str["timeOverlap"])]);
+                        throw new ApiErrorException(
+                            [new ErrorObject(_str["timeOverlap", "LessonPeriod"])]
+                        );
                     }
                 }
             }

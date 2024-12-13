@@ -40,7 +40,7 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
             }
 
             if (
-                Regex.IsMatch(request.dto.SchoolDays, @"^[^01]*$")
+                !Regex.IsMatch(request.dto.SchoolDays, @"^[01]+$")
                 || request.dto.SchoolDays.Length != 7
             )
             {
@@ -91,7 +91,7 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
             await _dbService.Post<Guid>(
                 $@"
                     INSERT INTO [ScheduleSettings] 
-                    ([Id],[SchoolHour],[SchoolYearStart],[SchoolYearEnd],[ScheduleId],[SchoolDays])
+                    ([Id],[SchoolHour],[SchoolYearStart],[SchoolYearEnd],[SchoolDays],[ScheduleId])
                     OUTPUT 
                     INSERTED.Id
                     VALUES (
@@ -99,7 +99,7 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
                     @SchoolHour, 
                     @SchoolYearStart, 
                     @SchoolYearEnd,
-                    @SchoolDays
+                    @SchoolDays,
                     '{request.Id}');",
                 request.dto
             );

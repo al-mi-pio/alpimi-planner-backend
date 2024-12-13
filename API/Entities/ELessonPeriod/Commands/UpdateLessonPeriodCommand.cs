@@ -69,11 +69,25 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Commands
 
             request.dto.Start = request.dto.Start ?? originalLessonPeriod.Start;
 
+            GetScheduleSettingsHandler getScheduleSettingsHandler = new GetScheduleSettingsHandler(
+                _dbService
+            );
+            GetScheduleSettingsQuery getScheduleSettingsQuery = new GetScheduleSettingsQuery(
+                originalLessonPeriod!.ScheduleSettingsId,
+                new Guid(),
+                "Admin"
+            );
+            ActionResult<ScheduleSettings?> scheduleSettings =
+                await getScheduleSettingsHandler.Handle(
+                    getScheduleSettingsQuery,
+                    cancellationToken
+                );
+
             GetAllLessonPeriodByScheduleHandler getAllLessonPeriodByScheduleHandler =
                 new GetAllLessonPeriodByScheduleHandler(_dbService, _str);
             GetAllLessonPeriodByScheduleQuery getAllLessonPeriodByScheduleQuery =
                 new GetAllLessonPeriodByScheduleQuery(
-                    originalLessonPeriod.ScheduleSettings.ScheduleId,
+                    scheduleSettings.Value!.ScheduleId,
                     request.FilteredId,
                     request.Role,
                     new PaginationParams(1440, 0, "Start", "ASC")
@@ -86,16 +100,18 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Commands
 
             if (allLessonsPeriods.Value.Item1 != null)
             {
-                for (int i = 0; i != allLessonsPeriods.Value.Item1.Count() - 1; i++)
+                for (int i = 0; i < allLessonsPeriods.Value.Item1.Count() - 1; i++)
                 {
                     if (
                         allLessonsPeriods
                             .Value.Item1.ElementAt(i)
                             .Start.AddMinutes(originalLessonPeriod.ScheduleSettings.SchoolHour)
-                        > allLessonsPeriods.Value.Item1.ElementAt(i - 1).Start
+                        > allLessonsPeriods.Value.Item1.ElementAt(i + 1).Start
                     )
                     {
-                        throw new ApiErrorException([new ErrorObject(_str["timeOverlap"])]);
+                        throw new ApiErrorException(
+                            [new ErrorObject(_str["timeOverlap", "LessonPeriod"])]
+                        );
                     }
                 }
             }
@@ -113,20 +129,7 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Commands
                 request.dto
             );
 
-            GetScheduleSettingsHandler getScheduleSettingsHandler = new GetScheduleSettingsHandler(
-                _dbService
-            );
-            GetScheduleSettingsQuery getScheduleSettingsQuery = new GetScheduleSettingsQuery(
-                lessonPeriod!.ScheduleSettingsId,
-                new Guid(),
-                "Admin"
-            );
-            ActionResult<ScheduleSettings?> toInsertScheduleSettings =
-                await getScheduleSettingsHandler.Handle(
-                    getScheduleSettingsQuery,
-                    cancellationToken
-                );
-            lessonPeriod.ScheduleSettings = toInsertScheduleSettings.Value!;
+            lessonPeriod!.ScheduleSettings = scheduleSettings.Value;
 
             return lessonPeriod;
         }

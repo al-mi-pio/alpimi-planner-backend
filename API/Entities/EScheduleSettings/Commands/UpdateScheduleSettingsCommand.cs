@@ -51,7 +51,7 @@ namespace AlpimiAPI.Entities.EScheduleSettings.Commands
             if (request.dto.SchoolDays != null)
             {
                 if (
-                    Regex.IsMatch(request.dto.SchoolDays, @"^[^01]*$")
+                    !Regex.IsMatch(request.dto.SchoolDays, @"^[01]+$")
                     || request.dto.SchoolDays.Length != 7
                 )
                 {
@@ -129,16 +129,18 @@ namespace AlpimiAPI.Entities.EScheduleSettings.Commands
 
             if (allLessonsPeriods.Value.Item1 != null)
             {
-                for (int i = 0; i != allLessonsPeriods.Value.Item1.Count() - 1; i++)
+                for (int i = 0; i < allLessonsPeriods.Value.Item1.Count() - 1; i++)
                 {
                     if (
                         allLessonsPeriods
                             .Value.Item1.ElementAt(i)
                             .Start.AddMinutes(request.dto.SchoolHour.Value)
-                        > allLessonsPeriods.Value.Item1.ElementAt(i - 1).Start
+                        > allLessonsPeriods.Value.Item1.ElementAt(i + 1).Start
                     )
                     {
-                        throw new ApiErrorException([new ErrorObject(_str["timeOverlap"])]);
+                        throw new ApiErrorException(
+                            [new ErrorObject(_str["timeOverlap", "LessonPeriod"])]
+                        );
                     }
                 }
             }

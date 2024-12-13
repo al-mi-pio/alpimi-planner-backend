@@ -36,11 +36,14 @@ namespace AlpimiAPI.Entities.ELesson.Commands
             CancellationToken cancellationToken
         )
         {
-            if (request.dto.AmountOfHours < 1)
+            if (request.dto.AmountOfHours != null)
             {
-                throw new ApiErrorException(
-                    [new ErrorObject(_str["badParameter", "AmountOfHours"])]
-                );
+                if (request.dto.AmountOfHours < 1)
+                {
+                    throw new ApiErrorException(
+                        [new ErrorObject(_str["badParameter", "AmountOfHours"])]
+                    );
+                }
             }
 
             GetLessonHandler getLessonHandler = new GetLessonHandler(_dbService);

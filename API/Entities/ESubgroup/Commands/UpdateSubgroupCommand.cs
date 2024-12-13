@@ -34,11 +34,14 @@ namespace AlpimiAPI.Entities.ESubgroup.Commands
             CancellationToken cancellationToken
         )
         {
-            if (request.dto.StudentCount < 1)
+            if (request.dto.StudentCount != null)
             {
-                throw new ApiErrorException(
-                    [new ErrorObject(_str["badParameter", "StudentCount"])]
-                );
+                if (request.dto.StudentCount < 1)
+                {
+                    throw new ApiErrorException(
+                        [new ErrorObject(_str["badParameter", "StudentCount"])]
+                    );
+                }
             }
 
             GetSubgroupHandler getSubgroupHandler = new GetSubgroupHandler(_dbService);

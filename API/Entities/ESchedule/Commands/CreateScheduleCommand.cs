@@ -32,6 +32,10 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
             CancellationToken cancellationToken
         )
         {
+            if (request.dto.SchoolHour < 1)
+            {
+                throw new ApiErrorException([new ErrorObject(_str["badParameter", "SchoolHour"])]);
+            }
             GetScheduleByNameHandler getScheduleByNameHandler = new GetScheduleByNameHandler(
                 _dbService
             );

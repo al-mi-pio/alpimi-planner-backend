@@ -31,11 +31,14 @@ namespace AlpimiAPI.Entities.EGroup.Commands
             CancellationToken cancellationToken
         )
         {
-            if (request.dto.StudentCount < 1)
+            if (request.dto.StudentCount != null)
             {
-                throw new ApiErrorException(
-                    [new ErrorObject(_str["badParameter", "StudentCount"])]
-                );
+                if (request.dto.StudentCount < 1)
+                {
+                    throw new ApiErrorException(
+                        [new ErrorObject(_str["badParameter", "StudentCount"])]
+                    );
+                }
             }
 
             GetGroupHandler getGroupHandler = new GetGroupHandler(_dbService);

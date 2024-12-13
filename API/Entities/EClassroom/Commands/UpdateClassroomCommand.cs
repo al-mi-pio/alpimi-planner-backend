@@ -36,9 +36,14 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
             CancellationToken cancellationToken
         )
         {
-            if (request.dto.Capacity < 1)
+            if (request.dto.Capacity != null)
             {
-                throw new ApiErrorException([new ErrorObject(_str["badParameter", "Capacity"])]);
+                if (request.dto.Capacity < 1)
+                {
+                    throw new ApiErrorException(
+                        [new ErrorObject(_str["badParameter", "Capacity"])]
+                    );
+                }
             }
 
             GetClassroomHandler getClassroomHandler = new GetClassroomHandler(_dbService);

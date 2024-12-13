@@ -34,9 +34,12 @@ namespace AlpimiAPI.Entities.ELessonType.Commands
             CancellationToken cancellationToken
         )
         {
-            if (request.dto.Color < 1) // TODO: w przyszłości jak odkryjemy jak kolorystykę zrobimy to trzeba zmienić
+            if (request.dto.Color != null)
             {
-                throw new ApiErrorException([new ErrorObject(_str["badParameter", "Color"])]);
+                if (request.dto.Color < 1) // TODO: w przyszłości jak odkryjemy jak kolorystykę zrobimy to trzeba zmienić
+                {
+                    throw new ApiErrorException([new ErrorObject(_str["badParameter", "Color"])]);
+                }
             }
 
             GetLessonTypeHandler getLessonTypeHandler = new GetLessonTypeHandler(_dbService);

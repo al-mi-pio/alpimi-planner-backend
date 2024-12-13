@@ -53,21 +53,21 @@ namespace AlpimiAPI.Entities.EScheduleSettings
             string Role = Privileges.GetUserRoleFromToken(Authorization);
 
             var command = new UpdateScheduleSettingsCommand(scheduleId, request, UserId, Role);
-            //try
-            //{
-            var result = await _mediator.Send(command);
-            if (result == null)
+            try
             {
-                return NotFound(
-                    new ApiErrorResponse(
-                        404,
-                        [new ErrorObject(_str["notFound", "ScheduleSettings"])]
-                    )
-                );
+                var result = await _mediator.Send(command);
+                if (result == null)
+                {
+                    return NotFound(
+                        new ApiErrorResponse(
+                            404,
+                            [new ErrorObject(_str["notFound", "ScheduleSettings"])]
+                        )
+                    );
+                }
+                var response = new ApiGetResponse<ScheduleSettingsDTO>(DataTrimmer.Trim(result));
+                return Ok(response);
             }
-            var response = new ApiGetResponse<ScheduleSettingsDTO>(DataTrimmer.Trim(result));
-            return Ok(response);
-            /*}
             catch (ApiErrorException ex)
             {
                 return BadRequest(new ApiErrorResponse(400, ex.errors));
@@ -77,7 +77,7 @@ namespace AlpimiAPI.Entities.EScheduleSettings
                 return BadRequest(
                     new ApiErrorResponse(400, [new ErrorObject(_str["unknownError", ex])])
                 );
-            }*/
+            }
         }
 
         /// <summary>

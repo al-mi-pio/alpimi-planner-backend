@@ -127,28 +127,31 @@ namespace AlpimiAPI.Entities.ELessonPeriod
             string privileges = Privileges.GetUserRoleFromToken(Authorization);
 
             var command = new UpdateLessonPeriodCommand(id, request, filteredId, privileges);
-            //try
-            //{
-            LessonPeriod? result = await _mediator.Send(command);
-            if (result == null)
+            try
             {
-                return NotFound(
-                    new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "LessonPeriod"])])
+                LessonPeriod? result = await _mediator.Send(command);
+                if (result == null)
+                {
+                    return NotFound(
+                        new ApiErrorResponse(
+                            404,
+                            [new ErrorObject(_str["notFound", "LessonPeriod"])]
+                        )
+                    );
+                }
+                var response = new ApiGetResponse<LessonPeriodDTO>(DataTrimmer.Trim(result));
+                return Ok(response);
+            }
+            catch (ApiErrorException ex)
+            {
+                return BadRequest(new ApiErrorResponse(400, ex.errors));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(
+                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError", ex])])
                 );
             }
-            var response = new ApiGetResponse<LessonPeriodDTO>(DataTrimmer.Trim(result));
-            return Ok(response);
-            /* }
-             catch (ApiErrorException ex)
-             {
-                 return BadRequest(new ApiErrorResponse(400, ex.errors));
-             }
-             catch (Exception ex)
-             {
-                 return BadRequest(
-                     new ApiErrorResponse(400, [new ErrorObject(_str["unknownError", ex])])
-                 );
-             }*/
         }
 
         /// <summary>

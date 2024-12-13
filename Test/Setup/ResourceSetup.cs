@@ -62,7 +62,7 @@ namespace AlpimiTest.TestSetup
                 "timeOverlap",
                 args => new LocalizedString(
                     "timeOverlap",
-                    string.Format("{0}s are overlapping", args[0])
+                    string.Format("{0}s cannot overlap", args[0])
                 )
             },
             {

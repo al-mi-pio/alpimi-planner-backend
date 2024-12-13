@@ -99,7 +99,7 @@ namespace AlpimiTest.Entities.ELessonPeriod.Commands
                     )
             );
 
-            Assert.Equal("LessonPeriods are overlapping", result.errors.First().message);
+            Assert.Equal("LessonPeriods cannot overlap", result.errors.First().message);
         }
     }
 }

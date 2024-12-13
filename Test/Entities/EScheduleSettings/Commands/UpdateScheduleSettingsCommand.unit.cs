@@ -257,7 +257,7 @@ namespace AlpimiTest.Entities.EScheduleSettings.Commands
 
             Assert.Equal(
                 JsonConvert.SerializeObject(
-                    new ErrorObject[] { new ErrorObject("LessonPeriods are overlapping") }
+                    new ErrorObject[] { new ErrorObject("LessonPeriods cannot overlap") }
                 ),
                 JsonConvert.SerializeObject(result.errors)
             );

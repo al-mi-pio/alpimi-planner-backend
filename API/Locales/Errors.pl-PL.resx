@@ -166,7 +166,7 @@
     <value>Czas zakończenia nie może być przed czasem rozpoczęcia</value>
   </data>
   <data name="timeOverlap" xml:space="preserve">
-    <value>{0} się na siebie nakładają</value>
+    <value>{0} nie mogą nakładać się na siebie</value>
   </data>
   <data name="outOfRange" xml:space="preserve">
     <value>Isnieją dni wolne poza podanym zakresem. Proszę je najpierw zmienić</value>

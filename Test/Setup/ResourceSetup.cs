@@ -17,10 +17,6 @@ namespace AlpimiTest.TestSetup
             { "scheduleDate", "The end date cannot happen before the start date" },
             { "scheduleTime", "The end time cannot happen before the start time" },
             {
-                "outOfRange",
-                "There are days off outside of provided range. Please change them first"
-            },
-            {
                 "tooManyStudents",
                 "Student count in a subgroup cannot be greater than the student count in a group"
             }
@@ -35,6 +31,16 @@ namespace AlpimiTest.TestSetup
                 args => new LocalizedString(
                     "badParameter",
                     string.Format("{0} parameter is invalid", args[0])
+                )
+            },
+            {
+                "outOfRange",
+                args => new LocalizedString(
+                    "outOfRange",
+                    string.Format(
+                        "There are {0} outside of provided range. Please change them first",
+                        args[0]
+                    )
                 )
             },
             {

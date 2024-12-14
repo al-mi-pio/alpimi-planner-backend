@@ -169,7 +169,7 @@
     <value>{0} nie mogą nakładać się na siebie</value>
   </data>
   <data name="outOfRange" xml:space="preserve">
-    <value>Isnieją dni wolne poza podanym zakresem. Proszę je najpierw zmienić</value>
+    <value>Isnieją {0} poza podanym zakresem. Proszę je najpierw zmienić</value>
   </data>
   <data name="tooManyStudents" xml:space="preserve">
     <value>Liczba studentów w podgrupie nie może być większa niż liczba studentów w grupie</value>
@@ -182,5 +182,8 @@
   </data>
   <data name="wrongSet" xml:space="preserve">
     <value>{0} musi należeć do tego samego {1} co {2}</value>
+  </data>
+  <data name="badWeekDay" xml:space="preserve">
+    <value>Lekcja nie może odbywać się w {0}</value>
   </data>
 </root>

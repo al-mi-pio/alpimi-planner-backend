@@ -169,7 +169,7 @@
     <value>{0}s cannot overlap</value>
   </data>
   <data name="outOfRange" xml:space="preserve">
-    <value>There are days off outside of provided range. Please change them first</value>
+    <value>There are {0} outside of provided range. Please change them first</value>
   </data>
   <data name="tooManyStudents" xml:space="preserve">
     <value>Student count in a subgroup cannot be greater than the student count in a group</value>
@@ -182,5 +182,8 @@
   </data>
   <data name="wrongSet" xml:space="preserve">
     <value>{0} must be in the same {1} as {2}</value>
+  </data>
+  <data name="badWeekDay" xml:space="preserve">
+    <value>Lessons cannot occur on {0}</value>
   </data>
 </root>

@@ -4,6 +4,7 @@ using AlpimiAPI.Entities.EClassroomType;
 using AlpimiAPI.Entities.EDayOff;
 using AlpimiAPI.Entities.EGroup;
 using AlpimiAPI.Entities.ELesson;
+using AlpimiAPI.Entities.ELessonBlock;
 using AlpimiAPI.Entities.ELessonPeriod;
 using AlpimiAPI.Entities.ELessonType;
 using AlpimiAPI.Entities.ESchedule;
@@ -37,6 +38,7 @@ namespace AlpimiAPI.Database
         public DbSet<Classroom> Classroom { get; set; }
         public DbSet<LessonType> LessonType { get; set; }
         public DbSet<Lesson> Lesson { get; set; }
+        public DbSet<LessonBlock> LessonBlock { get; set; }
         public DbSet<StudentSubgroup> StudentSubgroup { get; set; }
         public DbSet<ClassroomClassroomType> ClassroomClassroomType { get; set; }
         public DbSet<LessonClassroomType> LessonClassroomType { get; set; }
@@ -55,6 +57,20 @@ namespace AlpimiAPI.Database
                 .HasOne(l => l.Subgroup)
                 .WithMany()
                 .HasForeignKey(l => l.SubgroupId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder
+                .Entity<LessonBlock>()
+                .HasOne(l => l.Teacher)
+                .WithMany()
+                .HasForeignKey(l => l.TeacherId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder
+                .Entity<LessonBlock>()
+                .HasOne(l => l.Classroom)
+                .WithMany()
+                .HasForeignKey(l => l.ClassroomId)
                 .OnDelete(DeleteBehavior.NoAction);
         }
     }

@@ -109,7 +109,7 @@ namespace AlpimiTest.Entities.EScheduleSettings.Commands
                     new ErrorObject[]
                     {
                         new ErrorObject(
-                            "There are days off outside of provided range. Please change them first"
+                            "There are DayOff outside of provided range. Please change them first"
                         )
                     }
                 ),

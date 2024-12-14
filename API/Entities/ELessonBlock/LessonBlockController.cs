@@ -155,9 +155,10 @@ namespace AlpimiAPI.Entities.ELessonBlock
         }
 
         /// <summary>
-        /// Gets all LessonBlocks by SubroupId, GroupId, ScheduleId, ClusterId, TeacherId, ClassroomId or LessonId that occur between given dates
+        /// Gets all LessonBlocks by SubroupId, GroupId, ScheduleId, ClusterId, TeacherId, ClassroomId or LessonId
         /// </summary>
         /// <remarks>
+        /// Returned LessonBlocks can be filtered by given date range
         /// - JWT token is required
         /// </remarks>
         [HttpGet]

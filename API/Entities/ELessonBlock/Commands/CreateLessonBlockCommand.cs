@@ -150,12 +150,12 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                 errors.Add(new ErrorObject(_str["scheduleTime"]));
             }
 
-            if (request.dto.LessonStart < 0 || request.dto.LessonStart > lessonPeriodCount)
+            if (request.dto.LessonStart < 1 || request.dto.LessonStart > lessonPeriodCount)
             {
                 errors.Add(new ErrorObject(_str["badParameter", "LessonStart"]));
             }
 
-            if (request.dto.LessonEnd < 0 || request.dto.LessonEnd > lessonPeriodCount)
+            if (request.dto.LessonEnd < 1 || request.dto.LessonEnd > lessonPeriodCount)
             {
                 errors.Add(new ErrorObject(_str["badParameter", "LessonEnd"]));
             }

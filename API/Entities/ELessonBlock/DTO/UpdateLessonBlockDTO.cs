@@ -4,7 +4,7 @@ namespace AlpimiAPI.Entities.ELessonBlock.DTO
 {
     public class UpdateLessonBlockDTO
     {
-        public int? WeekDay { get; set; } //ex. 0 this means monaday
+        public int? WeekDay { get; set; } //ex. 0 means Monday
         public int? LessonStart { get; set; }
         public int? LessonEnd { get; set; }
         public Guid? ClassroomId { get; set; }

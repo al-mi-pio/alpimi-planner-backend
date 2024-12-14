@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using System.Net.Http.Headers;
-using AlpimiAPI.Entities.EScheduleSettings;
 using AlpimiAPI.Entities.EScheduleSettings.DTO;
 using AlpimiAPI.Responses;
 using AlpimiAPI.Settings;
@@ -41,7 +40,7 @@ namespace AlpimiTest.Entities.EScheduleSettings
         }
 
         [Fact]
-        public async Task UpdateScheduleSettingsReturnsUpdatedSchedule()
+        public async Task UpdateScheduleSettingsReturnsUpdatedScheduleSettings()
         {
             var updateScheduleSettings = MockData.GetUpdateScheduleSettingsDTO();
 

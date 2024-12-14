@@ -83,7 +83,7 @@ namespace AlpimiAPI.Entities.ELesson.Queries
                     lessons = await _dbService.GetAll<Lesson>(
                         $@"
                             SELECT
-                            l.[Id], l.[Name], [AmountOfHours], l.[LessonTypeId], l.[SubgroupId]  
+                            l.[Id], l.[Name], [CurrentHours], [AmountOfHours], l.[LessonTypeId], l.[SubgroupId]  
                             FROM [Lesson] l
                             INNER JOIN [Subgroup] sg ON sg.[Id] = l.[SubgroupId]
                             INNER JOIN [Group] g ON g.[Id] = sg.[GroupId]
@@ -114,7 +114,7 @@ namespace AlpimiAPI.Entities.ELesson.Queries
                     lessons = await _dbService.GetAll<Lesson>(
                         $@"
                             SELECT 
-                            l.[Id], l.[Name], [AmountOfHours], l.[LessonTypeId], l.[SubgroupId]  
+                            l.[Id], l.[Name], [CurrentHours], [AmountOfHours], l.[LessonTypeId], l.[SubgroupId]  
                             FROM [Lesson] l
                             INNER JOIN [Subgroup] sg ON sg.[Id] = l.[SubgroupId]
                             INNER JOIN [Group] g ON g.[Id] = sg.[GroupId]

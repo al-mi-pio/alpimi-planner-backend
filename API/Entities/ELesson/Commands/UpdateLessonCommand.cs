@@ -244,6 +244,7 @@ namespace AlpimiAPI.Entities.ELesson.Commands
                     OUTPUT
                     INSERTED.[Id],
                     INSERTED.[Name],
+                    INSERTED.[CurrentHours],
                     INSERTED.[AmountOfHours],
                     INSERTED.[LessonTypeId],
                     INSERTED.[SubgroupId]

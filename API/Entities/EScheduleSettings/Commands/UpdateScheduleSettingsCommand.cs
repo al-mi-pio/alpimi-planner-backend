@@ -1,6 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using AlpimiAPI.Database;
 using AlpimiAPI.Entities.EDayOff;
+using AlpimiAPI.Entities.ELessonBlock;
 using AlpimiAPI.Entities.ELessonPeriod;
 using AlpimiAPI.Entities.ELessonPeriod.Queries;
 using AlpimiAPI.Entities.ESchedule;
@@ -106,10 +107,25 @@ namespace AlpimiAPI.Entities.EScheduleSettings.Commands
                     AND (do.[To] > @SchoolYearEnd OR do.[From] < @SchoolYearStart)",
                 request.dto
             );
-
             if (daysOffOutOfRange!.Any())
             {
-                throw new ApiErrorException([new ErrorObject(_str["outOfRange"])]);
+                throw new ApiErrorException([new ErrorObject(_str["outOfRange", "DayOff"])]);
+            }
+
+            var lessonBlocksOutOfRange = await _dbService.GetAll<LessonBlock>(
+                $@"
+                    SELECT
+                    lb.[Id] 
+                    FROM [LessonBlock] lb
+                    INNER JOIN [Lesson] l ON l.[Id] = lb.[LessonId]
+                    INNER JOIN [LessonType] lt ON lt.[Id] = l.[LessonTypeId]
+                    WHERE lt.[ScheduleId] = '{request.ScheduleId}'
+                    AND (lb.[LessonDate] > @SchoolYearEnd OR lb.[LessonDate] < @SchoolYearStart)",
+                request.dto
+            );
+            if (lessonBlocksOutOfRange!.Any())
+            {
+                throw new ApiErrorException([new ErrorObject(_str["outOfRange", "LessonBlock"])]);
             }
 
             GetAllLessonPeriodByScheduleHandler getAllLessonPeriodByScheduleHandler =

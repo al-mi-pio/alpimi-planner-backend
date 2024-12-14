@@ -8,6 +8,7 @@ using AlpimiAPI.Entities.EGroup;
 using AlpimiAPI.Entities.EGroup.DTO;
 using AlpimiAPI.Entities.ELesson;
 using AlpimiAPI.Entities.ELesson.DTO;
+using AlpimiAPI.Entities.ELessonBlock;
 using AlpimiAPI.Entities.ELessonPeriod;
 using AlpimiAPI.Entities.ELessonPeriod.DTO;
 using AlpimiAPI.Entities.ELessonType;
@@ -120,6 +121,7 @@ namespace AlpimiAPI.Utilities
             {
                 Id = data.Id,
                 Name = data.Name,
+                CurrentHours = data.CurrentHours,
                 AmountOfHours = data.AmountOfHours,
                 LessonType = Trim(data.LessonType),
                 Subgroup = Trim(data.Subgroup)
@@ -135,6 +137,21 @@ namespace AlpimiAPI.Utilities
                 SchoolYearStart = data.SchoolYearStart,
                 SchoolYearEnd = data.SchoolYearEnd,
                 SchoolDays = data.SchoolDays
+            };
+        }
+
+        public static LessonBlockDTO Trim(LessonBlock data)
+        {
+            return new LessonBlockDTO
+            {
+                Id = data.Id,
+                LessonDate = data.LessonDate,
+                LessonStart = data.LessonStart,
+                LessonEnd = data.LessonEnd,
+                Lesson = Trim(data.Lesson),
+                Classroom = data.Classroom == null ? null : Trim(data.Classroom),
+                Teacher = data.Teacher == null ? null : Trim(data.Teacher),
+                ClusterId = data.ClusterId
             };
         }
     }

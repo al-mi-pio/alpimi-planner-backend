@@ -86,7 +86,7 @@ namespace AlpimiAPI.Entities.ELessonBlock.Queries
             );
             if (scheduleSettings == null)
             {
-                return (null, 0);
+                return ([], 0); // To test
             }
 
             request = request with
@@ -95,6 +95,11 @@ namespace AlpimiAPI.Entities.ELessonBlock.Queries
                 FromDate = request.FromDate ?? scheduleSettings.SchoolYearStart,
                 ToDate = request.ToDate ?? scheduleSettings.SchoolYearEnd
             };
+
+            if (request.FromDate > request.ToDate)
+            {
+                throw new ApiErrorException([new ErrorObject(_str["scheduleDate"])]);
+            }
 
             IEnumerable<LessonBlock>? lessonBlocks;
             int count;

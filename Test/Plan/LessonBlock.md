@@ -40,12 +40,6 @@
 - [ThrowsErrorWhenLessonStartIsLessThan1()](../Entities/ELessonBlock/Commands/CreateLessonBlockCommand.unit.cs) - **unit** 
   Check if returns an error when lesson start is less than one
 
-- [ThrowsErrorWhenLessonStartIsMoreThanTheAmountOfLessonPeriods()](../Entities/ELessonBlock/Commands/CreateLessonBlockCommand.unit.cs) - **unit** 
-  Check if returns an error when lesson start is more than the amount of lesson periods
-
-- [ThrowsErrorWhenLessonEndIsLessThan1()](../Entities/ELessonBlock/Commands/CreateLessonBlockCommand.unit.cs) - **unit** 
-  Check if returns an error when lesson end is less than one
-
 - [ThrowsErrorWhenLessonEndIsMoreThanTheAmountOfLessonPeriods()](../Entities/ELessonBlock/Commands/CreateLessonBlockCommand.unit.cs) - **unit** 
   Check if returns an error when lesson end is more than the amount of lesson periods
 
@@ -169,12 +163,6 @@
 
 - [ThrowsErrorWhenLessonStartIsLessThan1()](../Entities/ELessonBlock/Commands/UpdateLessonBlockCommand.unit.cs) - **unit** 
   Check if returns an error when lesson start is less than one
-
-- [ThrowsErrorWhenLessonStartIsMoreThanTheAmountOfLessonPeriods()](../Entities/ELessonBlock/Commands/UpdateLessonBlockCommand.unit.cs) - **unit** 
-  Check if returns an error when lesson start is more than the amount of lesson periods
-
-- [ThrowsErrorWhenLessonEndIsLessThan1()](../Entities/ELessonBlock/Commands/UpdateLessonBlockCommand.unit.cs) - **unit** 
-  Check if returns an error when lesson end is less than one
 
 - [ThrowsErrorWhenLessonEndIsMoreThanTheAmountOfLessonPeriods()](../Entities/ELessonBlock/Commands/UpdateLessonBlockCommand.unit.cs) - **unit** 
   Check if returns an error when lesson end is more than the amount of lesson periods

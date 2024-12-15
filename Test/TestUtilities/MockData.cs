@@ -28,7 +28,6 @@ using AlpimiAPI.Entities.ETeacher;
 using AlpimiAPI.Entities.ETeacher.DTO;
 using AlpimiAPI.Entities.EUser;
 using AlpimiAPI.Entities.EUser.DTO;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.DataCollection;
 
 namespace AlpimiTest.TestUtilities
 {
@@ -76,7 +75,7 @@ namespace AlpimiTest.TestUtilities
                 SchoolHour = 10,
                 SchoolYearStart = new DateOnly(2020, 11, 19),
                 SchoolYearEnd = new DateOnly(2025, 11, 19),
-                SchoolDays = "1111100",
+                SchoolDays = "0111110",
                 ScheduleId = new Guid(),
                 Schedule = GetScheduleDetails()
             };
@@ -201,7 +200,7 @@ namespace AlpimiTest.TestUtilities
             {
                 LessonDate = new DateOnly(2023, 10, 10),
                 LessonStart = 1,
-                LessonEnd = 0,
+                LessonEnd = 2,
                 LessonId = new Guid(),
                 Lesson = GetLessonDetails(),
                 TeacherId = new Guid(),
@@ -594,10 +593,12 @@ namespace AlpimiTest.TestUtilities
         {
             return new UpdateLessonBlockDTO()
             {
-                LessonEnd = 1,
-                LessonStart = 3,
+                LessonStart = 1,
+                LessonEnd = 3,
                 WeekDay = 2,
-                UpdateCluster = false
+                UpdateCluster = false,
+                ClassroomId = new Guid(),
+                TeacherId = new Guid()
             };
         }
     }

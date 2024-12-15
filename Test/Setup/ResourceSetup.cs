@@ -89,6 +89,13 @@ namespace AlpimiTest.TestSetup
                 )
             },
             {
+                "badWeekDay",
+                args => new LocalizedString(
+                    "badWeekDay",
+                    string.Format("Lessons cannot occur on {0}", args[0])
+                )
+            },
+            {
                 "dateOutOfRange",
                 args => new LocalizedString(
                     "dateOutofRange",

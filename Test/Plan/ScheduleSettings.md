@@ -25,6 +25,9 @@
 - [ThrowsErrorDaysOffAreOutsideOfDateRange()](../Entities/EScheduleSettings/Commands/UpdateEScheduleSettingsCommand.unit.cs) - **unit**  
   Check if returns an error when a day off is outside of new range
 
+- [ThrowsErrorLessonBlocksAreOutsideOfDateRange()](../Entities/EScheduleSettings/Commands/UpdateEScheduleSettingsCommand.unit.cs) - **unit**  
+  Check if returns an error when a lesson block is outside of new range
+
 - [ThrowsErrorWhenSchoolHourIsLessThan1()](../Entities/EScheduleSettings/Commands/UpdateScheduleCommand.unit.cs) - **unit**  
   Check if returns an error when school hour is less than one
 

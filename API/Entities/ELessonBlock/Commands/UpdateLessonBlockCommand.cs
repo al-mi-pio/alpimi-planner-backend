@@ -242,17 +242,6 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                 throw new ApiErrorException(errors);
             }
 
-            await _dbService.Update<Lesson?>(
-                $@"
-                    UPDATE [Lesson] 
-                    SET
-                    [CurrentHours] = [CurrentHours] + {amountOfLessonHoursToUpdate}
-                    OUTPUT
-                    INSERTED.[Id]
-                    WHERE [Id] = @LessonId;",
-                oneLessonBlock
-            );
-
             await _dbService.Update<LessonBlock?>(
                 $@"
                     UPDATE [LessonBlock] 
@@ -262,6 +251,12 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                     INSERTED.[Id]
                     WHERE [Id] = '{request.Id}' OR [ClusterId] = '{request.Id}';",
                 request.dto
+            );
+
+            await Utilities.CurrentLessonHours.Update(
+                _dbService,
+                oneLessonBlock.LessonId,
+                cancellationToken
             );
 
             return request.Id;

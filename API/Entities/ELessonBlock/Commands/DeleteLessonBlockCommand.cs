@@ -1,5 +1,9 @@
 ﻿using AlpimiAPI.Database;
+using AlpimiAPI.Entities.ELesson;
+using AlpimiAPI.Entities.ELesson.Queries;
+using AlpimiAPI.Entities.ELessonBlock.Queries;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AlpimiAPI.Entities.ELessonBlock.Commands
 {
@@ -19,6 +23,17 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
             CancellationToken cancellationToken
         )
         {
+            GetLessonBlockHandler getLessonBlockHandler = new GetLessonBlockHandler(_dbService);
+            GetLessonBlockQuery getLessonBlockQuery = new GetLessonBlockQuery(
+                request.Id,
+                new Guid(),
+                "Admin"
+            );
+            ActionResult<LessonBlock?> lessonBlock = await getLessonBlockHandler.Handle(
+                getLessonBlockQuery,
+                cancellationToken
+            );
+
             switch (request.Role)
             {
                 case "Admin":
@@ -41,6 +56,15 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                         request
                     );
                     break;
+            }
+
+            if (lessonBlock.Value != null)
+            {
+                await Utilities.CurrentLessonHours.Update(
+                    _dbService,
+                    lessonBlock.Value.LessonId,
+                    cancellationToken
+                );
             }
         }
     }

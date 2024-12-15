@@ -203,19 +203,6 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                 throw new ApiErrorException(errors);
             }
 
-            int amountOfHoursToAdd =
-                amountOfLessonsToInsert * (request.dto.LessonEnd - request.dto.LessonStart + 1);
-            await _dbService.Update<Lesson?>(
-                $@"
-                    UPDATE [Lesson] 
-                    SET
-                    [CurrentHours] = [CurrentHours] + {amountOfHoursToAdd}
-                    OUTPUT
-                    INSERTED.[Id]
-                    WHERE [Id] = @Id;",
-                lesson.Value!
-            );
-
             for (int i = 0; i < amountOfLessonsToInsert; i++)
             {
                 await _dbService.Post<Guid>(
@@ -247,6 +234,12 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                     Role = request.Role
                 };
             }
+
+            await Utilities.CurrentLessonHours.Update(
+                _dbService,
+                lesson.Value!.Id,
+                cancellationToken
+            );
 
             if (amountOfLessonsToInsert > 1)
             {

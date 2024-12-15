@@ -194,24 +194,26 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                 scheduleSettings!
             );
 
-            if (request.dto.LessonStart < request.dto.LessonEnd)
+            if (request.dto.LessonStart > request.dto.LessonEnd)
             {
                 errors.Add(new ErrorObject(_str["scheduleTime"]));
             }
 
-            if (request.dto.LessonStart < 1 || request.dto.LessonStart > lessonPeriodCount)
+            if (request.dto.LessonStart < 1)
             {
                 errors.Add(new ErrorObject(_str["badParameter", "LessonStart"]));
             }
 
-            if (request.dto.LessonEnd < 1 || request.dto.LessonEnd > lessonPeriodCount)
+            if (request.dto.LessonEnd > lessonPeriodCount)
             {
                 errors.Add(new ErrorObject(_str["badParameter", "LessonEnd"]));
             }
 
             if (scheduleSettings!.SchoolDays[request.dto.WeekDay.Value] == '0')
             {
-                errors.Add(new ErrorObject(_str["badWeekDay", request.dto.WeekDay.Value]));
+                errors.Add(
+                    new ErrorObject(_str["badWeekDay", (DayOfWeek)request.dto.WeekDay.Value])
+                );
             }
 
             int daysDifference =
@@ -231,7 +233,7 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                         _str[
                             "dateOutOfRange",
                             scheduleSettings.SchoolYearStart,
-                            scheduleSettings.SchoolYearStart
+                            scheduleSettings.SchoolYearEnd
                         ]
                     )
                 );

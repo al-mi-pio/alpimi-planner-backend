@@ -5,6 +5,7 @@ using AlpimiAPI.Entities.EClassroomType.DTO;
 using AlpimiAPI.Entities.EDayOff.DTO;
 using AlpimiAPI.Entities.EGroup.DTO;
 using AlpimiAPI.Entities.ELesson.DTO;
+using AlpimiAPI.Entities.ELessonBlock.DTO;
 using AlpimiAPI.Entities.ELessonPeriod.DTO;
 using AlpimiAPI.Entities.ELessonType.DTO;
 using AlpimiAPI.Entities.ESchedule.DTO;
@@ -243,6 +244,25 @@ namespace AlpimiTest.TestSetup
             var jsonLessonId = await lesson.Content.ReadFromJsonAsync<ApiGetResponse<Guid>>();
 
             return jsonLessonId!.Content;
+        }
+
+        public static async Task<Guid> SetupLessonBlock(
+            HttpClient _client,
+            CreateLessonBlockDTO lessonBlockRequest
+        )
+        {
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "Bob", new Guid())
+            );
+
+            var lessonBlock = await _client.PostAsJsonAsync("/api/LessonBlock", lessonBlockRequest);
+
+            var jsonLessonBlockId = await lessonBlock.Content.ReadFromJsonAsync<
+                ApiGetResponse<Guid>
+            >();
+
+            return jsonLessonBlockId!.Content;
         }
     }
 }

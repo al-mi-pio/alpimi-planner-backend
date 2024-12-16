@@ -2,11 +2,12 @@
 
 ## `ALL` `api/LessonBlock/*`
 
+- [LessonBlockSettingsControllerThrowsUnauthorized()](../Entities/ELessonBlock/LessonBlockController.test.cs) - **integrity**  
+  Check if returns an error when token is not provided
+
 - [LessonBlockControllerThrowsTooManyRequests()](../Entities/ELessonBlock/LessonBlockController.test.cs) - **integrity**  
   Check if returns an error when request is sent too many times
 
-- [LessonBlockSettingsControllerThrowsUnauthorized()](../Entities/ELessonBlock/LessonBlockController.test.cs) - **integrity**  
-  Check if returns an error when token is not provided
 
 ## `POST` `api/LessonBlock`
 
@@ -54,6 +55,66 @@
 
 - [ThrowsErrorWhenWeekIntervalIsLessThan1()](../Entities/ELessonBlock/Commands/CreateLessonBlockCommand.unit.cs) - **unit** 
   Check if returns an error when lesson end is more than the amount of lesson periods
+
+
+## `DELETE` `api/LessonBlock/{id}`
+
+- [LessonBlockIsDeleted()](../Entities/ELessonBlock/LessonBlockController.test.cs) - **integrity**  
+  Check if lesson block is deleted when a valid token is provided
+
+- [LessonBlockClusterIsDeleted()](../Entities/ELessonBlock/LessonBlockController.test.cs) - **integrity**  
+  Check if multiple lesson blocks in a cluster are deleted when a cluster id is provided
+
+- [DeleteLessonBlockUpdatesLessonsCurrentHours()](../Entities/ELessonBlock/LessonBlockController.test.cs) - **integrity**  
+  Check if deleting a lesson block updates the current hours of the lesson
+
+
+## `PATCH` `api/LessonBlock/{id}`
+
+- [UpdateLessonBlockReturnsId()](../Entities/ELessonBlock/LessonBlockController.test.cs) - **integrity**  
+  Check if returns an id when provided with correct data
+
+- [UpdateLessonBlockUpdatesLessonBlockCluster()](../Entities/EClassroom/ClassroomController.test.cs) - **integrity**  
+  Check if updates lesson block cluster  when provided with cluster id and update cluster is true
+
+- [UpdateLessonBlockUpdatesLessonsCurrentHours()](../Entities/EClassroom/ClassroomController.test.cs) - **integrity**  
+   Check if updating a lesson block updates the current hours of the lesson
+
+- [UpdateLessonBlockThrowsNotFoundErrorWhenWrongIdIsGiven()](../Entities/ELessonBlock/LessonBlockController.test.cs) - **integrity**  
+  Check if returns an error when day off doesn't exists
+
+- [UpdateLessonBlockThrowsNotFoundErrorWhenWrongUserAttemptsUpdate()](../Entities/ELessonBlock/LessonBlockController.test.cs) - **integrity**  
+  Check if returns an error when day off is inaccessible for user
+
+- [ThrowsErrorWhenWrongTeacherIdIsGiven()](../Entities/ELessonBlock/UpdateLessonBlockCommand.unit.cs) - **unit** 
+  Check if returns an error when incorrect teacher id is provided
+
+- [ThrowsErrorWhenScheduleIdsFromLessonAndTeacherDontMatch()](../Entities/ELessonBlock/UpdateLessonBlockCommand.unit.cs) - **unit** 
+  Check if returns an error when lesson and teacher are from different schedules
+
+- [ThrowsErrorWhenWrongClassroomIdIsGiven()](../Entities/ELessonBlock/UpdateLessonBlockCommand.unit.cs) - **unit** 
+  Check if returns an error when incorrect classroom id is provided
+
+- [ThrowsErrorWhenScheduleIdsFromLessonAndClassroomDontMatch()](../Entities/ELessonBlock/UpdateLessonBlockCommand.unit.cs) - **unit** 
+  Check if returns an error when lesson and classroom are from different schedules
+
+- [ThrowsErrorWhenLessonStartIsAfterLessonEnd()](../Entities/ELessonBlock/Commands/UpdateLessonBlockCommand.unit.cs) - **unit** 
+  Check if returns an error when incorrect lesson start and end times are provided
+
+- [ThrowsErrorWhenLessonStartIsLessThan1()](../Entities/ELessonBlock/Commands/UpdateLessonBlockCommand.unit.cs) - **unit** 
+  Check if returns an error when lesson start is less than one
+
+- [ThrowsErrorWhenLessonEndIsMoreThanTheAmountOfLessonPeriods()](../Entities/ELessonBlock/Commands/UpdateLessonBlockCommand.unit.cs) - **unit** 
+  Check if returns an error when lesson end is more than the amount of lesson periods
+
+- [ThrowsErrorWhenLessonOccursOnADayOfTheWeekThatIsNotAllowedByScheduleSettings()](../Entities/ELessonBlock/Commands/UpdateLessonBlockCommand.unit.cs) - **unit** 
+  Check if returns an error when lesson occurs on a day of the week that is not allowed by schedule settings
+
+- [ThrowsErrorWhenUpdatedLessonDateWouldOccurBeforeSchoolYearStart()](../Entities/ELessonBlock/Commands/UpdateLessonBlockCommand.unit.cs) - **unit** 
+  Check if returns an error when updated lesson date would occur before the start of the school year
+
+- [ThrowsErrorWhenUpdatedLessonDateWouldOccurAfterSchoolYearEnd()](../Entities/ELessonBlock/Commands/UpdateLessonBlockCommand.unit.cs) - **unit** 
+  Check if returns an error when updated lesson date would occur after the end of the school year
 
 
 ## `GET` `api/LessonBlock`
@@ -117,64 +178,6 @@
 
 - [GetLessonBlockThrowsNotFoundWhenWrongIdIsGiven()](../Entities/ELessonBlock/LessonBlockController.test.cs) - **integrity**  
   Check if returns no days off when wrong id is provided
-
-## `DELETE` `api/LessonBlock/{id}`
-
-- [LessonBlockIsDeleted()](../Entities/ELessonBlock/LessonBlockController.test.cs) - **integrity**  
-  Check if lesson block is deleted when a valid token is provided
-
-- [LessonBlockClusterIsDeleted()](../Entities/ELessonBlock/LessonBlockController.test.cs) - **integrity**  
-  Check if multiple lesson blocks in a cluster are deleted when a cluster id is provided
-
-- [DeleteLessonBlockUpdatesLessonsCurrentHours()](../Entities/ELessonBlock/LessonBlockController.test.cs) - **integrity**  
-  Check if deleting a lesson block updates the current hours of the lesson
-
-## `PATCH` `api/LessonBlock/{id}`
-
-- [UpdateLessonBlockReturnsId()](../Entities/ELessonBlock/LessonBlockController.test.cs) - **integrity**  
-  Check if returns an id when provided with correct data
-
-- [UpdateLessonBlockUpdatesLessonBlockCluster()](../Entities/EClassroom/ClassroomController.test.cs) - **integrity**  
-  Check if updates lesson block cluster  when provided with cluster id and update cluster is true
-
-- [UpdateLessonBlockUpdatesLessonsCurrentHours()](../Entities/EClassroom/ClassroomController.test.cs) - **integrity**  
-   Check if updating a lesson block updates the current hours of the lesson
-
-- [UpdateLessonBlockThrowsNotFoundErrorWhenWrongIdIsGiven()](../Entities/ELessonBlock/LessonBlockController.test.cs) - **integrity**  
-  Check if returns an error when day off doesn't exists
-
-- [UpdateLessonBlockThrowsNotFoundErrorWhenWrongUserAttemptsUpdate()](../Entities/ELessonBlock/LessonBlockController.test.cs) - **integrity**  
-  Check if returns an error when day off is inaccessible for user
-
-- [ThrowsErrorWhenWrongTeacherIdIsGiven()](../Entities/ELessonBlock/UpdateLessonBlockCommand.unit.cs) - **unit** 
-  Check if returns an error when incorrect teacher id is provided
-
-- [ThrowsErrorWhenScheduleIdsFromLessonAndTeacherDontMatch()](../Entities/ELessonBlock/UpdateLessonBlockCommand.unit.cs) - **unit** 
-  Check if returns an error when lesson and teacher are from different schedules
-
-- [ThrowsErrorWhenWrongClassroomIdIsGiven()](../Entities/ELessonBlock/UpdateLessonBlockCommand.unit.cs) - **unit** 
-  Check if returns an error when incorrect classroom id is provided
-
-- [ThrowsErrorWhenScheduleIdsFromLessonAndClassroomDontMatch()](../Entities/ELessonBlock/UpdateLessonBlockCommand.unit.cs) - **unit** 
-  Check if returns an error when lesson and classroom are from different schedules
-
-- [ThrowsErrorWhenLessonStartIsAfterLessonEnd()](../Entities/ELessonBlock/Commands/UpdateLessonBlockCommand.unit.cs) - **unit** 
-  Check if returns an error when incorrect lesson start and end times are provided
-
-- [ThrowsErrorWhenLessonStartIsLessThan1()](../Entities/ELessonBlock/Commands/UpdateLessonBlockCommand.unit.cs) - **unit** 
-  Check if returns an error when lesson start is less than one
-
-- [ThrowsErrorWhenLessonEndIsMoreThanTheAmountOfLessonPeriods()](../Entities/ELessonBlock/Commands/UpdateLessonBlockCommand.unit.cs) - **unit** 
-  Check if returns an error when lesson end is more than the amount of lesson periods
-
-- [ThrowsErrorWhenLessonOccursOnADayOfTheWeekThatIsNotAllowedByScheduleSettings()](../Entities/ELessonBlock/Commands/UpdateLessonBlockCommand.unit.cs) - **unit** 
-  Check if returns an error when lesson occurs on a day of the week that is not allowed by schedule settings
-
-- [ThrowsErrorWhenUpdatedLessonDateWouldOccurBeforeSchoolYearStart()](../Entities/ELessonBlock/Commands/UpdateLessonBlockCommand.unit.cs) - **unit** 
-  Check if returns an error when updated lesson date would occur before the start of the school year
-
-- [ThrowsErrorWhenUpdatedLessonDateWouldOccurAfterSchoolYearEnd()](../Entities/ELessonBlock/Commands/UpdateLessonBlockCommand.unit.cs) - **unit** 
-  Check if returns an error when updated lesson date would occur after the end of the school year
 
 
 

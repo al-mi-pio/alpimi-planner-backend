@@ -65,6 +65,82 @@ namespace AlpimiAPI.Entities.EUser
         }
 
         /// <summary>
+        /// Deletes a User
+        /// </summary>
+        /// <remarks>
+        /// - Admin role is required
+        /// - JWT is required
+        /// </remarks>
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 403)]
+        public async Task<ActionResult> Delete(
+            [FromRoute] Guid id,
+            [FromHeader] string Authorization
+        )
+        {
+            var command = new DeleteUserCommand(id);
+            try
+            {
+                await _mediator.Send(command);
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(
+                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError", ex])])
+                );
+            }
+        }
+
+        /// <summary>
+        /// Updates a User
+        /// </summary>
+        /// <remarks>
+        /// - JWT token is required
+        /// </remarks>
+        [HttpPatch("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 400)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 401)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 404)]
+        public async Task<ActionResult<ApiGetResponse<User>>> Patch(
+            [FromBody] UpdateUserDTO request,
+            [FromRoute] Guid id,
+            [FromHeader] string Authorization
+        )
+        {
+            Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
+            string privileges = Privileges.GetUserRoleFromToken(Authorization);
+
+            var command = new UpdateUserCommand(id, request, filteredId, privileges);
+            try
+            {
+                User? result = await _mediator.Send(command);
+                if (result == null)
+                {
+                    return NotFound(
+                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "User"])])
+                    );
+                }
+                var response = new ApiGetResponse<User>(result);
+                return Ok(response);
+            }
+            catch (ApiErrorException ex)
+            {
+                return BadRequest(new ApiErrorResponse(400, ex.errors));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(
+                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError", ex])])
+                );
+            }
+        }
+
+        /// <summary>
         /// Gets a User
         /// </summary>
         /// <remarks>
@@ -136,82 +212,6 @@ namespace AlpimiAPI.Entities.EUser
                 }
                 var response = new ApiGetResponse<User>(result);
                 return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(
-                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError", ex])])
-                );
-            }
-        }
-
-        /// <summary>
-        /// Deletes a User
-        /// </summary>
-        /// <remarks>
-        /// - Admin role is required
-        /// - JWT is required
-        /// </remarks>
-        [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin")]
-        [ProducesResponseType(204)]
-        [ProducesResponseType(typeof(ApiErrorResponse), 403)]
-        public async Task<ActionResult> Delete(
-            [FromRoute] Guid id,
-            [FromHeader] string Authorization
-        )
-        {
-            var command = new DeleteUserCommand(id);
-            try
-            {
-                await _mediator.Send(command);
-
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(
-                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError", ex])])
-                );
-            }
-        }
-
-        /// <summary>
-        /// Updates a User
-        /// </summary>
-        /// <remarks>
-        /// - JWT token is required
-        /// </remarks>
-        [HttpPatch("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiErrorResponse), 400)]
-        [ProducesResponseType(typeof(ApiErrorResponse), 401)]
-        [ProducesResponseType(typeof(ApiErrorResponse), 404)]
-        public async Task<ActionResult<ApiGetResponse<User>>> Patch(
-            [FromBody] UpdateUserDTO request,
-            [FromRoute] Guid id,
-            [FromHeader] string Authorization
-        )
-        {
-            Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
-            string privileges = Privileges.GetUserRoleFromToken(Authorization);
-
-            var command = new UpdateUserCommand(id, request, filteredId, privileges);
-            try
-            {
-                User? result = await _mediator.Send(command);
-                if (result == null)
-                {
-                    return NotFound(
-                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "User"])])
-                    );
-                }
-                var response = new ApiGetResponse<User>(result);
-                return Ok(response);
-            }
-            catch (ApiErrorException ex)
-            {
-                return BadRequest(new ApiErrorResponse(400, ex.errors));
             }
             catch (Exception ex)
             {

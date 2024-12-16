@@ -47,6 +47,86 @@ namespace AlpimiTest.Entities.ESubgroup
         }
 
         [Fact]
+        public async Task SubgroupControllerThrowsUnauthorized()
+        {
+            _client.DefaultRequestHeaders.Authorization = null;
+
+            var response = await _client.DeleteAsync($"/api/Subgroup/{new Guid()}");
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+
+            response = await _client.PostAsJsonAsync(
+                "/api/Subgroup",
+                MockData.GetCreateSubgroupDTODetails(groupId)
+            );
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+
+            var query = $"?groupId={new Guid()}";
+            response = await _client.GetAsync($"/api/Subgroup{query}");
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+
+            response = await _client.PatchAsJsonAsync(
+                $"/api/Subgroup/{new Guid()}",
+                MockData.GetUpdateSubgroupDTODetails()
+            );
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+
+            response = await _client.GetAsync($"/api/Subgroup/{new Guid()}");
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task SubgroupControllerThrowsTooManyRequests()
+        {
+            for (int i = 0; i != Configuration.GetPermitLimit(); i++)
+            {
+                await _client.GetAsync("/api/Subgroup");
+            }
+
+            _client.DefaultRequestHeaders.Authorization = null;
+
+            var response = await _client.DeleteAsync($"/api/Subgroup/{new Guid()}");
+            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
+
+            response = await _client.PostAsJsonAsync(
+                "/api/Subgroup",
+                MockData.GetCreateSubgroupDTODetails(groupId)
+            );
+            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
+
+            var query = $"?groupId={new Guid()}";
+            response = await _client.GetAsync($"/api/Subgroup{query}");
+            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
+
+            response = await _client.PatchAsJsonAsync(
+                $"/api/Subgroup/{new Guid()}",
+                MockData.GetUpdateSubgroupDTODetails()
+            );
+            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
+
+            response = await _client.GetAsync($"/api/Subgroup/{new Guid()}");
+            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task SubgroupIsCreated()
+        {
+            var subgroupRequest = MockData.GetCreateSubgroupDTODetails(groupId);
+
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", userId)
+            );
+
+            var response = await _client.PostAsJsonAsync("/api/Subgroup", subgroupRequest);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            var query = $"?id={groupId}";
+            response = await _client.GetAsync($"/api/Subgroup{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            Assert.Contains(subgroupRequest.Name, stringResponse);
+        }
+
+        [Fact]
         public async Task SubgroupIsDeleted()
         {
             var subgroupRequest = MockData.GetCreateSubgroupDTODetails(groupId);
@@ -89,25 +169,6 @@ namespace AlpimiTest.Entities.ESubgroup
             response = await _client.GetAsync($"/api/Lesson");
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.DoesNotContain(lessonRequest.Name, stringResponse);
-        }
-
-        [Fact]
-        public async Task SubgroupIsCreated()
-        {
-            var subgroupRequest = MockData.GetCreateSubgroupDTODetails(groupId);
-
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-                "Bearer",
-                TestAuthorization.GetToken("Admin", "User", userId)
-            );
-
-            var response = await _client.PostAsJsonAsync("/api/Subgroup", subgroupRequest);
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-
-            var query = $"?id={groupId}";
-            response = await _client.GetAsync($"/api/Subgroup{query}");
-            var stringResponse = await response.Content.ReadAsStringAsync();
-            Assert.Contains(subgroupRequest.Name, stringResponse);
         }
 
         [Fact]
@@ -291,23 +352,6 @@ namespace AlpimiTest.Entities.ESubgroup
         }
 
         [Fact]
-        public async Task GetSubgroupThrowsNotFoundWhenWrongIdIsGiven()
-        {
-            var subgroupRequest = MockData.GetCreateSubgroupDTODetails(groupId);
-
-            await DbHelper.SetupSubgroup(_client, subgroupRequest);
-
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-                "Bearer",
-                TestAuthorization.GetToken("Admin", "User", userId)
-            );
-
-            var response = await _client.GetAsync($"/api/Subgroup/{new Guid()}");
-
-            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
-        }
-
-        [Fact]
         public async Task GetSubgroupThrowsNotFoundErrorWhenWrongUserTokenIsGiven()
         {
             var subgroupRequest = MockData.GetCreateSubgroupDTODetails(groupId);
@@ -325,64 +369,20 @@ namespace AlpimiTest.Entities.ESubgroup
         }
 
         [Fact]
-        public async Task SubgroupControllerThrowsUnauthorized()
+        public async Task GetSubgroupThrowsNotFoundWhenWrongIdIsGiven()
         {
-            _client.DefaultRequestHeaders.Authorization = null;
+            var subgroupRequest = MockData.GetCreateSubgroupDTODetails(groupId);
 
-            var response = await _client.DeleteAsync($"/api/Subgroup/{new Guid()}");
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+            await DbHelper.SetupSubgroup(_client, subgroupRequest);
 
-            response = await _client.PostAsJsonAsync(
-                "/api/Subgroup",
-                MockData.GetCreateSubgroupDTODetails(groupId)
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", userId)
             );
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
 
-            var query = $"?groupId={new Guid()}";
-            response = await _client.GetAsync($"/api/Subgroup{query}");
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+            var response = await _client.GetAsync($"/api/Subgroup/{new Guid()}");
 
-            response = await _client.PatchAsJsonAsync(
-                $"/api/Subgroup/{new Guid()}",
-                MockData.GetUpdateSubgroupDTODetails()
-            );
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-
-            response = await _client.GetAsync($"/api/Subgroup/{new Guid()}");
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-        }
-
-        [Fact]
-        public async Task SubgroupControllerThrowsTooManyRequests()
-        {
-            for (int i = 0; i != Configuration.GetPermitLimit(); i++)
-            {
-                await _client.GetAsync("/api/Subgroup");
-            }
-
-            _client.DefaultRequestHeaders.Authorization = null;
-
-            var response = await _client.DeleteAsync($"/api/Subgroup/{new Guid()}");
-            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
-
-            response = await _client.PostAsJsonAsync(
-                "/api/Subgroup",
-                MockData.GetCreateSubgroupDTODetails(groupId)
-            );
-            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
-
-            var query = $"?groupId={new Guid()}";
-            response = await _client.GetAsync($"/api/Subgroup{query}");
-            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
-
-            response = await _client.PatchAsJsonAsync(
-                $"/api/Subgroup/{new Guid()}",
-                MockData.GetUpdateSubgroupDTODetails()
-            );
-            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
-
-            response = await _client.GetAsync($"/api/Subgroup/{new Guid()}");
-            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
     }
 }

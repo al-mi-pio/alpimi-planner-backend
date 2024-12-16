@@ -2,11 +2,12 @@
 
 ## `ALL` `api/User/*`
 
+- [UserControllerThrowsUnauthorized()](../Entities/UserController.test.cs) - **integrity**  
+  Check if returns an error when token is not provided
+
 - [UserControllerThrowsTooManyRequests()](../Entities/EUser/UserController.test.cs) - **integrity**  
   Check if returns an error when request is sent too many times
 
-- [UserControllerThrowsUnauthorized()](../Entities/UserController.test.cs) - **integrity**  
-  Check if returns an error when token is not provided
 
 ## `POST` `api/User`
 
@@ -43,16 +44,6 @@
 - [ThrowsMultipleErrorMessages()](../Entities/EUser/Commands/CreateUserCommand.unit.cs) - **unit**  
   Check if returns multiple errors when provided with multiple invalid parameters
 
-## `GET` `api/User/{id}`
-
-- [GetUserReturnsUser()](../Entities/EUser/UserController.test.cs) - **integrity**  
-  Check if returns a user when a valid token is provided
-
-- [GetUserThrowsNotFoundWhenWrongIdIsGiven()](../Entities/EUser/UserController.test.cs) - **integrity**  
-  Check if returns an error when a user doesn't exists
-
-- [GetUserThrowsNotFoundErrorWhenWrongUserAttemptsGet()](../Entities/UserController.test.cs) - **integrity**  
-  Check if returns an error when a user is inaccessible for user
 
 ## `DELETE` `api/User/{id}`
 
@@ -61,6 +52,7 @@
 
 - [DeleteUserThrowsForbiddenErrorWhenNoTokenIsGiven()](../Entities/EUser/UserController.test.cs) - **integrity**  
   Check if returns forbidden when a invalid token is provided
+
 
 ## `PATCH` `api/User/{id}`
 
@@ -76,15 +68,30 @@
 - [ThrowsErrorWhenURLAlreadyExists()](../Entities/EUser/Commands/UpdateUserCommand.unit.cs) - **unit**  
   Check if returns an error when url is already taken
 
+
+## `GET` `api/User/{id}`
+
+- [GetUserReturnsUser()](../Entities/EUser/UserController.test.cs) - **integrity**  
+  Check if returns a user when a valid token is provided
+
+- [GetUserThrowsNotFoundErrorWhenWrongUserAttemptsGet()](../Entities/UserController.test.cs) - **integrity**  
+  Check if returns an error when a user is inaccessible for user
+
+- [GetUserThrowsNotFoundWhenWrongIdIsGiven()](../Entities/EUser/UserController.test.cs) - **integrity**  
+  Check if returns an error when a user doesn't exists
+
+
 ## `GET` `api/User/byLogin/{login}`
 
 - [GetUserByNameReturnsUser()](../Entities/EUser/UserController.test.cs) - **integrity**  
   Check if returns a user when a valid token is provided
 
-- [GetUserByNameThrowsNotFoundWhenWrongIdIsGiven()](../Entities/EUser/UserController.test.cs) - **integrity**  
-  Check if returns an error when a user doesn't exists
-
 - [GetUserByNameThrowsNotFoundErrorWhenWrongUserAttemptsGet()](../Entities/EUser/UserController.test.cs) - **integrity**  
   Check if returns an error when a user is inaccessible for the user
+
+- [GetUserByNameThrowsNotFoundWhenWrongLoginIsGiven()](../Entities/EUser/UserController.test.cs) - **integrity**  
+  Check if returns an error when a user doesn't exists
+
+
 
 

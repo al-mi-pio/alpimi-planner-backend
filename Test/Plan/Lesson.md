@@ -2,11 +2,12 @@
 
 ## `ALL` `api/Lesson/*`
 
+- [LessonSettingsControllerThrowsUnauthorized()](../Entities/ELesson/LessonController.test.cs) - **integrity**  
+  Check if returns an error when token is not provided
+
 - [LessonControllerThrowsTooManyRequests()](../Entities/ELesson/LessonController.test.cs) - **integrity**  
   Check if returns an error when request is sent too many times
 
-- [LessonSettingsControllerThrowsUnauthorized()](../Entities/ELesson/LessonController.test.cs) - **integrity**  
-  Check if returns an error when token is not provided
 
 ## `POST` `api/Lesson`
 
@@ -16,14 +17,17 @@
 - [LessonIsCreatedWithClassroomTypes()](../Entities/ELesson/LessonController.test.cs) - **integrity**  
   Check if lesson is created with classroom types when provided with correct data
 
-- [ThrowsErrorWhenNameIsAlreadyTakenByLesson()](../Entities/ELesson/CreateLessonCommand.unit.cs) - **unit**  
-  Check if returns an error when a taken by lesson name is provided
-
 - [ThrowsErrorWhenWrongLessonTypeIdIsGiven()](../Entities/ELesson/CreateLessonCommand.unit.cs) - **unit** 
   Check if returns an error when incorrect id is provided
 
 - [ThrowsErrorWhenWrongSubgroupIdIsGiven()](../Entities/ELesson/CreateLessonCommand.unit.cs) - **unit** 
   Check if returns an error when incorrect id is provided
+
+- [ThrowsErrorWhenWrongClassroomTypeIdIsGiven()](../Entities/ELesson/CreateLessonCommand.unit.cs) - **unit** 			
+  Check if returns an error when incorrect classroom type id is provided
+
+- [ThrowsErrorWhenNameIsAlreadyTakenByLesson()](../Entities/ELesson/CreateLessonCommand.unit.cs) - **unit**  
+  Check if returns an error when a taken by lesson name is provided
 
 - [ThrowsErrorWhenAmountOfHoursIsLessThan1()](../Entities/ELesson/Commands/CreateLessonCommand.unit.cs) - **unit** 
   Check if returns an error when student count is less than 1
@@ -31,16 +35,58 @@
 - [ThrowsErrorWhenDuplicatedClassroomTypeIdsAreGiven()](../Entities/ELesson/CreateLessonCommand.unit.cs) - **unit** 			
   Check if returns an error when duplicated classroom type ids are provided
 
-- [ThrowsErrorWhenWrongClassroomTypeIdIsGiven()](../Entities/ELesson/CreateLessonCommand.unit.cs) - **unit** 			
-  Check if returns an error when incorrect classroom type id is provided
+- [ThrowsErrorWhenScheduleIdsFromClassroomTypeAndLessonDontMatch()](../Entities/ELesson/CreateLessonCommand.unit.cs) - **unit** 			
+  Check if returns an error when classroom type and lesson are from different schedules
 
 - [ThrowsErrorWhenScheduleIdsFromLessonTypeAndSubgroupDontMatch()](../Entities/ELesson/CreateLessonCommand.unit.cs) - **unit** 			
   Check if returns an error when lesson type and subgroup are from different schedules
 
-- [ThrowsErrorWhenScheduleIdsFromClassroomTypeAndLessonDontMatch()](../Entities/ELesson/CreateLessonCommand.unit.cs) - **unit** 			
+
+## `DELETE` `api/Lesson/{id}`
+
+- [LessonIsDeleted()](../Entities/ELesson/LessonController.test.cs) - **integrity**  
+  Check if lesson is deleted when a valid token is provided
+
+
+## `PATCH` `api/Lesson/{id}`
+
+- [UpdateLessonReturnsUpdatedLesson()](../Entities/ELesson/LessonController.test.cs) - **integrity**  
+  Check if returns an updated lesson when provided with correct data
+
+- [UpdateLessonUpdatesClassroomsClassroomTypes()](../Entities/EClassroom/ClassroomController.test.cs) - **integrity**  
+  Check if updates lesson classroom types when provided with correct data
+
+- [UpdateLessonThrowsNotFoundErrorWhenWrongIdIsGiven()](../Entities/ELesson/LessonController.test.cs) - **integrity**  
+  Check if returns an error when lesson doesn't exists
+
+- [UpdateLessonThrowsNotFoundErrorWhenWrongUserAttemptsUpdate()](../Entities/ELesson/LessonController.test.cs) - **integrity**  
+  Check if returns an error when lesson is inaccessible for user
+
+- [ThrowsErrorWhenWrongLessonTypeIdIsGiven()](../Entities/ELesson/UpdateLessonCommand.unit.cs) - **unit** 
+  Check if returns an error when incorrect id is provided
+
+- [ThrowsErrorWhenWrongSubgroupIdIsGiven()](../Entities/ELesson/UpdateLessonCommand.unit.cs) - **unit** 			
+  Check if returns an error when incorrect subgroup  id is provided
+
+- [ThrowsErrorWhenWrongClassroomTypeIdIsGiven()](../Entities/ELesson/UpdateLessonCommand.unit.cs) - **unit** 			
+  Check if returns an error when incorrect classroom type id is provided
+
+- [ThrowsErrorWhenNameIsAlreadyTakenByLesson()](../Entities/ELesson/Commands/UpdateLessonCommand.unit.cs) - **unit**  
+  Check if returns an error when a taken by lesson name is provided
+
+- [ThrowsErrorWhenAmountOfHoursIsLessThan1()](../Entities/ELesson/Commands/UpdateLessonCommand.unit.cs) - **unit** 
+  Check if returns an error when student count is less than 1
+
+- [ThrowsErrorWhenDuplicatedClassroomTypeIdsAreGiven()](../Entities/ELesson/UpdateLessonCommand.unit.cs) - **unit** 			
+  Check if returns an error when duplicated classroom type ids are provided
+
+- [ThrowsErrorWhenScheduleIdsFromClassroomTypeAndLessonDontMatch()](../Entities/ELesson/UpdateLessonCommand.unit.cs) - **unit** 			
   Check if returns an error when classroom type and lesson are from different schedules
 
+- [ThrowsErrorWhenScheduleIdsFromLessonTypeAndSubgroupDontMatch()](../Entities/ELesson/UpdateLessonCommand.unit.cs) - **unit** 			
+  Check if returns an error when lesson type and subgroup are from different schedules
 
+- 
 ## `GET` `api/Lesson`
 
 - [GetAllLessonsReturnsLessonsFromGroupIfGroupIdIsProvided()](../Entities/ELesson/LessonController.test.cs) - **integrity**  
@@ -70,6 +116,7 @@
 - [ThrowsMultipleErrorMessages()](../Entities/ELesson/Queries/GetAllLesson.unit.cs) - **unit**  
   Check if returns multiple errors when provided with multiple invalid parameters
 
+
 ## `GET` `api/Lesson{id}`
 
 - [GetLessonReturnsLesson()](../Entities/ELesson/LessonController.test.cs) - **integrity**  
@@ -80,49 +127,5 @@
 
 - [GetLessonThrowsNotFoundWhenWrongIdIsGiven()](../Entities/ELesson/LessonController.test.cs) - **integrity**  
   Check if returns no days off when wrong id is provided
-
-## `DELETE` `api/Lesson/{id}`
-
-- [LessonIsDeleted()](../Entities/ELesson/LessonController.test.cs) - **integrity**  
-  Check if lesson is deleted when a valid token is provided
-
-## `PATCH` `api/Lesson/{id}`
-
-- [UpdateLessonReturnsUpdatedLesson()](../Entities/ELesson/LessonController.test.cs) - **integrity**  
-  Check if returns an updated lesson when provided with correct data
-
-- [UpdateLessonUpdatesClassroomsClassroomTypes()](../Entities/EClassroom/ClassroomController.test.cs) - **integrity**  
-  Check if updates lesson classroom types when provided with correct data
-
-- [UpdateLessonThrowsNotFoundErrorWhenWrongIdIsGiven()](../Entities/ELesson/LessonController.test.cs) - **integrity**  
-  Check if returns an error when lesson doesn't exists
-
-- [UpdateLessonThrowsNotFoundErrorWhenWrongUserAttemptsUpdate()](../Entities/ELesson/LessonController.test.cs) - **integrity**  
-  Check if returns an error when lesson is inaccessible for user
-
-- [ThrowsErrorWhenNameIsAlreadyTakenByLesson()](../Entities/ELesson/Commands/UpdateLessonCommand.unit.cs) - **unit**  
-  Check if returns an error when a taken by lesson name is provided
-
-- [ThrowsErrorWhenAmountOfHoursIsLessThan1()](../Entities/ELesson/Commands/UpdateLessonCommand.unit.cs) - **unit** 
-  Check if returns an error when student count is less than 1
-
-- [ThrowsErrorWhenDuplicatedClassroomTypeIdsAreGiven()](../Entities/ELesson/UpdateLessonCommand.unit.cs) - **unit** 			
-  Check if returns an error when duplicated classroom type ids are provided
-
-- [ThrowsErrorWhenWrongClassroomTypeIdIsGiven()](../Entities/ELesson/UpdateLessonCommand.unit.cs) - **unit** 			
-  Check if returns an error when incorrect classroom type id is provided
-
-- [ThrowsErrorWhenWrongSubgroupIdIsGiven()](../Entities/ELesson/UpdateLessonCommand.unit.cs) - **unit** 			
-  Check if returns an error when incorrect subgroup  id is provided
-
-- [ThrowsErrorWhenWrongLessonTypeIdIsGiven()](../Entities/ELesson/UpdateLessonCommand.unit.cs) - **unit** 			
-  Check if returns an error when incorrect lesson type id is provided
-
-- [ThrowsErrorWhenScheduleIdsFromLessonTypeAndSubgroupDontMatch()](../Entities/ELesson/UpdateLessonCommand.unit.cs) - **unit** 			
-  Check if returns an error when lesson type and subgroup are from different schedules
-
-- [ThrowsErrorWhenScheduleIdsFromClassroomTypeAndLessonDontMatch()](../Entities/ELesson/UpdateLessonCommand.unit.cs) - **unit** 			
-  Check if returns an error when classroom type and lesson are from different schedules
-
 
 

@@ -66,23 +66,64 @@ namespace AlpimiTest.Entities.ELesson
         }
 
         [Fact]
-        public async Task LessonIsDeleted()
+        public async Task LessonControllerThrowsUnauthorized()
         {
-            var lessonRequest = MockData.GetCreateLessonDTODetails(subgroupId1, lessonTypeId);
-            var lessonId = await DbHelper.SetupLesson(_client, lessonRequest);
+            _client.DefaultRequestHeaders.Authorization = null;
 
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-                "Bearer",
-                TestAuthorization.GetToken("Admin", "User", new Guid())
+            var response = await _client.DeleteAsync($"/api/Lesson/{new Guid()}");
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+
+            response = await _client.PostAsJsonAsync(
+                "/api/Lesson",
+                MockData.GetCreateLessonDTODetails(subgroupId1, lessonTypeId)
             );
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
 
-            var response = await _client.DeleteAsync($"/api/Lesson/{lessonId}");
-            Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+            var query = $"?groupId={new Guid()}";
+            response = await _client.GetAsync($"/api/Lesson{query}");
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
 
-            var query = $"?id={groupId}";
-            response = await _client.GetAsync($"/api/Lesson");
-            var stringResponse = await response.Content.ReadAsStringAsync();
-            Assert.DoesNotContain(lessonRequest.Name, stringResponse);
+            response = await _client.PatchAsJsonAsync(
+                $"/api/Lesson/{new Guid()}",
+                MockData.GetUpdateLessonDTODetails()
+            );
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+
+            response = await _client.GetAsync($"/api/Lesson/{new Guid()}");
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task LessonControllerThrowsTooManyRequests()
+        {
+            for (int i = 0; i != Configuration.GetPermitLimit(); i++)
+            {
+                await _client.GetAsync("/api/Lesson");
+            }
+
+            _client.DefaultRequestHeaders.Authorization = null;
+
+            var response = await _client.DeleteAsync($"/api/Lesson/{new Guid()}");
+            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
+
+            response = await _client.PostAsJsonAsync(
+                "/api/Lesson",
+                MockData.GetCreateLessonDTODetails(subgroupId1, lessonTypeId)
+            );
+            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
+
+            var query = $"?groupId={new Guid()}";
+            response = await _client.GetAsync($"/api/Lesson{query}");
+            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
+
+            response = await _client.PatchAsJsonAsync(
+                $"/api/Lesson/{new Guid()}",
+                MockData.GetUpdateLessonDTODetails()
+            );
+            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
+
+            response = await _client.GetAsync($"/api/Lesson/{new Guid()}");
+            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
         }
 
         [Fact]
@@ -128,6 +169,26 @@ namespace AlpimiTest.Entities.ELesson
             var stringResponse = await response.Content.ReadAsStringAsync();
 
             Assert.Contains(classroomTypeRequest.Name, stringResponse);
+        }
+
+        [Fact]
+        public async Task LessonIsDeleted()
+        {
+            var lessonRequest = MockData.GetCreateLessonDTODetails(subgroupId1, lessonTypeId);
+            var lessonId = await DbHelper.SetupLesson(_client, lessonRequest);
+
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", new Guid())
+            );
+
+            var response = await _client.DeleteAsync($"/api/Lesson/{lessonId}");
+            Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+
+            var query = $"?id={groupId}";
+            response = await _client.GetAsync($"/api/Lesson");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            Assert.DoesNotContain(lessonRequest.Name, stringResponse);
         }
 
         [Fact]
@@ -345,23 +406,6 @@ namespace AlpimiTest.Entities.ELesson
         }
 
         [Fact]
-        public async Task GetLessonThrowsNotFoundWhenWrongIdIsGiven()
-        {
-            var lessonRequest = MockData.GetCreateLessonDTODetails(subgroupId1, lessonTypeId);
-
-            await DbHelper.SetupLesson(_client, lessonRequest);
-
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-                "Bearer",
-                TestAuthorization.GetToken("Admin", "User", userId)
-            );
-
-            var response = await _client.GetAsync($"/api/Lesson/{new Guid()}");
-
-            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
-        }
-
-        [Fact]
         public async Task GetLessonThrowsNotFoundErrorWhenWrongUserTokenIsGiven()
         {
             var lessonRequest = MockData.GetCreateLessonDTODetails(subgroupId1, lessonTypeId);
@@ -379,64 +423,20 @@ namespace AlpimiTest.Entities.ELesson
         }
 
         [Fact]
-        public async Task LessonControllerThrowsUnauthorized()
+        public async Task GetLessonThrowsNotFoundWhenWrongIdIsGiven()
         {
-            _client.DefaultRequestHeaders.Authorization = null;
+            var lessonRequest = MockData.GetCreateLessonDTODetails(subgroupId1, lessonTypeId);
 
-            var response = await _client.DeleteAsync($"/api/Lesson/{new Guid()}");
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+            await DbHelper.SetupLesson(_client, lessonRequest);
 
-            response = await _client.PostAsJsonAsync(
-                "/api/Lesson",
-                MockData.GetCreateLessonDTODetails(subgroupId1, lessonTypeId)
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", userId)
             );
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
 
-            var query = $"?groupId={new Guid()}";
-            response = await _client.GetAsync($"/api/Lesson{query}");
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+            var response = await _client.GetAsync($"/api/Lesson/{new Guid()}");
 
-            response = await _client.PatchAsJsonAsync(
-                $"/api/Lesson/{new Guid()}",
-                MockData.GetUpdateLessonDTODetails()
-            );
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-
-            response = await _client.GetAsync($"/api/Lesson/{new Guid()}");
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-        }
-
-        [Fact]
-        public async Task LessonControllerThrowsTooManyRequests()
-        {
-            for (int i = 0; i != Configuration.GetPermitLimit(); i++)
-            {
-                await _client.GetAsync("/api/Lesson");
-            }
-
-            _client.DefaultRequestHeaders.Authorization = null;
-
-            var response = await _client.DeleteAsync($"/api/Lesson/{new Guid()}");
-            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
-
-            response = await _client.PostAsJsonAsync(
-                "/api/Lesson",
-                MockData.GetCreateLessonDTODetails(subgroupId1, lessonTypeId)
-            );
-            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
-
-            var query = $"?groupId={new Guid()}";
-            response = await _client.GetAsync($"/api/Lesson{query}");
-            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
-
-            response = await _client.PatchAsJsonAsync(
-                $"/api/Lesson/{new Guid()}",
-                MockData.GetUpdateLessonDTODetails()
-            );
-            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
-
-            response = await _client.GetAsync($"/api/Lesson/{new Guid()}");
-            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
     }
 }

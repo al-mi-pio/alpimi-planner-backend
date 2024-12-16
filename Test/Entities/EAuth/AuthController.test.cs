@@ -32,36 +32,6 @@ namespace AlpimiTest.Entities.EAuth
         }
 
         [Fact]
-        public async Task RefreshTokenThrowsUnothorizedErrorWhenNoJWTTokenIsGiven()
-        {
-            _client.DefaultRequestHeaders.Authorization = null;
-            var response = await _client.GetAsync("/api/Auth/refresh");
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-        }
-
-        [Fact]
-        public async Task RefreshTokenReturnsOKStatusCodeWhenCorrectJWTTokenIsGiven()
-        {
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-                "Bearer",
-                TestAuthorization.GetToken("Admin", "Random", new Guid())
-            );
-            var response = await _client.GetAsync("/api/Auth/refresh");
-
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        }
-
-        [Fact]
-        public async Task LoginReturnsOKStatusCode()
-        {
-            var loginRequest = MockData.GetLoginDTODetails();
-
-            var response = await _client.PostAsJsonAsync("/api/Auth/login", loginRequest);
-
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        }
-
-        [Fact]
         public async Task AuthControllerThrowsTooManyRequests()
         {
             for (int i = 0; i != Configuration.GetPermitLimit(); i++)
@@ -77,6 +47,36 @@ namespace AlpimiTest.Entities.EAuth
                 MockData.GetLoginDTODetails()
             );
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task LoginReturnsOKStatusCode()
+        {
+            var loginRequest = MockData.GetLoginDTODetails();
+
+            var response = await _client.PostAsJsonAsync("/api/Auth/login", loginRequest);
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task RefreshTokenReturnsOKStatusCodeWhenCorrectJWTTokenIsGiven()
+        {
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "Random", new Guid())
+            );
+            var response = await _client.GetAsync("/api/Auth/refresh");
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task RefreshTokenThrowsUnothorizedErrorWhenNoJWTTokenIsGiven()
+        {
+            _client.DefaultRequestHeaders.Authorization = null;
+            var response = await _client.GetAsync("/api/Auth/refresh");
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         }
     }
 }

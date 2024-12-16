@@ -42,23 +42,64 @@ namespace AlpimiTest.Entities.ETeacher
         }
 
         [Fact]
-        public async Task TeacherIsDeleted()
+        public async Task TeacherControllerThrowsUnauthorized()
         {
-            var teacherRequest = MockData.GetCreateTeacherDTODetails(scheduleId);
-            var teacherId = await DbHelper.SetupTeacher(_client, teacherRequest);
+            _client.DefaultRequestHeaders.Authorization = null;
 
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-                "Bearer",
-                TestAuthorization.GetToken("Admin", "User", new Guid())
+            var response = await _client.DeleteAsync($"/api/Teacher/{new Guid()}");
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+
+            response = await _client.PostAsJsonAsync(
+                "/api/Teacher",
+                MockData.GetCreateTeacherDTODetails(scheduleId)
             );
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
 
-            var response = await _client.DeleteAsync($"/api/Teacher/{teacherId}");
-            Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+            var query = $"?scheduleId={new Guid()}";
+            response = await _client.GetAsync($"/api/Teacher{query}");
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
 
-            var query = $"?scheduleId={scheduleId}";
-            response = await _client.GetAsync($"/api/Teacher");
-            var stringResponse = await response.Content.ReadAsStringAsync();
-            Assert.DoesNotContain(teacherRequest.Name, stringResponse);
+            response = await _client.PatchAsJsonAsync(
+                $"/api/Teacher/{new Guid()}",
+                MockData.GetUpdateTeacherDTODetails()
+            );
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+
+            response = await _client.GetAsync($"/api/Teacher/{new Guid()}");
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task TeacherControllerThrowsTooManyRequests()
+        {
+            for (int i = 0; i != Configuration.GetPermitLimit(); i++)
+            {
+                await _client.GetAsync("/api/Teacher");
+            }
+
+            _client.DefaultRequestHeaders.Authorization = null;
+
+            var response = await _client.DeleteAsync($"/api/Teacher/{new Guid()}");
+            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
+
+            response = await _client.PostAsJsonAsync(
+                "/api/Teacher",
+                MockData.GetCreateTeacherDTODetails(scheduleId)
+            );
+            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
+
+            var query = $"?scheduleId={new Guid()}";
+            response = await _client.GetAsync($"/api/Teacher{query}");
+            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
+
+            response = await _client.PatchAsJsonAsync(
+                $"/api/Teacher/{new Guid()}",
+                MockData.GetUpdateTeacherDTODetails()
+            );
+            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
+
+            response = await _client.GetAsync($"/api/Teacher/{new Guid()}");
+            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
         }
 
         [Fact]
@@ -78,6 +119,26 @@ namespace AlpimiTest.Entities.ETeacher
             response = await _client.GetAsync($"/api/Teacher{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.Contains(teacherRequest.Name, stringResponse);
+        }
+
+        [Fact]
+        public async Task TeacherIsDeleted()
+        {
+            var teacherRequest = MockData.GetCreateTeacherDTODetails(scheduleId);
+            var teacherId = await DbHelper.SetupTeacher(_client, teacherRequest);
+
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", new Guid())
+            );
+
+            var response = await _client.DeleteAsync($"/api/Teacher/{teacherId}");
+            Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+
+            var query = $"?scheduleId={scheduleId}";
+            response = await _client.GetAsync($"/api/Teacher");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            Assert.DoesNotContain(teacherRequest.Name, stringResponse);
         }
 
         [Fact]
@@ -151,7 +212,7 @@ namespace AlpimiTest.Entities.ETeacher
         }
 
         [Fact]
-        public async Task GetAllTeacherByScheduleReturnsDaysOff()
+        public async Task GetAllTeacherByScheduleReturnsTeachers()
         {
             var teacherRequest1 = MockData.GetCreateTeacherDTODetails(scheduleId);
             var teacherRequest2 = MockData.GetCreateSecondTeacherDTODetails(scheduleId);
@@ -235,23 +296,6 @@ namespace AlpimiTest.Entities.ETeacher
         }
 
         [Fact]
-        public async Task GetScheduleThrowsNotFoundWhenWrongIdIsGiven()
-        {
-            var teacherRequest = MockData.GetCreateTeacherDTODetails(scheduleId);
-
-            await DbHelper.SetupTeacher(_client, teacherRequest);
-
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-                "Bearer",
-                TestAuthorization.GetToken("Admin", "User", userId)
-            );
-
-            var response = await _client.GetAsync($"/api/Teacher/{new Guid()}");
-
-            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
-        }
-
-        [Fact]
         public async Task GetScheduleThrowsNotFoundErrorWhenWrongUserTokenIsGiven()
         {
             var teacherRequest = MockData.GetCreateTeacherDTODetails(scheduleId);
@@ -269,64 +313,20 @@ namespace AlpimiTest.Entities.ETeacher
         }
 
         [Fact]
-        public async Task TeacherControllerThrowsUnauthorized()
+        public async Task GetScheduleThrowsNotFoundWhenWrongIdIsGiven()
         {
-            _client.DefaultRequestHeaders.Authorization = null;
+            var teacherRequest = MockData.GetCreateTeacherDTODetails(scheduleId);
 
-            var response = await _client.DeleteAsync($"/api/Teacher/{new Guid()}");
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+            await DbHelper.SetupTeacher(_client, teacherRequest);
 
-            response = await _client.PostAsJsonAsync(
-                "/api/Teacher",
-                MockData.GetCreateTeacherDTODetails(scheduleId)
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", userId)
             );
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
 
-            var query = $"?scheduleId={new Guid()}";
-            response = await _client.GetAsync($"/api/Teacher{query}");
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+            var response = await _client.GetAsync($"/api/Teacher/{new Guid()}");
 
-            response = await _client.PatchAsJsonAsync(
-                $"/api/Teacher/{new Guid()}",
-                MockData.GetUpdateTeacherDTODetails()
-            );
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-
-            response = await _client.GetAsync($"/api/Teacher/{new Guid()}");
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-        }
-
-        [Fact]
-        public async Task TeacherControllerThrowsTooManyRequests()
-        {
-            for (int i = 0; i != Configuration.GetPermitLimit(); i++)
-            {
-                await _client.GetAsync("/api/Teacher");
-            }
-
-            _client.DefaultRequestHeaders.Authorization = null;
-
-            var response = await _client.DeleteAsync($"/api/Teacher/{new Guid()}");
-            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
-
-            response = await _client.PostAsJsonAsync(
-                "/api/Teacher",
-                MockData.GetCreateTeacherDTODetails(scheduleId)
-            );
-            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
-
-            var query = $"?scheduleId={new Guid()}";
-            response = await _client.GetAsync($"/api/Teacher{query}");
-            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
-
-            response = await _client.PatchAsJsonAsync(
-                $"/api/Teacher/{new Guid()}",
-                MockData.GetUpdateTeacherDTODetails()
-            );
-            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
-
-            response = await _client.GetAsync($"/api/Teacher/{new Guid()}");
-            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
     }
 }

@@ -232,6 +232,9 @@ namespace AlpimiTest.Entities.ELesson.Commands
             _dbService
                 .Setup(s => s.Get<Lesson>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetLessonDetails());
+            _dbService
+                .Setup(s => s.Get<Subgroup>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetSubgroupDetails());
 
             var createLessonCommand = new UpdateLessonCommand(new Guid(), dto, new Guid(), "User");
 

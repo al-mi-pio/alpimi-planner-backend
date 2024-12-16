@@ -40,6 +40,10 @@ namespace AlpimiTest.Entities.ELesson.Commands
                 "User"
             );
 
+            _dbService
+                .Setup(s => s.Get<Subgroup>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetSubgroupDetails());
+
             var createLessonHandler = new CreateLessonHandler(_dbService.Object, _str.Object);
 
             var result = await Assert.ThrowsAsync<ApiErrorException>(

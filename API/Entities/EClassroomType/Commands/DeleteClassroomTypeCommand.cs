@@ -47,7 +47,7 @@ namespace AlpimiAPI.Entities.EClassroomType.Commands
                             DELETE cct
                             FROM [ClassroomClassroomType] cct
                             INNER JOIN [ClassroomType] ct ON ct.[Id] = cct.[ClassroomTypeId]
-                            INNER JOIN [Schedule] s ON s.[Id] = ct.[ScheduleId] 
+                            INNER JOIN [Schedule] s ON s.[Id] = ct.[ScheduleId]
                             WHERE s.[UserId] = @FilteredId AND cct.[ClassroomTypeId] = @Id;",
                         request
                     );

@@ -57,6 +57,7 @@ namespace AlpimiAPI.Entities.ESubgroup
             try
             {
                 var result = await _mediator.Send(command);
+
                 var response = new ApiGetResponse<Guid>(result);
                 return Ok(response);
             }
@@ -134,6 +135,7 @@ namespace AlpimiAPI.Entities.ESubgroup
                         new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "Subgroup"])])
                     );
                 }
+
                 var response = new ApiGetResponse<SubgroupDTO>(DataTrimmer.Trim(result));
                 return Ok(response);
             }
@@ -180,6 +182,7 @@ namespace AlpimiAPI.Entities.ESubgroup
             try
             {
                 (IEnumerable<Subgroup>?, int) result = await _mediator.Send(query);
+
                 var response = new ApiGetAllResponse<IEnumerable<SubgroupDTO>>(
                     result.Item1!.Select(DataTrimmer.Trim),
                     new Pagination(result.Item2, perPage, page, sortBy, sortOrder)
@@ -227,8 +230,8 @@ namespace AlpimiAPI.Entities.ESubgroup
                         new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "Subgroup"])])
                     );
                 }
-                var response = new ApiGetResponse<SubgroupDTO>(DataTrimmer.Trim(result));
 
+                var response = new ApiGetResponse<SubgroupDTO>(DataTrimmer.Trim(result));
                 return Ok(response);
             }
             catch (Exception ex)

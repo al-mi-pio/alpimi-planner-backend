@@ -56,6 +56,7 @@ namespace AlpimiAPI.Entities.ESchedule
             try
             {
                 var result = await _mediator.Send(command);
+
                 var response = new ApiGetResponse<Guid>(result);
                 return Ok(response);
             }
@@ -133,6 +134,7 @@ namespace AlpimiAPI.Entities.ESchedule
                         new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "Schedule"])])
                     );
                 }
+
                 var response = new ApiGetResponse<ScheduleDTO>(DataTrimmer.Trim(result));
                 return Ok(response);
             }
@@ -177,6 +179,7 @@ namespace AlpimiAPI.Entities.ESchedule
             try
             {
                 (IEnumerable<Schedule>?, int) result = await _mediator.Send(query);
+
                 var response = new ApiGetAllResponse<IEnumerable<ScheduleDTO>>(
                     result.Item1!.Select(DataTrimmer.Trim),
                     new Pagination(result.Item2, perPage, page, sortBy, sortOrder)
@@ -224,8 +227,8 @@ namespace AlpimiAPI.Entities.ESchedule
                         new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "Schedule"])])
                     );
                 }
-                var response = new ApiGetResponse<ScheduleDTO>(DataTrimmer.Trim(result));
 
+                var response = new ApiGetResponse<ScheduleDTO>(DataTrimmer.Trim(result));
                 return Ok(response);
             }
             catch (Exception ex)
@@ -265,6 +268,7 @@ namespace AlpimiAPI.Entities.ESchedule
                         new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "Schedule"])])
                     );
                 }
+
                 var response = new ApiGetResponse<ScheduleDTO>(DataTrimmer.Trim(result));
                 return Ok(response);
             }

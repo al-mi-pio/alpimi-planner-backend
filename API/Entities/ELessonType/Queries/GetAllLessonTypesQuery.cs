@@ -120,6 +120,7 @@ namespace AlpimiAPI.Entities.ELessonType.Queries
                     );
                     break;
             }
+
             if (lessonTypes != null)
             {
                 foreach (var lessonType in lessonTypes)
@@ -137,6 +138,7 @@ namespace AlpimiAPI.Entities.ELessonType.Queries
                     lessonType.Schedule = schedule.Value!;
                 }
             }
+
             return (lessonTypes, count);
         }
     }

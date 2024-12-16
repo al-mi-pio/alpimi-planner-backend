@@ -74,7 +74,6 @@ namespace AlpimiTest.Entities.EGroup
             {
                 await _client.GetAsync("/api/Group");
             }
-
             _client.DefaultRequestHeaders.Authorization = null;
 
             var response = await _client.DeleteAsync($"/api/Group/{new Guid()}");
@@ -104,7 +103,6 @@ namespace AlpimiTest.Entities.EGroup
         public async Task GroupIsCreated()
         {
             var groupRequest = MockData.GetCreateGroupDTODetails(scheduleId);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)
@@ -124,7 +122,6 @@ namespace AlpimiTest.Entities.EGroup
         {
             var groupRequest = MockData.GetCreateGroupDTODetails(scheduleId);
             var groupId = await DbHelper.SetupGroup(_client, groupRequest);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", new Guid())
@@ -147,7 +144,6 @@ namespace AlpimiTest.Entities.EGroup
                 _client,
                 MockData.GetCreateGroupDTODetails(scheduleId)
             );
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "Bob", userId)
@@ -167,16 +163,15 @@ namespace AlpimiTest.Entities.EGroup
         public async Task UpdateGroupThrowsNotFoundErrorWhenWrongIdIsGiven()
         {
             var groupUpdateRequest = MockData.GetUpdateGroupDTODetails();
-
             var groupId = await DbHelper.SetupGroup(
                 _client,
                 MockData.GetCreateGroupDTODetails(scheduleId)
             );
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)
             );
+
             var response = await _client.PatchAsJsonAsync(
                 $"/api/Group/{new Guid()}",
                 groupUpdateRequest
@@ -189,16 +184,15 @@ namespace AlpimiTest.Entities.EGroup
         public async Task UpdateGroupThrowsNotFoundErrorWhenWrongUserAttemptsUpdate()
         {
             var groupUpdateRequest = MockData.GetUpdateGroupDTODetails();
-
             var groupId = await DbHelper.SetupGroup(
                 _client,
                 MockData.GetCreateGroupDTODetails(scheduleId)
             );
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("User", "User", new Guid())
             );
+
             var response = await _client.PatchAsJsonAsync(
                 $"/api/Group/{groupId}",
                 groupUpdateRequest
@@ -212,14 +206,13 @@ namespace AlpimiTest.Entities.EGroup
         {
             var groupRequest1 = MockData.GetCreateGroupDTODetails(scheduleId);
             var groupRequest2 = MockData.GetCreateSecondGroupDTODetails(scheduleId);
-
             await DbHelper.SetupGroup(_client, groupRequest1);
             await DbHelper.SetupGroup(_client, groupRequest2);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)
             );
+
             var query = $"?scheduleId={scheduleId}";
             var response = await _client.GetAsync($"/api/Group{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
@@ -233,14 +226,13 @@ namespace AlpimiTest.Entities.EGroup
         {
             var groupRequest1 = MockData.GetCreateGroupDTODetails(scheduleId);
             var groupRequest2 = MockData.GetCreateSecondGroupDTODetails(scheduleId);
-
             await DbHelper.SetupGroup(_client, groupRequest1);
             await DbHelper.SetupGroup(_client, groupRequest2);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("User", "User", new Guid())
             );
+
             var query = $"?scheduleId={scheduleId}";
             var response = await _client.GetAsync($"/api/Group{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
@@ -254,14 +246,13 @@ namespace AlpimiTest.Entities.EGroup
         {
             var groupRequest1 = MockData.GetCreateGroupDTODetails(scheduleId);
             var groupRequest2 = MockData.GetCreateSecondGroupDTODetails(scheduleId);
-
             await DbHelper.SetupGroup(_client, groupRequest1);
             await DbHelper.SetupGroup(_client, groupRequest2);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)
             );
+
             var query = $"?scheduleId={new Guid()}";
             var response = await _client.GetAsync($"/api/Group{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
@@ -274,9 +265,7 @@ namespace AlpimiTest.Entities.EGroup
         public async Task GetGroupReturnsGroup()
         {
             var groupRequest = MockData.GetCreateGroupDTODetails(scheduleId);
-
             var groupId = await DbHelper.SetupGroup(_client, groupRequest);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)
@@ -293,9 +282,7 @@ namespace AlpimiTest.Entities.EGroup
         public async Task GetScheduleThrowsNotFoundErrorWhenWrongUserTokenIsGiven()
         {
             var groupRequest = MockData.GetCreateGroupDTODetails(scheduleId);
-
             var groupId = await DbHelper.SetupGroup(_client, groupRequest);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("User", "User", new Guid())
@@ -310,9 +297,7 @@ namespace AlpimiTest.Entities.EGroup
         public async Task GetScheduleThrowsNotFoundWhenWrongIdIsGiven()
         {
             var groupRequest = MockData.GetCreateGroupDTODetails(scheduleId);
-
             await DbHelper.SetupGroup(_client, groupRequest);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)

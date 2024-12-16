@@ -113,6 +113,7 @@ namespace AlpimiAPI.Entities.EStudent.Commands
                     }
                 }
             }
+
             if (errors.Count != 0)
             {
                 throw new ApiErrorException(errors);

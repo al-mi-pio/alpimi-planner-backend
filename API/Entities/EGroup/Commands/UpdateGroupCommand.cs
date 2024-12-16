@@ -45,7 +45,6 @@ namespace AlpimiAPI.Entities.EGroup.Commands
                 request.FilteredId,
                 request.Role
             );
-
             ActionResult<Group?> originalGroup = await getGroupHandler.Handle(
                 getGroupQuery,
                 cancellationToken

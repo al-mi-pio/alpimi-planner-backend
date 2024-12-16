@@ -125,6 +125,7 @@ namespace AlpimiAPI.Entities.EDayOff.Queries
                     );
                     break;
             }
+
             if (daysOff != null)
             {
                 foreach (var dayOff in daysOff)
@@ -145,6 +146,7 @@ namespace AlpimiAPI.Entities.EDayOff.Queries
                     dayOff.ScheduleSettings = scheduleSettings.Value!;
                 }
             }
+
             return (daysOff, count);
         }
     }

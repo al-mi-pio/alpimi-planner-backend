@@ -72,7 +72,6 @@ namespace AlpimiTest.Entities.ELessonPeriod
             {
                 await _client.GetAsync("/api/LessonPeriod");
             }
-
             _client.DefaultRequestHeaders.Authorization = null;
 
             var response = await _client.DeleteAsync($"/api/LessonPeriod/{new Guid()}");
@@ -99,7 +98,6 @@ namespace AlpimiTest.Entities.ELessonPeriod
         public async Task LessonPeriodIsCreated()
         {
             var lessonPeriodRequest = MockData.GetCreateLessonPeriodDTODetails(scheduleId);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)
@@ -119,7 +117,6 @@ namespace AlpimiTest.Entities.ELessonPeriod
         {
             var lessonPeriodRequest = MockData.GetCreateLessonPeriodDTODetails(scheduleId);
             var lessonPeriodId = await DbHelper.SetupLessonPeriod(_client, lessonPeriodRequest);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", new Guid())
@@ -142,7 +139,6 @@ namespace AlpimiTest.Entities.ELessonPeriod
                 _client,
                 MockData.GetCreateLessonPeriodDTODetails(scheduleId)
             );
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "Bob", userId)
@@ -153,10 +149,10 @@ namespace AlpimiTest.Entities.ELessonPeriod
                 lessonPeriodUpdateRequest
             );
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
             var jsonResponse = await response.Content.ReadFromJsonAsync<
                 ApiGetResponse<LessonPeriodDTO>
             >();
-
             Assert.Equal(lessonPeriodUpdateRequest.Start, jsonResponse!.Content.Start);
         }
 
@@ -164,16 +160,15 @@ namespace AlpimiTest.Entities.ELessonPeriod
         public async Task UpdateLessonPeriodThrowsNotFoundErrorWhenWrongIdIsGiven()
         {
             var lessonPeriodUpdateRequest = MockData.GetUpdateLessonPeriodDTODetails();
-
             var lessonPeriodId = await DbHelper.SetupLessonPeriod(
                 _client,
                 MockData.GetCreateLessonPeriodDTODetails(scheduleId)
             );
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)
             );
+
             var response = await _client.PatchAsJsonAsync(
                 $"/api/LessonPeriod/{new Guid()}",
                 lessonPeriodUpdateRequest
@@ -186,23 +181,21 @@ namespace AlpimiTest.Entities.ELessonPeriod
         public async Task UpdateLessonPeriodThrowsNotFoundErrorWhenWrongUserAttemptsUpdate()
         {
             var lessonPeriodUpdateRequest = MockData.GetUpdateLessonPeriodDTODetails();
-
             var lessonPeriodId = await DbHelper.SetupLessonPeriod(
                 _client,
                 MockData.GetCreateLessonPeriodDTODetails(scheduleId)
             );
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("User", "User", new Guid())
             );
+
             var response = await _client.PatchAsJsonAsync(
                 $"/api/LessonPeriod/{lessonPeriodId}",
                 lessonPeriodUpdateRequest
             );
 
             var jsonResponse = await response.Content.ReadFromJsonAsync<ApiGetResponse<Schedule>>();
-
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
@@ -211,17 +204,15 @@ namespace AlpimiTest.Entities.ELessonPeriod
         {
             var lessonPeriodRequest1 = MockData.GetCreateLessonPeriodDTODetails(scheduleId);
             var lessonPeriodRequest2 = MockData.GetCreateSecondLessonPeriodDTODetails(scheduleId);
-
             await DbHelper.SetupLessonPeriod(_client, lessonPeriodRequest1);
             var lessonPeriodId = await DbHelper.SetupLessonPeriod(_client, lessonPeriodRequest2);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)
             );
+
             var query = $"?scheduleId={scheduleId}";
             var response = await _client.GetAsync($"/api/LessonPeriod{query}");
-
             var stringResponse = await response.Content.ReadAsStringAsync();
 
             Assert.Contains(lessonPeriodRequest1.Start.ToString(), stringResponse);
@@ -233,14 +224,13 @@ namespace AlpimiTest.Entities.ELessonPeriod
         {
             var lessonPeriodRequest1 = MockData.GetCreateLessonPeriodDTODetails(scheduleId);
             var lessonPeriodRequest2 = MockData.GetCreateSecondLessonPeriodDTODetails(scheduleId);
-
             await DbHelper.SetupLessonPeriod(_client, lessonPeriodRequest1);
             await DbHelper.SetupLessonPeriod(_client, lessonPeriodRequest2);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("User", "User", new Guid())
             );
+
             var query = $"?scheduleId={scheduleId}";
             var response = await _client.GetAsync($"/api/LessonPeriod{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
@@ -254,14 +244,13 @@ namespace AlpimiTest.Entities.ELessonPeriod
         {
             var lessonPeriodRequest1 = MockData.GetCreateLessonPeriodDTODetails(scheduleId);
             var lessonPeriodRequest2 = MockData.GetCreateSecondLessonPeriodDTODetails(scheduleId);
-
             await DbHelper.SetupLessonPeriod(_client, lessonPeriodRequest1);
             await DbHelper.SetupLessonPeriod(_client, lessonPeriodRequest2);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)
             );
+
             var query = $"?scheduleId={new Guid()}";
             var response = await _client.GetAsync($"/api/LessonPeriod{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();

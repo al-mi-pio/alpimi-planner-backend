@@ -128,6 +128,7 @@ namespace AlpimiAPI.Entities.EStudent.Queries
                     );
                     break;
             }
+
             if (students != null)
             {
                 foreach (var student in students)
@@ -145,6 +146,7 @@ namespace AlpimiAPI.Entities.EStudent.Queries
                     student.Group = group.Value!;
                 }
             }
+
             return (students, count);
         }
     }

@@ -30,19 +30,17 @@ namespace AlpimiTest.Entities.ELesson.Commands
         [Fact]
         public async Task ThrowsErrorWhenWrongLessonTypeIdIsGiven()
         {
+            _dbService
+                .Setup(s => s.Get<Subgroup>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetSubgroupDetails());
+
             var createLessonCommand = new CreateLessonCommand(
                 new Guid(),
                 MockData.GetCreateLessonDTODetails(new Guid(), new Guid()),
                 new Guid(),
                 "User"
             );
-
-            _dbService
-                .Setup(s => s.Get<Subgroup>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(MockData.GetSubgroupDetails());
-
             var createLessonHandler = new CreateLessonHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createLessonHandler.Handle(createLessonCommand, new CancellationToken())
@@ -64,19 +62,17 @@ namespace AlpimiTest.Entities.ELesson.Commands
         [Fact]
         public async Task ThrowsErrorWhenWrongSubgroupIdIsGiven()
         {
+            _dbService
+                .Setup(s => s.Get<LessonType>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetLessonTypeDetails());
+
             var createLessonCommand = new CreateLessonCommand(
                 new Guid(),
                 MockData.GetCreateLessonDTODetails(new Guid(), new Guid()),
                 new Guid(),
                 "User"
             );
-
-            _dbService
-                .Setup(s => s.Get<LessonType>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(MockData.GetLessonTypeDetails());
-
             var createLessonHandler = new CreateLessonHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createLessonHandler.Handle(createLessonCommand, new CancellationToken())
@@ -100,7 +96,6 @@ namespace AlpimiTest.Entities.ELesson.Commands
         {
             var dto = MockData.GetCreateLessonDTODetails(new Guid(), new Guid());
             dto.ClassroomTypeIds = [new Guid()];
-
             _dbService
                 .Setup(s => s.Get<LessonType>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetLessonTypeDetails());
@@ -112,9 +107,7 @@ namespace AlpimiTest.Entities.ELesson.Commands
                 .ReturnsAsync(MockData.GetGroupDetails());
 
             var createLessonCommand = new CreateLessonCommand(new Guid(), dto, new Guid(), "User");
-
             var createLessonHandler = new CreateLessonHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createLessonHandler.Handle(createLessonCommand, new CancellationToken())
@@ -130,7 +123,6 @@ namespace AlpimiTest.Entities.ELesson.Commands
         public async Task ThrowsErrorWhenNameIsAlreadyTakenByLesson()
         {
             var dto = MockData.GetCreateLessonDTODetails(new Guid(), new Guid());
-
             _dbService
                 .Setup(s => s.Get<LessonType>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetLessonTypeDetails());
@@ -145,9 +137,7 @@ namespace AlpimiTest.Entities.ELesson.Commands
                 .ReturnsAsync(MockData.GetGroupDetails());
 
             var createLessonCommand = new CreateLessonCommand(new Guid(), dto, new Guid(), "User");
-
             var createLessonHandler = new CreateLessonHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createLessonHandler.Handle(createLessonCommand, new CancellationToken())
@@ -166,9 +156,7 @@ namespace AlpimiTest.Entities.ELesson.Commands
             dto.AmountOfHours = -1;
 
             var createLessonCommand = new CreateLessonCommand(new Guid(), dto, new Guid(), "User");
-
             var createLessonHandler = new CreateLessonHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createLessonHandler.Handle(createLessonCommand, new CancellationToken())
@@ -182,7 +170,6 @@ namespace AlpimiTest.Entities.ELesson.Commands
         {
             var dto = MockData.GetCreateLessonDTODetails(new Guid(), new Guid());
             dto.ClassroomTypeIds = [new Guid(), new Guid()];
-
             _dbService
                 .Setup(s => s.Get<LessonType>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetLessonTypeDetails());
@@ -194,9 +181,7 @@ namespace AlpimiTest.Entities.ELesson.Commands
                 .ReturnsAsync(MockData.GetGroupDetails());
 
             var createLessonCommand = new CreateLessonCommand(new Guid(), dto, new Guid(), "User");
-
             var createLessonHandler = new CreateLessonHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createLessonHandler.Handle(createLessonCommand, new CancellationToken())
@@ -215,7 +200,6 @@ namespace AlpimiTest.Entities.ELesson.Commands
             dto.ClassroomTypeIds = [new Guid()];
             var classroomType = MockData.GetClassroomTypeDetails();
             classroomType.ScheduleId = Guid.NewGuid();
-
             _dbService
                 .Setup(s => s.Get<LessonType>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetLessonTypeDetails());
@@ -230,9 +214,7 @@ namespace AlpimiTest.Entities.ELesson.Commands
                 .ReturnsAsync(classroomType);
 
             var createLessonCommand = new CreateLessonCommand(new Guid(), dto, new Guid(), "User");
-
             var createLessonHandler = new CreateLessonHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createLessonHandler.Handle(createLessonCommand, new CancellationToken())
@@ -250,7 +232,6 @@ namespace AlpimiTest.Entities.ELesson.Commands
             var dto = MockData.GetCreateLessonDTODetails(new Guid(), new Guid());
             var lessonType = MockData.GetLessonTypeDetails();
             lessonType.ScheduleId = Guid.NewGuid();
-
             _dbService
                 .Setup(s => s.Get<LessonType>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(lessonType);
@@ -262,9 +243,7 @@ namespace AlpimiTest.Entities.ELesson.Commands
                 .ReturnsAsync(MockData.GetGroupDetails());
 
             var createLessonCommand = new CreateLessonCommand(new Guid(), dto, new Guid(), "User");
-
             var createLessonHandler = new CreateLessonHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createLessonHandler.Handle(createLessonCommand, new CancellationToken())

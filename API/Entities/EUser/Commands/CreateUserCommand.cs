@@ -74,6 +74,7 @@ namespace AlpimiAPI.Entities.EUser.Commands
                     new ErrorObject(_str["longPassword", AuthSettings.MaximumPasswordLength])
                 );
             }
+
             RequiredCharacterTypes[]? requiredCharacterTypes = AuthSettings.RequiredCharacters;
             bool requiredCharactersError = false;
 
@@ -140,6 +141,7 @@ namespace AlpimiAPI.Entities.EUser.Commands
                     @CustomURL);",
                 request.dto
             );
+
             byte[] salt = RandomNumberGenerator.GetBytes(16);
             byte[] hash = Rfc2898DeriveBytes.Pbkdf2(
                 request.dto.Password,

@@ -31,7 +31,6 @@ namespace AlpimiTest.Entities.EStudent.Queries
                 new PaginationParams(-20, 0, "Id", "ASC")
             );
             var getAllStudentsHandler = new GetAllStudentsHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await getAllStudentsHandler.Handle(getAllStudentsQuery, new CancellationToken())
@@ -55,7 +54,6 @@ namespace AlpimiTest.Entities.EStudent.Queries
                 new PaginationParams(20, -1, "Id", "ASC")
             );
             var getAllStudentsHandler = new GetAllStudentsHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await getAllStudentsHandler.Handle(getAllStudentsQuery, new CancellationToken())
@@ -79,7 +77,6 @@ namespace AlpimiTest.Entities.EStudent.Queries
                 new PaginationParams(20, 0, "wrong", "ASC")
             );
             var getAllStudentsHandler = new GetAllStudentsHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await getAllStudentsHandler.Handle(getAllStudentsQuery, new CancellationToken())
@@ -103,7 +100,6 @@ namespace AlpimiTest.Entities.EStudent.Queries
                 new PaginationParams(20, 0, "Id", "wrong")
             );
             var getAllStudentsHandler = new GetAllStudentsHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await getAllStudentsHandler.Handle(getAllStudentsQuery, new CancellationToken())
@@ -127,7 +123,6 @@ namespace AlpimiTest.Entities.EStudent.Queries
                 new PaginationParams(20, 0, "wrong", "wrong")
             );
             var getAllStudentsHandler = new GetAllStudentsHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await getAllStudentsHandler.Handle(getAllStudentsQuery, new CancellationToken())

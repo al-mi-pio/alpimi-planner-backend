@@ -71,6 +71,7 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
                     [new ErrorObject(_str["alreadyExists", "Schedule", request.dto.Name])]
                 );
             }
+
             if (request.dto.SchoolYearStart > request.dto.SchoolYearEnd)
             {
                 throw new ApiErrorException([new ErrorObject(_str["scheduleDate"])]);
@@ -88,6 +89,7 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
                     '{request.UserId}');",
                 request.dto
             );
+
             await _dbService.Post<Guid>(
                 $@"
                     INSERT INTO [ScheduleSettings] 

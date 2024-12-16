@@ -29,7 +29,6 @@ namespace AlpimiTest.Entities.EAuth.Queries
         public async Task ThrowsErrorWhenIncorrectLoginIsGiven()
         {
             var auth = MockData.GetAuthDetails();
-
             _dbService
                 .Setup(s => s.Get<User>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync((User?)null);
@@ -37,9 +36,7 @@ namespace AlpimiTest.Entities.EAuth.Queries
             var loginCommand = new LoginQuery(
                 new LoginDTO() { Login = "wrongLogin", Password = "sssSSS1!" }
             );
-
             var loginHandler = new LoginHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () => await loginHandler.Handle(loginCommand, new CancellationToken())
             );
@@ -66,9 +63,7 @@ namespace AlpimiTest.Entities.EAuth.Queries
             var loginCommand = new LoginQuery(
                 new LoginDTO() { Login = auth.User.Login, Password = "wrongPassword" }
             );
-
             var loginHandler = new LoginHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () => await loginHandler.Handle(loginCommand, new CancellationToken())
             );

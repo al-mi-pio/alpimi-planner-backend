@@ -42,6 +42,7 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
                 getScheduleQuery,
                 cancellationToken
             );
+
             if (originalSchedule.Value == null)
             {
                 return null;

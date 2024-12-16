@@ -26,7 +26,6 @@ namespace AlpimiTest.Entities.EClassroomType.Commands
         public async Task ThrowsErrorWhenNameIsAlreadyTaken()
         {
             var dto = MockData.GetUpdateClassroomTypeDTODetails();
-
             _dbService
                 .Setup(s => s.Get<ClassroomType>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetClassroomTypeDetails());
@@ -40,12 +39,10 @@ namespace AlpimiTest.Entities.EClassroomType.Commands
                 new Guid(),
                 "Admin"
             );
-
             var updateClassroomTypeHandler = new UpdateClassroomTypeHandler(
                 _dbService.Object,
                 _str.Object
             );
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateClassroomTypeHandler.Handle(

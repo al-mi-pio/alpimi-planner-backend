@@ -34,7 +34,6 @@ namespace AlpimiAPI.Entities.EAuth
         /// <remarks>
         /// Provide a valid token inside the Authorization header with the 'Bearer' prefix
         /// </remarks>
-
         [AllowAnonymous]
         [HttpPost]
         [Route("login")]
@@ -68,7 +67,6 @@ namespace AlpimiAPI.Entities.EAuth
         /// </summary>
         /// <remarks>
         /// Takes a valid token from Authorization header and returns another one with a new expiration date
-        ///
         /// - JWT token is required
         /// </remarks>
         [Authorize]

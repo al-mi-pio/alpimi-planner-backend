@@ -28,7 +28,6 @@ namespace AlpimiTest.Entities.ESchedule.Commands
         {
             var dto = MockData.GetCreateScheduleDTODetails();
             dto.Name = "TakenName";
-
             var scheduleSettings = MockData.GetScheduleSettingsDetails();
             _dbService
                 .Setup(s => s.Get<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
@@ -40,9 +39,7 @@ namespace AlpimiTest.Entities.ESchedule.Commands
                 scheduleSettings.Id,
                 dto
             );
-
             var createScheduleHandler = new CreateScheduleHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createScheduleHandler.Handle(
@@ -67,7 +64,6 @@ namespace AlpimiTest.Entities.ESchedule.Commands
         {
             var dto = MockData.GetCreateScheduleDTODetails();
             dto.SchoolYearStart = new DateOnly(2050, 10, 10);
-
             var scheduleSettings = MockData.GetScheduleSettingsDetails();
 
             var createScheduleCommand = new CreateScheduleCommand(
@@ -76,9 +72,7 @@ namespace AlpimiTest.Entities.ESchedule.Commands
                 scheduleSettings.Id,
                 dto
             );
-
             var createScheduleHandler = new CreateScheduleHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createScheduleHandler.Handle(
@@ -103,7 +97,6 @@ namespace AlpimiTest.Entities.ESchedule.Commands
         {
             var dto = MockData.GetCreateScheduleDTODetails();
             dto.SchoolHour = 0;
-
             var scheduleSettings = MockData.GetScheduleSettingsDetails();
 
             var createScheduleCommand = new CreateScheduleCommand(
@@ -112,9 +105,7 @@ namespace AlpimiTest.Entities.ESchedule.Commands
                 scheduleSettings.Id,
                 dto
             );
-
             var createScheduleHandler = new CreateScheduleHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createScheduleHandler.Handle(
@@ -136,7 +127,6 @@ namespace AlpimiTest.Entities.ESchedule.Commands
         {
             var dto = MockData.GetCreateScheduleDTODetails();
             dto.SchoolHour = 1441;
-
             var scheduleSettings = MockData.GetScheduleSettingsDetails();
 
             var createScheduleCommand = new CreateScheduleCommand(
@@ -145,9 +135,7 @@ namespace AlpimiTest.Entities.ESchedule.Commands
                 scheduleSettings.Id,
                 dto
             );
-
             var createScheduleHandler = new CreateScheduleHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createScheduleHandler.Handle(
@@ -169,7 +157,6 @@ namespace AlpimiTest.Entities.ESchedule.Commands
         {
             var dto = MockData.GetCreateScheduleDTODetails();
             dto.SchoolDays = "1111";
-
             var scheduleSettings = MockData.GetScheduleSettingsDetails();
 
             var createScheduleCommand = new CreateScheduleCommand(
@@ -178,9 +165,7 @@ namespace AlpimiTest.Entities.ESchedule.Commands
                 scheduleSettings.Id,
                 dto
             );
-
             var createScheduleHandler = new CreateScheduleHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createScheduleHandler.Handle(
@@ -202,7 +187,6 @@ namespace AlpimiTest.Entities.ESchedule.Commands
         {
             var dto = MockData.GetCreateScheduleDTODetails();
             dto.SchoolDays = "1100115";
-
             var scheduleSettings = MockData.GetScheduleSettingsDetails();
 
             var createScheduleCommand = new CreateScheduleCommand(
@@ -211,9 +195,7 @@ namespace AlpimiTest.Entities.ESchedule.Commands
                 scheduleSettings.Id,
                 dto
             );
-
             var createScheduleHandler = new CreateScheduleHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createScheduleHandler.Handle(

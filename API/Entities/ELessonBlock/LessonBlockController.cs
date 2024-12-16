@@ -31,9 +31,10 @@ namespace AlpimiAPI.Entities.ELessonBlock
         }
 
         /// <summary>
-        /// Creates one LessonBlock or multiple LessonBlocks if given a week interval
+        /// Creates one or multiple LessonBlocks
         /// </summary>
         /// <remarks>
+        /// To create multiple LessonBlocks provide a valid week interval
         /// - JWT token is required
         /// </remarks>
         [HttpPost]
@@ -58,6 +59,7 @@ namespace AlpimiAPI.Entities.ELessonBlock
             try
             {
                 var result = await _mediator.Send(command);
+
                 var response = new ApiGetResponse<Guid>(result);
                 return Ok(response);
             }
@@ -74,9 +76,11 @@ namespace AlpimiAPI.Entities.ELessonBlock
         }
 
         /// <summary>
-        /// Deletes one LessonBlock or multiple LessonBlocks if given a ClusterId
+        /// Deletes one or multiple LessonBlocks
         /// </summary>
         /// <remarks>
+        /// To delete multiple LessonBlocks provide a valid ClusterId.
+        /// To delete one LessonBlock provide a valid LessonBlockId.
         /// - JWT is required
         /// </remarks>
         [HttpDelete("{id}")]
@@ -106,9 +110,11 @@ namespace AlpimiAPI.Entities.ELessonBlock
         }
 
         /// <summary>
-        /// Updates one LessonBlock or multiple LessonBlocks if given a ClusterId and UpdateCluster is true
+        /// Updates one or multiple LessonBlocks
         /// </summary>
         /// <remarks>
+        /// To update multiple LessonBlocks provide a valid ClusterId and set UpdateCluster to true.
+        /// To update one LessonBlock provide a valid LessonBlockId and set UpdateCluster to false.
         /// - JWT token is required
         /// </remarks>
         [HttpPatch("{id}")]
@@ -138,6 +144,7 @@ namespace AlpimiAPI.Entities.ELessonBlock
                         )
                     );
                 }
+
                 var response = new ApiGetResponse<Guid>(result.Value);
                 return Ok(response);
             }
@@ -154,9 +161,10 @@ namespace AlpimiAPI.Entities.ELessonBlock
         }
 
         /// <summary>
-        /// Gets all LessonBlocks by SubroupId, GroupId, ScheduleId, ClusterId, TeacherId, ClassroomId or LessonId
+        /// Gets all LessonBlocks by parameter
         /// </summary>
         /// <remarks>
+        /// Possible parameters are: SubroupId, GroupId, ScheduleId, ClusterId, TeacherId, ClassroomId or LessonId
         /// Returned LessonBlocks can be filtered by given date range
         /// - JWT token is required
         /// </remarks>
@@ -189,6 +197,7 @@ namespace AlpimiAPI.Entities.ELessonBlock
             try
             {
                 (IEnumerable<LessonBlock>?, int) result = await _mediator.Send(query);
+
                 var response = new ApiGetAllResponse<IEnumerable<LessonBlockDTO>>(
                     result.Item1!.Select(DataTrimmer.Trim),
                     new Pagination(result.Item2, perPage, page, sortBy, sortOrder)
@@ -239,8 +248,8 @@ namespace AlpimiAPI.Entities.ELessonBlock
                         )
                     );
                 }
-                var response = new ApiGetResponse<LessonBlockDTO>(DataTrimmer.Trim(result));
 
+                var response = new ApiGetResponse<LessonBlockDTO>(DataTrimmer.Trim(result));
                 return Ok(response);
             }
             catch (Exception ex)

@@ -27,7 +27,6 @@ namespace AlpimiTest.Entities.ESubgroup.Commands
         public async Task ThrowsErrorWhenNameIsAlreadyTakenBySubgroup()
         {
             var dto = MockData.GetUpdateSubgroupDTODetails();
-
             _dbService
                 .Setup(s => s.Get<Group>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetGroupDetails());
@@ -46,9 +45,7 @@ namespace AlpimiTest.Entities.ESubgroup.Commands
                 new Guid(),
                 "Admin"
             );
-
             var updateSubgroupHandler = new UpdateSubgroupHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateSubgroupHandler.Handle(
@@ -67,7 +64,6 @@ namespace AlpimiTest.Entities.ESubgroup.Commands
         public async Task ThrowsErrorWhenNameIsAlreadyTakenByGroup()
         {
             var dto = MockData.GetUpdateSubgroupDTODetails();
-
             _dbService
                 .Setup(s => s.Get<Subgroup>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetSubgroupDetails());
@@ -84,9 +80,7 @@ namespace AlpimiTest.Entities.ESubgroup.Commands
                 new Guid(),
                 "Admin"
             );
-
             var updateSubgroupHandler = new UpdateSubgroupHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateSubgroupHandler.Handle(
@@ -113,9 +107,7 @@ namespace AlpimiTest.Entities.ESubgroup.Commands
                 new Guid(),
                 "Admin"
             );
-
             var updateSubgroupHandler = new UpdateSubgroupHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateSubgroupHandler.Handle(
@@ -132,7 +124,6 @@ namespace AlpimiTest.Entities.ESubgroup.Commands
         {
             var dto = MockData.GetUpdateSubgroupDTODetails();
             dto.StudentCount = 100;
-
             _dbService
                 .Setup(s => s.Get<Subgroup>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetSubgroupDetails());
@@ -146,9 +137,7 @@ namespace AlpimiTest.Entities.ESubgroup.Commands
                 new Guid(),
                 "Admin"
             );
-
             var updateSubgroupHandler = new UpdateSubgroupHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateSubgroupHandler.Handle(

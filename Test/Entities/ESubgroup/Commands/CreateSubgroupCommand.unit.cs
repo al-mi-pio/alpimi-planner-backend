@@ -33,9 +33,7 @@ namespace AlpimiTest.Entities.ESubgroup.Commands
                 new Guid(),
                 "User"
             );
-
             var createSubgroupHandler = new CreateSubgroupHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createSubgroupHandler.Handle(
@@ -61,7 +59,6 @@ namespace AlpimiTest.Entities.ESubgroup.Commands
         public async Task ThrowsErrorWhenNameIsAlreadyTakenBySubgroup()
         {
             var dto = MockData.GetCreateSubgroupDTODetails(new Guid());
-
             _dbService
                 .Setup(s => s.Get<Group>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetGroupDetails());
@@ -75,9 +72,7 @@ namespace AlpimiTest.Entities.ESubgroup.Commands
                 new Guid(),
                 "User"
             );
-
             var createSubgroupHandler = new CreateSubgroupHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createSubgroupHandler.Handle(
@@ -96,7 +91,6 @@ namespace AlpimiTest.Entities.ESubgroup.Commands
         public async Task ThrowsErrorWhenNameIsAlreadyTakenByGroup()
         {
             var dto = MockData.GetCreateSubgroupDTODetails(new Guid());
-
             _dbService
                 .Setup(s => s.Get<Group>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetGroupDetails());
@@ -110,9 +104,7 @@ namespace AlpimiTest.Entities.ESubgroup.Commands
                 new Guid(),
                 "User"
             );
-
             var createSubgroupHandler = new CreateSubgroupHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createSubgroupHandler.Handle(
@@ -139,9 +131,7 @@ namespace AlpimiTest.Entities.ESubgroup.Commands
                 new Guid(),
                 "User"
             );
-
             var createSubgroupHandler = new CreateSubgroupHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createSubgroupHandler.Handle(
@@ -158,6 +148,9 @@ namespace AlpimiTest.Entities.ESubgroup.Commands
         {
             var dto = MockData.GetCreateSubgroupDTODetails(new Guid());
             dto.StudentCount = 100;
+            _dbService
+                .Setup(s => s.Get<Group>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetGroupDetails());
 
             var createSubgroupCommand = new CreateSubgroupCommand(
                 new Guid(),
@@ -165,13 +158,7 @@ namespace AlpimiTest.Entities.ESubgroup.Commands
                 new Guid(),
                 "User"
             );
-
-            _dbService
-                .Setup(s => s.Get<Group>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(MockData.GetGroupDetails());
-
             var createSubgroupHandler = new CreateSubgroupHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createSubgroupHandler.Handle(

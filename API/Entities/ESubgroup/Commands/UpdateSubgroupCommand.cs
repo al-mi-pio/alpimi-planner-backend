@@ -50,7 +50,6 @@ namespace AlpimiAPI.Entities.ESubgroup.Commands
                 request.FilteredId,
                 request.Role
             );
-
             ActionResult<Subgroup?> originalSubgroup = await getSubgroupHandler.Handle(
                 getSubgroupQuery,
                 cancellationToken
@@ -71,7 +70,6 @@ namespace AlpimiAPI.Entities.ESubgroup.Commands
                 request.FilteredId,
                 request.Role
             );
-
             ActionResult<Group?> group = await getGroupHandler.Handle(
                 getGroupQuery,
                 cancellationToken

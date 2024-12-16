@@ -57,6 +57,7 @@ namespace AlpimiAPI.Entities.EScheduleSettings.Commands
                     errors.Add(new ErrorObject(_str["badParameter", "SchoolDays"]));
                 }
             }
+
             if (errors.Count != 0)
             {
                 throw new ApiErrorException(errors);
@@ -105,6 +106,7 @@ namespace AlpimiAPI.Entities.EScheduleSettings.Commands
                     AND (do.[To] > @SchoolYearEnd OR do.[From] < @SchoolYearStart);",
                 request.dto
             );
+
             if (daysOffOutOfRange!.Any())
             {
                 throw new ApiErrorException([new ErrorObject(_str["outOfRange", "DayOff"])]);
@@ -121,6 +123,7 @@ namespace AlpimiAPI.Entities.EScheduleSettings.Commands
                     AND (lb.[LessonDate] > @SchoolYearEnd OR lb.[LessonDate] < @SchoolYearStart);",
                 request.dto
             );
+
             if (lessonBlocksOutOfRange!.Any())
             {
                 throw new ApiErrorException([new ErrorObject(_str["outOfRange", "LessonBlock"])]);

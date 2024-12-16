@@ -26,7 +26,6 @@ namespace AlpimiTest.Entities.ELessonType.Commands
         public async Task ThrowsErrorWhenNameIsAlreadyTaken()
         {
             var dto = MockData.GetUpdateLessonTypeDTODetails();
-
             _dbService
                 .Setup(s => s.Get<LessonType>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetLessonTypeDetails());
@@ -40,12 +39,10 @@ namespace AlpimiTest.Entities.ELessonType.Commands
                 new Guid(),
                 "Admin"
             );
-
             var updateLessonTypeHandler = new UpdateLessonTypeHandler(
                 _dbService.Object,
                 _str.Object
             );
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateLessonTypeHandler.Handle(
@@ -72,12 +69,10 @@ namespace AlpimiTest.Entities.ELessonType.Commands
                 new Guid(),
                 "Admin"
             );
-
             var updateLessonTypeHandler = new UpdateLessonTypeHandler(
                 _dbService.Object,
                 _str.Object
             );
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateLessonTypeHandler.Handle(
@@ -101,12 +96,10 @@ namespace AlpimiTest.Entities.ELessonType.Commands
                 new Guid(),
                 "Admin"
             );
-
             var updateLessonTypeHandler = new UpdateLessonTypeHandler(
                 _dbService.Object,
                 _str.Object
             );
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateLessonTypeHandler.Handle(

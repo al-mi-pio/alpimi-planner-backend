@@ -59,6 +59,7 @@ namespace AlpimiAPI.Entities.EGroup.Queries
                 );
                 group.Schedule = schedule.Value!;
             }
+
             return group;
         }
     }

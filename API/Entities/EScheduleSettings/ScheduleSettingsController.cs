@@ -65,6 +65,7 @@ namespace AlpimiAPI.Entities.EScheduleSettings
                         )
                     );
                 }
+
                 var response = new ApiGetResponse<ScheduleSettingsDTO>(DataTrimmer.Trim(result));
                 return Ok(response);
             }
@@ -112,6 +113,7 @@ namespace AlpimiAPI.Entities.EScheduleSettings
                         )
                     );
                 }
+
                 var response = new ApiGetResponse<ScheduleSettingsDTO>(DataTrimmer.Trim(result));
                 return Ok(response);
             }
@@ -159,6 +161,7 @@ namespace AlpimiAPI.Entities.EScheduleSettings
                         )
                     );
                 }
+
                 var response = new ApiGetResponse<ScheduleSettingsDTO>(DataTrimmer.Trim(result));
                 return Ok(response);
             }

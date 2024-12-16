@@ -34,9 +34,7 @@ namespace AlpimiTest.Entities.EStudent.Commands
                 new Guid(),
                 "User"
             );
-
             var createStudentHandler = new CreateStudentHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createStudentHandler.Handle(createStudentCommand, new CancellationToken())
@@ -60,7 +58,6 @@ namespace AlpimiTest.Entities.EStudent.Commands
         {
             var dto = MockData.GetCreateStudentDTODetails(new Guid());
             dto.SubgroupIds = [new Guid()];
-
             _dbService
                 .Setup(s => s.Get<Group>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetGroupDetails());
@@ -71,9 +68,7 @@ namespace AlpimiTest.Entities.EStudent.Commands
                 new Guid(),
                 "User"
             );
-
             var createStudentHandler = new CreateStudentHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createStudentHandler.Handle(createStudentCommand, new CancellationToken())
@@ -90,7 +85,6 @@ namespace AlpimiTest.Entities.EStudent.Commands
         {
             var dto = MockData.GetCreateStudentDTODetails(new Guid());
             dto.SubgroupIds = [new Guid(), new Guid()];
-
             _dbService
                 .Setup(s => s.Get<Group>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetGroupDetails());
@@ -101,9 +95,7 @@ namespace AlpimiTest.Entities.EStudent.Commands
                 new Guid(),
                 "User"
             );
-
             var createStudentHandler = new CreateStudentHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createStudentHandler.Handle(createStudentCommand, new CancellationToken())
@@ -122,7 +114,6 @@ namespace AlpimiTest.Entities.EStudent.Commands
             dto.SubgroupIds = [new Guid()];
             var subgroup = MockData.GetSubgroupDetails();
             subgroup.GroupId = Guid.NewGuid();
-
             _dbService
                 .Setup(s => s.Get<Group>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetGroupDetails());
@@ -136,9 +127,7 @@ namespace AlpimiTest.Entities.EStudent.Commands
                 new Guid(),
                 "User"
             );
-
             var createStudentHandler = new CreateStudentHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createStudentHandler.Handle(createStudentCommand, new CancellationToken())
@@ -154,7 +143,6 @@ namespace AlpimiTest.Entities.EStudent.Commands
         public async Task ThrowsErrorWhenNameIsAlreadyTaken()
         {
             var dto = MockData.GetCreateStudentDTODetails(new Guid());
-
             _dbService
                 .Setup(s => s.Get<Group>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetGroupDetails());
@@ -168,9 +156,7 @@ namespace AlpimiTest.Entities.EStudent.Commands
                 new Guid(),
                 "User"
             );
-
             var createStudentHandler = new CreateStudentHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createStudentHandler.Handle(createStudentCommand, new CancellationToken())

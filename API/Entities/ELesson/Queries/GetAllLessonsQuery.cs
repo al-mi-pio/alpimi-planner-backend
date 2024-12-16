@@ -130,6 +130,7 @@ namespace AlpimiAPI.Entities.ELesson.Queries
                     );
                     break;
             }
+
             if (lessons != null)
             {
                 foreach (var lesson in lessons)
@@ -161,6 +162,7 @@ namespace AlpimiAPI.Entities.ELesson.Queries
                     lesson.Subgroup = subgroup.Value!;
                 }
             }
+
             return (lessons, count);
         }
     }

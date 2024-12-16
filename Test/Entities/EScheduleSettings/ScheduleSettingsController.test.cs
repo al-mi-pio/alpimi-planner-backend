@@ -64,6 +64,7 @@ namespace AlpimiTest.Entities.EScheduleSettings
             {
                 await _client.GetAsync($"/api/ScheduleSettings/{new Guid()}");
             }
+            _client.DefaultRequestHeaders.Authorization = null;
 
             var response = await _client.GetAsync($"/api/ScheduleSettings/bySchedule/{new Guid()}");
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
@@ -82,7 +83,6 @@ namespace AlpimiTest.Entities.EScheduleSettings
         public async Task UpdateScheduleSettingsReturnsUpdatedScheduleSettings()
         {
             var updateScheduleSettings = MockData.GetUpdateScheduleSettingsDTO();
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", new Guid())
@@ -116,6 +116,7 @@ namespace AlpimiTest.Entities.EScheduleSettings
                 $"/api/ScheduleSettings/{scheduleId}",
                 MockData.GetUpdateScheduleSettingsDTO()
             );
+
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
@@ -131,6 +132,7 @@ namespace AlpimiTest.Entities.EScheduleSettings
                 $"/api/ScheduleSettings/{new Guid()}",
                 MockData.GetUpdateScheduleSettingsDTO()
             );
+
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
@@ -144,7 +146,6 @@ namespace AlpimiTest.Entities.EScheduleSettings
             var jsonScheduleSettingsId = await scheduleSettingsId.Content.ReadFromJsonAsync<
                 ApiGetResponse<ScheduleSettingsDTO>
             >();
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", new Guid())
@@ -171,7 +172,6 @@ namespace AlpimiTest.Entities.EScheduleSettings
             var jsonScheduleSettingsId = await scheduleSettingsId.Content.ReadFromJsonAsync<
                 ApiGetResponse<ScheduleSettingsDTO>
             >();
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("User", "User", new Guid())
@@ -201,7 +201,6 @@ namespace AlpimiTest.Entities.EScheduleSettings
         public async Task GetScheduleSettingsByScheduleIdReturnsScheduleSettings()
         {
             var scheduleSettings = MockData.GetCreateScheduleDTODetails();
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", new Guid())

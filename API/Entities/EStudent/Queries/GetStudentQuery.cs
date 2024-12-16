@@ -63,6 +63,7 @@ namespace AlpimiAPI.Entities.EStudent.Queries
                 );
                 student.Group = group.Value!;
             }
+
             return student;
         }
     }

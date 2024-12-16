@@ -38,7 +38,6 @@ namespace AlpimiTest.Entities.ELessonBlock.Queries
                 _dbService.Object,
                 _str.Object
             );
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await getAllLessonBlockHandler.Handle(
@@ -70,7 +69,6 @@ namespace AlpimiTest.Entities.ELessonBlock.Queries
                 _dbService.Object,
                 _str.Object
             );
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await getAllLessonBlockHandler.Handle(
@@ -102,7 +100,6 @@ namespace AlpimiTest.Entities.ELessonBlock.Queries
                 _dbService.Object,
                 _str.Object
             );
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await getAllLessonBlockHandler.Handle(
@@ -134,7 +131,6 @@ namespace AlpimiTest.Entities.ELessonBlock.Queries
                 _dbService.Object,
                 _str.Object
             );
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await getAllLessonBlockHandler.Handle(
@@ -166,7 +162,6 @@ namespace AlpimiTest.Entities.ELessonBlock.Queries
                 _dbService.Object,
                 _str.Object
             );
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await getAllLessonBlockHandler.Handle(
@@ -206,7 +201,6 @@ namespace AlpimiTest.Entities.ELessonBlock.Queries
                 _dbService.Object,
                 _str.Object
             );
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await getAllLessonBlockHandler.Handle(

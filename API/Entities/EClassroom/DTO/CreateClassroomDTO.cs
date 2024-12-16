@@ -12,6 +12,7 @@ namespace AlpimiAPI.Entities.EClassroom.DTO
 
         [Required]
         public required Guid ScheduleId { get; set; }
+
         public IEnumerable<Guid>? ClassroomTypeIds { get; set; }
     }
 }

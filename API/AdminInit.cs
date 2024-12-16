@@ -54,7 +54,7 @@ namespace AlpimiAPI
                 {
                     do
                     {
-                        System.Console.WriteLine(_str["login"]);
+                        Console.WriteLine(_str["login"]);
                         login = Console.ReadLine();
 
                         GetUserByLoginHandler getUserByLoginHandler = new GetUserByLoginHandler(
@@ -96,6 +96,7 @@ namespace AlpimiAPI
                             NULL);",
                         ""
                     );
+
                     byte[] salt = RandomNumberGenerator.GetBytes(16);
                     byte[] hash = Rfc2898DeriveBytes.Pbkdf2(
                         password!,

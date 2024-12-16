@@ -31,7 +31,6 @@ namespace AlpimiTest.Entities.ESubgroup.Queries
                 new PaginationParams(-20, 0, "Id", "ASC")
             );
             var getAllSubgroupHandler = new GetAllSubgroupsHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await getAllSubgroupHandler.Handle(getAllSubgroupQuery, new CancellationToken())
@@ -55,7 +54,6 @@ namespace AlpimiTest.Entities.ESubgroup.Queries
                 new PaginationParams(20, -1, "Id", "ASC")
             );
             var getAllSubgroupHandler = new GetAllSubgroupsHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await getAllSubgroupHandler.Handle(getAllSubgroupQuery, new CancellationToken())
@@ -79,7 +77,6 @@ namespace AlpimiTest.Entities.ESubgroup.Queries
                 new PaginationParams(20, 0, "wrong", "ASC")
             );
             var getAllSubgroupHandler = new GetAllSubgroupsHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await getAllSubgroupHandler.Handle(getAllSubgroupQuery, new CancellationToken())
@@ -103,7 +100,6 @@ namespace AlpimiTest.Entities.ESubgroup.Queries
                 new PaginationParams(20, 0, "Id", "wrong")
             );
             var getAllSubgroupHandler = new GetAllSubgroupsHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await getAllSubgroupHandler.Handle(getAllSubgroupQuery, new CancellationToken())
@@ -127,7 +123,6 @@ namespace AlpimiTest.Entities.ESubgroup.Queries
                 new PaginationParams(20, 0, "wrong", "wrong")
             );
             var getAllSubgroupHandler = new GetAllSubgroupsHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await getAllSubgroupHandler.Handle(getAllSubgroupQuery, new CancellationToken())

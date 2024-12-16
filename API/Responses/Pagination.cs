@@ -36,7 +36,6 @@ namespace AlpimiAPI.Responses
         public PaginationParams(int? perPage, int? offset, string? sortBy, string? sortOrder)
         {
             PerPage = perPage ?? Configuration.perPage;
-
             Offset = offset ?? (Configuration.page - 1) * PerPage;
             SortBy = sortBy ?? Configuration.sortBy;
             SortOrder = sortOrder ?? Configuration.sortOrder;

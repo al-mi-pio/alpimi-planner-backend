@@ -38,7 +38,6 @@ namespace AlpimiAPI.Entities.EStudent.Commands
                 request.FilteredId,
                 request.Role
             );
-
             ActionResult<Student?> originalStudent = await getStudentHandler.Handle(
                 getStudentQuery,
                 cancellationToken
@@ -127,6 +126,7 @@ namespace AlpimiAPI.Entities.EStudent.Commands
                         );
                     }
                 }
+
                 if (errors.Any())
                 {
                     throw new ApiErrorException(errors);

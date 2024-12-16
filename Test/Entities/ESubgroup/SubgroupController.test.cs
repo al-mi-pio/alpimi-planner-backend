@@ -79,7 +79,6 @@ namespace AlpimiTest.Entities.ESubgroup
             {
                 await _client.GetAsync("/api/Subgroup");
             }
-
             _client.DefaultRequestHeaders.Authorization = null;
 
             var response = await _client.DeleteAsync($"/api/Subgroup/{new Guid()}");
@@ -109,7 +108,6 @@ namespace AlpimiTest.Entities.ESubgroup
         public async Task SubgroupIsCreated()
         {
             var subgroupRequest = MockData.GetCreateSubgroupDTODetails(groupId);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)
@@ -129,7 +127,6 @@ namespace AlpimiTest.Entities.ESubgroup
         {
             var subgroupRequest = MockData.GetCreateSubgroupDTODetails(groupId);
             var subgroupId = await DbHelper.SetupSubgroup(_client, subgroupRequest);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", new Guid())
@@ -154,7 +151,6 @@ namespace AlpimiTest.Entities.ESubgroup
                 MockData.GetCreateLessonTypeDTODetails(scheduleId)
             );
             var lessonRequest = MockData.GetCreateLessonDTODetails(subgroupId, lessonTypeId);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", new Guid())
@@ -177,7 +173,6 @@ namespace AlpimiTest.Entities.ESubgroup
                 _client,
                 MockData.GetCreateSubgroupDTODetails(groupId)
             );
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "Bob", userId)
@@ -199,16 +194,15 @@ namespace AlpimiTest.Entities.ESubgroup
         public async Task UpdateSubgroupThrowsNotFoundErrorWhenWrongIdIsGiven()
         {
             var subgroupUpdateRequest = MockData.GetUpdateSubgroupDTODetails();
-
             var subgroupId = await DbHelper.SetupSubgroup(
                 _client,
                 MockData.GetCreateSubgroupDTODetails(groupId)
             );
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)
             );
+
             var response = await _client.PatchAsJsonAsync(
                 $"/api/Subgroup/{new Guid()}",
                 subgroupUpdateRequest
@@ -226,11 +220,11 @@ namespace AlpimiTest.Entities.ESubgroup
                 _client,
                 MockData.GetCreateSubgroupDTODetails(groupId)
             );
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("User", "User", new Guid())
             );
+
             var response = await _client.PatchAsJsonAsync(
                 $"/api/Subgroup/{subgroupId}",
                 subgroupUpdateRequest
@@ -244,14 +238,13 @@ namespace AlpimiTest.Entities.ESubgroup
         {
             var subgroupRequest1 = MockData.GetCreateSubgroupDTODetails(groupId);
             var subgroupRequest2 = MockData.GetCreateSecondSubgroupDTODetails(groupId);
-
             await DbHelper.SetupSubgroup(_client, subgroupRequest1);
             await DbHelper.SetupSubgroup(_client, subgroupRequest2);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)
             );
+
             var query = $"?id={groupId}";
             var response = await _client.GetAsync($"/api/Subgroup{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
@@ -265,19 +258,16 @@ namespace AlpimiTest.Entities.ESubgroup
         {
             var subgroupRequest1 = MockData.GetCreateSubgroupDTODetails(groupId);
             var subgroupRequest2 = MockData.GetCreateSecondSubgroupDTODetails(groupId);
-
             var subgroupId = await DbHelper.SetupSubgroup(_client, subgroupRequest1);
             await DbHelper.SetupSubgroup(_client, subgroupRequest2);
-
             var studentRequest = MockData.GetCreateStudentDTODetails(groupId);
             studentRequest.SubgroupIds = [subgroupId];
-
             var studentId = await DbHelper.SetupStudent(_client, studentRequest);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)
             );
+
             var query = $"?id={studentId}";
             var response = await _client.GetAsync($"/api/Subgroup{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
@@ -291,14 +281,13 @@ namespace AlpimiTest.Entities.ESubgroup
         {
             var subgroupRequest1 = MockData.GetCreateSubgroupDTODetails(groupId);
             var subgroupRequest2 = MockData.GetCreateSecondSubgroupDTODetails(groupId);
-
             await DbHelper.SetupSubgroup(_client, subgroupRequest1);
             await DbHelper.SetupSubgroup(_client, subgroupRequest2);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("User", "User", new Guid())
             );
+
             var query = $"?groupId={groupId}";
             var response = await _client.GetAsync($"/api/Subgroup{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
@@ -312,14 +301,13 @@ namespace AlpimiTest.Entities.ESubgroup
         {
             var subgroupRequest1 = MockData.GetCreateSubgroupDTODetails(groupId);
             var subgroupRequest2 = MockData.GetCreateSecondSubgroupDTODetails(groupId);
-
             await DbHelper.SetupSubgroup(_client, subgroupRequest1);
             await DbHelper.SetupSubgroup(_client, subgroupRequest2);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)
             );
+
             var query = $"?groupId={new Guid()}";
             var response = await _client.GetAsync($"/api/Subgroup{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
@@ -332,9 +320,7 @@ namespace AlpimiTest.Entities.ESubgroup
         public async Task GetSubgroupReturnsSubgroup()
         {
             var subgroupRequest = MockData.GetCreateSubgroupDTODetails(groupId);
-
             var subgroupId = await DbHelper.SetupSubgroup(_client, subgroupRequest);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)
@@ -353,9 +339,7 @@ namespace AlpimiTest.Entities.ESubgroup
         public async Task GetSubgroupThrowsNotFoundErrorWhenWrongUserTokenIsGiven()
         {
             var subgroupRequest = MockData.GetCreateSubgroupDTODetails(groupId);
-
             var subgroupId = await DbHelper.SetupSubgroup(_client, subgroupRequest);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("User", "User", new Guid())
@@ -370,9 +354,7 @@ namespace AlpimiTest.Entities.ESubgroup
         public async Task GetSubgroupThrowsNotFoundWhenWrongIdIsGiven()
         {
             var subgroupRequest = MockData.GetCreateSubgroupDTODetails(groupId);
-
             await DbHelper.SetupSubgroup(_client, subgroupRequest);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)

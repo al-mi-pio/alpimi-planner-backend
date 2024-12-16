@@ -131,6 +131,7 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
                         );
                     }
                 }
+
                 if (errors.Count != 0)
                 {
                     throw new ApiErrorException(errors);
@@ -148,7 +149,6 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
                 );
 
                 classroomTypes = classroomTypes ?? [];
-
                 foreach (Guid classroomTypeId in request.dto.ClassroomTypeIds)
                 {
                     if (!classroomTypes.Contains(classroomTypeId))

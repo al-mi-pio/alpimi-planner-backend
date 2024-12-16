@@ -131,7 +131,6 @@ namespace AlpimiTest.Entities.ELessonBlock
             {
                 await _client.GetAsync("/api/LessonBlock");
             }
-
             _client.DefaultRequestHeaders.Authorization = null;
 
             var response = await _client.DeleteAsync($"/api/LessonBlock/{new Guid()}");
@@ -165,7 +164,6 @@ namespace AlpimiTest.Entities.ELessonBlock
                 classroomId1,
                 teacherId1
             );
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)
@@ -188,7 +186,6 @@ namespace AlpimiTest.Entities.ELessonBlock
                 classroomId1,
                 teacherId1
             );
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", new Guid())
@@ -213,7 +210,6 @@ namespace AlpimiTest.Entities.ELessonBlock
                 classroomId1,
                 teacherId1
             );
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", new Guid())
@@ -238,7 +234,6 @@ namespace AlpimiTest.Entities.ELessonBlock
                 teacherId1
             );
             var lessonBlockId = await DbHelper.SetupLessonBlock(_client, lessonBlockRequest);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", new Guid())
@@ -262,7 +257,6 @@ namespace AlpimiTest.Entities.ELessonBlock
                 teacherId1
             );
             var clusterId = await DbHelper.SetupLessonBlock(_client, lessonBlockRequest);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", new Guid())
@@ -288,7 +282,6 @@ namespace AlpimiTest.Entities.ELessonBlock
                 teacherId1
             );
             var clusterId = await DbHelper.SetupLessonBlock(_client, lessonBlockRequest);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", new Guid())
@@ -313,7 +306,6 @@ namespace AlpimiTest.Entities.ELessonBlock
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "Bob", userId)
             );
-
             var lessonBlockId = await DbHelper.SetupLessonBlock(
                 _client,
                 MockData.GetCreateLessonBlockDTODetails(lessonId1, classroomId1, teacherId1)
@@ -333,12 +325,10 @@ namespace AlpimiTest.Entities.ELessonBlock
         {
             var lessonBlockUpdateRequest = MockData.GetUpdateLessonBlockDTODetails();
             lessonBlockUpdateRequest.UpdateCluster = true;
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "Bob", userId)
             );
-
             var clusterId = await DbHelper.SetupLessonBlock(
                 _client,
                 MockData.GetCreateThirdLessonBlockDTODetails(lessonId1, classroomId1, teacherId1)
@@ -348,8 +338,8 @@ namespace AlpimiTest.Entities.ELessonBlock
                 $"/api/LessonBlock/{clusterId}",
                 lessonBlockUpdateRequest
             );
-            var jsonResponse = await response.Content.ReadFromJsonAsync<ApiGetResponse<Guid>>();
 
+            var jsonResponse = await response.Content.ReadFromJsonAsync<ApiGetResponse<Guid>>();
             Assert.Equal(clusterId, jsonResponse!.Content);
         }
 
@@ -358,12 +348,10 @@ namespace AlpimiTest.Entities.ELessonBlock
         {
             var lessonBlockUpdateRequest = MockData.GetUpdateLessonBlockDTODetails();
             lessonBlockUpdateRequest.UpdateCluster = true;
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "Bob", userId)
             );
-
             var clusterId = await DbHelper.SetupLessonBlock(
                 _client,
                 MockData.GetCreateThirdLessonBlockDTODetails(lessonId1, classroomId1, teacherId1)
@@ -385,12 +373,10 @@ namespace AlpimiTest.Entities.ELessonBlock
         public async Task UpdateLessonBlockThrowsNotFoundErrorWhenWrongIdIsGiven()
         {
             var lessonBlockUpdateRequest = MockData.GetUpdateLessonBlockDTODetails();
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "Bob", userId)
             );
-
             await DbHelper.SetupLessonBlock(
                 _client,
                 MockData.GetCreateLessonBlockDTODetails(lessonId1, classroomId1, teacherId1)
@@ -408,12 +394,10 @@ namespace AlpimiTest.Entities.ELessonBlock
         public async Task UpdateLessonBlockThrowsNotFoundErrorWhenWrongUserAttemptsUpdate()
         {
             var lessonBlockUpdateRequest = MockData.GetUpdateLessonBlockDTODetails();
-
             var lessonBlockId = await DbHelper.SetupLessonBlock(
                 _client,
                 MockData.GetCreateLessonBlockDTODetails(lessonId1, classroomId1, teacherId1)
             );
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("User", "Bob", new Guid())
@@ -434,7 +418,6 @@ namespace AlpimiTest.Entities.ELessonBlock
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "Bob", userId)
             );
-
             await DbHelper.SetupLessonBlock(
                 _client,
                 MockData.GetCreateLessonBlockDTODetails(lessonId1, classroomId1, teacherId1)
@@ -451,6 +434,7 @@ namespace AlpimiTest.Entities.ELessonBlock
             var query = $"?id={groupId}";
             var response = await _client.GetAsync($"/api/LessonBlock{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
+
             Assert.Contains(classroomId1.ToString(), stringResponse);
             Assert.Contains(classroomId2.ToString(), stringResponse);
             Assert.Contains(teacherId1.ToString(), stringResponse);
@@ -466,7 +450,6 @@ namespace AlpimiTest.Entities.ELessonBlock
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "Bob", userId)
             );
-
             await DbHelper.SetupLessonBlock(
                 _client,
                 MockData.GetCreateLessonBlockDTODetails(lessonId1, classroomId1, teacherId1)
@@ -483,6 +466,7 @@ namespace AlpimiTest.Entities.ELessonBlock
             var query = $"?id={subgroupId1}";
             var response = await _client.GetAsync($"/api/LessonBlock{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
+
             Assert.Contains(classroomId1.ToString(), stringResponse);
             Assert.DoesNotContain(classroomId2.ToString(), stringResponse);
             Assert.Contains(teacherId1.ToString(), stringResponse);
@@ -498,7 +482,6 @@ namespace AlpimiTest.Entities.ELessonBlock
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "Bob", userId)
             );
-
             await DbHelper.SetupLessonBlock(
                 _client,
                 MockData.GetCreateLessonBlockDTODetails(lessonId1, classroomId1, teacherId1)
@@ -515,6 +498,7 @@ namespace AlpimiTest.Entities.ELessonBlock
             var query = $"?id={scheduleId}";
             var response = await _client.GetAsync($"/api/LessonBlock{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
+
             Assert.Contains(classroomId1.ToString(), stringResponse);
             Assert.Contains(classroomId2.ToString(), stringResponse);
             Assert.Contains(teacherId1.ToString(), stringResponse);
@@ -530,7 +514,6 @@ namespace AlpimiTest.Entities.ELessonBlock
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "Bob", userId)
             );
-
             await DbHelper.SetupLessonBlock(
                 _client,
                 MockData.GetCreateLessonBlockDTODetails(lessonId1, classroomId1, teacherId1)
@@ -547,6 +530,7 @@ namespace AlpimiTest.Entities.ELessonBlock
             var query = $"?id={classroomId1}";
             var response = await _client.GetAsync($"/api/LessonBlock{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
+
             Assert.Contains(classroomId1.ToString(), stringResponse);
             Assert.DoesNotContain(classroomId2.ToString(), stringResponse);
             Assert.Contains(teacherId1.ToString(), stringResponse);
@@ -562,7 +546,6 @@ namespace AlpimiTest.Entities.ELessonBlock
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "Bob", userId)
             );
-
             await DbHelper.SetupLessonBlock(
                 _client,
                 MockData.GetCreateLessonBlockDTODetails(lessonId1, classroomId1, teacherId1)
@@ -579,6 +562,7 @@ namespace AlpimiTest.Entities.ELessonBlock
             var query = $"?id={lessonId1}";
             var response = await _client.GetAsync($"/api/LessonBlock{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
+
             Assert.Contains(classroomId1.ToString(), stringResponse);
             Assert.DoesNotContain(classroomId2.ToString(), stringResponse);
             Assert.Contains(teacherId1.ToString(), stringResponse);
@@ -594,7 +578,6 @@ namespace AlpimiTest.Entities.ELessonBlock
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "Bob", userId)
             );
-
             await DbHelper.SetupLessonBlock(
                 _client,
                 MockData.GetCreateLessonBlockDTODetails(lessonId1, classroomId1, teacherId1)
@@ -611,6 +594,7 @@ namespace AlpimiTest.Entities.ELessonBlock
             var query = $"?id={teacherId1}";
             var response = await _client.GetAsync($"/api/LessonBlock{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
+
             Assert.Contains(classroomId1.ToString(), stringResponse);
             Assert.DoesNotContain(classroomId2.ToString(), stringResponse);
             Assert.Contains(teacherId1.ToString(), stringResponse);
@@ -626,7 +610,6 @@ namespace AlpimiTest.Entities.ELessonBlock
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "Bob", userId)
             );
-
             await DbHelper.SetupLessonBlock(
                 _client,
                 MockData.GetCreateLessonBlockDTODetails(lessonId1, classroomId1, teacherId1)
@@ -643,6 +626,7 @@ namespace AlpimiTest.Entities.ELessonBlock
             var query = $"?id={clusterId}";
             var response = await _client.GetAsync($"/api/LessonBlock{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
+
             Assert.DoesNotContain(classroomId1.ToString(), stringResponse);
             Assert.Contains(classroomId2.ToString(), stringResponse);
             Assert.DoesNotContain(teacherId1.ToString(), stringResponse);
@@ -658,7 +642,6 @@ namespace AlpimiTest.Entities.ELessonBlock
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "Bob", userId)
             );
-
             await DbHelper.SetupLessonBlock(
                 _client,
                 MockData.GetCreateLessonBlockDTODetails(lessonId1, classroomId1, teacherId1)
@@ -675,6 +658,7 @@ namespace AlpimiTest.Entities.ELessonBlock
             var query = $"?id={lessonId1}&fromDate=10.10.2023&toDate=10.10.2023";
             var response = await _client.GetAsync($"/api/LessonBlock{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
+
             Assert.Contains(classroomId1.ToString(), stringResponse);
             Assert.DoesNotContain(classroomId2.ToString(), stringResponse);
             Assert.Contains(teacherId1.ToString(), stringResponse);
@@ -690,7 +674,6 @@ namespace AlpimiTest.Entities.ELessonBlock
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "Bob", userId)
             );
-
             await DbHelper.SetupLessonBlock(
                 _client,
                 MockData.GetCreateLessonBlockDTODetails(lessonId1, classroomId1, teacherId1)
@@ -707,6 +690,7 @@ namespace AlpimiTest.Entities.ELessonBlock
             var query = $"?id={new Guid()}";
             var response = await _client.GetAsync($"/api/LessonBlock{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
+
             Assert.DoesNotContain(classroomId1.ToString(), stringResponse);
             Assert.DoesNotContain(classroomId2.ToString(), stringResponse);
             Assert.DoesNotContain(teacherId1.ToString(), stringResponse);
@@ -730,7 +714,6 @@ namespace AlpimiTest.Entities.ELessonBlock
                 _client,
                 MockData.GetCreateThirdLessonBlockDTODetails(lessonId2, classroomId2, teacherId2)
             );
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("User", "Bob", new Guid())
@@ -739,6 +722,7 @@ namespace AlpimiTest.Entities.ELessonBlock
             var query = $"?id={lessonId1}";
             var response = await _client.GetAsync($"/api/LessonBlock{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
+
             Assert.DoesNotContain(classroomId1.ToString(), stringResponse);
             Assert.DoesNotContain(classroomId2.ToString(), stringResponse);
             Assert.DoesNotContain(teacherId1.ToString(), stringResponse);
@@ -754,7 +738,6 @@ namespace AlpimiTest.Entities.ELessonBlock
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "Bob", userId)
             );
-
             var lessonBlockId = await DbHelper.SetupLessonBlock(
                 _client,
                 MockData.GetCreateLessonBlockDTODetails(lessonId1, classroomId1, teacherId1)
@@ -762,6 +745,7 @@ namespace AlpimiTest.Entities.ELessonBlock
 
             var response = await _client.GetAsync($"/api/LessonBlock/{lessonBlockId}");
             var stringResponse = await response.Content.ReadAsStringAsync();
+
             Assert.Contains(classroomId1.ToString(), stringResponse);
             Assert.Contains(teacherId1.ToString(), stringResponse);
             Assert.Contains(lessonId1.ToString(), stringResponse);
@@ -774,13 +758,13 @@ namespace AlpimiTest.Entities.ELessonBlock
                 _client,
                 MockData.GetCreateLessonBlockDTODetails(lessonId1, classroomId1, teacherId1)
             );
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("User", "Bob", new Guid())
             );
 
             var response = await _client.GetAsync($"/api/LessonBlock/{lessonBlockId}");
+
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
@@ -791,13 +775,13 @@ namespace AlpimiTest.Entities.ELessonBlock
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "Bob", userId)
             );
-
             var lessonBlockId = await DbHelper.SetupLessonBlock(
                 _client,
                 MockData.GetCreateLessonBlockDTODetails(lessonId1, classroomId1, teacherId1)
             );
 
             var response = await _client.GetAsync($"/api/LessonBlock/{new Guid()}");
+
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
     }

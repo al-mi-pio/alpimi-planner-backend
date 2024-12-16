@@ -201,7 +201,7 @@ namespace AlpimiAPI.Entities.ELesson.Commands
                         FROM [ClassroomType] ct
                         LEFT JOIN [LessonClassroomType] lct ON lct.[ClassroomTypeId] = ct.[Id]
                         LEFT JOIN [Lesson] l ON l.[Id] = lct.[LessonId]
-                        WHERE l.[Id] = @Id",
+                        WHERE l.[Id] = @Id;",
                     request
                 );
 
@@ -214,7 +214,7 @@ namespace AlpimiAPI.Entities.ELesson.Commands
                         await _dbService.Post<Guid>(
                             $@"
                                 INSERT INTO [LessonClassroomType] 
-                                ([Id],[LessonId],[ClassroomTypeId])
+                                ([Id], [LessonId], [ClassroomTypeId])
                                 OUTPUT 
                                 INSERTED.Id                    
                                 VALUES (
@@ -251,7 +251,7 @@ namespace AlpimiAPI.Entities.ELesson.Commands
                     INSERTED.[AmountOfHours],
                     INSERTED.[LessonTypeId],
                     INSERTED.[SubgroupId]
-                    WHERE [Id] = '{request.Id}';",
+                    WHERE [Id] = '{request.Id}' ;",
                 request.dto
             );
 

@@ -75,7 +75,7 @@ namespace AlpimiAPI.Entities.ELessonType.Commands
             var insertedId = await _dbService.Post<Guid>(
                 $@"
                     INSERT INTO [LessonType] 
-                    ([Id],[Name],[Color],[ScheduleId])
+                    ([Id], [Name], [Color], [ScheduleId])
                     OUTPUT 
                     INSERTED.Id                    
                     VALUES (

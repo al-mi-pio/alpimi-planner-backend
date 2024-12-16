@@ -111,15 +111,15 @@ namespace AlpimiAPI.Entities.EGroup.Commands
 
             var group = await _dbService.Update<Group?>(
                 $@"
-                            UPDATE [Group] 
-                            SET
-                            [Name] = @Name, [StudentCount] = @StudentCount 
-                            OUTPUT
-                            INSERTED.[Id],
-                            INSERTED.[Name],
-                            INSERTED.[StudentCount],
-                            INSERTED.[ScheduleId]
-                            WHERE [Id] = '{request.Id}';",
+                    UPDATE [Group] 
+                    SET
+                    [Name] = @Name, [StudentCount] = @StudentCount 
+                    OUTPUT
+                    INSERTED.[Id],
+                    INSERTED.[Name],
+                    INSERTED.[StudentCount],
+                    INSERTED.[ScheduleId]
+                    WHERE [Id] = '{request.Id}';",
                 request.dto
             );
 

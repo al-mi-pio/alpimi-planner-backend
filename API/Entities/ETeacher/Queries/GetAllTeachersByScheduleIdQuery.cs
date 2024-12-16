@@ -73,13 +73,13 @@ namespace AlpimiAPI.Entities.ETeacher.Queries
                             SELECT 
                             COUNT(*)
                             FROM [Teacher] 
-                            WHERE [ScheduleId] = @ScheduleId",
+                            WHERE [ScheduleId] = @ScheduleId;",
                         request
                     );
                     teachers = await _dbService.GetAll<Teacher>(
                         $@"
                             SELECT
-                            [Id], [Name], [Surname],[ScheduleId] 
+                            [Id], [Name], [Surname], [ScheduleId] 
                             FROM [Teacher]
                             WHERE [ScheduleId] = @ScheduleId 
                             ORDER BY
@@ -88,18 +88,18 @@ namespace AlpimiAPI.Entities.ETeacher.Queries
                             OFFSET
                             {request.Pagination.Offset} ROWS
                             FETCH NEXT
-                            {request.Pagination.PerPage} ROWS ONLY; ",
+                            {request.Pagination.PerPage} ROWS ONLY;",
                         request
                     );
                     break;
                 default:
                     count = await _dbService.Get<int>(
                         @"
-                            SELECT COUNT(*)
+                            SELECT 
+                            COUNT(*)
                             FROM [Teacher] t
                             INNER JOIN [Schedule] s ON s.[Id]=t.[ScheduleId]
-                            WHERE s.[UserId] = @FilteredId AND t.[ScheduleId] = @ScheduleId
-                            ",
+                            WHERE s.[UserId] = @FilteredId AND t.[ScheduleId] = @ScheduleId;",
                         request
                     );
                     teachers = await _dbService.GetAll<Teacher>(
@@ -115,7 +115,7 @@ namespace AlpimiAPI.Entities.ETeacher.Queries
                             OFFSET
                             {request.Pagination.Offset} ROWS
                             FETCH NEXT
-                            {request.Pagination.PerPage} ROWS ONLY; ",
+                            {request.Pagination.PerPage} ROWS ONLY;",
                         request
                     );
                     break;

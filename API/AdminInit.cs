@@ -87,7 +87,7 @@ namespace AlpimiAPI
                     var userId = await _dbService.Post<Guid>(
                         $@"
                             INSERT INTO [User] 
-                            ([Id],[Login],[CustomURL])
+                            ([Id], [Login], [CustomURL])
                             OUTPUT 
                             INSERTED.Id                    
                             VALUES (
@@ -108,7 +108,7 @@ namespace AlpimiAPI
                     await _dbService.Post<Guid>(
                         $@"
                             INSERT INTO [Auth] 
-                            ([Id],[Password],[Salt],[Role],[UserId])
+                            ([Id], [Password], [Salt], [Role], [UserId])
                             OUTPUT 
                             INSERTED.UserId                    
                             VALUES (

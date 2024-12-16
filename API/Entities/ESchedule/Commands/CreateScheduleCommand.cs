@@ -79,7 +79,7 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
             var insertedId = await _dbService.Post<Guid>(
                 $@"
                     INSERT INTO [Schedule] 
-                    ([Id],[Name],[UserId])
+                    ([Id], [Name], [UserId])
                     OUTPUT 
                     INSERTED.Id                    
                     VALUES (
@@ -91,7 +91,7 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
             await _dbService.Post<Guid>(
                 $@"
                     INSERT INTO [ScheduleSettings] 
-                    ([Id],[SchoolHour],[SchoolYearStart],[SchoolYearEnd],[SchoolDays],[ScheduleId])
+                    ([Id], [SchoolHour], [SchoolYearStart], [SchoolYearEnd], [SchoolDays], [ScheduleId])
                     OUTPUT 
                     INSERTED.Id
                     VALUES (

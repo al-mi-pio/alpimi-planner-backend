@@ -28,7 +28,7 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                     SELECT DISTINCT
                     [LessonId] 
                     FROM [LessonBlock] 
-                    WHERE [Id] = '{request.Id}' OR [ClusterId] = '{request.Id}'; ",
+                    WHERE [Id] = '{request.Id}' OR [ClusterId] = '{request.Id}';",
                 ""
             );
 

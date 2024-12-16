@@ -190,7 +190,7 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                     SELECT 
                     count(*)
                     FROM [LessonPeriod] 
-                    WHERE ScheduleSettingsId = '{scheduleSettings!.Id}'; ",
+                    WHERE ScheduleSettingsId = '{scheduleSettings!.Id}';",
                 ""
             );
 
@@ -248,7 +248,11 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                 $@"
                     UPDATE [LessonBlock] 
                     SET
-                    [LessonDate] = DATEADD(DAY,{daysDifference},[LessonDate]), [LessonStart] = @LessonStart, [LessonEnd] = @LessonEnd, [ClassroomId] = @ClassroomId, [TeacherId] = @TeacherId
+                    [LessonDate] = DATEADD(DAY,{daysDifference},[LessonDate]), 
+                    [LessonStart] = @LessonStart, 
+                    [LessonEnd] = @LessonEnd, 
+                    [ClassroomId] = @ClassroomId, 
+                    [TeacherId] = @TeacherId
                     WHERE [Id] = '{request.Id}' OR [ClusterId] = '{request.Id}';",
                 request.dto
             );

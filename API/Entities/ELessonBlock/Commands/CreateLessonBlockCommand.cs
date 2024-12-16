@@ -139,7 +139,7 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                     SELECT 
                     count(*)
                     FROM [LessonPeriod] 
-                    WHERE [ScheduleSettingsId] = '{scheduleSettings!.Id}'; ",
+                    WHERE [ScheduleSettingsId] = '{scheduleSettings!.Id}';",
                 ""
             );
 
@@ -209,7 +209,7 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                 await _dbService.Post<Guid>(
                     $@"
                     INSERT INTO [LessonBlock] 
-                    ([Id],[LessonDate],[LessonStart],[LessonEnd],[LessonId],[ClassroomId],[TeacherId],[ClusterId])
+                    ([Id], [LessonDate], [LessonStart], [LessonEnd], [LessonId], [ClassroomId], [TeacherId], [ClusterId])
                     OUTPUT 
                     INSERTED.Id                    
                     VALUES (

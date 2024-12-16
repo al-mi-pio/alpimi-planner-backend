@@ -137,7 +137,7 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
             var insertedId = await _dbService.Post<Guid>(
                 $@"
                     INSERT INTO [Classroom] 
-                    ([Id],[Name],[Capacity],[ScheduleId])
+                    ([Id], [Name], [Capacity], [ScheduleId])
                     OUTPUT 
                     INSERTED.Id                    
                     VALUES (
@@ -155,7 +155,7 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
                     await _dbService.Post<Guid>(
                         $@"
                             INSERT INTO [ClassroomClassroomType] 
-                            ([Id],[ClassroomId],[ClassroomTypeId])
+                            ([Id], [ClassroomId], [ClassroomTypeId])
                             OUTPUT 
                             INSERTED.Id                    
                             VALUES (

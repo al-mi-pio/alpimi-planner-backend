@@ -139,7 +139,7 @@ namespace AlpimiAPI.Entities.EStudent.Commands
                         FROM [Subgroup] sg
                         LEFT JOIN [StudentSubgroup] ssg ON ssg.[SubgroupId] = sg.[Id]
                         LEFT JOIN [Student] st ON st.[Id] = ssg.[StudentId]
-                        WHERE st.[Id] = @Id",
+                        WHERE st.[Id] = @Id;",
                     request
                 );
 
@@ -151,7 +151,7 @@ namespace AlpimiAPI.Entities.EStudent.Commands
                         await _dbService.Post<Guid>(
                             $@"
                                 INSERT INTO [StudentSubgroup] 
-                                ([Id],[StudentId],[SubgroupId])
+                                ([Id], [StudentId], [SubgroupId])
                                 OUTPUT 
                                 INSERTED.Id                    
                                 VALUES (

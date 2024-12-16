@@ -67,9 +67,9 @@ namespace AlpimiAPI.Entities.EUser.Commands
 
             User? user = await _dbService.Update<User?>(
                 $@"
-                UPDATE [User] 
-                SET
-                    [Login]=@Login, [CustomURL]=@CustomURL
+                    UPDATE [User] 
+                    SET
+                    [Login] = @Login, [CustomURL] = @CustomURL
                     OUTPUT 
                     INSERTED.[Id], 
                     INSERTED.[Login], 

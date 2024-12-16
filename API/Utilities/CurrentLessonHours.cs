@@ -50,7 +50,7 @@ namespace AlpimiAPI.Utilities
                     [CurrentHours] = {amountOfHoursToInsert}
                     OUTPUT
                     INSERTED.[Id]
-                    WHERE [Id] = '{lessonId}'; ",
+                    WHERE [Id] = '{lessonId}';",
                 ""
             );
         }

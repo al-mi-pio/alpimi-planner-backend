@@ -38,7 +38,10 @@
   Check if returns an error when school days contains symbols other than 1 or 0
 
 - [ThrowsErrorWhenLessonPeriodsOverlapAfterUpdatingSchoolHour()](../Entities/EScheduleSettings/Commands/UpdateScheduleSettingsCommand.unit.cs) - **unit**  
-  Check if returns an error lesson periods start to overlap after updating school hour
+  Check if returns an error when incorrect school hour is provided
+
+- [ThrowsErrorWhenSchoolHourIsLessThan1440()](../Entities/EScheduleSettings/Commands/UpdateScheduleSettingsCommand.unit.cs) - **unit**  
+  Check if returns an error when incorrect school hour is provided
   
 ## `GET` `api/ScheduleSettings/bySchedule/{scheduleId}`
 

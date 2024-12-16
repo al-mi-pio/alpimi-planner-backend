@@ -33,11 +33,10 @@ namespace AlpimiAPI.Entities.ELesson.Commands
             CancellationToken cancellationToken
         )
         {
+            List<ErrorObject> errors = new List<ErrorObject>();
             if (request.dto.AmountOfHours < 1)
             {
-                throw new ApiErrorException(
-                    [new ErrorObject(_str["badParameter", "AmountOfHours"])]
-                );
+                errors.Add(new ErrorObject(_str["badParameter", "AmountOfHours"]));
             }
 
             GetLessonTypeHandler getLessonTypeHandler = new GetLessonTypeHandler(_dbService);
@@ -53,12 +52,10 @@ namespace AlpimiAPI.Entities.ELesson.Commands
 
             if (lessonType.Value == null)
             {
-                throw new ApiErrorException(
-                    [
-                        new ErrorObject(
-                            _str["resourceNotFound", "LessonType", request.dto.LessonTypeId]
-                        )
-                    ]
+                errors.Add(
+                    new ErrorObject(
+                        _str["resourceNotFound", "LessonType", request.dto.LessonTypeId]
+                    )
                 );
             }
 
@@ -75,12 +72,17 @@ namespace AlpimiAPI.Entities.ELesson.Commands
 
             if (subgroup.Value == null)
             {
-                throw new ApiErrorException(
-                    [new ErrorObject(_str["resourceNotFound", "Subgroup", request.dto.SubgroupId])]
+                errors.Add(
+                    new ErrorObject(_str["resourceNotFound", "Subgroup", request.dto.SubgroupId])
                 );
             }
 
-            if (subgroup.Value.Group.ScheduleId != lessonType.Value.ScheduleId)
+            if (errors.Count != 0)
+            {
+                throw new ApiErrorException(errors);
+            }
+
+            if (subgroup.Value!.Group.ScheduleId != lessonType.Value!.ScheduleId)
             {
                 throw new ApiErrorException(
                     [new ErrorObject(_str["wrongSet", "Subgroup", "Schedule", "LessonType"])]
@@ -103,7 +105,6 @@ namespace AlpimiAPI.Entities.ELesson.Commands
                 );
             }
 
-            List<ErrorObject> errors = new List<ErrorObject>();
             if (request.dto.ClassroomTypeIds != null)
             {
                 var duplicates = request

@@ -22,6 +22,9 @@
 - [ThrowsErrorWhenSchoolHourIsLessThan1()](../Entities/ESchedule/Commands/CreateScheduleCommand.unit.cs) - **unit**  
   Check if returns an error when school hour is less than one
 
+- [ThrowsErrorWhenSchoolHourIsLessThan1440()](../Entities/ESchedule/Commands/CreateScheduleCommand.unit.cs) - **unit**  
+  Check if returns an error when school hour is more than fourteen thousand forty
+
 - [ThrowsErrorWhenSchoolDaysLengthIsOtherThan7()](../Entities/ESchedule/Commands/CreateScheduleCommand.unit.cs) - **unit**  
   Check if returns an error when school days length is other than seven
 

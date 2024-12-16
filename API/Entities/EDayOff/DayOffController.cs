@@ -52,6 +52,7 @@ namespace AlpimiAPI.Entities.EDayOff
             try
             {
                 var result = await _mediator.Send(command);
+
                 var response = new ApiGetResponse<Guid>(result);
                 return Ok(response);
             }
@@ -129,6 +130,7 @@ namespace AlpimiAPI.Entities.EDayOff
                         new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "DayOff"])])
                     );
                 }
+
                 var response = new ApiGetResponse<DayOffDTO>(DataTrimmer.Trim(result));
                 return Ok(response);
             }
@@ -175,6 +177,7 @@ namespace AlpimiAPI.Entities.EDayOff
             try
             {
                 (IEnumerable<DayOff>?, int) result = await _mediator.Send(query);
+
                 var response = new ApiGetAllResponse<IEnumerable<DayOffDTO>>(
                     result.Item1!.Select(DataTrimmer.Trim),
                     new Pagination(result.Item2, perPage, page, sortBy, sortOrder)

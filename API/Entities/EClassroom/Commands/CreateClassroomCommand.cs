@@ -2,7 +2,6 @@
 using AlpimiAPI.Entities.EClassroom.DTO;
 using AlpimiAPI.Entities.EClassroomType;
 using AlpimiAPI.Entities.EClassroomType.Queries;
-using AlpimiAPI.Entities.ELessonType;
 using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Entities.ESchedule.Queries;
 using AlpimiAPI.Locales;
@@ -47,11 +46,11 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
                 request.FilteredId,
                 request.Role
             );
-
             ActionResult<Schedule?> schedule = await getScheduleHandler.Handle(
                 getScheduleQuery,
                 cancellationToken
             );
+
             if (schedule.Value == null)
             {
                 throw new ApiErrorException(
@@ -128,6 +127,7 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
                         );
                     }
                 }
+
                 if (errors.Count != 0)
                 {
                     throw new ApiErrorException(errors);

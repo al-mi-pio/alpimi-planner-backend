@@ -128,6 +128,7 @@ namespace AlpimiAPI.Entities.EClassroom.Queries
                     );
                     break;
             }
+
             if (classrooms != null)
             {
                 foreach (var classroom in classrooms)
@@ -145,6 +146,7 @@ namespace AlpimiAPI.Entities.EClassroom.Queries
                     classroom.Schedule = schedule.Value!;
                 }
             }
+
             return (classrooms, count);
         }
     }

@@ -49,6 +49,7 @@ namespace AlpimiAPI.Entities.EUser
             try
             {
                 var result = await _mediator.Send(command);
+
                 var response = new ApiGetResponse<Guid>(result);
                 return Ok(response);
             }
@@ -125,6 +126,7 @@ namespace AlpimiAPI.Entities.EUser
                         new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "User"])])
                     );
                 }
+
                 var response = new ApiGetResponse<User>(result);
                 return Ok(response);
             }
@@ -170,6 +172,7 @@ namespace AlpimiAPI.Entities.EUser
                         new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "User"])])
                     );
                 }
+
                 var response = new ApiGetResponse<User>(result);
                 return Ok(response);
             }
@@ -210,6 +213,7 @@ namespace AlpimiAPI.Entities.EUser
                         new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "User"])])
                     );
                 }
+
                 var response = new ApiGetResponse<User>(result);
                 return Ok(response);
             }

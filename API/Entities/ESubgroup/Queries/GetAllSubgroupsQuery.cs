@@ -130,6 +130,7 @@ namespace AlpimiAPI.Entities.ESubgroup.Queries
                     );
                     break;
             }
+
             if (subgroups != null)
             {
                 foreach (var subgroup in subgroups)
@@ -147,6 +148,7 @@ namespace AlpimiAPI.Entities.ESubgroup.Queries
                     subgroup.Group = group.Value!;
                 }
             }
+
             return (subgroups, count);
         }
     }

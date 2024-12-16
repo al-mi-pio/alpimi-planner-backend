@@ -42,12 +42,12 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Commands
                     request.FilteredId,
                     request.Role
                 );
-
             ActionResult<ScheduleSettings?> scheduleSettings =
                 await getScheduleSettingsByScheduleIdHandler.Handle(
                     getScheduleSettingsByScheduleIdQuery,
                     cancellationToken
                 );
+
             if (scheduleSettings.Value == null)
             {
                 throw new ApiErrorException(

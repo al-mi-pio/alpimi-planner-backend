@@ -62,6 +62,7 @@ namespace AlpimiAPI.Entities.EClassroom.Queries
                 );
                 classroom.Schedule = schedule.Value!;
             }
+
             return classroom;
         }
     }

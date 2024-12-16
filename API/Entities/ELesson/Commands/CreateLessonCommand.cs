@@ -155,6 +155,7 @@ namespace AlpimiAPI.Entities.ELesson.Commands
                         );
                     }
                 }
+
                 if (errors.Count != 0)
                 {
                     throw new ApiErrorException(errors);

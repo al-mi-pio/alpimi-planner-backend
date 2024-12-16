@@ -132,6 +132,7 @@ namespace AlpimiAPI.Entities.EClassroomType.Queries
                     );
                     break;
             }
+
             if (classroomTypes != null)
             {
                 foreach (var classroomType in classroomTypes)
@@ -149,6 +150,7 @@ namespace AlpimiAPI.Entities.EClassroomType.Queries
                     classroomType.Schedule = schedule.Value!;
                 }
             }
+
             return (classroomTypes, count);
         }
     }

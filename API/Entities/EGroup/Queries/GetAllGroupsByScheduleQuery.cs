@@ -120,6 +120,7 @@ namespace AlpimiAPI.Entities.EGroup.Queries
                     );
                     break;
             }
+
             if (groups != null)
             {
                 foreach (var group in groups)
@@ -137,6 +138,7 @@ namespace AlpimiAPI.Entities.EGroup.Queries
                     group.Schedule = schedule.Value!;
                 }
             }
+
             return (groups, count);
         }
     }

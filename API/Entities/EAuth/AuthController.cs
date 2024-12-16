@@ -34,7 +34,6 @@ namespace AlpimiAPI.Entities.EAuth
         /// <remarks>
         /// Provide a valid token inside the Authorization header with the 'Bearer' prefix
         /// </remarks>
-
         [AllowAnonymous]
         [HttpPost]
         [Route("login")]

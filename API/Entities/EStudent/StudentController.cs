@@ -52,6 +52,7 @@ namespace AlpimiAPI.Entities.EStudent
             try
             {
                 var result = await _mediator.Send(command);
+
                 var response = new ApiGetResponse<Guid>(result);
                 return Ok(response);
             }
@@ -129,6 +130,7 @@ namespace AlpimiAPI.Entities.EStudent
                         new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "Student"])])
                     );
                 }
+
                 var response = new ApiGetResponse<StudentDTO>(DataTrimmer.Trim(result));
                 return Ok(response);
             }
@@ -175,6 +177,7 @@ namespace AlpimiAPI.Entities.EStudent
             try
             {
                 (IEnumerable<Student>?, int) result = await _mediator.Send(query);
+
                 var response = new ApiGetAllResponse<IEnumerable<StudentDTO>>(
                     result.Item1!.Select(DataTrimmer.Trim),
                     new Pagination(result.Item2, perPage, page, sortBy, sortOrder)
@@ -222,8 +225,8 @@ namespace AlpimiAPI.Entities.EStudent
                         new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "Student"])])
                     );
                 }
-                var response = new ApiGetResponse<StudentDTO>(DataTrimmer.Trim(result));
 
+                var response = new ApiGetResponse<StudentDTO>(DataTrimmer.Trim(result));
                 return Ok(response);
             }
             catch (Exception ex)

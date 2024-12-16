@@ -22,8 +22,6 @@ namespace AlpimiAPI.Database
     public class Context : DbContext
     {
         #region Entities
-
-
         public DbSet<User> User { get; set; }
         public DbSet<Auth> Auth { get; set; }
         public DbSet<Schedule> Schedule { get; set; }

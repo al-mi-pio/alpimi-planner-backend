@@ -124,6 +124,7 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Queries
                     );
                     break;
             }
+
             if (lessonPeriods != null)
             {
                 foreach (var lessonPeriod in lessonPeriods)
@@ -144,6 +145,7 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Queries
                     lessonPeriod.ScheduleSettings = scheduleSettings.Value!;
                 }
             }
+
             return (lessonPeriods, count);
         }
     }

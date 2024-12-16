@@ -29,9 +29,7 @@ namespace AlpimiAPI.Entities.EAuth.Queries
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetJWTKey()));
             var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
             var expires = DateTime.Now.AddMinutes(Configuration.GetJWTExpire());
-
             var token = new JwtSecurityToken(
                 Configuration.GetJWTIssuer(),
                 Configuration.GetJWTIssuer(),
@@ -39,7 +37,6 @@ namespace AlpimiAPI.Entities.EAuth.Queries
                 expires: expires,
                 signingCredentials: cred
             );
-
             var tokenHandler = new JwtSecurityTokenHandler();
 
             return tokenHandler.WriteToken(token);

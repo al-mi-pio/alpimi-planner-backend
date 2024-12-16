@@ -120,6 +120,7 @@ namespace AlpimiAPI.Entities.ETeacher.Queries
                     );
                     break;
             }
+
             if (teachers != null)
             {
                 foreach (var teacher in teachers)
@@ -137,6 +138,7 @@ namespace AlpimiAPI.Entities.ETeacher.Queries
                     teacher.Schedule = schedule.Value!;
                 }
             }
+
             return (teachers, count);
         }
     }

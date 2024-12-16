@@ -58,6 +58,7 @@ namespace AlpimiAPI.Entities.ELessonPeriod
             try
             {
                 var result = await _mediator.Send(command);
+
                 var response = new ApiGetResponse<Guid>(result);
                 return Ok(response);
             }
@@ -138,6 +139,7 @@ namespace AlpimiAPI.Entities.ELessonPeriod
                         )
                     );
                 }
+
                 var response = new ApiGetResponse<LessonPeriodDTO>(DataTrimmer.Trim(result));
                 return Ok(response);
             }
@@ -184,6 +186,7 @@ namespace AlpimiAPI.Entities.ELessonPeriod
             try
             {
                 (IEnumerable<LessonPeriod>?, int) result = await _mediator.Send(query);
+
                 var response = new ApiGetAllResponse<IEnumerable<LessonPeriodDTO>>(
                     result.Item1!.Select(DataTrimmer.Trim),
                     new Pagination(result.Item2, perPage, page, sortBy, sortOrder)

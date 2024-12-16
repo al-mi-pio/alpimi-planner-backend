@@ -50,7 +50,6 @@ namespace AlpimiAPI.Entities.ELesson.Commands
                 request.FilteredId,
                 request.Role
             );
-
             ActionResult<Lesson?> originalLesson = await getLessonHandler.Handle(
                 getLessonQuery,
                 cancellationToken
@@ -187,6 +186,7 @@ namespace AlpimiAPI.Entities.ELesson.Commands
                         );
                     }
                 }
+
                 if (errors.Count != 0)
                 {
                     throw new ApiErrorException(errors);

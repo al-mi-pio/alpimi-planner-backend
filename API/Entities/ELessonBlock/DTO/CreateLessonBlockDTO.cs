@@ -15,8 +15,11 @@ namespace AlpimiAPI.Entities.ELessonBlock.DTO
 
         [Required]
         public required Guid LessonId { get; set; }
+
         public Guid? ClassroomId { get; set; }
+
         public Guid? TeacherId { get; set; }
+
         public int? WeekInterval { get; set; }
     }
 }

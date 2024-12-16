@@ -77,6 +77,7 @@ namespace AlpimiAPI.Entities.ELesson.Queries
                 );
                 lesson.Subgroup = subgroup.Value!;
             }
+
             return lesson;
         }
     }

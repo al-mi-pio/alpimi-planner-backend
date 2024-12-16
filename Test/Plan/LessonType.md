@@ -19,8 +19,11 @@
 - [ThrowsErrorWhenWrongScheduleIdIsGiven()](../Entities/ELessonType/CreateLessonTypeCommand.unit.cs) - **unit** 
   Check if returns an error when incorrect id is provided
 
-- [ThrowsErrorWhenColorIsLessThan1](../Entities/ELessonType/CreateLessonTypeCommand.unit.cs) - **unit** 
-  Check if returns an error when incorrect capacity is provided
+- [ThrowsErrorWhenColorIsLessThan0](../Entities/ELessonType/CreateLessonTypeCommand.unit.cs) - **unit** 
+  Check if returns an error when incorrect color value is provided
+
+- [ThrowsErrorWhenColorIsMoreThan359](../Entities/ELessonType/CreateLessonTypeCommand.unit.cs) - **unit** 
+  Check if returns an error when incorrect color value is provided
 
 ## `GET` `api/LessonType`
 
@@ -78,7 +81,10 @@
 - [ThrowsErrorWhenNameAndSurnameAreAlreadyTaken()](../Entities/ELessonType/Commands/UpdateLessonTypeCommand.unit.cs) - **unit**  
   Check if returns an error when out of range date is provided
 
-- [ThrowsErrorWhenColorIsLessThan1](../Entities/ELessonType/UpdateLessonTypeCommand.unit.cs) - **unit** 
-  Check if returns an error when incorrect capacity is provided
+- [ThrowsErrorWhenColorIsLessThan0](../Entities/ELessonType/CreateLessonTypeCommand.unit.cs) - **unit** 
+  Check if returns an error when incorrect color value is provided
+
+- [ThrowsErrorWhenColorIsMoreThan359](../Entities/ELessonType/CreateLessonTypeCommand.unit.cs) - **unit** 
+  Check if returns an error when incorrect color value is provided
 
 

@@ -25,6 +25,12 @@ namespace AlpimiAPI.Utilities
         private static readonly string? _testConnectionString = Environment.GetEnvironmentVariable(
             "TEST_CONNECTION_STRING"
         );
+        private static readonly string? _permitLimit = Environment.GetEnvironmentVariable(
+            "PERMIT_LIMIT"
+        ); //dokończ
+        private static readonly string? _timeWindow = Environment.GetEnvironmentVariable(
+            "TIME_WINDOW"
+        ); //dokończ
 
         public static string? GetConnectionString()
         {

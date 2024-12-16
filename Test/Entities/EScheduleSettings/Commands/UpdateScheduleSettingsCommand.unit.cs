@@ -1,5 +1,6 @@
 ﻿using AlpimiAPI.Database;
 using AlpimiAPI.Entities.EDayOff;
+using AlpimiAPI.Entities.ELessonBlock;
 using AlpimiAPI.Entities.ELessonPeriod;
 using AlpimiAPI.Entities.ESchedule.Commands;
 using AlpimiAPI.Entities.EScheduleSettings;
@@ -110,6 +111,53 @@ namespace AlpimiTest.Entities.EScheduleSettings.Commands
                     {
                         new ErrorObject(
                             "There are DayOff outside of provided range. Please change them first"
+                        )
+                    }
+                ),
+                JsonConvert.SerializeObject(result.errors)
+            );
+        }
+
+        [Fact]
+        public async Task ThrowsErrorLessonBlocksAreOutsideOfDateRange()
+        {
+            var dto = MockData.GetUpdateScheduleSettingsDTO();
+            dto.SchoolYearStart = new DateOnly(2024, 10, 10);
+            dto.SchoolYearEnd = new DateOnly(2024, 10, 10);
+
+            _dbService
+                .Setup(s => s.Get<ScheduleSettings>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetScheduleSettingsDetails());
+            _dbService
+                .Setup(s => s.GetAll<LessonBlock>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(new List<LessonBlock> { MockData.GetLessonBlockDetails() });
+
+            var updateScheduleSettingsCommand = new UpdateScheduleSettingsCommand(
+                new Guid(),
+                dto,
+                new Guid(),
+                "Admin"
+            );
+
+            var updateScheduleSettingsHandler = new UpdateScheduleSettingsHandler(
+                _dbService.Object,
+                _str.Object
+            );
+
+            var result = await Assert.ThrowsAsync<ApiErrorException>(
+                async () =>
+                    await updateScheduleSettingsHandler.Handle(
+                        updateScheduleSettingsCommand,
+                        new CancellationToken()
+                    )
+            );
+
+            Assert.Equal(
+                JsonConvert.SerializeObject(
+                    new ErrorObject[]
+                    {
+                        new ErrorObject(
+                            "There are LessonBlock outside of provided range. Please change them first"
                         )
                     }
                 ),

@@ -10,6 +10,8 @@ using AlpimiAPI.Entities.EGroup;
 using AlpimiAPI.Entities.EGroup.DTO;
 using AlpimiAPI.Entities.ELesson;
 using AlpimiAPI.Entities.ELesson.DTO;
+using AlpimiAPI.Entities.ELessonBlock;
+using AlpimiAPI.Entities.ELessonBlock.DTO;
 using AlpimiAPI.Entities.ELessonPeriod;
 using AlpimiAPI.Entities.ELessonPeriod.DTO;
 using AlpimiAPI.Entities.ELessonType;
@@ -70,10 +72,10 @@ namespace AlpimiTest.TestUtilities
             return new ScheduleSettings()
             {
                 Id = new Guid(),
-                SchoolHour = 10,
+                SchoolHour = 45,
                 SchoolYearStart = new DateOnly(2020, 11, 19),
                 SchoolYearEnd = new DateOnly(2025, 11, 19),
-                SchoolDays = "1111100",
+                SchoolDays = "0111110",
                 ScheduleId = new Guid(),
                 Schedule = GetScheduleDetails()
             };
@@ -189,6 +191,23 @@ namespace AlpimiTest.TestUtilities
                 Subgroup = GetSubgroupDetails(),
                 LessonTypeId = new Guid(),
                 LessonType = GetLessonTypeDetails()
+            };
+        }
+
+        public static LessonBlock GetLessonBlockDetails()
+        {
+            return new LessonBlock()
+            {
+                LessonDate = new DateOnly(2023, 10, 10),
+                LessonStart = 1,
+                LessonEnd = 2,
+                LessonId = new Guid(),
+                Lesson = GetLessonDetails(),
+                TeacherId = new Guid(),
+                Teacher = GetTeacherDetails(),
+                ClassroomId = new Guid(),
+                Classroom = GetClassroomDetails(),
+                ClusterId = new Guid()
             };
         }
 
@@ -515,6 +534,70 @@ namespace AlpimiTest.TestUtilities
         public static UpdateLessonDTO GetUpdateLessonDTODetails()
         {
             return new UpdateLessonDTO() { Name = "Bazie Danych", AmountOfHours = 9 };
+        }
+
+        public static CreateLessonBlockDTO GetCreateLessonBlockDTODetails(
+            Guid lessonId,
+            Guid classroomId,
+            Guid teacherId
+        )
+        {
+            var lessonBlock = GetLessonBlockDetails();
+            return new CreateLessonBlockDTO()
+            {
+                LessonDate = lessonBlock.LessonDate,
+                LessonStart = lessonBlock.LessonStart,
+                LessonEnd = lessonBlock.LessonEnd,
+                LessonId = lessonId,
+                ClassroomId = classroomId,
+                TeacherId = teacherId
+            };
+        }
+
+        public static CreateLessonBlockDTO GetCreateSecondLessonBlockDTODetails(
+            Guid lessonId,
+            Guid classroomId,
+            Guid teacherId
+        )
+        {
+            return new CreateLessonBlockDTO()
+            {
+                LessonDate = new DateOnly(2023, 8, 7),
+                LessonStart = 1,
+                LessonEnd = 4,
+                LessonId = lessonId,
+                ClassroomId = classroomId,
+                TeacherId = teacherId
+            };
+        }
+
+        public static CreateLessonBlockDTO GetCreateThirdLessonBlockDTODetails(
+            Guid lessonId,
+            Guid classroomId,
+            Guid teacherId
+        )
+        {
+            return new CreateLessonBlockDTO()
+            {
+                LessonDate = new DateOnly(2023, 8, 8),
+                LessonStart = 2,
+                LessonEnd = 4,
+                LessonId = lessonId,
+                ClassroomId = classroomId,
+                TeacherId = teacherId,
+                WeekInterval = 10
+            };
+        }
+
+        public static UpdateLessonBlockDTO GetUpdateLessonBlockDTODetails()
+        {
+            return new UpdateLessonBlockDTO()
+            {
+                LessonStart = 2,
+                LessonEnd = 3,
+                WeekDay = 2,
+                UpdateCluster = false
+            };
         }
     }
 }

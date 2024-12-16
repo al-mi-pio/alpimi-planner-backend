@@ -89,16 +89,16 @@
 ## `PATCH` `api/Lesson/{id}`
 
 - [UpdateLessonReturnsUpdatedLesson()](../Entities/ELesson/LessonController.test.cs) - **integrity**  
-  Check if returns an updated day off when provided with correct data
+  Check if returns an updated lesson when provided with correct data
 
 - [UpdateLessonUpdatesClassroomsClassroomTypes()](../Entities/EClassroom/ClassroomController.test.cs) - **integrity**  
   Check if updates lesson classroom types when provided with correct data
 
 - [UpdateLessonThrowsNotFoundErrorWhenWrongIdIsGiven()](../Entities/ELesson/LessonController.test.cs) - **integrity**  
-  Check if returns an error when day off doesn't exists
+  Check if returns an error when lesson doesn't exists
 
 - [UpdateLessonThrowsNotFoundErrorWhenWrongUserAttemptsUpdate()](../Entities/ELesson/LessonController.test.cs) - **integrity**  
-  Check if returns an error when day off is inaccessible for user
+  Check if returns an error when lesson is inaccessible for user
 
 - [ThrowsErrorWhenNameIsAlreadyTakenByLesson()](../Entities/ELesson/Commands/UpdateLessonCommand.unit.cs) - **unit**  
   Check if returns an error when a taken by lesson name is provided

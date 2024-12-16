@@ -174,8 +174,8 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
 
             var scheduleSettings = await _dbService.Get<ScheduleSettings?>(
                 @"
-                    SELECT 
-                    ss.[Id], ss.[SchoolHour], ss.[SchoolYearStart], ss.[SchoolYearEnd], ss.[ScheduleId]
+                    SELECT DISTINCT
+                    ss.[Id], ss.[SchoolHour], ss.[SchoolYearStart], ss.[SchoolYearEnd], ss.[SchoolDays], ss.[ScheduleId]
                     FROM [LessonBlock] lb
                     INNER JOIN [Lesson] l ON l.[Id] = lb.[LessonId]
                     INNER JOIN [LessonType] lt ON lt.[Id] = l.[LessonTypeId]
@@ -186,32 +186,34 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
             );
 
             var lessonPeriodCount = await _dbService.Get<int>(
-                @"
+                $@"
                     SELECT 
                     count(*)
                     FROM [LessonPeriod] 
-                    WHERE ScheduleSettingsId = @Id;",
-                scheduleSettings!
+                    WHERE ScheduleSettingsId = '{scheduleSettings!.Id}'; ",
+                ""
             );
 
-            if (request.dto.LessonStart < request.dto.LessonEnd)
+            if (request.dto.LessonStart > request.dto.LessonEnd)
             {
                 errors.Add(new ErrorObject(_str["scheduleTime"]));
             }
 
-            if (request.dto.LessonStart < 1 || request.dto.LessonStart > lessonPeriodCount)
+            if (request.dto.LessonStart < 1)
             {
                 errors.Add(new ErrorObject(_str["badParameter", "LessonStart"]));
             }
 
-            if (request.dto.LessonEnd < 1 || request.dto.LessonEnd > lessonPeriodCount)
+            if (request.dto.LessonEnd > lessonPeriodCount)
             {
                 errors.Add(new ErrorObject(_str["badParameter", "LessonEnd"]));
             }
 
             if (scheduleSettings!.SchoolDays[request.dto.WeekDay.Value] == '0')
             {
-                errors.Add(new ErrorObject(_str["badWeekDay", request.dto.WeekDay.Value]));
+                errors.Add(
+                    new ErrorObject(_str["badWeekDay", (DayOfWeek)request.dto.WeekDay.Value])
+                );
             }
 
             int daysDifference =
@@ -231,7 +233,7 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                         _str[
                             "dateOutOfRange",
                             scheduleSettings.SchoolYearStart,
-                            scheduleSettings.SchoolYearStart
+                            scheduleSettings.SchoolYearEnd
                         ]
                     )
                 );
@@ -242,26 +244,19 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                 throw new ApiErrorException(errors);
             }
 
-            await _dbService.Update<Lesson?>(
-                $@"
-                    UPDATE [Lesson] 
-                    SET
-                    [CurrentHours] = [CurrentHours] + {amountOfLessonHoursToUpdate}
-                    OUTPUT
-                    INSERTED.[Id]
-                    WHERE [Id] = @LessonId;",
-                oneLessonBlock
-            );
-
             await _dbService.Update<LessonBlock?>(
                 $@"
                     UPDATE [LessonBlock] 
                     SET
                     [LessonDate] = DATEADD(DAY,{daysDifference},[LessonDate]), [LessonStart] = @LessonStart, [LessonEnd] = @LessonEnd, [ClassroomId] = @ClassroomId, [TeacherId] = @TeacherId
-                    OUTPUT
-                    INSERTED.[Id]
                     WHERE [Id] = '{request.Id}' OR [ClusterId] = '{request.Id}';",
                 request.dto
+            );
+
+            await Utilities.CurrentLessonHours.Update(
+                _dbService,
+                oneLessonBlock.LessonId,
+                cancellationToken
             );
 
             return request.Id;

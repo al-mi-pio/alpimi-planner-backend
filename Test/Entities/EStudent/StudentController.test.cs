@@ -57,23 +57,64 @@ namespace AlpimiTest.Entities.EStudent
         }
 
         [Fact]
-        public async Task StudentIsDeleted()
+        public async Task StudentControllerThrowsUnauthorized()
         {
-            var studentRequest = MockData.GetCreateStudentDTODetails(groupId1);
-            var studentId = await DbHelper.SetupStudent(_client, studentRequest);
+            _client.DefaultRequestHeaders.Authorization = null;
 
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-                "Bearer",
-                TestAuthorization.GetToken("Admin", "User", new Guid())
+            var response = await _client.DeleteAsync($"/api/Student/{new Guid()}");
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+
+            response = await _client.PostAsJsonAsync(
+                "/api/Student",
+                MockData.GetCreateStudentDTODetails(groupId1)
             );
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
 
-            var response = await _client.DeleteAsync($"/api/Student/{studentId}");
-            Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+            var query = $"?Id={new Guid()}";
+            response = await _client.GetAsync($"/api/Student{query}");
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
 
-            var query = $"?groupId1={groupId1}";
-            response = await _client.GetAsync($"/api/Student");
-            var stringResponse = await response.Content.ReadAsStringAsync();
-            Assert.DoesNotContain(studentRequest.AlbumNumber, stringResponse);
+            response = await _client.PatchAsJsonAsync(
+                $"/api/Student/{new Guid()}",
+                MockData.GetUpdateStudentDTODetails()
+            );
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+
+            response = await _client.GetAsync($"/api/Student/{new Guid()}");
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task StudentControllerThrowsTooManyRequests()
+        {
+            for (int i = 0; i != Configuration.GetPermitLimit(); i++)
+            {
+                await _client.GetAsync("/api/Student");
+            }
+
+            _client.DefaultRequestHeaders.Authorization = null;
+
+            var response = await _client.DeleteAsync($"/api/Student/{new Guid()}");
+            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
+
+            response = await _client.PostAsJsonAsync(
+                "/api/Student",
+                MockData.GetCreateStudentDTODetails(groupId1)
+            );
+            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
+
+            var query = $"?Id={new Guid()}";
+            response = await _client.GetAsync($"/api/Student{query}");
+            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
+
+            response = await _client.PatchAsJsonAsync(
+                $"/api/Student/{new Guid()}",
+                MockData.GetUpdateStudentDTODetails()
+            );
+            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
+
+            response = await _client.GetAsync($"/api/Student/{new Guid()}");
+            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
         }
 
         [Fact]
@@ -113,6 +154,26 @@ namespace AlpimiTest.Entities.EStudent
             response = await _client.GetAsync($"/api/Student{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.Contains(studentRequest.AlbumNumber, stringResponse);
+        }
+
+        [Fact]
+        public async Task StudentIsDeleted()
+        {
+            var studentRequest = MockData.GetCreateStudentDTODetails(groupId1);
+            var studentId = await DbHelper.SetupStudent(_client, studentRequest);
+
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", new Guid())
+            );
+
+            var response = await _client.DeleteAsync($"/api/Student/{studentId}");
+            Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+
+            var query = $"?groupId1={groupId1}";
+            response = await _client.GetAsync($"/api/Student");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            Assert.DoesNotContain(studentRequest.AlbumNumber, stringResponse);
         }
 
         [Fact]
@@ -250,6 +311,27 @@ namespace AlpimiTest.Entities.EStudent
         }
 
         [Fact]
+        public async Task GetAllStudentsReturnsStudentsFromSubgroupIfSubgroupIdIsProvided()
+        {
+            var studentRequest1 = MockData.GetCreateStudentDTODetails(groupId1);
+            var studentRequest2 = MockData.GetCreateSecondStudentDTODetails(groupId2);
+
+            await DbHelper.SetupStudent(_client, studentRequest1);
+            await DbHelper.SetupStudent(_client, studentRequest2);
+
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", userId)
+            );
+            var query = $"?id={subgroupId}";
+            var response = await _client.GetAsync($"/api/Student{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+
+            Assert.Contains(studentRequest1.AlbumNumber, stringResponse);
+            Assert.DoesNotContain(studentRequest2.AlbumNumber, stringResponse);
+        }
+
+        [Fact]
         public async Task GetAllStudentReturnsEmptyContentWhenWrongUserAttemptsGet()
         {
             var studentRequest1 = MockData.GetCreateStudentDTODetails(groupId1);
@@ -312,23 +394,6 @@ namespace AlpimiTest.Entities.EStudent
         }
 
         [Fact]
-        public async Task GetStudentThrowsNotFoundWhenWrongIdIsGiven()
-        {
-            var studentRequest = MockData.GetCreateStudentDTODetails(groupId1);
-
-            await DbHelper.SetupStudent(_client, studentRequest);
-
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-                "Bearer",
-                TestAuthorization.GetToken("Admin", "User", userId)
-            );
-
-            var response = await _client.GetAsync($"/api/Student/{new Guid()}");
-
-            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
-        }
-
-        [Fact]
         public async Task GetStudentThrowsNotFoundErrorWhenWrongUserTokenIsGiven()
         {
             var studentRequest = MockData.GetCreateStudentDTODetails(groupId1);
@@ -346,64 +411,20 @@ namespace AlpimiTest.Entities.EStudent
         }
 
         [Fact]
-        public async Task StudentControllerThrowsUnauthorized()
+        public async Task GetStudentThrowsNotFoundWhenWrongIdIsGiven()
         {
-            _client.DefaultRequestHeaders.Authorization = null;
+            var studentRequest = MockData.GetCreateStudentDTODetails(groupId1);
 
-            var response = await _client.DeleteAsync($"/api/Student/{new Guid()}");
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+            await DbHelper.SetupStudent(_client, studentRequest);
 
-            response = await _client.PostAsJsonAsync(
-                "/api/Student",
-                MockData.GetCreateStudentDTODetails(groupId1)
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", userId)
             );
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
 
-            var query = $"?Id={new Guid()}";
-            response = await _client.GetAsync($"/api/Student{query}");
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+            var response = await _client.GetAsync($"/api/Student/{new Guid()}");
 
-            response = await _client.PatchAsJsonAsync(
-                $"/api/Student/{new Guid()}",
-                MockData.GetUpdateStudentDTODetails()
-            );
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-
-            response = await _client.GetAsync($"/api/Student/{new Guid()}");
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-        }
-
-        [Fact]
-        public async Task StudentControllerThrowsTooManyRequests()
-        {
-            for (int i = 0; i != Configuration.GetPermitLimit(); i++)
-            {
-                await _client.GetAsync("/api/Student");
-            }
-
-            _client.DefaultRequestHeaders.Authorization = null;
-
-            var response = await _client.DeleteAsync($"/api/Student/{new Guid()}");
-            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
-
-            response = await _client.PostAsJsonAsync(
-                "/api/Student",
-                MockData.GetCreateStudentDTODetails(groupId1)
-            );
-            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
-
-            var query = $"?Id={new Guid()}";
-            response = await _client.GetAsync($"/api/Student{query}");
-            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
-
-            response = await _client.PatchAsJsonAsync(
-                $"/api/Student/{new Guid()}",
-                MockData.GetUpdateStudentDTODetails()
-            );
-            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
-
-            response = await _client.GetAsync($"/api/Student/{new Guid()}");
-            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
     }
 }

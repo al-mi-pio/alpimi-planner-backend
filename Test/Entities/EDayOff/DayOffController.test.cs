@@ -42,23 +42,58 @@ namespace AlpimiTest.Entities.EDayOff
         }
 
         [Fact]
-        public async Task DayOffIsDeleted()
+        public async Task DayOffControllerThrowsUnauthorized()
         {
-            var dayOffRequest = MockData.GetCreateDayOffDTODetails(scheduleId);
-            var dayOffId = await DbHelper.SetupDayOff(_client, dayOffRequest);
+            _client.DefaultRequestHeaders.Authorization = null;
 
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-                "Bearer",
-                TestAuthorization.GetToken("Admin", "User", new Guid())
+            var response = await _client.DeleteAsync($"/api/DayOff/{new Guid()}");
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+
+            response = await _client.PostAsJsonAsync(
+                "/api/DayOff",
+                MockData.GetCreateDayOffDTODetails(scheduleId)
             );
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
 
-            var response = await _client.DeleteAsync($"/api/DayOff/{dayOffId}");
-            Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+            var query = $"?scheduleId={new Guid()}";
+            response = await _client.GetAsync($"/api/DayOff{query}");
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
 
-            var query = $"?scheduleId={scheduleId}";
-            response = await _client.GetAsync($"/api/DayOff");
-            var stringResponse = await response.Content.ReadAsStringAsync();
-            Assert.DoesNotContain(dayOffRequest.Name, stringResponse);
+            response = await _client.PatchAsJsonAsync(
+                $"/api/DayOff/{new Guid()}",
+                MockData.GetUpdateDayOffDTODetails()
+            );
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task DayOffControllerThrowsTooManyRequests()
+        {
+            for (int i = 0; i != Configuration.GetPermitLimit(); i++)
+            {
+                await _client.GetAsync("/api/DayOff");
+            }
+
+            _client.DefaultRequestHeaders.Authorization = null;
+
+            var response = await _client.DeleteAsync($"/api/DayOff/{new Guid()}");
+            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
+
+            response = await _client.PostAsJsonAsync(
+                "/api/DayOff",
+                MockData.GetCreateDayOffDTODetails(scheduleId)
+            );
+            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
+
+            var query = $"?scheduleId={new Guid()}";
+            response = await _client.GetAsync($"/api/DayOff{query}");
+            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
+
+            response = await _client.PatchAsJsonAsync(
+                $"/api/DayOff/{new Guid()}",
+                MockData.GetUpdateDayOffDTODetails()
+            );
+            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
         }
 
         [Fact]
@@ -78,6 +113,26 @@ namespace AlpimiTest.Entities.EDayOff
             response = await _client.GetAsync($"/api/DayOff{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.Contains(dayOffRequest.Name, stringResponse);
+        }
+
+        [Fact]
+        public async Task DayOffIsDeleted()
+        {
+            var dayOffRequest = MockData.GetCreateDayOffDTODetails(scheduleId);
+            var dayOffId = await DbHelper.SetupDayOff(_client, dayOffRequest);
+
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", new Guid())
+            );
+
+            var response = await _client.DeleteAsync($"/api/DayOff/{dayOffId}");
+            Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+
+            var query = $"?scheduleId={scheduleId}";
+            response = await _client.GetAsync($"/api/DayOff");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            Assert.DoesNotContain(dayOffRequest.Name, stringResponse);
         }
 
         [Fact]
@@ -212,61 +267,6 @@ namespace AlpimiTest.Entities.EDayOff
 
             Assert.DoesNotContain(dayOffRequest1.Name, stringResponse);
             Assert.DoesNotContain(dayOffRequest2.Name, stringResponse);
-        }
-
-        [Fact]
-        public async Task DayOffControllerThrowsUnauthorized()
-        {
-            _client.DefaultRequestHeaders.Authorization = null;
-
-            var response = await _client.DeleteAsync($"/api/DayOff/{new Guid()}");
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-
-            response = await _client.PostAsJsonAsync(
-                "/api/DayOff",
-                MockData.GetCreateDayOffDTODetails(scheduleId)
-            );
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-
-            var query = $"?scheduleId={new Guid()}";
-            response = await _client.GetAsync($"/api/DayOff{query}");
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-
-            response = await _client.PatchAsJsonAsync(
-                $"/api/DayOff/{new Guid()}",
-                MockData.GetUpdateDayOffDTODetails()
-            );
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-        }
-
-        [Fact]
-        public async Task DayOffControllerThrowsTooManyRequests()
-        {
-            for (int i = 0; i != Configuration.GetPermitLimit(); i++)
-            {
-                await _client.GetAsync("/api/DayOff");
-            }
-
-            _client.DefaultRequestHeaders.Authorization = null;
-
-            var response = await _client.DeleteAsync($"/api/DayOff/{new Guid()}");
-            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
-
-            response = await _client.PostAsJsonAsync(
-                "/api/DayOff",
-                MockData.GetCreateDayOffDTODetails(scheduleId)
-            );
-            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
-
-            var query = $"?scheduleId={new Guid()}";
-            response = await _client.GetAsync($"/api/DayOff{query}");
-            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
-
-            response = await _client.PatchAsJsonAsync(
-                $"/api/DayOff/{new Guid()}",
-                MockData.GetUpdateDayOffDTODetails()
-            );
-            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
         }
     }
 }

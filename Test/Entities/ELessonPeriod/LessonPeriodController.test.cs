@@ -43,23 +43,58 @@ namespace AlpimiTest.Entities.ELessonPeriod
         }
 
         [Fact]
-        public async Task LessonPeriodIsDeleted()
+        public async Task LessonPeriodControllerThrowsUnauthorized()
         {
-            var lessonPeriodRequest = MockData.GetCreateLessonPeriodDTODetails(scheduleId);
-            var lessonPeriodId = await DbHelper.SetupLessonPeriod(_client, lessonPeriodRequest);
+            _client.DefaultRequestHeaders.Authorization = null;
 
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-                "Bearer",
-                TestAuthorization.GetToken("Admin", "User", new Guid())
+            var response = await _client.DeleteAsync($"/api/LessonPeriod/{new Guid()}");
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+
+            response = await _client.PostAsJsonAsync(
+                "/api/LessonPeriod",
+                MockData.GetCreateLessonPeriodDTODetails(scheduleId)
             );
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
 
-            var response = await _client.DeleteAsync($"/api/LessonPeriod/{lessonPeriodId}");
-            Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+            var query = $"?scheduleId={new Guid()}";
+            response = await _client.GetAsync($"/api/LessonPeriod{query}");
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
 
-            var query = $"?scheduleId={scheduleId}";
-            response = await _client.GetAsync($"/api/LessonPeriod");
-            var stringResponse = await response.Content.ReadAsStringAsync();
-            Assert.DoesNotContain(lessonPeriodRequest.Start.ToString(), stringResponse);
+            response = await _client.PatchAsJsonAsync(
+                $"/api/LessonPeriod/{new Guid()}",
+                MockData.GetUpdateLessonPeriodDTODetails()
+            );
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task LessonPeriodControllerThrowsTooManyRequests()
+        {
+            for (int i = 0; i != Configuration.GetPermitLimit(); i++)
+            {
+                await _client.GetAsync("/api/LessonPeriod");
+            }
+
+            _client.DefaultRequestHeaders.Authorization = null;
+
+            var response = await _client.DeleteAsync($"/api/LessonPeriod/{new Guid()}");
+            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
+
+            response = await _client.PostAsJsonAsync(
+                "/api/LessonPeriod",
+                MockData.GetCreateLessonPeriodDTODetails(scheduleId)
+            );
+            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
+
+            var query = $"?scheduleId={new Guid()}";
+            response = await _client.GetAsync($"/api/LessonPeriod{query}");
+            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
+
+            response = await _client.PatchAsJsonAsync(
+                $"/api/LessonPeriod/{new Guid()}",
+                MockData.GetUpdateLessonPeriodDTODetails()
+            );
+            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
         }
 
         [Fact]
@@ -79,6 +114,26 @@ namespace AlpimiTest.Entities.ELessonPeriod
             response = await _client.GetAsync($"/api/LessonPeriod{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.Contains(lessonPeriodRequest.Start.ToString(), stringResponse);
+        }
+
+        [Fact]
+        public async Task LessonPeriodIsDeleted()
+        {
+            var lessonPeriodRequest = MockData.GetCreateLessonPeriodDTODetails(scheduleId);
+            var lessonPeriodId = await DbHelper.SetupLessonPeriod(_client, lessonPeriodRequest);
+
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", new Guid())
+            );
+
+            var response = await _client.DeleteAsync($"/api/LessonPeriod/{lessonPeriodId}");
+            Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+
+            var query = $"?scheduleId={scheduleId}";
+            response = await _client.GetAsync($"/api/LessonPeriod");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            Assert.DoesNotContain(lessonPeriodRequest.Start.ToString(), stringResponse);
         }
 
         [Fact]
@@ -154,7 +209,7 @@ namespace AlpimiTest.Entities.ELessonPeriod
         }
 
         [Fact]
-        public async Task GetAllLessonPeriodByScheduleReturnsDaysOff()
+        public async Task GetAllLessonPeriodByScheduleReturnsLessonPeriods()
         {
             var lessonPeriodRequest1 = MockData.GetCreateLessonPeriodDTODetails(scheduleId);
             var lessonPeriodRequest2 = MockData.GetCreateSecondLessonPeriodDTODetails(scheduleId);
@@ -215,61 +270,6 @@ namespace AlpimiTest.Entities.ELessonPeriod
 
             Assert.DoesNotContain(lessonPeriodRequest1.Start.ToString(), stringResponse);
             Assert.DoesNotContain(lessonPeriodRequest2.Start.ToString(), stringResponse);
-        }
-
-        [Fact]
-        public async Task LessonPeriodControllerThrowsUnauthorized()
-        {
-            _client.DefaultRequestHeaders.Authorization = null;
-
-            var response = await _client.DeleteAsync($"/api/LessonPeriod/{new Guid()}");
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-
-            response = await _client.PostAsJsonAsync(
-                "/api/LessonPeriod",
-                MockData.GetCreateLessonPeriodDTODetails(scheduleId)
-            );
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-
-            var query = $"?scheduleId={new Guid()}";
-            response = await _client.GetAsync($"/api/LessonPeriod{query}");
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-
-            response = await _client.PatchAsJsonAsync(
-                $"/api/LessonPeriod/{new Guid()}",
-                MockData.GetUpdateLessonPeriodDTODetails()
-            );
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-        }
-
-        [Fact]
-        public async Task LessonPeriodControllerThrowsTooManyRequests()
-        {
-            for (int i = 0; i != Configuration.GetPermitLimit(); i++)
-            {
-                await _client.GetAsync("/api/LessonPeriod");
-            }
-
-            _client.DefaultRequestHeaders.Authorization = null;
-
-            var response = await _client.DeleteAsync($"/api/LessonPeriod/{new Guid()}");
-            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
-
-            response = await _client.PostAsJsonAsync(
-                "/api/LessonPeriod",
-                MockData.GetCreateLessonPeriodDTODetails(scheduleId)
-            );
-            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
-
-            var query = $"?scheduleId={new Guid()}";
-            response = await _client.GetAsync($"/api/LessonPeriod{query}");
-            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
-
-            response = await _client.PatchAsJsonAsync(
-                $"/api/LessonPeriod/{new Guid()}",
-                MockData.GetUpdateLessonPeriodDTODetails()
-            );
-            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
         }
     }
 }

@@ -42,23 +42,64 @@ namespace AlpimiTest.Entities.EGroup
         }
 
         [Fact]
-        public async Task GroupIsDeleted()
+        public async Task GroupControllerThrowsUnauthorized()
         {
-            var groupRequest = MockData.GetCreateGroupDTODetails(scheduleId);
-            var groupId = await DbHelper.SetupGroup(_client, groupRequest);
+            _client.DefaultRequestHeaders.Authorization = null;
 
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-                "Bearer",
-                TestAuthorization.GetToken("Admin", "User", new Guid())
+            var response = await _client.DeleteAsync($"/api/Group/{new Guid()}");
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+
+            response = await _client.PostAsJsonAsync(
+                "/api/Group",
+                MockData.GetCreateGroupDTODetails(scheduleId)
             );
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
 
-            var response = await _client.DeleteAsync($"/api/Group/{groupId}");
-            Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+            var query = $"?scheduleId={new Guid()}";
+            response = await _client.GetAsync($"/api/Group{query}");
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
 
-            var query = $"?scheduleId={scheduleId}";
-            response = await _client.GetAsync($"/api/Group");
-            var stringResponse = await response.Content.ReadAsStringAsync();
-            Assert.DoesNotContain(groupRequest.Name, stringResponse);
+            response = await _client.PatchAsJsonAsync(
+                $"/api/Group/{new Guid()}",
+                MockData.GetUpdateGroupDTODetails()
+            );
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+
+            response = await _client.GetAsync($"/api/Group/{new Guid()}");
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task GroupControllerThrowsTooManyRequests()
+        {
+            for (int i = 0; i != Configuration.GetPermitLimit(); i++)
+            {
+                await _client.GetAsync("/api/Group");
+            }
+
+            _client.DefaultRequestHeaders.Authorization = null;
+
+            var response = await _client.DeleteAsync($"/api/Group/{new Guid()}");
+            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
+
+            response = await _client.PostAsJsonAsync(
+                "/api/Group",
+                MockData.GetCreateGroupDTODetails(scheduleId)
+            );
+            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
+
+            var query = $"?scheduleId={new Guid()}";
+            response = await _client.GetAsync($"/api/Group{query}");
+            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
+
+            response = await _client.PatchAsJsonAsync(
+                $"/api/Group/{new Guid()}",
+                MockData.GetUpdateGroupDTODetails()
+            );
+            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
+
+            response = await _client.GetAsync($"/api/Group/{new Guid()}");
+            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
         }
 
         [Fact]
@@ -78,6 +119,26 @@ namespace AlpimiTest.Entities.EGroup
             response = await _client.GetAsync($"/api/Group{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.Contains(groupRequest.Name, stringResponse);
+        }
+
+        [Fact]
+        public async Task GroupIsDeleted()
+        {
+            var groupRequest = MockData.GetCreateGroupDTODetails(scheduleId);
+            var groupId = await DbHelper.SetupGroup(_client, groupRequest);
+
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", new Guid())
+            );
+
+            var response = await _client.DeleteAsync($"/api/Group/{groupId}");
+            Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+
+            var query = $"?scheduleId={scheduleId}";
+            response = await _client.GetAsync($"/api/Group");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            Assert.DoesNotContain(groupRequest.Name, stringResponse);
         }
 
         [Fact]
@@ -231,23 +292,6 @@ namespace AlpimiTest.Entities.EGroup
         }
 
         [Fact]
-        public async Task GetScheduleThrowsNotFoundWhenWrongIdIsGiven()
-        {
-            var groupRequest = MockData.GetCreateGroupDTODetails(scheduleId);
-
-            await DbHelper.SetupGroup(_client, groupRequest);
-
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-                "Bearer",
-                TestAuthorization.GetToken("Admin", "User", userId)
-            );
-
-            var response = await _client.GetAsync($"/api/Group/{new Guid()}");
-
-            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
-        }
-
-        [Fact]
         public async Task GetScheduleThrowsNotFoundErrorWhenWrongUserTokenIsGiven()
         {
             var groupRequest = MockData.GetCreateGroupDTODetails(scheduleId);
@@ -265,64 +309,20 @@ namespace AlpimiTest.Entities.EGroup
         }
 
         [Fact]
-        public async Task GroupControllerThrowsUnauthorized()
+        public async Task GetScheduleThrowsNotFoundWhenWrongIdIsGiven()
         {
-            _client.DefaultRequestHeaders.Authorization = null;
+            var groupRequest = MockData.GetCreateGroupDTODetails(scheduleId);
 
-            var response = await _client.DeleteAsync($"/api/Group/{new Guid()}");
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+            await DbHelper.SetupGroup(_client, groupRequest);
 
-            response = await _client.PostAsJsonAsync(
-                "/api/Group",
-                MockData.GetCreateGroupDTODetails(scheduleId)
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", userId)
             );
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
 
-            var query = $"?scheduleId={new Guid()}";
-            response = await _client.GetAsync($"/api/Group{query}");
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+            var response = await _client.GetAsync($"/api/Group/{new Guid()}");
 
-            response = await _client.PatchAsJsonAsync(
-                $"/api/Group/{new Guid()}",
-                MockData.GetUpdateGroupDTODetails()
-            );
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-
-            response = await _client.GetAsync($"/api/Group/{new Guid()}");
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-        }
-
-        [Fact]
-        public async Task GroupControllerThrowsTooManyRequests()
-        {
-            for (int i = 0; i != Configuration.GetPermitLimit(); i++)
-            {
-                await _client.GetAsync("/api/Group");
-            }
-
-            _client.DefaultRequestHeaders.Authorization = null;
-
-            var response = await _client.DeleteAsync($"/api/Group/{new Guid()}");
-            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
-
-            response = await _client.PostAsJsonAsync(
-                "/api/Group",
-                MockData.GetCreateGroupDTODetails(scheduleId)
-            );
-            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
-
-            var query = $"?scheduleId={new Guid()}";
-            response = await _client.GetAsync($"/api/Group{query}");
-            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
-
-            response = await _client.PatchAsJsonAsync(
-                $"/api/Group/{new Guid()}",
-                MockData.GetUpdateGroupDTODetails()
-            );
-            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
-
-            response = await _client.GetAsync($"/api/Group/{new Guid()}");
-            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
     }
 }

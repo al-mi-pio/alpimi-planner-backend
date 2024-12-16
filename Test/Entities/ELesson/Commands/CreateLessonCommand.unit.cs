@@ -99,6 +99,37 @@ namespace AlpimiTest.Entities.ELesson.Commands
         }
 
         [Fact]
+        public async Task ThrowsErrorWhenWrongClassroomTypeIdIsGiven()
+        {
+            var dto = MockData.GetCreateLessonDTODetails(new Guid(), new Guid());
+            dto.ClassroomTypeIds = [new Guid()];
+
+            _dbService
+                .Setup(s => s.Get<LessonType>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetLessonTypeDetails());
+            _dbService
+                .Setup(s => s.Get<Subgroup>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetSubgroupDetails());
+            _dbService
+                .Setup(s => s.Get<Group>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetGroupDetails());
+
+            var createLessonCommand = new CreateLessonCommand(new Guid(), dto, new Guid(), "User");
+
+            var createLessonHandler = new CreateLessonHandler(_dbService.Object, _str.Object);
+
+            var result = await Assert.ThrowsAsync<ApiErrorException>(
+                async () =>
+                    await createLessonHandler.Handle(createLessonCommand, new CancellationToken())
+            );
+
+            Assert.Equal(
+                "ClassroomType with id 00000000-0000-0000-0000-000000000000 was not found",
+                result.errors.First().message
+            );
+        }
+
+        [Fact]
         public async Task ThrowsErrorWhenNameIsAlreadyTakenByLesson()
         {
             var dto = MockData.GetCreateLessonDTODetails(new Guid(), new Guid());
@@ -176,37 +207,6 @@ namespace AlpimiTest.Entities.ELesson.Commands
 
             Assert.Equal(
                 "Cannot add multiple ClassroomType with the value 00000000-0000-0000-0000-000000000000",
-                result.errors.First().message
-            );
-        }
-
-        [Fact]
-        public async Task ThrowsErrorWhenWrongClassroomTypeIdIsGiven()
-        {
-            var dto = MockData.GetCreateLessonDTODetails(new Guid(), new Guid());
-            dto.ClassroomTypeIds = [new Guid()];
-
-            _dbService
-                .Setup(s => s.Get<LessonType>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(MockData.GetLessonTypeDetails());
-            _dbService
-                .Setup(s => s.Get<Subgroup>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(MockData.GetSubgroupDetails());
-            _dbService
-                .Setup(s => s.Get<Group>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(MockData.GetGroupDetails());
-
-            var createLessonCommand = new CreateLessonCommand(new Guid(), dto, new Guid(), "User");
-
-            var createLessonHandler = new CreateLessonHandler(_dbService.Object, _str.Object);
-
-            var result = await Assert.ThrowsAsync<ApiErrorException>(
-                async () =>
-                    await createLessonHandler.Handle(createLessonCommand, new CancellationToken())
-            );
-
-            Assert.Equal(
-                "ClassroomType with id 00000000-0000-0000-0000-000000000000 was not found",
                 result.errors.First().message
             );
         }

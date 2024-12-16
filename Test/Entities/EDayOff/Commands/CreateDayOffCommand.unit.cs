@@ -32,9 +32,7 @@ namespace AlpimiTest.Entities.EDayOff.Commands
                 new Guid(),
                 "User"
             );
-
             var createDayOffHandler = new CreateDayOffHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createDayOffHandler.Handle(createDayOffCommand, new CancellationToken())
@@ -58,16 +56,13 @@ namespace AlpimiTest.Entities.EDayOff.Commands
         {
             var dto = MockData.GetCreateDayOffDTODetails(new Guid());
             dto.From = new DateOnly(2000, 1, 1);
-
             var scheduleSettings = MockData.GetScheduleSettingsDetails();
             _dbService
                 .Setup(s => s.Get<ScheduleSettings>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(scheduleSettings);
 
             var createDayOffCommand = new CreateDayOffCommand(new Guid(), dto, new Guid(), "User");
-
             var createDayOffHandler = new CreateDayOffHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createDayOffHandler.Handle(createDayOffCommand, new CancellationToken())
@@ -81,16 +76,13 @@ namespace AlpimiTest.Entities.EDayOff.Commands
         {
             var dto = MockData.GetCreateDayOffDTODetails(new Guid());
             dto.To = new DateOnly(1999, 10, 10);
-
             var scheduleSettings = MockData.GetScheduleSettingsDetails();
             _dbService
                 .Setup(s => s.Get<ScheduleSettings>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(scheduleSettings);
 
             var createDayOffCommand = new CreateDayOffCommand(new Guid(), dto, new Guid(), "User");
-
             var createDayOffHandler = new CreateDayOffHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createDayOffHandler.Handle(createDayOffCommand, new CancellationToken())

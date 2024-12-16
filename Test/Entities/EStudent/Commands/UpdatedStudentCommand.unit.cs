@@ -28,7 +28,6 @@ namespace AlpimiTest.Entities.EStudent.Commands
         public async Task ThrowsErrorWhenAlbumNumberIsAlreadyTaken()
         {
             var dto = MockData.GetUpdateStudentDTODetails();
-
             _dbService
                 .Setup(s => s.Get<Student>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetStudentDetails());
@@ -45,9 +44,7 @@ namespace AlpimiTest.Entities.EStudent.Commands
                 new Guid(),
                 "Admin"
             );
-
             var updateStudentHandler = new UpdateStudentHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateStudentHandler.Handle(updateStudentCommand, new CancellationToken())

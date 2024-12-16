@@ -34,9 +34,7 @@ namespace AlpimiTest.Entities.EClassroom.Commands
                 new Guid(),
                 "User"
             );
-
             var createClassroomHandler = new CreateClassroomHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createClassroomHandler.Handle(
@@ -62,7 +60,6 @@ namespace AlpimiTest.Entities.EClassroom.Commands
         public async Task ThrowsErrorWhenNameIsAlreadyTaken()
         {
             var dto = MockData.GetCreateClassroomDTODetails(new Guid());
-
             _dbService
                 .Setup(s => s.Get<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetScheduleDetails());
@@ -76,9 +73,7 @@ namespace AlpimiTest.Entities.EClassroom.Commands
                 new Guid(),
                 "User"
             );
-
             var createClassroomHandler = new CreateClassroomHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createClassroomHandler.Handle(
@@ -105,9 +100,7 @@ namespace AlpimiTest.Entities.EClassroom.Commands
                 new Guid(),
                 "User"
             );
-
             var createClassroomHandler = new CreateClassroomHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createClassroomHandler.Handle(
@@ -124,7 +117,6 @@ namespace AlpimiTest.Entities.EClassroom.Commands
         {
             var dto = MockData.GetCreateClassroomDTODetails(new Guid());
             dto.ClassroomTypeIds = [new Guid(), new Guid()];
-
             _dbService
                 .Setup(s => s.Get<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetScheduleDetails());
@@ -135,9 +127,7 @@ namespace AlpimiTest.Entities.EClassroom.Commands
                 new Guid(),
                 "User"
             );
-
             var createClassroomHandler = new CreateClassroomHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createClassroomHandler.Handle(
@@ -157,7 +147,6 @@ namespace AlpimiTest.Entities.EClassroom.Commands
         {
             var dto = MockData.GetCreateClassroomDTODetails(new Guid());
             dto.ClassroomTypeIds = [new Guid()];
-
             _dbService
                 .Setup(s => s.Get<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetScheduleDetails());
@@ -168,9 +157,7 @@ namespace AlpimiTest.Entities.EClassroom.Commands
                 new Guid(),
                 "User"
             );
-
             var createClassroomHandler = new CreateClassroomHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createClassroomHandler.Handle(
@@ -192,7 +179,6 @@ namespace AlpimiTest.Entities.EClassroom.Commands
             dto.ClassroomTypeIds = [new Guid()];
             var classroomType = MockData.GetClassroomTypeDetails();
             classroomType.ScheduleId = Guid.NewGuid();
-
             _dbService
                 .Setup(s => s.Get<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetScheduleDetails());
@@ -206,9 +192,7 @@ namespace AlpimiTest.Entities.EClassroom.Commands
                 new Guid(),
                 "User"
             );
-
             var createClassroomHandler = new CreateClassroomHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createClassroomHandler.Handle(

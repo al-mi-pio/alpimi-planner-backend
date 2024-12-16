@@ -29,10 +29,8 @@ namespace AlpimiTest.Entities.EDayOff.Commands
         {
             var dto = MockData.GetUpdateDayOffDTODetails();
             dto.From = new DateOnly(1000, 1, 1);
-
             var scheduleSettings = MockData.GetScheduleSettingsDetails();
             var dayOff = MockData.GetDayOffDetails();
-
             _dbService
                 .Setup(s => s.Get<ScheduleSettings>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(scheduleSettings);
@@ -41,9 +39,7 @@ namespace AlpimiTest.Entities.EDayOff.Commands
                 .ReturnsAsync(dayOff);
 
             var updateDayOffCommand = new UpdateDayOffCommand(new Guid(), dto, new Guid(), "Admin");
-
             var updateDayOffHandler = new UpdateDayOffHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateDayOffHandler.Handle(updateDayOffCommand, new CancellationToken())
@@ -58,15 +54,12 @@ namespace AlpimiTest.Entities.EDayOff.Commands
             var dto = MockData.GetUpdateDayOffDTODetails();
             dto.From = new DateOnly(2020, 1, 1);
             dto.To = new DateOnly(2019, 1, 1);
-
             _dbService
                 .Setup(s => s.Get<DayOff>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetDayOffDetails());
 
             var updateDayOffCommand = new UpdateDayOffCommand(new Guid(), dto, new Guid(), "User");
-
             var updateDayOffHandler = new UpdateDayOffHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateDayOffHandler.Handle(updateDayOffCommand, new CancellationToken())

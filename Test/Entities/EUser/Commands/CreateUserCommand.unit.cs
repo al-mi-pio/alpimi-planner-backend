@@ -29,13 +29,10 @@ namespace AlpimiTest.Entities.EUser.Commands
         {
             var dto = MockData.GetCreateUserDTODetails();
             dto.Password = "Rand1!";
-
             var user = MockData.GetUserDetails();
 
             var createUserCommand = new CreateUserCommand(user.Id, new Guid(), dto);
-
             var createUserHandler = new CreateUserHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())
@@ -62,13 +59,10 @@ namespace AlpimiTest.Entities.EUser.Commands
             var dto = MockData.GetCreateUserDTODetails();
             dto.Password =
                 "RandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandomRandom1!";
-
             var user = MockData.GetUserDetails();
 
             var createUserCommand = new CreateUserCommand(user.Id, new Guid(), dto);
-
             var createUserHandler = new CreateUserHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())
@@ -94,13 +88,10 @@ namespace AlpimiTest.Entities.EUser.Commands
         {
             var dto = MockData.GetCreateUserDTODetails();
             dto.Password = "RANDOMBIG1!";
-
             var user = MockData.GetUserDetails();
 
             var createUserCommand = new CreateUserCommand(user.Id, new Guid(), dto);
-
             var createUserHandler = new CreateUserHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())
@@ -126,13 +117,10 @@ namespace AlpimiTest.Entities.EUser.Commands
         {
             var dto = MockData.GetCreateUserDTODetails();
             dto.Password = "randomsmall1!";
-
             var user = MockData.GetUserDetails();
 
             var createUserCommand = new CreateUserCommand(user.Id, new Guid(), dto);
-
             var createUserHandler = new CreateUserHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())
@@ -158,13 +146,10 @@ namespace AlpimiTest.Entities.EUser.Commands
         {
             var dto = MockData.GetCreateUserDTODetails();
             dto.Password = "Randomsmall1";
-
             var user = MockData.GetUserDetails();
 
             var createUserCommand = new CreateUserCommand(user.Id, new Guid(), dto);
-
             var createUserHandler = new CreateUserHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())
@@ -190,13 +175,10 @@ namespace AlpimiTest.Entities.EUser.Commands
         {
             var dto = MockData.GetCreateUserDTODetails();
             dto.Password = "Randomsmall!";
-
             var user = MockData.GetUserDetails();
 
             var createUserCommand = new CreateUserCommand(user.Id, new Guid(), dto);
-
             var createUserHandler = new CreateUserHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())
@@ -221,17 +203,13 @@ namespace AlpimiTest.Entities.EUser.Commands
         public async Task ThrowsErrorWhenLoginAlreadyExists()
         {
             var dto = MockData.GetCreateUserDTODetails();
-
             var user = MockData.GetUserDetails();
-
             _dbService
                 .Setup(s => s.Get<User>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(user);
 
             var createUserCommand = new CreateUserCommand(user.Id, new Guid(), dto);
-
             var createUserHandler = new CreateUserHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())
@@ -253,16 +231,13 @@ namespace AlpimiTest.Entities.EUser.Commands
         public async Task ThrowsErrorWhenURLAlreadyExists()
         {
             var dto = MockData.GetCreateUserDTODetails();
-
             var user = MockData.GetUserDetails();
-
             _dbService
                 .Setup(s => s.Get<string>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(user.CustomURL);
+
             var createUserCommand = new CreateUserCommand(user.Id, new Guid(), dto);
-
             var createUserHandler = new CreateUserHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())
@@ -284,13 +259,10 @@ namespace AlpimiTest.Entities.EUser.Commands
         {
             var dto = MockData.GetCreateUserDTODetails();
             dto.Password = "R1!";
-
             var user = MockData.GetUserDetails();
 
             var createUserCommand = new CreateUserCommand(user.Id, new Guid(), dto);
-
             var createUserHandler = new CreateUserHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())

@@ -44,12 +44,10 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
                 new Guid(),
                 "User"
             );
-
             var createLessonBlockHandler = new CreateLessonBlockHandler(
                 _dbService.Object,
                 _str.Object
             );
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createLessonBlockHandler.Handle(
@@ -91,12 +89,10 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
                 new Guid(),
                 "User"
             );
-
             var createLessonBlockHandler = new CreateLessonBlockHandler(
                 _dbService.Object,
                 _str.Object
             );
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createLessonBlockHandler.Handle(
@@ -123,7 +119,6 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
         {
             var teacher = MockData.GetTeacherDetails();
             teacher.ScheduleId = Guid.NewGuid();
-
             _dbService
                 .Setup(s => s.Get<Lesson>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetLessonDetails());
@@ -144,12 +139,10 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
                 new Guid(),
                 "User"
             );
-
             var createLessonBlockHandler = new CreateLessonBlockHandler(
                 _dbService.Object,
                 _str.Object
             );
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createLessonBlockHandler.Handle(
@@ -189,12 +182,10 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
                 new Guid(),
                 "User"
             );
-
             var createLessonBlockHandler = new CreateLessonBlockHandler(
                 _dbService.Object,
                 _str.Object
             );
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createLessonBlockHandler.Handle(
@@ -221,7 +212,6 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
         {
             var classroom = MockData.GetClassroomDetails();
             classroom.ScheduleId = Guid.NewGuid();
-
             _dbService
                 .Setup(s => s.Get<Lesson>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetLessonDetails());
@@ -242,12 +232,10 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
                 new Guid(),
                 "User"
             );
-
             var createLessonBlockHandler = new CreateLessonBlockHandler(
                 _dbService.Object,
                 _str.Object
             );
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createLessonBlockHandler.Handle(
@@ -303,12 +291,10 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
                 new Guid(),
                 "User"
             );
-
             var createLessonBlockHandler = new CreateLessonBlockHandler(
                 _dbService.Object,
                 _str.Object
             );
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createLessonBlockHandler.Handle(
@@ -363,12 +349,10 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
                 new Guid(),
                 "User"
             );
-
             var createLessonBlockHandler = new CreateLessonBlockHandler(
                 _dbService.Object,
                 _str.Object
             );
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createLessonBlockHandler.Handle(
@@ -420,12 +404,10 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
                 new Guid(),
                 "User"
             );
-
             var createLessonBlockHandler = new CreateLessonBlockHandler(
                 _dbService.Object,
                 _str.Object
             );
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createLessonBlockHandler.Handle(
@@ -477,12 +459,10 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
                 new Guid(),
                 "User"
             );
-
             var createLessonBlockHandler = new CreateLessonBlockHandler(
                 _dbService.Object,
                 _str.Object
             );
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createLessonBlockHandler.Handle(
@@ -529,12 +509,10 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
                 new Guid(),
                 "User"
             );
-
             var createLessonBlockHandler = new CreateLessonBlockHandler(
                 _dbService.Object,
                 _str.Object
             );
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createLessonBlockHandler.Handle(
@@ -581,12 +559,10 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
                 new Guid(),
                 "User"
             );
-
             var createLessonBlockHandler = new CreateLessonBlockHandler(
                 _dbService.Object,
                 _str.Object
             );
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createLessonBlockHandler.Handle(
@@ -638,12 +614,10 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
                 new Guid(),
                 "User"
             );
-
             var createLessonBlockHandler = new CreateLessonBlockHandler(
                 _dbService.Object,
                 _str.Object
             );
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createLessonBlockHandler.Handle(

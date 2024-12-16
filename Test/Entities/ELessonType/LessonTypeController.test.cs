@@ -74,7 +74,6 @@ namespace AlpimiTest.Entities.ELessonType
             {
                 await _client.GetAsync("/api/LessonType");
             }
-
             _client.DefaultRequestHeaders.Authorization = null;
 
             var response = await _client.DeleteAsync($"/api/LessonType/{new Guid()}");
@@ -104,7 +103,6 @@ namespace AlpimiTest.Entities.ELessonType
         public async Task LessonTypeIsCreated()
         {
             var lessonTypeRequest = MockData.GetCreateLessonTypeDTODetails(scheduleId);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)
@@ -124,7 +122,6 @@ namespace AlpimiTest.Entities.ELessonType
         {
             var lessonTypeRequest = MockData.GetCreateLessonTypeDTODetails(scheduleId);
             var lessonTypeId = await DbHelper.SetupLessonType(_client, lessonTypeRequest);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", new Guid())
@@ -147,7 +144,6 @@ namespace AlpimiTest.Entities.ELessonType
                 _client,
                 MockData.GetCreateLessonTypeDTODetails(scheduleId)
             );
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "Bob", userId)
@@ -168,16 +164,15 @@ namespace AlpimiTest.Entities.ELessonType
         public async Task UpdateLessonTypeThrowsNotFoundErrorWhenWrongUserAttemptsUpdate()
         {
             var lessonTypeUpdateRequest = MockData.GetUpdateLessonTypeDTODetails();
-
             var lessonTypeId = await DbHelper.SetupLessonType(
                 _client,
                 MockData.GetCreateLessonTypeDTODetails(scheduleId)
             );
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("User", "User", new Guid())
             );
+
             var response = await _client.PatchAsJsonAsync(
                 $"/api/LessonType/{lessonTypeId}",
                 lessonTypeUpdateRequest
@@ -190,16 +185,15 @@ namespace AlpimiTest.Entities.ELessonType
         public async Task UpdateLessonTypeThrowsNotFoundErrorWhenWrongIdIsGiven()
         {
             var lessonTypeUpdateRequest = MockData.GetUpdateLessonTypeDTODetails();
-
             var lessonTypeId = await DbHelper.SetupLessonType(
                 _client,
                 MockData.GetCreateLessonTypeDTODetails(scheduleId)
             );
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)
             );
+
             var response = await _client.PatchAsJsonAsync(
                 $"/api/LessonType/{new Guid()}",
                 lessonTypeUpdateRequest
@@ -213,14 +207,13 @@ namespace AlpimiTest.Entities.ELessonType
         {
             var lessonTypeRequest1 = MockData.GetCreateLessonTypeDTODetails(scheduleId);
             var lessonTypeRequest2 = MockData.GetCreateSecondLessonTypeDTODetails(scheduleId);
-
             await DbHelper.SetupLessonType(_client, lessonTypeRequest1);
             await DbHelper.SetupLessonType(_client, lessonTypeRequest2);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)
             );
+
             var query = $"?scheduleId={scheduleId}";
             var response = await _client.GetAsync($"/api/LessonType{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
@@ -234,14 +227,13 @@ namespace AlpimiTest.Entities.ELessonType
         {
             var lessonTypeRequest1 = MockData.GetCreateLessonTypeDTODetails(scheduleId);
             var lessonTypeRequest2 = MockData.GetCreateSecondLessonTypeDTODetails(scheduleId);
-
             await DbHelper.SetupLessonType(_client, lessonTypeRequest1);
             await DbHelper.SetupLessonType(_client, lessonTypeRequest2);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("User", "User", new Guid())
             );
+
             var query = $"?scheduleId={scheduleId}";
             var response = await _client.GetAsync($"/api/LessonType{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
@@ -255,14 +247,13 @@ namespace AlpimiTest.Entities.ELessonType
         {
             var lessonTypeRequest1 = MockData.GetCreateLessonTypeDTODetails(scheduleId);
             var lessonTypeRequest2 = MockData.GetCreateSecondLessonTypeDTODetails(scheduleId);
-
             await DbHelper.SetupLessonType(_client, lessonTypeRequest1);
             await DbHelper.SetupLessonType(_client, lessonTypeRequest2);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)
             );
+
             var query = $"?scheduleId={new Guid()}";
             var response = await _client.GetAsync($"/api/LessonType{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
@@ -275,9 +266,7 @@ namespace AlpimiTest.Entities.ELessonType
         public async Task GetLessonTypeReturnsLessonType()
         {
             var lessonTypeRequest = MockData.GetCreateLessonTypeDTODetails(scheduleId);
-
             var lessonTypeId = await DbHelper.SetupLessonType(_client, lessonTypeRequest);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)
@@ -295,9 +284,7 @@ namespace AlpimiTest.Entities.ELessonType
         public async Task GetScheduleThrowsNotFoundErrorWhenWrongUserTokenIsGiven()
         {
             var lessonTypeRequest = MockData.GetCreateLessonTypeDTODetails(scheduleId);
-
             var lessonTypeId = await DbHelper.SetupLessonType(_client, lessonTypeRequest);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("User", "User", new Guid())
@@ -312,9 +299,7 @@ namespace AlpimiTest.Entities.ELessonType
         public async Task GetScheduleThrowsNotFoundWhenWrongIdIsGiven()
         {
             var lessonTypeRequest = MockData.GetCreateLessonTypeDTODetails(scheduleId);
-
             await DbHelper.SetupLessonType(_client, lessonTypeRequest);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)

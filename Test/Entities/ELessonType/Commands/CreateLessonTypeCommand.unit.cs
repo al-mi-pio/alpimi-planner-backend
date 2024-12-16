@@ -33,12 +33,10 @@ namespace AlpimiTest.Entities.ELessonType.Commands
                 new Guid(),
                 "User"
             );
-
             var createLessonTypeHandler = new CreateLessonTypeHandler(
                 _dbService.Object,
                 _str.Object
             );
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createLessonTypeHandler.Handle(
@@ -64,7 +62,6 @@ namespace AlpimiTest.Entities.ELessonType.Commands
         public async Task ThrowsErrorWhenNameIsAlreadyTaken()
         {
             var dto = MockData.GetCreateLessonTypeDTODetails(new Guid());
-
             _dbService
                 .Setup(s => s.Get<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetScheduleDetails());
@@ -78,12 +75,10 @@ namespace AlpimiTest.Entities.ELessonType.Commands
                 new Guid(),
                 "User"
             );
-
             var createLessonTypeHandler = new CreateLessonTypeHandler(
                 _dbService.Object,
                 _str.Object
             );
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createLessonTypeHandler.Handle(
@@ -110,12 +105,10 @@ namespace AlpimiTest.Entities.ELessonType.Commands
                 new Guid(),
                 "User"
             );
-
             var createLessonTypeHandler = new CreateLessonTypeHandler(
                 _dbService.Object,
                 _str.Object
             );
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createLessonTypeHandler.Handle(
@@ -139,12 +132,10 @@ namespace AlpimiTest.Entities.ELessonType.Commands
                 new Guid(),
                 "User"
             );
-
             var createLessonTypeHandler = new CreateLessonTypeHandler(
                 _dbService.Object,
                 _str.Object
             );
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createLessonTypeHandler.Handle(

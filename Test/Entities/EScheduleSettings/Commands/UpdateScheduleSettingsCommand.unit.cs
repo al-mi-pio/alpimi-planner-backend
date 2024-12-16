@@ -32,11 +32,9 @@ namespace AlpimiTest.Entities.EScheduleSettings.Commands
             var dto = MockData.GetUpdateScheduleSettingsDTO();
             dto.SchoolYearStart = new DateOnly(2020, 10, 10);
             dto.SchoolYearEnd = new DateOnly(2000, 10, 10);
-
             _dbService
                 .Setup(s => s.Get<ScheduleSettings>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetScheduleSettingsDetails());
-
             var scheduleSettings = MockData.GetScheduleSettingsDetails();
 
             var updateScheduleSettingsCommand = new UpdateScheduleSettingsCommand(
@@ -45,12 +43,10 @@ namespace AlpimiTest.Entities.EScheduleSettings.Commands
                 new Guid(),
                 "Admin"
             );
-
             var updateScheduleSettingsHandler = new UpdateScheduleSettingsHandler(
                 _dbService.Object,
                 _str.Object
             );
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateScheduleSettingsHandler.Handle(
@@ -76,7 +72,6 @@ namespace AlpimiTest.Entities.EScheduleSettings.Commands
             var dto = MockData.GetUpdateScheduleSettingsDTO();
             dto.SchoolYearStart = new DateOnly(2024, 10, 10);
             dto.SchoolYearEnd = new DateOnly(2024, 10, 10);
-
             _dbService
                 .Setup(s => s.Get<ScheduleSettings>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetScheduleSettingsDetails());
@@ -90,12 +85,10 @@ namespace AlpimiTest.Entities.EScheduleSettings.Commands
                 new Guid(),
                 "Admin"
             );
-
             var updateScheduleSettingsHandler = new UpdateScheduleSettingsHandler(
                 _dbService.Object,
                 _str.Object
             );
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateScheduleSettingsHandler.Handle(
@@ -123,7 +116,6 @@ namespace AlpimiTest.Entities.EScheduleSettings.Commands
             var dto = MockData.GetUpdateScheduleSettingsDTO();
             dto.SchoolYearStart = new DateOnly(2024, 10, 10);
             dto.SchoolYearEnd = new DateOnly(2024, 10, 10);
-
             _dbService
                 .Setup(s => s.Get<ScheduleSettings>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetScheduleSettingsDetails());
@@ -137,12 +129,10 @@ namespace AlpimiTest.Entities.EScheduleSettings.Commands
                 new Guid(),
                 "Admin"
             );
-
             var updateScheduleSettingsHandler = new UpdateScheduleSettingsHandler(
                 _dbService.Object,
                 _str.Object
             );
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateScheduleSettingsHandler.Handle(
@@ -176,12 +166,10 @@ namespace AlpimiTest.Entities.EScheduleSettings.Commands
                 new Guid(),
                 "Admin"
             );
-
             var updateScheduleSettingsHandler = new UpdateScheduleSettingsHandler(
                 _dbService.Object,
                 _str.Object
             );
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateScheduleSettingsHandler.Handle(
@@ -210,12 +198,10 @@ namespace AlpimiTest.Entities.EScheduleSettings.Commands
                 new Guid(),
                 "Admin"
             );
-
             var updateScheduleSettingsHandler = new UpdateScheduleSettingsHandler(
                 _dbService.Object,
                 _str.Object
             );
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateScheduleSettingsHandler.Handle(
@@ -244,12 +230,10 @@ namespace AlpimiTest.Entities.EScheduleSettings.Commands
                 new Guid(),
                 "Admin"
             );
-
             var updateScheduleSettingsHandler = new UpdateScheduleSettingsHandler(
                 _dbService.Object,
                 _str.Object
             );
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateScheduleSettingsHandler.Handle(
@@ -278,12 +262,10 @@ namespace AlpimiTest.Entities.EScheduleSettings.Commands
                 new Guid(),
                 "Admin"
             );
-
             var updateScheduleSettingsHandler = new UpdateScheduleSettingsHandler(
                 _dbService.Object,
                 _str.Object
             );
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateScheduleSettingsHandler.Handle(
@@ -303,13 +285,6 @@ namespace AlpimiTest.Entities.EScheduleSettings.Commands
         [Fact]
         public async Task ThrowsErrorWhenLessonPeriodsOverlapAfterUpdatingSchoolHour()
         {
-            var updateScheduleSettingsCommand = new UpdateScheduleSettingsCommand(
-                new Guid(),
-                MockData.GetUpdateScheduleSettingsDTO(),
-                new Guid(),
-                "Admin"
-            );
-
             _dbService
                 .Setup(s => s.Get<ScheduleSettings>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetScheduleSettingsDetails());
@@ -323,11 +298,16 @@ namespace AlpimiTest.Entities.EScheduleSettings.Commands
                     }
                 );
 
+            var updateScheduleSettingsCommand = new UpdateScheduleSettingsCommand(
+                new Guid(),
+                MockData.GetUpdateScheduleSettingsDTO(),
+                new Guid(),
+                "Admin"
+            );
             var updateScheduleSettingsHandler = new UpdateScheduleSettingsHandler(
                 _dbService.Object,
                 _str.Object
             );
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateScheduleSettingsHandler.Handle(

@@ -127,6 +127,7 @@ namespace AlpimiTest.TestSetup
                         return localizedErrorsWithoutArgs[key](args);
                     }
                 );
+
             _str.Setup(localizer => localizer[It.IsAny<string>()])
                 .Returns(
                     (string key) =>

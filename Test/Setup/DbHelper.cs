@@ -28,11 +28,13 @@ namespace AlpimiTest.TestSetup
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "Bob", new Guid())
             );
+
             var query = "SELECT [Id] FROM [User]";
             var _dbService = new DbService(
                 new SqlConnection(Configuration.GetTestConnectionString())
             );
             var userIds = await _dbService.GetAll<Guid>(query, "");
+
             foreach (var userId in userIds!)
             {
                 await _client.DeleteAsync($"/api/User/{userId}");
@@ -131,7 +133,6 @@ namespace AlpimiTest.TestSetup
             );
 
             var group = await _client.PostAsJsonAsync("/api/Group", groupRequest);
-
             var jsonGroupId = await group.Content.ReadFromJsonAsync<ApiGetResponse<Guid>>();
 
             return jsonGroupId!.Content;
@@ -148,7 +149,6 @@ namespace AlpimiTest.TestSetup
             );
 
             var subgroup = await _client.PostAsJsonAsync("/api/Subgroup", subgroupRequest);
-
             var jsonSubgroupId = await subgroup.Content.ReadFromJsonAsync<ApiGetResponse<Guid>>();
 
             return jsonSubgroupId!.Content;
@@ -165,7 +165,6 @@ namespace AlpimiTest.TestSetup
             );
 
             var student = await _client.PostAsJsonAsync("/api/Student", studentRequest);
-
             var jsonStudentId = await student.Content.ReadFromJsonAsync<ApiGetResponse<Guid>>();
 
             return jsonStudentId!.Content;
@@ -185,7 +184,6 @@ namespace AlpimiTest.TestSetup
                 "/api/ClassroomType",
                 classroomTypeRequest
             );
-
             var jsonClassroomTypeId = await classroomType.Content.ReadFromJsonAsync<
                 ApiGetResponse<Guid>
             >();
@@ -204,7 +202,6 @@ namespace AlpimiTest.TestSetup
             );
 
             var classroom = await _client.PostAsJsonAsync("/api/Classroom", classroomRequest);
-
             var jsonClassroomId = await classroom.Content.ReadFromJsonAsync<ApiGetResponse<Guid>>();
 
             return jsonClassroomId!.Content;
@@ -221,7 +218,6 @@ namespace AlpimiTest.TestSetup
             );
 
             var lessonType = await _client.PostAsJsonAsync("/api/LessonType", lessonTypeRequest);
-
             var jsonLessonTypeId = await lessonType.Content.ReadFromJsonAsync<
                 ApiGetResponse<Guid>
             >();
@@ -240,7 +236,6 @@ namespace AlpimiTest.TestSetup
             );
 
             var lesson = await _client.PostAsJsonAsync("/api/Lesson", lessonRequest);
-
             var jsonLessonId = await lesson.Content.ReadFromJsonAsync<ApiGetResponse<Guid>>();
 
             return jsonLessonId!.Content;
@@ -257,7 +252,6 @@ namespace AlpimiTest.TestSetup
             );
 
             var lessonBlock = await _client.PostAsJsonAsync("/api/LessonBlock", lessonBlockRequest);
-
             var jsonLessonBlockId = await lessonBlock.Content.ReadFromJsonAsync<
                 ApiGetResponse<Guid>
             >();

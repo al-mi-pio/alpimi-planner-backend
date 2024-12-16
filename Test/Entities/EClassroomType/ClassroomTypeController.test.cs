@@ -74,7 +74,6 @@ namespace AlpimiTest.Entities.EClassroomType
             {
                 await _client.GetAsync("/api/ClassroomType");
             }
-
             _client.DefaultRequestHeaders.Authorization = null;
 
             var response = await _client.DeleteAsync($"/api/ClassroomType/{new Guid()}");
@@ -104,7 +103,6 @@ namespace AlpimiTest.Entities.EClassroomType
         public async Task ClassroomTypeIsCreated()
         {
             var classroomTypeRequest = MockData.GetCreateClassroomTypeDTODetails(scheduleId);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)
@@ -127,7 +125,6 @@ namespace AlpimiTest.Entities.EClassroomType
         {
             var classroomTypeRequest = MockData.GetCreateClassroomTypeDTODetails(scheduleId);
             var classroomTypeId = await DbHelper.SetupClassroomType(_client, classroomTypeRequest);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", new Guid())
@@ -150,7 +147,6 @@ namespace AlpimiTest.Entities.EClassroomType
                 _client,
                 MockData.GetCreateClassroomTypeDTODetails(scheduleId)
             );
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "Bob", userId)
@@ -171,16 +167,15 @@ namespace AlpimiTest.Entities.EClassroomType
         public async Task UpdateClassroomTypeThrowsNotFoundErrorWhenWrongIdIsGiven()
         {
             var classroomTypeUpdateRequest = MockData.GetUpdateClassroomTypeDTODetails();
-
             var classroomTypeId = await DbHelper.SetupClassroomType(
                 _client,
                 MockData.GetCreateClassroomTypeDTODetails(scheduleId)
             );
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)
             );
+
             var response = await _client.PatchAsJsonAsync(
                 $"/api/ClassroomType/{new Guid()}",
                 classroomTypeUpdateRequest
@@ -193,16 +188,15 @@ namespace AlpimiTest.Entities.EClassroomType
         public async Task UpdateClassroomTypeThrowsNotFoundErrorWhenWrongUserAttemptsUpdate()
         {
             var classroomTypeUpdateRequest = MockData.GetUpdateClassroomTypeDTODetails();
-
             var classroomTypeId = await DbHelper.SetupClassroomType(
                 _client,
                 MockData.GetCreateClassroomTypeDTODetails(scheduleId)
             );
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("User", "User", new Guid())
             );
+
             var response = await _client.PatchAsJsonAsync(
                 $"/api/ClassroomType/{classroomTypeId}",
                 classroomTypeUpdateRequest
@@ -220,7 +214,6 @@ namespace AlpimiTest.Entities.EClassroomType
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)
             );
-
             await DbHelper.SetupClassroomType(_client, classroomTypeRequest1);
             await DbHelper.SetupClassroomType(_client, classroomTypeRequest2);
 
@@ -241,13 +234,11 @@ namespace AlpimiTest.Entities.EClassroomType
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)
             );
-
             var classroomTypeId = await DbHelper.SetupClassroomType(_client, classroomTypeRequest1);
             await DbHelper.SetupClassroomType(_client, classroomTypeRequest2);
 
             var classroomRequest = MockData.GetCreateClassroomDTODetails(scheduleId);
             classroomRequest.ClassroomTypeIds = [classroomTypeId];
-
             var classroomId = await DbHelper.SetupClassroom(_client, classroomRequest);
             await DbHelper.SetupClassroom(
                 _client,
@@ -271,10 +262,8 @@ namespace AlpimiTest.Entities.EClassroomType
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)
             );
-
             var classroomTypeId = await DbHelper.SetupClassroomType(_client, classroomTypeRequest1);
             await DbHelper.SetupClassroomType(_client, classroomTypeRequest2);
-
             var groupId = await DbHelper.SetupGroup(
                 _client,
                 MockData.GetCreateGroupDTODetails(scheduleId)
@@ -291,7 +280,6 @@ namespace AlpimiTest.Entities.EClassroomType
             var lessonRequest = MockData.GetCreateLessonDTODetails(subgroupId, lessonTypeId);
             lessonRequest.ClassroomTypeIds = [classroomTypeId];
             var lessonId = await DbHelper.SetupLesson(_client, lessonRequest);
-
             var query = $"?id={lessonId}";
             var response = await _client.GetAsync($"/api/ClassroomType{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
@@ -305,14 +293,13 @@ namespace AlpimiTest.Entities.EClassroomType
         {
             var classroomTypeRequest1 = MockData.GetCreateClassroomTypeDTODetails(scheduleId);
             var classroomTypeRequest2 = MockData.GetCreateSecondClassroomTypeDTODetails(scheduleId);
-
             await DbHelper.SetupClassroomType(_client, classroomTypeRequest1);
             await DbHelper.SetupClassroomType(_client, classroomTypeRequest2);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("User", "User", new Guid())
             );
+
             var query = $"?id={scheduleId}";
             var response = await _client.GetAsync($"/api/ClassroomType{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
@@ -326,14 +313,13 @@ namespace AlpimiTest.Entities.EClassroomType
         {
             var classroomTypeRequest1 = MockData.GetCreateClassroomTypeDTODetails(scheduleId);
             var classroomTypeRequest2 = MockData.GetCreateSecondClassroomTypeDTODetails(scheduleId);
-
             await DbHelper.SetupClassroomType(_client, classroomTypeRequest1);
             await DbHelper.SetupClassroomType(_client, classroomTypeRequest2);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)
             );
+
             var query = $"?id={new Guid()}";
             var response = await _client.GetAsync($"/api/ClassroomType{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
@@ -346,9 +332,7 @@ namespace AlpimiTest.Entities.EClassroomType
         public async Task GetClassroomTypeReturnsClassroomType()
         {
             var classroomTypeRequest = MockData.GetCreateClassroomTypeDTODetails(scheduleId);
-
             var classroomTypeId = await DbHelper.SetupClassroomType(_client, classroomTypeRequest);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)
@@ -366,9 +350,7 @@ namespace AlpimiTest.Entities.EClassroomType
         public async Task GetScheduleThrowsNotFoundErrorWhenWrongUserTokenIsGiven()
         {
             var classroomTypeRequest = MockData.GetCreateClassroomTypeDTODetails(scheduleId);
-
             var classroomTypeId = await DbHelper.SetupClassroomType(_client, classroomTypeRequest);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("User", "User", new Guid())
@@ -383,9 +365,7 @@ namespace AlpimiTest.Entities.EClassroomType
         public async Task GetScheduleThrowsNotFoundWhenWrongIdIsGiven()
         {
             var classroomTypeRequest = MockData.GetCreateClassroomTypeDTODetails(scheduleId);
-
             await DbHelper.SetupClassroomType(_client, classroomTypeRequest);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)

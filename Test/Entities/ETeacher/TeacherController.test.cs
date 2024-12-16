@@ -74,7 +74,6 @@ namespace AlpimiTest.Entities.ETeacher
             {
                 await _client.GetAsync("/api/Teacher");
             }
-
             _client.DefaultRequestHeaders.Authorization = null;
 
             var response = await _client.DeleteAsync($"/api/Teacher/{new Guid()}");
@@ -104,7 +103,6 @@ namespace AlpimiTest.Entities.ETeacher
         public async Task TeacherIsCreated()
         {
             var teacherRequest = MockData.GetCreateTeacherDTODetails(scheduleId);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)
@@ -124,7 +122,6 @@ namespace AlpimiTest.Entities.ETeacher
         {
             var teacherRequest = MockData.GetCreateTeacherDTODetails(scheduleId);
             var teacherId = await DbHelper.SetupTeacher(_client, teacherRequest);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", new Guid())
@@ -147,7 +144,6 @@ namespace AlpimiTest.Entities.ETeacher
                 _client,
                 MockData.GetCreateTeacherDTODetails(scheduleId)
             );
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "Bob", userId)
@@ -169,16 +165,15 @@ namespace AlpimiTest.Entities.ETeacher
         public async Task UpdateTeacherThrowsNotFoundErrorWhenWrongIdIsGiven()
         {
             var teacherUpdateRequest = MockData.GetUpdateTeacherDTODetails();
-
             var teacherId = await DbHelper.SetupTeacher(
                 _client,
                 MockData.GetCreateTeacherDTODetails(scheduleId)
             );
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)
             );
+
             var response = await _client.PatchAsJsonAsync(
                 $"/api/Teacher/{new Guid()}",
                 teacherUpdateRequest
@@ -191,16 +186,15 @@ namespace AlpimiTest.Entities.ETeacher
         public async Task UpdateTeacherThrowsNotFoundErrorWhenWrongUserAttemptsUpdate()
         {
             var teacherUpdateRequest = MockData.GetUpdateTeacherDTODetails();
-
             var teacherId = await DbHelper.SetupTeacher(
                 _client,
                 MockData.GetCreateTeacherDTODetails(scheduleId)
             );
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("User", "User", new Guid())
             );
+
             var response = await _client.PatchAsJsonAsync(
                 $"/api/Teacher/{teacherId}",
                 teacherUpdateRequest
@@ -214,14 +208,13 @@ namespace AlpimiTest.Entities.ETeacher
         {
             var teacherRequest1 = MockData.GetCreateTeacherDTODetails(scheduleId);
             var teacherRequest2 = MockData.GetCreateSecondTeacherDTODetails(scheduleId);
-
             await DbHelper.SetupTeacher(_client, teacherRequest1);
             await DbHelper.SetupTeacher(_client, teacherRequest2);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)
             );
+
             var query = $"?scheduleId={scheduleId}";
             var response = await _client.GetAsync($"/api/Teacher{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
@@ -235,14 +228,13 @@ namespace AlpimiTest.Entities.ETeacher
         {
             var teacherRequest1 = MockData.GetCreateTeacherDTODetails(scheduleId);
             var teacherRequest2 = MockData.GetCreateSecondTeacherDTODetails(scheduleId);
-
             await DbHelper.SetupTeacher(_client, teacherRequest1);
             await DbHelper.SetupTeacher(_client, teacherRequest2);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("User", "User", new Guid())
             );
+
             var query = $"?scheduleId={scheduleId}";
             var response = await _client.GetAsync($"/api/Teacher{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
@@ -256,14 +248,13 @@ namespace AlpimiTest.Entities.ETeacher
         {
             var teacherRequest1 = MockData.GetCreateTeacherDTODetails(scheduleId);
             var teacherRequest2 = MockData.GetCreateSecondTeacherDTODetails(scheduleId);
-
             await DbHelper.SetupTeacher(_client, teacherRequest1);
             await DbHelper.SetupTeacher(_client, teacherRequest2);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)
             );
+
             var query = $"?scheduleId={new Guid()}";
             var response = await _client.GetAsync($"/api/Teacher{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
@@ -276,9 +267,7 @@ namespace AlpimiTest.Entities.ETeacher
         public async Task GetTeacherReturnsTeacher()
         {
             var teacherRequest = MockData.GetCreateTeacherDTODetails(scheduleId);
-
             var teacherId = await DbHelper.SetupTeacher(_client, teacherRequest);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)
@@ -297,9 +286,7 @@ namespace AlpimiTest.Entities.ETeacher
         public async Task GetScheduleThrowsNotFoundErrorWhenWrongUserTokenIsGiven()
         {
             var teacherRequest = MockData.GetCreateTeacherDTODetails(scheduleId);
-
             var teacherId = await DbHelper.SetupTeacher(_client, teacherRequest);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("User", "User", new Guid())
@@ -314,9 +301,7 @@ namespace AlpimiTest.Entities.ETeacher
         public async Task GetScheduleThrowsNotFoundWhenWrongIdIsGiven()
         {
             var teacherRequest = MockData.GetCreateTeacherDTODetails(scheduleId);
-
             await DbHelper.SetupTeacher(_client, teacherRequest);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)

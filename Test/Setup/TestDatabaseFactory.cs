@@ -11,7 +11,9 @@ namespace AlpimiTest.TestSetup
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
             builder.UseContentRoot(Directory.GetCurrentDirectory());
+
             builder.UseEnvironment("Testing");
+
             builder.ConfigureServices(
                 (context, services) =>
                 {

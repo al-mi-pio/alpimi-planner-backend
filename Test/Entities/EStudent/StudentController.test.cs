@@ -89,7 +89,6 @@ namespace AlpimiTest.Entities.EStudent
             {
                 await _client.GetAsync("/api/Student");
             }
-
             _client.DefaultRequestHeaders.Authorization = null;
 
             var response = await _client.DeleteAsync($"/api/Student/{new Guid()}");
@@ -119,7 +118,6 @@ namespace AlpimiTest.Entities.EStudent
         public async Task StudentIsCreated()
         {
             var studentRequest = MockData.GetCreateStudentDTODetails(groupId1);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)
@@ -139,7 +137,6 @@ namespace AlpimiTest.Entities.EStudent
         {
             var studentRequest = MockData.GetCreateStudentDTODetails(groupId1);
             studentRequest.SubgroupIds = [subgroupId];
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)
@@ -159,7 +156,6 @@ namespace AlpimiTest.Entities.EStudent
         {
             var studentRequest = MockData.GetCreateStudentDTODetails(groupId1);
             var studentId = await DbHelper.SetupStudent(_client, studentRequest);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", new Guid())
@@ -182,7 +178,6 @@ namespace AlpimiTest.Entities.EStudent
                 _client,
                 MockData.GetCreateStudentDTODetails(groupId1)
             );
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "Bob", userId)
@@ -208,7 +203,6 @@ namespace AlpimiTest.Entities.EStudent
                 _client,
                 MockData.GetCreateStudentDTODetails(groupId1)
             );
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "Bob", userId)
@@ -226,16 +220,15 @@ namespace AlpimiTest.Entities.EStudent
         public async Task UpdateStudentThrowsNotFoundErrorWhenWrongIdIsGiven()
         {
             var studentUpdateRequest = MockData.GetUpdateStudentDTODetails();
-
             var studentId = await DbHelper.SetupStudent(
                 _client,
                 MockData.GetCreateStudentDTODetails(groupId1)
             );
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)
             );
+
             var response = await _client.PatchAsJsonAsync(
                 $"/api/Student/{new Guid()}",
                 studentUpdateRequest
@@ -248,16 +241,15 @@ namespace AlpimiTest.Entities.EStudent
         public async Task UpdateStudentThrowsNotFoundErrorWhenWrongUserAttemptsUpdate()
         {
             var studentUpdateRequest = MockData.GetUpdateStudentDTODetails();
-
             var studentId = await DbHelper.SetupStudent(
                 _client,
                 MockData.GetCreateStudentDTODetails(groupId1)
             );
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("User", "User", new Guid())
             );
+
             var response = await _client.PatchAsJsonAsync(
                 $"/api/Student/{studentId}",
                 studentUpdateRequest
@@ -271,14 +263,13 @@ namespace AlpimiTest.Entities.EStudent
         {
             var studentRequest1 = MockData.GetCreateStudentDTODetails(groupId1);
             var studentRequest2 = MockData.GetCreateSecondStudentDTODetails(groupId2);
-
             await DbHelper.SetupStudent(_client, studentRequest1);
             await DbHelper.SetupStudent(_client, studentRequest2);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)
             );
+
             var query = $"?id={groupId1}";
             var response = await _client.GetAsync($"/api/Student{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
@@ -292,14 +283,13 @@ namespace AlpimiTest.Entities.EStudent
         {
             var studentRequest1 = MockData.GetCreateStudentDTODetails(groupId1);
             var studentRequest2 = MockData.GetCreateSecondStudentDTODetails(groupId2);
-
             await DbHelper.SetupStudent(_client, studentRequest1);
             await DbHelper.SetupStudent(_client, studentRequest2);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)
             );
+
             var query = $"?id={scheduleId}";
             var response = await _client.GetAsync($"/api/Student{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
@@ -314,14 +304,13 @@ namespace AlpimiTest.Entities.EStudent
             var studentRequest1 = MockData.GetCreateStudentDTODetails(groupId1);
             studentRequest1.SubgroupIds = [subgroupId];
             var studentRequest2 = MockData.GetCreateSecondStudentDTODetails(groupId2);
-
             await DbHelper.SetupStudent(_client, studentRequest1);
             await DbHelper.SetupStudent(_client, studentRequest2);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)
             );
+
             var query = $"?id={subgroupId}";
             var response = await _client.GetAsync($"/api/Student{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
@@ -335,14 +324,13 @@ namespace AlpimiTest.Entities.EStudent
         {
             var studentRequest1 = MockData.GetCreateStudentDTODetails(groupId1);
             var studentRequest2 = MockData.GetCreateSecondStudentDTODetails(groupId2);
-
             await DbHelper.SetupStudent(_client, studentRequest1);
             await DbHelper.SetupStudent(_client, studentRequest2);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("User", "User", new Guid())
             );
+
             var query = $"?Id={groupId1}";
             var response = await _client.GetAsync($"/api/Student{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
@@ -356,14 +344,13 @@ namespace AlpimiTest.Entities.EStudent
         {
             var studentRequest1 = MockData.GetCreateStudentDTODetails(groupId1);
             var studentRequest2 = MockData.GetCreateSecondStudentDTODetails(groupId2);
-
             await DbHelper.SetupStudent(_client, studentRequest1);
             await DbHelper.SetupStudent(_client, studentRequest2);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)
             );
+
             var query = $"?Id={new Guid()}";
             var response = await _client.GetAsync($"/api/Student{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
@@ -376,9 +363,7 @@ namespace AlpimiTest.Entities.EStudent
         public async Task GetStudentReturnsStudent()
         {
             var studentRequest = MockData.GetCreateStudentDTODetails(groupId1);
-
             var studentId = await DbHelper.SetupStudent(_client, studentRequest);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)
@@ -396,9 +381,7 @@ namespace AlpimiTest.Entities.EStudent
         public async Task GetStudentThrowsNotFoundErrorWhenWrongUserTokenIsGiven()
         {
             var studentRequest = MockData.GetCreateStudentDTODetails(groupId1);
-
             var studentId = await DbHelper.SetupStudent(_client, studentRequest);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("User", "User", new Guid())
@@ -413,9 +396,7 @@ namespace AlpimiTest.Entities.EStudent
         public async Task GetStudentThrowsNotFoundWhenWrongIdIsGiven()
         {
             var studentRequest = MockData.GetCreateStudentDTODetails(groupId1);
-
             await DbHelper.SetupStudent(_client, studentRequest);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)

@@ -71,7 +71,6 @@ namespace AlpimiTest.Entities.EDayOff
             {
                 await _client.GetAsync("/api/DayOff");
             }
-
             _client.DefaultRequestHeaders.Authorization = null;
 
             var response = await _client.DeleteAsync($"/api/DayOff/{new Guid()}");
@@ -98,7 +97,6 @@ namespace AlpimiTest.Entities.EDayOff
         public async Task DayOffIsCreated()
         {
             var dayOffRequest = MockData.GetCreateDayOffDTODetails(scheduleId);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)
@@ -118,7 +116,6 @@ namespace AlpimiTest.Entities.EDayOff
         {
             var dayOffRequest = MockData.GetCreateDayOffDTODetails(scheduleId);
             var dayOffId = await DbHelper.SetupDayOff(_client, dayOffRequest);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", new Guid())
@@ -141,7 +138,6 @@ namespace AlpimiTest.Entities.EDayOff
                 _client,
                 MockData.GetCreateDayOffDTODetails(scheduleId)
             );
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "Bob", userId)
@@ -164,16 +160,15 @@ namespace AlpimiTest.Entities.EDayOff
         public async Task UpdateDayOffThrowsNotFoundErrorWhenWrongIdIsGiven()
         {
             var dayOffUpdateRequest = MockData.GetUpdateDayOffDTODetails();
-
             var dayOffId = await DbHelper.SetupDayOff(
                 _client,
                 MockData.GetCreateDayOffDTODetails(scheduleId)
             );
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)
             );
+
             var response = await _client.PatchAsJsonAsync(
                 $"/api/DayOff/{new Guid()}",
                 dayOffUpdateRequest
@@ -186,16 +181,15 @@ namespace AlpimiTest.Entities.EDayOff
         public async Task UpdateDayOffThrowsNotFoundErrorWhenWrongUserAttemptsUpdate()
         {
             var dayOffUpdateRequest = MockData.GetUpdateDayOffDTODetails();
-
             var dayOffId = await DbHelper.SetupDayOff(
                 _client,
                 MockData.GetCreateDayOffDTODetails(scheduleId)
             );
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("User", "User", new Guid())
             );
+
             var response = await _client.PatchAsJsonAsync(
                 $"/api/DayOff/{dayOffId}",
                 dayOffUpdateRequest
@@ -209,14 +203,13 @@ namespace AlpimiTest.Entities.EDayOff
         {
             var dayOffRequest1 = MockData.GetCreateDayOffDTODetails(scheduleId);
             var dayOffRequest2 = MockData.GetCreateSecondDayOffDTODetails(scheduleId);
-
             await DbHelper.SetupDayOff(_client, dayOffRequest1);
             await DbHelper.SetupDayOff(_client, dayOffRequest2);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)
             );
+
             var query = $"?scheduleId={scheduleId}";
             var response = await _client.GetAsync($"/api/DayOff{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
@@ -230,14 +223,13 @@ namespace AlpimiTest.Entities.EDayOff
         {
             var dayOffRequest1 = MockData.GetCreateDayOffDTODetails(scheduleId);
             var dayOffRequest2 = MockData.GetCreateSecondDayOffDTODetails(scheduleId);
-
             await DbHelper.SetupDayOff(_client, dayOffRequest1);
             await DbHelper.SetupDayOff(_client, dayOffRequest2);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("User", "User", new Guid())
             );
+
             var query = $"?scheduleId={scheduleId}";
             var response = await _client.GetAsync($"/api/DayOff{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
@@ -251,14 +243,13 @@ namespace AlpimiTest.Entities.EDayOff
         {
             var dayOffRequest1 = MockData.GetCreateDayOffDTODetails(scheduleId);
             var dayOffRequest2 = MockData.GetCreateSecondDayOffDTODetails(scheduleId);
-
             await DbHelper.SetupDayOff(_client, dayOffRequest1);
             await DbHelper.SetupDayOff(_client, dayOffRequest2);
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)
             );
+
             var query = $"?scheduleId={new Guid()}";
             var response = await _client.GetAsync($"/api/DayOff{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();

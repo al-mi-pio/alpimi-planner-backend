@@ -65,6 +65,7 @@ namespace AlpimiTest.Entities.EAuth
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "Random", new Guid())
             );
+
             var response = await _client.GetAsync("/api/Auth/refresh");
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -74,7 +75,9 @@ namespace AlpimiTest.Entities.EAuth
         public async Task RefreshTokenThrowsUnothorizedErrorWhenNoJWTTokenIsGiven()
         {
             _client.DefaultRequestHeaders.Authorization = null;
+
             var response = await _client.GetAsync("/api/Auth/refresh");
+
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         }
     }

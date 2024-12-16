@@ -34,9 +34,7 @@ namespace AlpimiTest.Entities.EGroup.Commands
                 new Guid(),
                 "User"
             );
-
             var createGroupHandler = new CreateGroupHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createGroupHandler.Handle(createGroupCommand, new CancellationToken())
@@ -59,7 +57,6 @@ namespace AlpimiTest.Entities.EGroup.Commands
         public async Task ThrowsErrorWhenNameIsAlreadyTakenByGroup()
         {
             var dto = MockData.GetCreateGroupDTODetails(new Guid());
-
             _dbService
                 .Setup(s => s.Get<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetScheduleDetails());
@@ -68,9 +65,7 @@ namespace AlpimiTest.Entities.EGroup.Commands
                 .ReturnsAsync(MockData.GetGroupDetails());
 
             var createGroupCommand = new CreateGroupCommand(new Guid(), dto, new Guid(), "User");
-
             var createGroupHandler = new CreateGroupHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createGroupHandler.Handle(createGroupCommand, new CancellationToken())
@@ -86,7 +81,6 @@ namespace AlpimiTest.Entities.EGroup.Commands
         public async Task ThrowsErrorWhenNameIsAlreadyTakenBySubgroup()
         {
             var dto = MockData.GetCreateGroupDTODetails(new Guid());
-
             _dbService
                 .Setup(s => s.Get<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetScheduleDetails());
@@ -95,9 +89,7 @@ namespace AlpimiTest.Entities.EGroup.Commands
                 .ReturnsAsync(MockData.GetSubgroupDetails());
 
             var createGroupCommand = new CreateGroupCommand(new Guid(), dto, new Guid(), "User");
-
             var createGroupHandler = new CreateGroupHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createGroupHandler.Handle(createGroupCommand, new CancellationToken())
@@ -116,9 +108,7 @@ namespace AlpimiTest.Entities.EGroup.Commands
             dto.StudentCount = -1;
 
             var createGroupCommand = new CreateGroupCommand(new Guid(), dto, new Guid(), "User");
-
             var createGroupHandler = new CreateGroupHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createGroupHandler.Handle(createGroupCommand, new CancellationToken())

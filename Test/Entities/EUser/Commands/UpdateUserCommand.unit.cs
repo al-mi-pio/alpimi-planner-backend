@@ -27,9 +27,7 @@ namespace AlpimiTest.Entities.EUser.Commands
         public async Task ThrowsErrorWhenURLAlreadyExists()
         {
             var dto = MockData.GetUpdateUserDTODetails();
-
             var user = MockData.GetUserDetails();
-
             _dbService
                 .Setup(s => s.Get<User>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(user);
@@ -38,9 +36,7 @@ namespace AlpimiTest.Entities.EUser.Commands
                 .ReturnsAsync(user.CustomURL);
 
             var updateUserCommand = new UpdateUserCommand(user.Id, dto, new Guid(), "Admin");
-
             var updateUserHandler = new UpdateUserHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateUserHandler.Handle(updateUserCommand, new CancellationToken())

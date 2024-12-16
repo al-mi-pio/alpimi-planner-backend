@@ -29,7 +29,6 @@ namespace AlpimiTest.Entities.ELessonPeriod.Commands
             var dto = MockData.GetUpdateLessonPeriodDTODetails();
             var scheduleSettings = MockData.GetScheduleSettingsDetails();
             var lessonPeriod = MockData.GetLessonPeriodDetails();
-
             _dbService
                 .Setup(s => s.Get<ScheduleSettings>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(scheduleSettings);
@@ -52,12 +51,10 @@ namespace AlpimiTest.Entities.ELessonPeriod.Commands
                 new Guid(),
                 "Admin"
             );
-
             var updateLessonPeriodHandler = new UpdateLessonPeriodHandler(
                 _dbService.Object,
                 _str.Object
             );
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateLessonPeriodHandler.Handle(

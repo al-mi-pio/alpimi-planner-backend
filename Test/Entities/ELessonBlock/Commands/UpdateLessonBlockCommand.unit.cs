@@ -56,12 +56,10 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
                 new Guid(),
                 "User"
             );
-
             var updateLessonBlockHandler = new UpdateLessonBlockHandler(
                 _dbService.Object,
                 _str.Object
             );
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateLessonBlockHandler.Handle(
@@ -88,7 +86,6 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
         {
             var teacher = MockData.GetTeacherDetails();
             teacher.ScheduleId = Guid.NewGuid();
-
             _dbService
                 .Setup(s => s.Get<LessonBlock>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetLessonBlockDetails());
@@ -117,12 +114,10 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
                 new Guid(),
                 "User"
             );
-
             var updateLessonBlockHandler = new UpdateLessonBlockHandler(
                 _dbService.Object,
                 _str.Object
             );
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateLessonBlockHandler.Handle(
@@ -170,12 +165,10 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
                 new Guid(),
                 "User"
             );
-
             var updateLessonBlockHandler = new UpdateLessonBlockHandler(
                 _dbService.Object,
                 _str.Object
             );
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateLessonBlockHandler.Handle(
@@ -202,7 +195,6 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
         {
             var classroom = MockData.GetClassroomDetails();
             classroom.ScheduleId = Guid.NewGuid();
-
             _dbService
                 .Setup(s => s.Get<LessonBlock>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetLessonBlockDetails());
@@ -231,12 +223,10 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
                 new Guid(),
                 "User"
             );
-
             var updateLessonBlockHandler = new UpdateLessonBlockHandler(
                 _dbService.Object,
                 _str.Object
             );
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateLessonBlockHandler.Handle(
@@ -290,12 +280,10 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
                 new Guid(),
                 "User"
             );
-
             var updateLessonBlockHandler = new UpdateLessonBlockHandler(
                 _dbService.Object,
                 _str.Object
             );
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateLessonBlockHandler.Handle(
@@ -348,12 +336,10 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
                 new Guid(),
                 "User"
             );
-
             var updateLessonBlockHandler = new UpdateLessonBlockHandler(
                 _dbService.Object,
                 _str.Object
             );
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateLessonBlockHandler.Handle(
@@ -403,12 +389,10 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
                 new Guid(),
                 "User"
             );
-
             var updateLessonBlockHandler = new UpdateLessonBlockHandler(
                 _dbService.Object,
                 _str.Object
             );
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateLessonBlockHandler.Handle(
@@ -458,12 +442,10 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
                 new Guid(),
                 "User"
             );
-
             var updateLessonBlockHandler = new UpdateLessonBlockHandler(
                 _dbService.Object,
                 _str.Object
             );
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateLessonBlockHandler.Handle(
@@ -518,12 +500,10 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
                 new Guid(),
                 "User"
             );
-
             var updateLessonBlockHandler = new UpdateLessonBlockHandler(
                 _dbService.Object,
                 _str.Object
             );
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateLessonBlockHandler.Handle(
@@ -542,7 +522,6 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
             lessonBlock.LessonDate = new DateOnly(2024, 12, 13);
             var scheduleSettings = MockData.GetScheduleSettingsDetails();
             scheduleSettings.SchoolYearStart = new DateOnly(2024, 12, 12);
-
             _dbService
                 .Setup(s => s.Get<LessonBlock>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(lessonBlock);
@@ -573,12 +552,10 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
                 new Guid(),
                 "User"
             );
-
             var updateLessonBlockHandler = new UpdateLessonBlockHandler(
                 _dbService.Object,
                 _str.Object
             );
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateLessonBlockHandler.Handle(

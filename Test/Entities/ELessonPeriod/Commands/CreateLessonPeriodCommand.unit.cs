@@ -33,12 +33,10 @@ namespace AlpimiTest.Entities.ELessonPeriod.Commands
                 new Guid(),
                 "User"
             );
-
             var createLessonPeriodHandler = new CreateLessonPeriodHandler(
                 _dbService.Object,
                 _str.Object
             );
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createLessonPeriodHandler.Handle(
@@ -65,7 +63,6 @@ namespace AlpimiTest.Entities.ELessonPeriod.Commands
         {
             var dto = MockData.GetCreateLessonPeriodDTODetails(new Guid());
             var scheduleSettings = MockData.GetScheduleSettingsDetails();
-
             _dbService
                 .Setup(s => s.GetAll<LessonPeriod>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(
@@ -85,12 +82,10 @@ namespace AlpimiTest.Entities.ELessonPeriod.Commands
                 new Guid(),
                 "User"
             );
-
             var createLessonPeriodHandler = new CreateLessonPeriodHandler(
                 _dbService.Object,
                 _str.Object
             );
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createLessonPeriodHandler.Handle(

@@ -26,7 +26,6 @@ namespace AlpimiTest.Entities.ETeacher.Commands
         public async Task ThrowsErrorWhenNameAndSurnameAreAlreadyTaken()
         {
             var dto = MockData.GetUpdateTeacherDTODetails();
-
             _dbService
                 .Setup(s => s.Get<Teacher>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetTeacherDetails());
@@ -40,9 +39,7 @@ namespace AlpimiTest.Entities.ETeacher.Commands
                 new Guid(),
                 "Admin"
             );
-
             var updateTeacherHandler = new UpdateTeacherHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateTeacherHandler.Handle(updateTeacherCommand, new CancellationToken())

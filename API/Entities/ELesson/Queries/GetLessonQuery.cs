@@ -31,7 +31,7 @@ namespace AlpimiAPI.Entities.ELesson.Queries
                     lesson = await _dbService.Get<Lesson?>(
                         @"
                             SELECT 
-                            [Id], [Name], [AmountOfHours], [LessonTypeId], [SubgroupId] 
+                            [Id], [Name], [CurrentHours], [AmountOfHours], [LessonTypeId], [SubgroupId] 
                             FROM [Lesson] 
                             WHERE [Id] = @Id;",
                         request
@@ -41,7 +41,7 @@ namespace AlpimiAPI.Entities.ELesson.Queries
                     lesson = await _dbService.Get<Lesson?>(
                         @"
                             SELECT 
-                            l.[Id], l.[Name], [AmountOfHours], l.[LessonTypeId], l.[SubgroupId]  
+                            l.[Id], l.[Name], [CurrentHours], [AmountOfHours], l.[LessonTypeId], l.[SubgroupId]  
                             FROM [Lesson] l
                             INNER JOIN [LessonType] lt ON lt.[Id] = l.[LessonTypeId]
                             INNER JOIN [Schedule] s ON lt.[ScheduleId] = s.[Id]

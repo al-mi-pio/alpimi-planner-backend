@@ -73,20 +73,20 @@ namespace AlpimiAPI.Entities.ELessonBlock.Queries
 
             var scheduleSettings = await _dbService.Get<ScheduleSettings?>(
                 @"
-                    SELECT 
-                    ss.[Id], ss.[SchoolHour], ss.[SchoolYearStart], ss.[SchoolYearEnd], ss.[ScheduleId]
-                    FROM [LessonBlock] lb
-                    INNER JOIN [Lesson] l ON l.[Id] = lb.[LessonId]
+                    SELECT DISTINCT
+                    ss.[Id], ss.[SchoolHour], ss.[SchoolYearStart], ss.[SchoolYearEnd], ss.[SchoolDays], ss.[ScheduleId]
+                    FROM [ScheduleSettings] ss
+                    INNER JOIN [LessonType] lt ON lt.[ScheduleId] = ss.[ScheduleId]
+                    INNER JOIN [Lesson] l ON l.[LessonTypeId] = lt.[Id]
+                    INNER JOIN [LessonBlock] lb ON lb.[LessonId] = l.[Id]
                     INNER JOIN [Subgroup] sg ON sg.[Id] = l.[SubgroupId]
                     INNER JOIN [Group] g ON g.[Id] = sg.[GroupId]
-                    INNER JOIN [Schedule] s ON s.[Id] = g.[ScheduleId]
-                    INNER JOIN [ScheduleSettings] ss ON ss.[ScheduleId] = s.[Id]
-                    WHERE sg.[Id] = @Id OR g.[Id] = @Id OR g.[ScheduleId] = @Id OR l.[Id] = @Id OR [TeacherId] = @Id OR [ClassroomId] = @Id OR [ClusterId] = @Id;",
+                    WHERE sg.[Id] = @Id OR g.[Id] = @Id OR g.[ScheduleId] = @Id OR l.[Id] = @Id OR lb.[TeacherId] = @Id OR lb.[ClassroomId] = @Id OR lb.[ClusterId] = @Id;",
                 request
             );
             if (scheduleSettings == null)
             {
-                return ([], 0); // To test
+                return ([], 0);
             }
 
             request = request with
@@ -170,6 +170,7 @@ namespace AlpimiAPI.Entities.ELessonBlock.Queries
                     );
                     break;
             }
+
             if (lessonBlocks != null)
             {
                 foreach (var lessonBlock in lessonBlocks)

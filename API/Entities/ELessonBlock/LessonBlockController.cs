@@ -168,8 +168,8 @@ namespace AlpimiAPI.Entities.ELessonBlock
         public async Task<ActionResult<ApiGetAllResponse<IEnumerable<LessonBlockDTO>>>> GetAll(
             [FromHeader] string Authorization,
             [FromQuery] Guid id,
-            [FromQuery] DateOnly fromDate,
-            [FromQuery] DateOnly toDate,
+            [FromQuery] DateOnly? fromDate = null,
+            [FromQuery] DateOnly? toDate = null,
             [FromQuery] int perPage = PaginationSettings.perPage,
             [FromQuery] int page = PaginationSettings.page,
             [FromQuery] string sortBy = PaginationSettings.sortBy,

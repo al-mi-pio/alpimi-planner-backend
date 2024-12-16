@@ -125,24 +125,22 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
 
             var scheduleSettings = await _dbService.Get<ScheduleSettings?>(
                 @"
-                    SELECT 
-                    ss.[Id], ss.[SchoolHour], ss.[SchoolYearStart], ss.[SchoolYearEnd], ss.[ScheduleId]
-                    FROM [LessonBlock] lb
-                    INNER JOIN [Lesson] l ON l.[Id] = lb.[LessonId]
-                    INNER JOIN [LessonType] lt ON lt.[Id] = l.[LessonTypeId]
-                    INNER JOIN [Schedule] s ON s.[Id] = lt.[ScheduleId]
-                    INNER JOIN [ScheduleSettings] ss ON ss.[ScheduleId] = s.[Id]
+                    SELECT DISTINCT
+                    ss.[Id], ss.[SchoolHour], ss.[SchoolYearStart], ss.[SchoolYearEnd], ss.[SchoolDays], ss.[ScheduleId]
+                    FROM [ScheduleSettings] ss
+                    INNER JOIN [LessonType] lt ON lt.[ScheduleId] = ss.[ScheduleId]
+                    INNER JOIN [Lesson] l ON l.[LessonTypeId] = lt.[Id]
                     WHERE l.[Id] = @LessonId;",
                 request.dto
             );
 
             var lessonPeriodCount = await _dbService.Get<int>(
-                @"
+                $@"
                     SELECT 
                     count(*)
                     FROM [LessonPeriod] 
-                    WHERE ScheduleSettingsId = @Id;",
-                scheduleSettings!
+                    WHERE [ScheduleSettingsId] = '{scheduleSettings!.Id}'; ",
+                ""
             );
 
             if (request.dto.LessonStart > request.dto.LessonEnd)
@@ -188,14 +186,17 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                 {
                     errors.Add(new ErrorObject(_str["badParameter", "WeekInterval"]));
                 }
-                amountOfLessonsToInsert = Convert.ToInt32(
-                    Math.Floor(
-                        (
-                            scheduleSettings.SchoolYearEnd.DayNumber
-                            - request.dto.LessonDate.DayNumber
-                        ) / 7.0
-                    )
-                );
+                else
+                {
+                    amountOfLessonsToInsert = Convert.ToInt32(
+                        Math.Floor(
+                            (
+                                scheduleSettings.SchoolYearEnd.DayNumber
+                                - request.dto.LessonDate.DayNumber
+                            ) / (7.0 * request.dto.WeekInterval!.Value)
+                        )
+                    );
+                }
             }
 
             if (errors.Count != 0)
@@ -218,21 +219,24 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                     @LessonEnd,
                     @LessonId,
                     @ClassroomId,
-                    @TeacherId
-                    @ClusterId);",
+                    @TeacherId,
+                    '{request.ClusterId}');",
                     request.dto
                 );
-                request.dto.LessonDate = DateOnly.FromDayNumber(
-                    request.dto.LessonDate.DayNumber + 7
-                );
-                request = request with
+                if (request.dto.WeekInterval != null)
                 {
-                    Id = Guid.NewGuid(),
-                    ClusterId = request.ClusterId,
-                    dto = request.dto,
-                    FilteredId = request.FilteredId,
-                    Role = request.Role
-                };
+                    request.dto.LessonDate = DateOnly.FromDayNumber(
+                        request.dto.LessonDate.DayNumber + 7 * request.dto.WeekInterval!.Value
+                    );
+                    request = request with
+                    {
+                        Id = Guid.NewGuid(),
+                        ClusterId = request.ClusterId,
+                        dto = request.dto,
+                        FilteredId = request.FilteredId,
+                        Role = request.Role
+                    };
+                }
             }
 
             await Utilities.CurrentLessonHours.Update(

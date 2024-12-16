@@ -23,15 +23,13 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
             CancellationToken cancellationToken
         )
         {
-            GetLessonBlockHandler getLessonBlockHandler = new GetLessonBlockHandler(_dbService);
-            GetLessonBlockQuery getLessonBlockQuery = new GetLessonBlockQuery(
-                request.Id,
-                new Guid(),
-                "Admin"
-            );
-            ActionResult<LessonBlock?> lessonBlock = await getLessonBlockHandler.Handle(
-                getLessonBlockQuery,
-                cancellationToken
+            var lessonId = await _dbService.Get<Guid?>(
+                $@"
+                    SELECT DISTINCT
+                    [LessonId] 
+                    FROM [LessonBlock] 
+                    WHERE [Id] = '{request.Id}' OR [ClusterId] = '{request.Id}'; ",
+                ""
             );
 
             switch (request.Role)
@@ -57,12 +55,11 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                     );
                     break;
             }
-
-            if (lessonBlock.Value != null)
+            if (lessonId != null)
             {
                 await Utilities.CurrentLessonHours.Update(
                     _dbService,
-                    lessonBlock.Value.LessonId,
+                    lessonId.Value,
                     cancellationToken
                 );
             }

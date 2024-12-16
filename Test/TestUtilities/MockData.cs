@@ -72,7 +72,7 @@ namespace AlpimiTest.TestUtilities
             return new ScheduleSettings()
             {
                 Id = new Guid(),
-                SchoolHour = 10,
+                SchoolHour = 45,
                 SchoolYearStart = new DateOnly(2020, 11, 19),
                 SchoolYearEnd = new DateOnly(2025, 11, 19),
                 SchoolDays = "0111110",
@@ -562,9 +562,9 @@ namespace AlpimiTest.TestUtilities
         {
             return new CreateLessonBlockDTO()
             {
-                LessonDate = new DateOnly(2023, 9, 9),
-                LessonStart = 2,
-                LessonEnd = 3,
+                LessonDate = new DateOnly(2023, 8, 7),
+                LessonStart = 1,
+                LessonEnd = 4,
                 LessonId = lessonId,
                 ClassroomId = classroomId,
                 TeacherId = teacherId
@@ -585,7 +585,7 @@ namespace AlpimiTest.TestUtilities
                 LessonId = lessonId,
                 ClassroomId = classroomId,
                 TeacherId = teacherId,
-                WeekInterval = 1
+                WeekInterval = 10
             };
         }
 
@@ -593,12 +593,10 @@ namespace AlpimiTest.TestUtilities
         {
             return new UpdateLessonBlockDTO()
             {
-                LessonStart = 1,
+                LessonStart = 2,
                 LessonEnd = 3,
                 WeekDay = 2,
-                UpdateCluster = false,
-                ClassroomId = new Guid(),
-                TeacherId = new Guid()
+                UpdateCluster = false
             };
         }
     }

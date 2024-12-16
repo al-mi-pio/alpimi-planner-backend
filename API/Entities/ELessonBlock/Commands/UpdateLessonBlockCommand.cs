@@ -174,8 +174,8 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
 
             var scheduleSettings = await _dbService.Get<ScheduleSettings?>(
                 @"
-                    SELECT 
-                    ss.[Id], ss.[SchoolHour], ss.[SchoolYearStart], ss.[SchoolYearEnd], ss.[ScheduleId]
+                    SELECT DISTINCT
+                    ss.[Id], ss.[SchoolHour], ss.[SchoolYearStart], ss.[SchoolYearEnd], ss.[SchoolDays], ss.[ScheduleId]
                     FROM [LessonBlock] lb
                     INNER JOIN [Lesson] l ON l.[Id] = lb.[LessonId]
                     INNER JOIN [LessonType] lt ON lt.[Id] = l.[LessonTypeId]
@@ -186,12 +186,12 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
             );
 
             var lessonPeriodCount = await _dbService.Get<int>(
-                @"
+                $@"
                     SELECT 
                     count(*)
                     FROM [LessonPeriod] 
-                    WHERE ScheduleSettingsId = @Id;",
-                scheduleSettings!
+                    WHERE ScheduleSettingsId = '{scheduleSettings!.Id}'; ",
+                ""
             );
 
             if (request.dto.LessonStart > request.dto.LessonEnd)
@@ -249,8 +249,6 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                     UPDATE [LessonBlock] 
                     SET
                     [LessonDate] = DATEADD(DAY,{daysDifference},[LessonDate]), [LessonStart] = @LessonStart, [LessonEnd] = @LessonEnd, [ClassroomId] = @ClassroomId, [TeacherId] = @TeacherId
-                    OUTPUT
-                    INSERTED.[Id]
                     WHERE [Id] = '{request.Id}' OR [ClusterId] = '{request.Id}';",
                 request.dto
             );

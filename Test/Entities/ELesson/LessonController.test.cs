@@ -1,16 +1,10 @@
 ﻿using System.Net;
 using System.Net.Http.Headers;
-using AlpimiAPI.Entities.ELesson;
 using AlpimiAPI.Entities.ELesson.DTO;
-using AlpimiAPI.Entities.ELessonType;
-using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
-using AlpimiAPI.Settings;
 using AlpimiAPI.Utilities;
 using AlpimiTest.TestSetup;
 using AlpimiTest.TestUtilities;
-using Azure;
-using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
 using Xunit;
 
 namespace AlpimiTest.Entities.ELesson

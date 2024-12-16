@@ -81,29 +81,25 @@ namespace AlpimiAPI.Entities.EScheduleSettings
         }
 
         /// <summary>
-        /// Gets schedule settings by schedule id
+        /// Gets schedule settings by id
         /// </summary>
         /// <remarks>
         /// - JWT token is required
         /// </remarks>
-        [HttpGet("bySchedule/{scheduleId}")]
+        [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
         [ProducesResponseType(typeof(ApiErrorResponse), 404)]
-        public async Task<ActionResult<ApiGetResponse<ScheduleDTO>>> GetOneByScheduleId(
-            [FromRoute] Guid scheduleId,
+        public async Task<ActionResult<ApiGetResponse<ScheduleDTO>>> Get(
+            [FromRoute] Guid id,
             [FromHeader] string Authorization
         )
         {
             Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
             string privileges = Privileges.GetUserRoleFromToken(Authorization);
 
-            var query = new GetScheduleSettingsByScheduleIdQuery(
-                scheduleId,
-                filteredId,
-                privileges
-            );
+            var query = new GetScheduleSettingsQuery(id, filteredId, privileges);
             try
             {
                 ScheduleSettings? result = await _mediator.Send(query);
@@ -128,25 +124,29 @@ namespace AlpimiAPI.Entities.EScheduleSettings
         }
 
         /// <summary>
-        /// Gets schedule settings by id
+        /// Gets schedule settings by schedule id
         /// </summary>
         /// <remarks>
         /// - JWT token is required
         /// </remarks>
-        [HttpGet("{id}")]
+        [HttpGet("bySchedule/{scheduleId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
         [ProducesResponseType(typeof(ApiErrorResponse), 404)]
-        public async Task<ActionResult<ApiGetResponse<ScheduleDTO>>> Get(
-            [FromRoute] Guid id,
+        public async Task<ActionResult<ApiGetResponse<ScheduleDTO>>> GetOneByScheduleId(
+            [FromRoute] Guid scheduleId,
             [FromHeader] string Authorization
         )
         {
             Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
             string privileges = Privileges.GetUserRoleFromToken(Authorization);
 
-            var query = new GetScheduleSettingsQuery(id, filteredId, privileges);
+            var query = new GetScheduleSettingsByScheduleIdQuery(
+                scheduleId,
+                filteredId,
+                privileges
+            );
             try
             {
                 ScheduleSettings? result = await _mediator.Send(query);

@@ -22,19 +22,19 @@ namespace AlpimiAPI.Entities.ESubgroup.Commands
                     await _dbService.Delete(
                         @"
                             DELETE FROM [Lesson]
-                            WHERE [SubgroupId] = @Id;",
+                            WHERE [SubgroupId] = @Id; ",
                         request
                     );
                     await _dbService.Delete(
                         @"
                             DELETE FROM [StudentSubgroup]
-                            WHERE [SubgroupId] = @Id;",
+                            WHERE [SubgroupId] = @Id; ",
                         request
                     );
                     await _dbService.Delete(
                         @"
                             DELETE [Subgroup] 
-                            WHERE [Id] = @Id;",
+                            WHERE [Id] = @Id; ",
                         request
                     );
                     break;
@@ -45,7 +45,7 @@ namespace AlpimiAPI.Entities.ESubgroup.Commands
                             FROM [Lesson] l
                             INNER JOIN [LessonType] lt on lt.[Id] = l.[LessonTypeId]
                             INNER JOIN [Schedule] s ON s.[Id] = lt.[ScheduleId]
-                            WHERE s.[UserId] = @FilteredId AND l.[Id] = @Id;",
+                            WHERE s.[UserId] = @FilteredId AND l.[Id] = @Id; ",
                         request
                     );
                     await _dbService.Delete(
@@ -55,7 +55,7 @@ namespace AlpimiAPI.Entities.ESubgroup.Commands
                             INNER JOIN [Subgroup] sg ON sg.[Id] = ssg.[SubgroupId]
                             INNER JOIN [Group] g ON g.[Id] = sg.[GroupId]
                             INNER JOIN [Schedule] s ON s.[Id] = g.[ScheduleId]
-                            WHERE s.[UserId] = @FilteredId AND ssg.[Id] = @Id;",
+                            WHERE s.[UserId] = @FilteredId AND ssg.[Id] = @Id; ",
                         request
                     );
                     await _dbService.Delete(
@@ -64,7 +64,7 @@ namespace AlpimiAPI.Entities.ESubgroup.Commands
                             FROM [Subgroup] sg
                             INNER JOIN [Group] g ON g.[Id] = sg.[GroupId]
                             INNER JOIN [Schedule] s ON s.[Id] = g.[ScheduleId]
-                            WHERE s.[UserId] = @FilteredId AND sg.[Id] = @Id;",
+                            WHERE s.[UserId] = @FilteredId AND sg.[Id] = @Id; ",
                         request
                     );
                     break;

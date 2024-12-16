@@ -130,7 +130,7 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                     FROM [ScheduleSettings] ss
                     INNER JOIN [LessonType] lt ON lt.[ScheduleId] = ss.[ScheduleId]
                     INNER JOIN [Lesson] l ON l.[LessonTypeId] = lt.[Id]
-                    WHERE l.[Id] = @LessonId;",
+                    WHERE l.[Id] = @LessonId; ",
                 request.dto
             );
 
@@ -209,7 +209,7 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                 await _dbService.Post<Guid>(
                     $@"
                     INSERT INTO [LessonBlock] 
-                    ([Id],[LessonDate],[LessonStart],[LessonEnd],[LessonId],[ClassroomId],[TeacherId],[ClusterId])
+                    ([Id], [LessonDate], [LessonStart], [LessonEnd], [LessonId], [ClassroomId], [TeacherId], [ClusterId])
                     OUTPUT 
                     INSERTED.Id                    
                     VALUES (
@@ -220,7 +220,7 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                     @LessonId,
                     @ClassroomId,
                     @TeacherId,
-                    '{request.ClusterId}');",
+                    '{request.ClusterId}'); ",
                     request.dto
                 );
                 if (request.dto.WeekInterval != null)

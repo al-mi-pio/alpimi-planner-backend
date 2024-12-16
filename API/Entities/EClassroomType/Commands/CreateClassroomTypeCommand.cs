@@ -56,7 +56,7 @@ namespace AlpimiAPI.Entities.EClassroomType.Commands
                     SELECT 
                     [Id]
                     FROM [ClassroomType] 
-                    WHERE [Name] = @Name AND [ScheduleId] = @ScheduleId;",
+                    WHERE [Name] = @Name AND [ScheduleId] = @ScheduleId; ",
                 request.dto
             );
 
@@ -70,13 +70,13 @@ namespace AlpimiAPI.Entities.EClassroomType.Commands
             var insertedId = await _dbService.Post<Guid>(
                 $@"
                     INSERT INTO [ClassroomType] 
-                    ([Id],[Name],[ScheduleId])
+                    ([Id], [Name], [ScheduleId])
                     OUTPUT 
                     INSERTED.Id                    
                     VALUES (
                     '{request.Id}',   
                     @Name,
-                    @ScheduleId);",
+                    @ScheduleId); ",
                 request.dto
             );
 

@@ -104,7 +104,7 @@ namespace AlpimiAPI.Entities.EScheduleSettings.Commands
                     FROM [DayOff] do
                     INNER JOIN [ScheduleSettings] ss ON ss.[Id] = do.[ScheduleSettingsId]
                     WHERE ss.[ScheduleId] = '{request.ScheduleId}'
-                    AND (do.[To] > @SchoolYearEnd OR do.[From] < @SchoolYearStart)",
+                    AND (do.[To] > @SchoolYearEnd OR do.[From] < @SchoolYearStart); ",
                 request.dto
             );
             if (daysOffOutOfRange!.Any())
@@ -120,7 +120,7 @@ namespace AlpimiAPI.Entities.EScheduleSettings.Commands
                     INNER JOIN [Lesson] l ON l.[Id] = lb.[LessonId]
                     INNER JOIN [LessonType] lt ON lt.[Id] = l.[LessonTypeId]
                     WHERE lt.[ScheduleId] = '{request.ScheduleId}'
-                    AND (lb.[LessonDate] > @SchoolYearEnd OR lb.[LessonDate] < @SchoolYearStart)",
+                    AND (lb.[LessonDate] > @SchoolYearEnd OR lb.[LessonDate] < @SchoolYearStart); ",
                 request.dto
             );
             if (lessonBlocksOutOfRange!.Any())
@@ -165,7 +165,10 @@ namespace AlpimiAPI.Entities.EScheduleSettings.Commands
                 $@"
                     UPDATE [ScheduleSettings] 
                     SET 
-                    [SchoolHour] = @SchoolHour, [SchoolYearStart] = @SchoolYearStart, [SchoolYearEnd] = @SchoolYearEnd, [SchoolDays] = @SchoolDays
+                    [SchoolHour] = @SchoolHour,
+                    [SchoolYearStart] = @SchoolYearStart, 
+                    [SchoolYearEnd] = @SchoolYearEnd, 
+                    [SchoolDays] = @SchoolDays
                     OUTPUT 
                     INSERTED.[Id], 
                     INSERTED.[SchoolHour], 
@@ -173,7 +176,7 @@ namespace AlpimiAPI.Entities.EScheduleSettings.Commands
                     INSERTED.[SchoolYearEnd], 
                     INSERTED.[SchoolDays],
                     INSERTED.[ScheduleId]
-                    WHERE [ScheduleId] = '{request.ScheduleId}';",
+                    WHERE [ScheduleId] = '{request.ScheduleId}'; ",
                 request.dto
             );
 

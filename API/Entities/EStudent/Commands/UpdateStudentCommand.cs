@@ -69,7 +69,7 @@ namespace AlpimiAPI.Entities.EStudent.Commands
                     st.[Id]
                     FROM [Student] st
                     INNER JOIN [Group] g on g.[Id] = st.[GroupId]
-                    WHERE [AlbumNumber] = @AlbumNumber AND g.[ScheduleId] = '{group .Value! .ScheduleId}' AND st.[Id] != '{request.Id}';",
+                    WHERE [AlbumNumber] = @AlbumNumber AND g.[ScheduleId] = '{group .Value! .ScheduleId}' AND st.[Id] != '{request.Id}'; ",
                 request.dto
             );
 
@@ -139,7 +139,7 @@ namespace AlpimiAPI.Entities.EStudent.Commands
                         FROM [Subgroup] sg
                         LEFT JOIN [StudentSubgroup] ssg ON ssg.[SubgroupId] = sg.[Id]
                         LEFT JOIN [Student] st ON st.[Id] = ssg.[StudentId]
-                        WHERE st.[Id] = @Id",
+                        WHERE st.[Id] = @Id; ",
                     request
                 );
 
@@ -151,13 +151,13 @@ namespace AlpimiAPI.Entities.EStudent.Commands
                         await _dbService.Post<Guid>(
                             $@"
                                 INSERT INTO [StudentSubgroup] 
-                                ([Id],[StudentId],[SubgroupId])
+                                ([Id], [StudentId], [SubgroupId])
                                 OUTPUT 
                                 INSERTED.Id                    
                                 VALUES (
                                 '{Guid.NewGuid()}',   
                                 @Id,
-                                '{subgroupId}');",
+                                '{subgroupId}'); ",
                             request
                         );
                     }
@@ -169,7 +169,7 @@ namespace AlpimiAPI.Entities.EStudent.Commands
                         await _dbService.Delete(
                             $@"
                                 DELETE [StudentSubgroup] 
-                                WHERE [StudentId] = @Id AND [SubgroupId] = '{subgroup}';",
+                                WHERE [StudentId] = @Id AND [SubgroupId] = '{subgroup}'; ",
                             request
                         );
                     }
@@ -185,7 +185,7 @@ namespace AlpimiAPI.Entities.EStudent.Commands
                     INSERTED.[Id],
                     INSERTED.[AlbumNumber],
                     INSERTED.[GroupId]
-                    WHERE [Id] = '{request.Id}';",
+                    WHERE [Id] = '{request.Id}'; ",
                 request.dto
             );
 

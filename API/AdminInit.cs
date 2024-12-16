@@ -35,7 +35,7 @@ namespace AlpimiAPI
                         SELECT 
                         [Role]
                         FROM [Auth]
-                        WHERE [Role] = 'Admin';",
+                        WHERE [Role] = 'Admin'; ",
                     ""
                 );
             }
@@ -87,13 +87,13 @@ namespace AlpimiAPI
                     var userId = await _dbService.Post<Guid>(
                         $@"
                             INSERT INTO [User] 
-                            ([Id],[Login],[CustomURL])
+                            ([Id], [Login], [CustomURL])
                             OUTPUT 
                             INSERTED.Id                    
                             VALUES (
                             '{Guid.NewGuid()}',
                             '{login}',
-                            NULL);",
+                            NULL); ",
                         ""
                     );
                     byte[] salt = RandomNumberGenerator.GetBytes(16);
@@ -108,7 +108,7 @@ namespace AlpimiAPI
                     await _dbService.Post<Guid>(
                         $@"
                             INSERT INTO [Auth] 
-                            ([Id],[Password],[Salt],[Role],[UserId])
+                            ([Id], [Password], [Salt], [Role], [UserId])
                             OUTPUT 
                             INSERTED.UserId                    
                             VALUES (
@@ -116,7 +116,7 @@ namespace AlpimiAPI
                             '{Convert.ToBase64String(hash)}',
                             '{Convert.ToBase64String(salt)}',
                             'Admin',
-                            '{userId}');",
+                            '{userId}'); ",
                         ""
                     );
                     Console.WriteLine(_str["success"]);

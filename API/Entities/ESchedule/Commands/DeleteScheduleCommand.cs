@@ -22,7 +22,7 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
                     await _dbService.Delete(
                         @"
                             DELETE [Schedule] 
-                            WHERE [Id] = @Id;",
+                            WHERE [Id] = @Id; ",
                         request
                     );
                     break;
@@ -30,7 +30,7 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
                     await _dbService.Delete(
                         @"
                             DELETE [Schedule] 
-                            WHERE [Id] = @Id and [UserId] = @FilteredId;",
+                            WHERE [Id] = @Id and [UserId] = @FilteredId; ",
                         request
                     );
                     break;

@@ -77,7 +77,7 @@ namespace AlpimiAPI.Entities.ELesson.Queries
                             FROM [Lesson] l
                             INNER JOIN [Subgroup] sg ON sg.[Id] = l.[SubgroupId]
                             INNER JOIN [Group] g ON g.[Id] = sg.[GroupId]
-                            WHERE sg.[Id] = @Id OR g.[Id] = @Id;",
+                            WHERE sg.[Id] = @Id OR g.[Id] = @Id; ",
                         request
                     );
                     lessons = await _dbService.GetAll<Lesson>(
@@ -107,8 +107,7 @@ namespace AlpimiAPI.Entities.ELesson.Queries
                             INNER JOIN [Subgroup] sg ON sg.[Id] = l.[SubgroupId]
                             INNER JOIN [Group] g ON g.[Id] = sg.[GroupId]
                             INNER JOIN [Schedule] s ON s.[Id] = g.[ScheduleId]
-                            WHERE s.[UserId] = @FilteredId AND (sg.[Id] = @Id OR g.[Id] = @Id)
-                            ",
+                            WHERE s.[UserId] = @FilteredId AND (sg.[Id] = @Id OR g.[Id] = @Id); ",
                         request
                     );
                     lessons = await _dbService.GetAll<Lesson>(

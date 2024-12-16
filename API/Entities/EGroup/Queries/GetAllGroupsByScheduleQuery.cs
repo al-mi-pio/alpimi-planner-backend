@@ -73,13 +73,13 @@ namespace AlpimiAPI.Entities.EGroup.Queries
                             SELECT 
                             COUNT(*)
                             FROM [Group] 
-                            WHERE [ScheduleId] = @ScheduleId",
+                            WHERE [ScheduleId] = @ScheduleId; ",
                         request
                     );
                     groups = await _dbService.GetAll<Group>(
                         $@"
                             SELECT
-                            [Id], [Name], [StudentCount],[ScheduleId] 
+                            [Id], [Name], [StudentCount], [ScheduleId] 
                             FROM [Group]
                             WHERE [ScheduleId] = @ScheduleId 
                             ORDER BY
@@ -95,11 +95,11 @@ namespace AlpimiAPI.Entities.EGroup.Queries
                 default:
                     count = await _dbService.Get<int>(
                         @"
-                            SELECT COUNT(*)
+                            SELECT
+                            COUNT(*)
                             FROM [Group] g
                             INNER JOIN [Schedule] s ON s.[Id]=g.[ScheduleId]
-                            WHERE s.[UserId] = @FilteredId AND g.[ScheduleId] = @ScheduleId
-                            ",
+                            WHERE s.[UserId] = @FilteredId AND g.[ScheduleId] = @ScheduleId; ",
                         request
                     );
                     groups = await _dbService.GetAll<Group>(

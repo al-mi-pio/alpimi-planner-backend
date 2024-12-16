@@ -84,7 +84,7 @@ namespace AlpimiAPI.Entities.EDayOff.Commands
             var insertedId = await _dbService.Post<Guid>(
                 $@"
                     INSERT INTO [DayOff] 
-                    ([Id],[Name],[From],[To],[ScheduleSettingsId])
+                    ([Id], [Name], [From], [To], [ScheduleSettingsId])
                     OUTPUT 
                     INSERTED.Id                    
                     VALUES (
@@ -92,7 +92,7 @@ namespace AlpimiAPI.Entities.EDayOff.Commands
                     @Name,
                     @From,
                     @To,
-                    '{scheduleSettings.Value.Id}');",
+                    '{scheduleSettings.Value.Id}'); ",
                 request.dto
             );
 

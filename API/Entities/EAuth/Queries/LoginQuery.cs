@@ -35,9 +35,9 @@ namespace AlpimiAPI.Entities.EAuth.Queries
             var auth = await _dbService.Post<Auth?>(
                 @"
                     SELECT
-                    a.[Id],a.[Password],a.[Salt],a.[Role],a.[UserId]
+                    a.[Id], a.[Password], a.[Salt], a.[Role], a.[UserId]
                     FROM [User] u
-                    JOIN [Auth] a on u.[Id]=a.[UserId] 
+                    INNER JOIN [Auth] a ON u.[Id] = a.[UserId] 
                     WHERE [Login] = @Login;",
                 request.dto
             );

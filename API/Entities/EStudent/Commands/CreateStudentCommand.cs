@@ -55,7 +55,7 @@ namespace AlpimiAPI.Entities.EStudent.Commands
                     st.[Id]
                     FROM [Student] st
                     INNER JOIN [Group] g on g.[Id] = st.[GroupId]
-                    WHERE [AlbumNumber] = @AlbumNumber AND g.[ScheduleId] = '{group .Value .ScheduleId}';",
+                    WHERE [AlbumNumber] = @AlbumNumber AND g.[ScheduleId] = '{group .Value .ScheduleId}'; ",
                 request.dto
             );
 
@@ -121,13 +121,13 @@ namespace AlpimiAPI.Entities.EStudent.Commands
             var insertedId = await _dbService.Post<Guid>(
                 $@"
                     INSERT INTO [Student] 
-                    ([Id],[AlbumNumber],[GroupId])
+                    ([Id], [AlbumNumber], [GroupId])
                     OUTPUT 
                     INSERTED.Id                    
                     VALUES (
                     '{request.Id}',   
                     @AlbumNumber,
-                    @GroupId);",
+                    @GroupId); ",
                 request.dto
             );
 
@@ -138,13 +138,13 @@ namespace AlpimiAPI.Entities.EStudent.Commands
                     await _dbService.Post<Guid>(
                         $@"
                             INSERT INTO [StudentSubgroup] 
-                            ([Id],[StudentId],[SubgroupId])
+                            ([Id], [StudentId], [SubgroupId])
                             OUTPUT 
                             INSERTED.Id                    
                             VALUES (
                             '{Guid.NewGuid()}',   
                             '{insertedId}',
-                            '{subgroupId}');",
+                            '{subgroupId}'); ",
                         ""
                     );
                 }

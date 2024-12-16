@@ -69,7 +69,7 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
                     SELECT 
                     [Id]
                     FROM [Classroom] 
-                    WHERE [Name] = @Name AND [ScheduleId] = '{originalClassroom .Value .ScheduleId}' AND [Id] != '{request.Id}';",
+                    WHERE [Name] = @Name AND [ScheduleId] = '{originalClassroom .Value .ScheduleId}' AND [Id] != '{request.Id}'; ",
                 request.dto
             );
 
@@ -145,7 +145,7 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
                         FROM [ClassroomType] ct
                         LEFT JOIN [ClassroomClassroomType] cct ON cct.[ClassroomTypeId] = ct.[Id]
                         LEFT JOIN [Classroom] c ON c.[Id] = cct.[ClassroomId]
-                        WHERE c.[Id] = @Id",
+                        WHERE c.[Id] = @Id; ",
                     request
                 );
 
@@ -158,7 +158,7 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
                         await _dbService.Post<Guid>(
                             $@"
                                 INSERT INTO [ClassroomClassroomType] 
-                                ([Id],[ClassroomId],[ClassroomTypeId])
+                                ([Id], [ClassroomId], [ClassroomTypeId])
                                 OUTPUT 
                                 INSERTED.Id                    
                                 VALUES (
@@ -193,7 +193,7 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
                     INSERTED.[Name],
                     INSERTED.[Capacity],
                     INSERTED.[ScheduleId]
-                    WHERE [Id] = '{request.Id}';",
+                    WHERE [Id] = '{request.Id}'; ",
                 request.dto
             );
 

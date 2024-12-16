@@ -74,7 +74,7 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Queries
                             COUNT(*)
                             FROM [LessonPeriod] lp
                             INNER JOIN [ScheduleSettings] ss ON ss.[Id] = lp.[ScheduleSettingsId]
-                            WHERE ss.[ScheduleId] = @ScheduleId",
+                            WHERE ss.[ScheduleId] = @ScheduleId; ",
                         request
                     );
                     lessonPeriods = await _dbService.GetAll<LessonPeriod>(
@@ -97,12 +97,12 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Queries
                 default:
                     count = await _dbService.Get<int>(
                         @"
-                            SELECT COUNT(*)
+                            SELECT
+                            COUNT(*)
                             FROM [LessonPeriod] lp
                             INNER JOIN [ScheduleSettings] ss ON ss.[Id] = lp.[ScheduleSettingsId]
                             INNER JOIN [Schedule] s ON s.[Id]=ss.[ScheduleId]
-                            WHERE s.[UserId] = @FilteredId AND ss.[ScheduleId] =@ScheduleId
-                            ",
+                            WHERE s.[UserId] = @FilteredId AND ss.[ScheduleId] =@ScheduleId; ",
                         request
                     );
                     lessonPeriods = await _dbService.GetAll<LessonPeriod>(

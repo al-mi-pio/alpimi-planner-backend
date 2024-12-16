@@ -51,7 +51,7 @@ namespace AlpimiAPI.Entities.EUser.Commands
                         SELECT 
                         [CustomURL]
                         FROM [User]
-                        WHERE [CustomURL] = @CustomURL AND [Id] != '{request.Id}';",
+                        WHERE [CustomURL] = @CustomURL AND [Id] != '{request.Id}'; ",
                     request.dto
                 );
                 if (userURL != null)
@@ -67,14 +67,14 @@ namespace AlpimiAPI.Entities.EUser.Commands
 
             User? user = await _dbService.Update<User?>(
                 $@"
-                UPDATE [User] 
-                SET
-                    [Login]=@Login, [CustomURL]=@CustomURL
+                    UPDATE [User] 
+                    SET
+                    [Login] = @Login, [CustomURL] = @CustomURL
                     OUTPUT 
                     INSERTED.[Id], 
                     INSERTED.[Login], 
                     INSERTED.[CustomURL]
-                    WHERE [Id] = '{request.Id}';",
+                    WHERE [Id] = '{request.Id}'; ",
                 request.dto
             );
 

@@ -64,7 +64,7 @@ namespace AlpimiAPI.Entities.ESchedule.Queries
                         @"
                             SELECT 
                             COUNT(*) 
-                            from [Schedule]",
+                            from [Schedule]; ",
                         ""
                     );
                     schedules = await _dbService.GetAll<Schedule>(
@@ -88,7 +88,7 @@ namespace AlpimiAPI.Entities.ESchedule.Queries
                             SELECT 
                             COUNT(*) 
                             from [Schedule] 
-                            WHERE [UserId] = @FilteredId",
+                            WHERE [UserId] = @FilteredId; ",
                         request
                     );
                     schedules = await _dbService.GetAll<Schedule>(

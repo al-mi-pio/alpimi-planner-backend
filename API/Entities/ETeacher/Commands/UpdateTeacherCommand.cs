@@ -54,7 +54,7 @@ namespace AlpimiAPI.Entities.ETeacher.Commands
                     SELECT 
                     [Id]
                     FROM [Teacher] 
-                    WHERE [Name] = @Name AND [Surname] = @Surname  AND [ScheduleId] = '{originalTeacher .Value .ScheduleId}' AND [Id] != '{request.Id}';",
+                    WHERE [Name] = @Name AND [Surname] = @Surname  AND [ScheduleId] = '{originalTeacher .Value .ScheduleId}' AND [Id] != '{request.Id}'; ",
                 request.dto
             );
 
@@ -83,7 +83,7 @@ namespace AlpimiAPI.Entities.ETeacher.Commands
                     INSERTED.[Name],
                     INSERTED.[Surname],
                     INSERTED.[ScheduleId]
-                    WHERE [Id] = '{request.Id}';",
+                    WHERE [Id] = '{request.Id}'; ",
                 request.dto
             );
 

@@ -52,7 +52,7 @@ namespace AlpimiAPI.Entities.EUser.Commands
                     SELECT 
                     [CustomURL]
                     FROM [User]
-                    WHERE [CustomURL] = @CustomURL;",
+                    WHERE [CustomURL] = @CustomURL; ",
                 request.dto
             );
 
@@ -131,13 +131,13 @@ namespace AlpimiAPI.Entities.EUser.Commands
             var insertedId = await _dbService.Post<Guid>(
                 $@"
                     INSERT INTO [User] 
-                    ([Id],[Login],[CustomURL])
+                    ([Id], [Login], [CustomURL])
                     OUTPUT 
                     INSERTED.Id                    
                     VALUES (
                     '{request.Id}',
                     @Login,
-                    @CustomURL);",
+                    @CustomURL); ",
                 request.dto
             );
             byte[] salt = RandomNumberGenerator.GetBytes(16);
@@ -152,7 +152,7 @@ namespace AlpimiAPI.Entities.EUser.Commands
             await _dbService.Post<Guid>(
                 $@"
                     INSERT INTO [Auth] 
-                    ([Id],[Password],[Salt],[Role],[UserId])
+                    ([Id], [Password], [Salt], [Role], [UserId])
                     OUTPUT 
                     INSERTED.UserId                    
                     VALUES (
@@ -160,7 +160,7 @@ namespace AlpimiAPI.Entities.EUser.Commands
                     '{Convert.ToBase64String(hash)}',
                     '{Convert.ToBase64String(salt)}',
                     'User',
-                    @Id);",
+                    @Id); ",
                 request
             );
 

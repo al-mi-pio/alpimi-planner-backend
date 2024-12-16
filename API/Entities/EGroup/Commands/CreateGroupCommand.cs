@@ -60,7 +60,7 @@ namespace AlpimiAPI.Entities.EGroup.Commands
                     SELECT 
                     [Id]
                     FROM [Group] 
-                    WHERE [Name] = @Name AND [ScheduleId] = @ScheduleId;",
+                    WHERE [Name] = @Name AND [ScheduleId] = @ScheduleId; ",
                 request.dto
             );
 
@@ -77,7 +77,7 @@ namespace AlpimiAPI.Entities.EGroup.Commands
                     sg.[Id]
                     FROM [Subgroup] sg
                     INNER JOIN [Group] g ON g.[Id] = sg.[GroupId]
-                    WHERE sg.[Name] = @Name AND g.[ScheduleId] = @ScheduleId;",
+                    WHERE sg.[Name] = @Name AND g.[ScheduleId] = @ScheduleId; ",
                 request.dto
             );
 
@@ -91,14 +91,14 @@ namespace AlpimiAPI.Entities.EGroup.Commands
             var insertedId = await _dbService.Post<Guid>(
                 $@"
                     INSERT INTO [Group] 
-                    ([Id],[Name],[StudentCount],[ScheduleId])
+                    ([Id], [Name], [StudentCount], [ScheduleId])
                     OUTPUT 
                     INSERTED.Id                    
                     VALUES (
                     '{request.Id}',   
                     @Name,
                     @StudentCount,
-                    @ScheduleId);",
+                    @ScheduleId); ",
                 request.dto
             );
 

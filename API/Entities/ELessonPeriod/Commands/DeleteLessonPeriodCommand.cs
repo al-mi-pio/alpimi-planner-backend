@@ -25,7 +25,7 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Commands
                     await _dbService.Delete(
                         @"
                             DELETE [LessonPeriod] 
-                            WHERE [Id] = @Id;",
+                            WHERE [Id] = @Id; ",
                         request
                     );
                     break;
@@ -36,7 +36,7 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Commands
                             FROM [LessonPeriod] lp
                             INNER JOIN [ScheduleSettings] ss ON ss.[Id] = lp.[ScheduleSettingsId]
                             INNER JOIN [Schedule] s ON s.[Id] = ss.[ScheduleId]
-                            WHERE s.[UserId] = @FilteredId AND lp.[Id] = @Id;",
+                            WHERE s.[UserId] = @FilteredId AND lp.[Id] = @Id; ",
                         request
                     );
                     break;

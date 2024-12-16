@@ -31,7 +31,7 @@ namespace AlpimiAPI.Entities.EStudent.Queries
                             SELECT 
                             [Id], [AlbumNumber], [GroupId] 
                             FROM [Student] 
-                            WHERE [Id] = @Id;",
+                            WHERE [Id] = @Id; ",
                         request
                     );
                     break;
@@ -43,7 +43,7 @@ namespace AlpimiAPI.Entities.EStudent.Queries
                             FROM [Student] st
                             INNER JOIN [Group] g ON g.[Id] = st.[GroupId]
                             INNER JOIN [Schedule] s ON g.[ScheduleId] = s.[Id]
-                            WHERE st.[Id] = @Id AND s.[UserId] = @FilteredId;",
+                            WHERE st.[Id] = @Id AND s.[UserId] = @FilteredId; ",
                         request
                     );
                     break;

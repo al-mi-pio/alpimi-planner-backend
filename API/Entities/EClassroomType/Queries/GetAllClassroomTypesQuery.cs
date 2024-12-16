@@ -73,7 +73,7 @@ namespace AlpimiAPI.Entities.EClassroomType.Queries
                             LEFT JOIN [Classroom] c ON c.[Id] = cct.[ClassroomId]
                             LEFT JOIN [LessonClassroomType] lct ON lct.[ClassroomTypeId] = ct.[Id]
                             LEFT JOIN [Lesson] l ON l.[Id] = lct.[LessonId]
-                            WHERE ct.[ScheduleId] = @Id OR c.[Id] = @Id OR l.[Id] = @Id",
+                            WHERE ct.[ScheduleId] = @Id OR c.[Id] = @Id OR l.[Id] = @Id; ",
                         request
                     );
                     classroomTypes = await _dbService.GetAll<ClassroomType>(
@@ -99,7 +99,8 @@ namespace AlpimiAPI.Entities.EClassroomType.Queries
                 default:
                     count = await _dbService.Get<int>(
                         @"
-                            SELECT COUNT(*)
+                            SELECT
+                            COUNT(*)
                             FROM [ClassroomType] ct
                             INNER JOIN [Schedule] s ON s.[Id] = ct.[ScheduleId]
                             LEFT JOIN [ClassroomClassroomType] cct ON cct.[ClassroomTypeId] = ct.[Id]

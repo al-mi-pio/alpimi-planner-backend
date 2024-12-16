@@ -28,7 +28,7 @@ namespace AlpimiAPI.Entities.EUser.Queries
                             SELECT 
                             [Id], [Login], [CustomURL] 
                             FROM [User] 
-                            WHERE [Login] = @Login;",
+                            WHERE [Login] = @Login; ",
                         request
                     );
                     break;
@@ -38,7 +38,7 @@ namespace AlpimiAPI.Entities.EUser.Queries
                             SELECT
                             [Id], [Login], [CustomURL]
                             FROM [User]
-                            WHERE [Login] = @Login AND [Id] = @FilteredId;",
+                            WHERE [Login] = @Login AND [Id] = @FilteredId; ",
                         request
                     );
                     break;

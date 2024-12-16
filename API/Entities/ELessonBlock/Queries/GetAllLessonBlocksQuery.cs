@@ -81,7 +81,7 @@ namespace AlpimiAPI.Entities.ELessonBlock.Queries
                     INNER JOIN [LessonBlock] lb ON lb.[LessonId] = l.[Id]
                     INNER JOIN [Subgroup] sg ON sg.[Id] = l.[SubgroupId]
                     INNER JOIN [Group] g ON g.[Id] = sg.[GroupId]
-                    WHERE sg.[Id] = @Id OR g.[Id] = @Id OR g.[ScheduleId] = @Id OR l.[Id] = @Id OR lb.[TeacherId] = @Id OR lb.[ClassroomId] = @Id OR lb.[ClusterId] = @Id;",
+                    WHERE sg.[Id] = @Id OR g.[Id] = @Id OR g.[ScheduleId] = @Id OR l.[Id] = @Id OR lb.[TeacherId] = @Id OR lb.[ClassroomId] = @Id OR lb.[ClusterId] = @Id; ",
                 request
             );
             if (scheduleSettings == null)
@@ -114,7 +114,7 @@ namespace AlpimiAPI.Entities.ELessonBlock.Queries
                             INNER JOIN [Lesson] l ON l.[Id] = lb.[LessonId]
                             INNER JOIN [Subgroup] sg ON sg.[Id] = l.[SubgroupId]
                             INNER JOIN [Group] g ON g.[Id] = sg.[GroupId]
-                            WHERE (sg.[Id] = @Id OR g.[Id] = @Id OR g.[ScheduleId] = @Id OR l.[Id] = @Id OR [TeacherId] = @Id OR [ClassroomId] = @Id OR [ClusterId] = @Id) AND lb.[LessonDate] BETWEEN @FromDate AND @ToDate;",
+                            WHERE (sg.[Id] = @Id OR g.[Id] = @Id OR g.[ScheduleId] = @Id OR l.[Id] = @Id OR [TeacherId] = @Id OR [ClassroomId] = @Id OR [ClusterId] = @Id) AND lb.[LessonDate] BETWEEN @FromDate AND @ToDate; ",
                         request
                     );
                     lessonBlocks = await _dbService.GetAll<LessonBlock>(

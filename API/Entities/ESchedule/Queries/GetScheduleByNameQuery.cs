@@ -32,7 +32,7 @@ namespace AlpimiAPI.Entities.ESchedule.Queries
                             SELECT
                             [Id], [Name], [UserId] 
                             FROM [Schedule] 
-                            WHERE [Name] = @Name;",
+                            WHERE [Name] = @Name; ",
                         request
                     );
                     break;
@@ -42,7 +42,7 @@ namespace AlpimiAPI.Entities.ESchedule.Queries
                             SELECT 
                             [Id], [Name], [UserId] 
                             FROM [Schedule] 
-                            WHERE [Name] =  @Name AND [UserId] = @FilteredId;",
+                            WHERE [Name] =  @Name AND [UserId] = @FilteredId; ",
                         request
                     );
                     break;

@@ -64,7 +64,7 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
                     SELECT 
                     [Id]
                     FROM [Classroom] 
-                    WHERE [Name] = @Name AND [ScheduleId] = @ScheduleId;",
+                    WHERE [Name] = @Name AND [ScheduleId] = @ScheduleId; ",
                 request.dto
             );
 
@@ -137,14 +137,14 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
             var insertedId = await _dbService.Post<Guid>(
                 $@"
                     INSERT INTO [Classroom] 
-                    ([Id],[Name],[Capacity],[ScheduleId])
+                    ([Id], [Name], [Capacity], [ScheduleId])
                     OUTPUT 
                     INSERTED.Id                    
                     VALUES (
                     '{request.Id}',   
                     @Name,
                     @Capacity,
-                    @ScheduleId);",
+                    @ScheduleId); ",
                 request.dto
             );
 
@@ -155,13 +155,13 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
                     await _dbService.Post<Guid>(
                         $@"
                             INSERT INTO [ClassroomClassroomType] 
-                            ([Id],[ClassroomId],[ClassroomTypeId])
+                            ([Id], [ClassroomId], [ClassroomTypeId])
                             OUTPUT 
                             INSERTED.Id                    
                             VALUES (
                             '{Guid.NewGuid()}',   
                             '{insertedId}',
-                            '{classroomTypeId}');",
+                            '{classroomTypeId}'); ",
                         ""
                     );
                 }

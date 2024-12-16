@@ -68,7 +68,6 @@ namespace AlpimiAPI.Entities.EAuth
         /// </summary>
         /// <remarks>
         /// Takes a valid token from Authorization header and returns another one with a new expiration date
-        ///
         /// - JWT token is required
         /// </remarks>
         [Authorize]

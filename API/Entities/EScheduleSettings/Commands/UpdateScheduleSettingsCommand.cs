@@ -4,8 +4,6 @@ using AlpimiAPI.Entities.EDayOff;
 using AlpimiAPI.Entities.ELessonBlock;
 using AlpimiAPI.Entities.ELessonPeriod;
 using AlpimiAPI.Entities.ELessonPeriod.Queries;
-using AlpimiAPI.Entities.ESchedule;
-using AlpimiAPI.Entities.ESchedule.Queries;
 using AlpimiAPI.Entities.EScheduleSettings.DTO;
 using AlpimiAPI.Entities.EScheduleSettings.Queries;
 using AlpimiAPI.Locales;

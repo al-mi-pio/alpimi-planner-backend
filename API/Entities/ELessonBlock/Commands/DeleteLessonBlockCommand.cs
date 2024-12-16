@@ -1,9 +1,5 @@
 ﻿using AlpimiAPI.Database;
-using AlpimiAPI.Entities.ELesson;
-using AlpimiAPI.Entities.ELesson.Queries;
-using AlpimiAPI.Entities.ELessonBlock.Queries;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
 
 namespace AlpimiAPI.Entities.ELessonBlock.Commands
 {

@@ -1,4 +1,6 @@
-﻿namespace AlpimiAPI.Responses
+﻿using AlpimiAPI.Utilities;
+
+namespace AlpimiAPI.Responses
 {
     public class Pagination
     {
@@ -21,6 +23,23 @@
             Page = page;
             SortBy = sortBy;
             SortOrder = sortOrder;
+        }
+    }
+
+    public class PaginationParams
+    {
+        public int PerPage { get; set; }
+        public int Offset { get; set; }
+        public string SortBy { get; set; }
+        public string SortOrder { get; set; }
+
+        public PaginationParams(int? perPage, int? offset, string? sortBy, string? sortOrder)
+        {
+            PerPage = perPage ?? Configuration.perPage;
+
+            Offset = offset ?? (Configuration.page - 1) * PerPage;
+            SortBy = sortBy ?? Configuration.sortBy;
+            SortOrder = sortOrder ?? Configuration.sortOrder;
         }
     }
 }

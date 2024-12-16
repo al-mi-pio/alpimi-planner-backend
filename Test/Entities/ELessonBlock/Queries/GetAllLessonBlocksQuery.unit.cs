@@ -1,6 +1,5 @@
 ﻿using AlpimiAPI.Database;
 using AlpimiAPI.Entities.ELessonBlock.Queries;
-using AlpimiAPI.Entities.ELessonType;
 using AlpimiAPI.Entities.EScheduleSettings;
 using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;

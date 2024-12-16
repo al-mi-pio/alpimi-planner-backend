@@ -1,8 +1,6 @@
 ﻿using AlpimiAPI.Database;
 using AlpimiAPI.Entities.ESchedule.DTO;
 using AlpimiAPI.Entities.ESchedule.Queries;
-using AlpimiAPI.Entities.EUser;
-using AlpimiAPI.Entities.EUser.Queries;
 using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
 using MediatR;

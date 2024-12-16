@@ -1,8 +1,6 @@
 ﻿using AlpimiAPI.Database;
 using AlpimiAPI.Entities.EGroup.DTO;
 using AlpimiAPI.Entities.EGroup.Queries;
-using AlpimiAPI.Entities.ESchedule;
-using AlpimiAPI.Entities.ESchedule.Queries;
 using AlpimiAPI.Entities.ESubgroup;
 using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;

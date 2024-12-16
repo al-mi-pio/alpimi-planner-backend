@@ -1,5 +1,4 @@
 ﻿using AlpimiAPI.Database;
-using AlpimiAPI.Entities.ELessonPeriod;
 using AlpimiAPI.Entities.ELessonPeriod.DTO;
 using AlpimiAPI.Entities.ELessonPeriod.Queries;
 using AlpimiAPI.Entities.EScheduleSettings;

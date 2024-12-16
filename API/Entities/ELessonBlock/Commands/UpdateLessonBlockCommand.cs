@@ -1,16 +1,9 @@
 ﻿using AlpimiAPI.Database;
 using AlpimiAPI.Entities.EClassroom;
 using AlpimiAPI.Entities.EClassroom.Queries;
-using AlpimiAPI.Entities.EClassroomType;
-using AlpimiAPI.Entities.EClassroomType.Queries;
-using AlpimiAPI.Entities.EGroup;
-using AlpimiAPI.Entities.EGroup.Queries;
-using AlpimiAPI.Entities.ELesson;
 using AlpimiAPI.Entities.ELessonBlock.DTO;
 using AlpimiAPI.Entities.ELessonBlock.Queries;
 using AlpimiAPI.Entities.EScheduleSettings;
-using AlpimiAPI.Entities.ESubgroup;
-using AlpimiAPI.Entities.ESubgroup.Queries;
 using AlpimiAPI.Entities.ETeacher;
 using AlpimiAPI.Entities.ETeacher.Queries;
 using AlpimiAPI.Locales;

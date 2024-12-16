@@ -30,10 +30,10 @@
   Check if returns an error when a lesson block is outside of new range
 
 - [ThrowsErrorWhenSchoolHourIsLessThan1()](../Entities/EScheduleSettings/Commands/UpdateScheduleCommand.unit.cs) - **unit**  
-  Check if returns an error when school hour is less than one
+  Check if returns an error when school hour is less than 1
 
-- [ThrowsErrorWhenSchoolHourIsLessThan1440()](../Entities/EScheduleSettings/Commands/UpdateScheduleSettingsCommand.unit.cs) - **unit**  
-  Check if returns an error when incorrect school hour is provided
+- [ThrowsErrorWhenSchoolHourIsMoreThan1440()](../Entities/EScheduleSettings/Commands/UpdateScheduleSettingsCommand.unit.cs) - **unit**  
+  Check if returns an error when school hour is more than 1440
 
 - [ThrowsErrorWhenSchoolDaysLengthIsOtherThan7()](../Entities/EScheduleSettings/Commands/UpdateScheduleSettingsCommand.unit.cs) - **unit**  
   Check if returns an error when school days length is other than seven

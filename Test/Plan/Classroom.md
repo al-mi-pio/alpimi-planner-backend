@@ -24,7 +24,7 @@
   Check if returns an error when a taken name  is provided
 
 - [ThrowsErrorWhenCapacityIsLessThan1](../Entities/EClassroom/CreateClassroomCommand.unit.cs) - **unit** 
-  Check if returns an error when incorrect capacity is provided
+  Check if returns an error when capacity is less than 1
 
 - [ThrowsErrorWhenDuplicatedClassroomTypeIdsAreGiven()](../Entities/EClassroom/CreateClassroomCommand.unit.cs) - **unit** 			
   Check if returns an error when duplicated classroom type ids are provided

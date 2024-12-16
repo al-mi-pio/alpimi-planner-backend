@@ -21,10 +21,10 @@
   Check if returns an error when start date is after end date
 
 - [ThrowsErrorWhenSchoolHourIsLessThan1()](../Entities/ESchedule/Commands/CreateScheduleCommand.unit.cs) - **unit**  
-  Check if returns an error when school hour is less than one
+  Check if returns an error when school hour is less than 1
 
 - [ThrowsErrorWhenSchoolHourIsLessThan1440()](../Entities/ESchedule/Commands/CreateScheduleCommand.unit.cs) - **unit**  
-  Check if returns an error when school hour is more than fourteen thousand forty
+  Check if returns an error when school hour is more than 1440
 
 - [ThrowsErrorWhenSchoolDaysLengthIsOtherThan7()](../Entities/ESchedule/Commands/CreateScheduleCommand.unit.cs) - **unit**  
   Check if returns an error when school days length is other than seven

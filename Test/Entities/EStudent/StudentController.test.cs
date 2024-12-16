@@ -314,6 +314,7 @@ namespace AlpimiTest.Entities.EStudent
         public async Task GetAllStudentsReturnsStudentsFromSubgroupIfSubgroupIdIsProvided()
         {
             var studentRequest1 = MockData.GetCreateStudentDTODetails(groupId1);
+            studentRequest1.SubgroupIds = [subgroupId];
             var studentRequest2 = MockData.GetCreateSecondStudentDTODetails(groupId2);
 
             await DbHelper.SetupStudent(_client, studentRequest1);

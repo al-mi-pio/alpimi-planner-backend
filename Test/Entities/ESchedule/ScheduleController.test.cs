@@ -217,8 +217,6 @@ namespace AlpimiTest.Entities.ESchedule
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
-        \
-
         [Fact]
         public async Task GetAllSchedulesReturnsSchedules()
         {

@@ -3,6 +3,7 @@ using System.Net.Http.Headers;
 using AlpimiAPI.Entities.EScheduleSettings.DTO;
 using AlpimiAPI.Responses;
 using AlpimiAPI.Settings;
+using AlpimiAPI.Utilities;
 using AlpimiTest.TestSetup;
 using AlpimiTest.TestUtilities;
 using Xunit;
@@ -225,7 +226,7 @@ namespace AlpimiTest.Entities.EScheduleSettings
         [Fact]
         public async Task ScheduleControllerThrowsTooManyRequests()
         {
-            for (int i = 0; i != RateLimiterSettings.permitLimit; i++)
+            for (int i = 0; i != Configuration.GetPermitLimit(); i++)
             {
                 await _client.GetAsync($"/api/ScheduleSettings/{new Guid()}");
             }

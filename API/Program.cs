@@ -165,8 +165,8 @@ try
                 "FixedWindow",
                 limiterOptions =>
                 {
-                    limiterOptions.PermitLimit = RateLimiterSettings.permitLimit;
-                    limiterOptions.Window = RateLimiterSettings.timeWindow;
+                    limiterOptions.PermitLimit = Configuration.GetPermitLimit();
+                    limiterOptions.Window = Configuration.GetTimeWindow();
                 }
             )
             .OnRejected = async (context, _) =>

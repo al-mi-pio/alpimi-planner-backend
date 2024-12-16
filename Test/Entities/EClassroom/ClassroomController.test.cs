@@ -4,6 +4,7 @@ using AlpimiAPI.Entities.EClassroom;
 using AlpimiAPI.Entities.EClassroom.DTO;
 using AlpimiAPI.Responses;
 using AlpimiAPI.Settings;
+using AlpimiAPI.Utilities;
 using AlpimiTest.TestSetup;
 using AlpimiTest.TestUtilities;
 using Xunit;
@@ -374,7 +375,7 @@ namespace AlpimiTest.Entities.EClassroom
         [Fact]
         public async Task ClassroomControllerThrowsTooManyRequests()
         {
-            for (int i = 0; i != RateLimiterSettings.permitLimit; i++)
+            for (int i = 0; i != Configuration.GetPermitLimit(); i++)
             {
                 await _client.GetAsync("/api/Classroom");
             }

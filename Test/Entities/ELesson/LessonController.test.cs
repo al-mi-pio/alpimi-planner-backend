@@ -6,6 +6,7 @@ using AlpimiAPI.Entities.ELessonType;
 using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
 using AlpimiAPI.Settings;
+using AlpimiAPI.Utilities;
 using AlpimiTest.TestSetup;
 using AlpimiTest.TestUtilities;
 using Azure;
@@ -408,7 +409,7 @@ namespace AlpimiTest.Entities.ELesson
         [Fact]
         public async Task LessonControllerThrowsTooManyRequests()
         {
-            for (int i = 0; i != RateLimiterSettings.permitLimit; i++)
+            for (int i = 0; i != Configuration.GetPermitLimit(); i++)
             {
                 await _client.GetAsync("/api/Lesson");
             }

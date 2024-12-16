@@ -197,17 +197,7 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
                 request.dto
             );
 
-            GetScheduleHandler getScheduleHandler = new GetScheduleHandler(_dbService);
-            GetScheduleQuery getScheduleQuery = new GetScheduleQuery(
-                classroom!.ScheduleId,
-                new Guid(),
-                "Admin"
-            );
-            ActionResult<Schedule?> toInsertSchedule = await getScheduleHandler.Handle(
-                getScheduleQuery,
-                cancellationToken
-            );
-            classroom.Schedule = toInsertSchedule.Value!;
+            classroom!.Schedule = originalClassroom.Value.Schedule!;
 
             return classroom;
         }

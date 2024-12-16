@@ -90,17 +90,7 @@ namespace AlpimiAPI.Entities.ELessonType.Commands
                 request.dto
             );
 
-            GetScheduleHandler getScheduleHandler = new GetScheduleHandler(_dbService);
-            GetScheduleQuery getScheduleQuery = new GetScheduleQuery(
-                lessonType!.ScheduleId,
-                new Guid(),
-                "Admin"
-            );
-            ActionResult<Schedule?> toInsertSchedule = await getScheduleHandler.Handle(
-                getScheduleQuery,
-                cancellationToken
-            );
-            lessonType.Schedule = toInsertSchedule.Value!;
+            lessonType!.Schedule = originalLessonType.Value.Schedule;
 
             return lessonType;
         }

@@ -123,17 +123,7 @@ namespace AlpimiAPI.Entities.EGroup.Commands
                 request.dto
             );
 
-            GetScheduleHandler getScheduleHandler = new GetScheduleHandler(_dbService);
-            GetScheduleQuery getScheduleQuery = new GetScheduleQuery(
-                group!.ScheduleId,
-                new Guid(),
-                "Admin"
-            );
-            ActionResult<Schedule?> toInsertSchedule = await getScheduleHandler.Handle(
-                getScheduleQuery,
-                cancellationToken
-            );
-            group.Schedule = toInsertSchedule.Value!;
+            group!.Schedule = originalGroup.Value.Schedule;
 
             return group;
         }

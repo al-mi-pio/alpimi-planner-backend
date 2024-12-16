@@ -90,10 +90,7 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
                 request.dto
             );
 
-            GetUserHandler getUserHandler = new GetUserHandler(_dbService);
-            GetUserQuery getUserQuery = new GetUserQuery(schedule!.UserId, new Guid(), "Admin");
-            ActionResult<User?> user = await getUserHandler.Handle(getUserQuery, cancellationToken);
-            schedule.User = user.Value!;
+            schedule!.User = originalSchedule.Value.User;
 
             return schedule;
         }

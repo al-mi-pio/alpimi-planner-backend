@@ -180,17 +180,7 @@ namespace AlpimiAPI.Entities.EScheduleSettings.Commands
                 request.dto
             );
 
-            GetScheduleHandler getScheduleHandler = new GetScheduleHandler(_dbService);
-            GetScheduleQuery getScheduleQuery = new GetScheduleQuery(
-                scheduleSettings!.ScheduleId,
-                new Guid(),
-                "Admin"
-            );
-            ActionResult<Schedule?> user = await getScheduleHandler.Handle(
-                getScheduleQuery,
-                cancellationToken
-            );
-            scheduleSettings.Schedule = user.Value!;
+            scheduleSettings!.Schedule = originalScheduleSettings.Value.Schedule;
 
             return scheduleSettings;
         }

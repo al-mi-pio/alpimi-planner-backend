@@ -200,6 +200,40 @@ namespace AlpimiTest.Entities.EScheduleSettings.Commands
         }
 
         [Fact]
+        public async Task ThrowsErrorWhenSchoolHourIsMoreThan1440()
+        {
+            var dto = MockData.GetUpdateScheduleSettingsDTO();
+            dto.SchoolHour = 1441;
+
+            var updateScheduleSettingsCommand = new UpdateScheduleSettingsCommand(
+                new Guid(),
+                dto,
+                new Guid(),
+                "Admin"
+            );
+
+            var updateScheduleSettingsHandler = new UpdateScheduleSettingsHandler(
+                _dbService.Object,
+                _str.Object
+            );
+
+            var result = await Assert.ThrowsAsync<ApiErrorException>(
+                async () =>
+                    await updateScheduleSettingsHandler.Handle(
+                        updateScheduleSettingsCommand,
+                        new CancellationToken()
+                    )
+            );
+
+            Assert.Equal(
+                JsonConvert.SerializeObject(
+                    new ErrorObject[] { new ErrorObject("SchoolHour parameter is invalid") }
+                ),
+                JsonConvert.SerializeObject(result.errors)
+            );
+        }
+
+        [Fact]
         public async Task ThrowsErrorWhenSchoolDaysLengthIsOtherThan7()
         {
             var dto = MockData.GetUpdateScheduleSettingsDTO();

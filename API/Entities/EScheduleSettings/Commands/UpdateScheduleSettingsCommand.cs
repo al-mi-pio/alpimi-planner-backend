@@ -43,7 +43,7 @@ namespace AlpimiAPI.Entities.EScheduleSettings.Commands
             List<ErrorObject> errors = new List<ErrorObject>();
             if (request.dto.SchoolHour != null)
             {
-                if (request.dto.SchoolHour < 1)
+                if (request.dto.SchoolHour < 1 || request.dto.SchoolHour > 1440)
                 {
                     errors.Add(new ErrorObject(_str["badParameter", "SchoolHour"]));
                 }

@@ -166,10 +166,10 @@ namespace AlpimiAPI.Entities.EClassroomType
         public async Task<ActionResult<ApiGetAllResponse<IEnumerable<ClassroomTypeDTO>>>> GetAll(
             [FromHeader] string Authorization,
             [FromQuery] Guid id,
-            [FromQuery] int perPage = PaginationSettings.perPage,
-            [FromQuery] int page = PaginationSettings.page,
-            [FromQuery] string sortBy = PaginationSettings.sortBy,
-            [FromQuery] string sortOrder = PaginationSettings.sortOrder
+            [FromQuery] int perPage = Configuration.perPage,
+            [FromQuery] int page = Configuration.page,
+            [FromQuery] string sortBy = Configuration.sortBy,
+            [FromQuery] string sortOrder = Configuration.sortOrder
         )
         {
             Guid filteredId = Privileges.GetUserIdFromToken(Authorization);

@@ -4,6 +4,7 @@ using AlpimiAPI.Entities.EGroup;
 using AlpimiAPI.Entities.EGroup.DTO;
 using AlpimiAPI.Responses;
 using AlpimiAPI.Settings;
+using AlpimiAPI.Utilities;
 using AlpimiTest.TestSetup;
 using AlpimiTest.TestUtilities;
 using Xunit;
@@ -294,7 +295,7 @@ namespace AlpimiTest.Entities.EGroup
         [Fact]
         public async Task GroupControllerThrowsTooManyRequests()
         {
-            for (int i = 0; i != RateLimiterSettings.permitLimit; i++)
+            for (int i = 0; i != Configuration.GetPermitLimit(); i++)
             {
                 await _client.GetAsync("/api/Group");
             }

@@ -5,6 +5,7 @@ using AlpimiAPI.Entities.ELessonPeriod.DTO;
 using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Responses;
 using AlpimiAPI.Settings;
+using AlpimiAPI.Utilities;
 using AlpimiTest.TestSetup;
 using AlpimiTest.TestUtilities;
 using Xunit;
@@ -244,7 +245,7 @@ namespace AlpimiTest.Entities.ELessonPeriod
         [Fact]
         public async Task LessonPeriodControllerThrowsTooManyRequests()
         {
-            for (int i = 0; i != RateLimiterSettings.permitLimit; i++)
+            for (int i = 0; i != Configuration.GetPermitLimit(); i++)
             {
                 await _client.GetAsync("/api/LessonPeriod");
             }

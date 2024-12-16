@@ -35,7 +35,7 @@ namespace AlpimiAPI
                         SELECT 
                         [Role]
                         FROM [Auth]
-                        WHERE [Role] = 'Admin'; ",
+                        WHERE [Role] = 'Admin';",
                     ""
                 );
             }
@@ -93,7 +93,7 @@ namespace AlpimiAPI
                             VALUES (
                             '{Guid.NewGuid()}',
                             '{login}',
-                            NULL); ",
+                            NULL);",
                         ""
                     );
                     byte[] salt = RandomNumberGenerator.GetBytes(16);
@@ -116,7 +116,7 @@ namespace AlpimiAPI
                             '{Convert.ToBase64String(hash)}',
                             '{Convert.ToBase64String(salt)}',
                             'Admin',
-                            '{userId}'); ",
+                            '{userId}');",
                         ""
                     );
                     Console.WriteLine(_str["success"]);

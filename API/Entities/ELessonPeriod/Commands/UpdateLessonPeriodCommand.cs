@@ -44,7 +44,7 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Commands
                             SELECT 
                             [Id], [Start], [ScheduleSettingsId]
                             FROM [LessonPeriod] 
-                            WHERE [Id]=@Id; ",
+                            WHERE [Id]=@Id;",
                         request
                     );
                     break;
@@ -56,7 +56,7 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Commands
                             FROM [LessonPeriod] lp
                             INNER JOIN [ScheduleSettings] ss ON ss.[Id] = lp.[ScheduleSettingsId]
                             INNER JOIN [Schedule] s ON s.[Id] = ss.[ScheduleId]
-                            WHERE s.[UserId] = @FilteredId AND lp.[Id] = @Id; ",
+                            WHERE s.[UserId] = @FilteredId AND lp.[Id] = @Id;",
                         request
                     );
                     break;
@@ -125,7 +125,7 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Commands
                     INSERTED.[Id],
                     INSERTED.[Start],
                     INSERTED.[ScheduleSettingsId]
-                    WHERE [Id] = '{request.Id}'; ",
+                    WHERE [Id] = '{request.Id}';",
                 request.dto
             );
 

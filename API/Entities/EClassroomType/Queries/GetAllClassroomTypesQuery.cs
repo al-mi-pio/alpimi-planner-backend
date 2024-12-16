@@ -73,7 +73,7 @@ namespace AlpimiAPI.Entities.EClassroomType.Queries
                             LEFT JOIN [Classroom] c ON c.[Id] = cct.[ClassroomId]
                             LEFT JOIN [LessonClassroomType] lct ON lct.[ClassroomTypeId] = ct.[Id]
                             LEFT JOIN [Lesson] l ON l.[Id] = lct.[LessonId]
-                            WHERE ct.[ScheduleId] = @Id OR c.[Id] = @Id OR l.[Id] = @Id; ",
+                            WHERE ct.[ScheduleId] = @Id OR c.[Id] = @Id OR l.[Id] = @Id;",
                         request
                     );
                     classroomTypes = await _dbService.GetAll<ClassroomType>(
@@ -92,7 +92,7 @@ namespace AlpimiAPI.Entities.EClassroomType.Queries
                             OFFSET
                             {request.Pagination.Offset} ROWS
                             FETCH NEXT
-                            {request.Pagination.PerPage} ROWS ONLY; ",
+                            {request.Pagination.PerPage} ROWS ONLY;",
                         request
                     );
                     break;
@@ -107,7 +107,7 @@ namespace AlpimiAPI.Entities.EClassroomType.Queries
                             LEFT JOIN [Classroom] c ON c.[Id] = cct.[ClassroomId]
                             LEFT JOIN [LessonClassroomType] lct ON lct.[ClassroomTypeId] = ct.[Id]
                             LEFT JOIN [Lesson] l ON l.[Id] = lct.[LessonId]
-                            WHERE s.[UserId] = @FilteredId AND (ct.[ScheduleId] = @Id OR c.[Id] = @Id OR l.[Id] = @Id); ",
+                            WHERE s.[UserId] = @FilteredId AND (ct.[ScheduleId] = @Id OR c.[Id] = @Id OR l.[Id] = @Id);",
                         request
                     );
                     classroomTypes = await _dbService.GetAll<ClassroomType>(
@@ -127,7 +127,7 @@ namespace AlpimiAPI.Entities.EClassroomType.Queries
                             OFFSET
                             {request.Pagination.Offset} ROWS
                             FETCH NEXT
-                            {request.Pagination.PerPage} ROWS ONLY; ",
+                            {request.Pagination.PerPage} ROWS ONLY;",
                         request
                     );
                     break;

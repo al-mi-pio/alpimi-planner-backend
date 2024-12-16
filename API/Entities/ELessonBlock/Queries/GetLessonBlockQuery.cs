@@ -36,7 +36,7 @@ namespace AlpimiAPI.Entities.ELessonBlock.Queries
                             SELECT 
                             [Id], [LessonDate], [LessonStart], [LessonEnd], [LessonId], [ClassroomId], [TeacherId], [ClusterId] 
                             FROM [LessonBlock] 
-                            WHERE [Id] = @Id; ",
+                            WHERE [Id] = @Id;",
                         request
                     );
                     break;
@@ -49,7 +49,7 @@ namespace AlpimiAPI.Entities.ELessonBlock.Queries
                             INNER JOIN [Lesson] l ON l.[Id] = lb.[LessonId]
                             INNER JOIN [LessonType] lt ON lt.[Id] = l.[LessonTypeId]
                             INNER JOIN [Schedule] s ON s.[Id] = lt.[ScheduleId]
-                            WHERE lb.[Id] = @Id AND s.[UserId] = @FilteredId; ",
+                            WHERE lb.[Id] = @Id AND s.[UserId] = @FilteredId;",
                         request
                     );
                     break;

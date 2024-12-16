@@ -19,7 +19,7 @@ namespace AlpimiAPI.Entities.EUser.Commands
             await _dbService.Delete(
                 @"
                     DELETE [User]
-                    WHERE [Id] = @Id; ",
+                    WHERE [Id] = @Id;",
                 request
             );
         }

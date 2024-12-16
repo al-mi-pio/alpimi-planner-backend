@@ -33,7 +33,7 @@ namespace AlpimiAPI.Entities.EDayOff.Commands
                             FROM [DayOff] do
                             INNER JOIN [ScheduleSettings] ss ON ss.[Id] = do.[ScheduleSettingsId]
                             INNER JOIN [Schedule] s ON s.[Id] = ss.[ScheduleId]
-                            WHERE s.[UserId] = @FilteredId AND do.[Id] = @Id; ",
+                            WHERE s.[UserId] = @FilteredId AND do.[Id] = @Id;",
                         request
                     );
                     break;

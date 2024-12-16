@@ -74,7 +74,7 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Queries
                             COUNT(*)
                             FROM [LessonPeriod] lp
                             INNER JOIN [ScheduleSettings] ss ON ss.[Id] = lp.[ScheduleSettingsId]
-                            WHERE ss.[ScheduleId] = @ScheduleId; ",
+                            WHERE ss.[ScheduleId] = @ScheduleId;",
                         request
                     );
                     lessonPeriods = await _dbService.GetAll<LessonPeriod>(
@@ -90,7 +90,7 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Queries
                             OFFSET
                             {request.Pagination.Offset} ROWS
                             FETCH NEXT
-                            {request.Pagination.PerPage} ROWS ONLY; ",
+                            {request.Pagination.PerPage} ROWS ONLY;",
                         request
                     );
                     break;
@@ -102,7 +102,7 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Queries
                             FROM [LessonPeriod] lp
                             INNER JOIN [ScheduleSettings] ss ON ss.[Id] = lp.[ScheduleSettingsId]
                             INNER JOIN [Schedule] s ON s.[Id]=ss.[ScheduleId]
-                            WHERE s.[UserId] = @FilteredId AND ss.[ScheduleId] =@ScheduleId; ",
+                            WHERE s.[UserId] = @FilteredId AND ss.[ScheduleId] =@ScheduleId;",
                         request
                     );
                     lessonPeriods = await _dbService.GetAll<LessonPeriod>(
@@ -119,7 +119,7 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Queries
                             OFFSET
                             {request.Pagination.Offset} ROWS
                             FETCH NEXT
-                            {request.Pagination.PerPage} ROWS ONLY; ",
+                            {request.Pagination.PerPage} ROWS ONLY;",
                         request
                     );
                     break;

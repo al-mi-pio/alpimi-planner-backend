@@ -52,7 +52,7 @@ namespace AlpimiAPI.Entities.EUser.Commands
                     SELECT 
                     [CustomURL]
                     FROM [User]
-                    WHERE [CustomURL] = @CustomURL; ",
+                    WHERE [CustomURL] = @CustomURL;",
                 request.dto
             );
 
@@ -137,7 +137,7 @@ namespace AlpimiAPI.Entities.EUser.Commands
                     VALUES (
                     '{request.Id}',
                     @Login,
-                    @CustomURL); ",
+                    @CustomURL);",
                 request.dto
             );
             byte[] salt = RandomNumberGenerator.GetBytes(16);
@@ -160,7 +160,7 @@ namespace AlpimiAPI.Entities.EUser.Commands
                     '{Convert.ToBase64String(hash)}',
                     '{Convert.ToBase64String(salt)}',
                     'User',
-                    @Id); ",
+                    @Id);",
                 request
             );
 

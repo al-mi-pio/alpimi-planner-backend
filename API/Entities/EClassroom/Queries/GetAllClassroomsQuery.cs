@@ -75,7 +75,7 @@ namespace AlpimiAPI.Entities.EClassroom.Queries
                             FROM [Classroom] c
                             LEFT JOIN [ClassroomClassroomType] cct ON cct.[ClassroomId] = c.[Id]
                             LEFT JOIN [ClassroomType] ct on ct.[Id] = cct.[ClassroomTypeId]
-                            WHERE c.[ScheduleId] = @Id OR ct.[Id] = @Id; ",
+                            WHERE c.[ScheduleId] = @Id OR ct.[Id] = @Id;",
                         request
                     );
                     classrooms = await _dbService.GetAll<Classroom>(
@@ -92,7 +92,7 @@ namespace AlpimiAPI.Entities.EClassroom.Queries
                             OFFSET
                             {request.Pagination.Offset} ROWS
                             FETCH NEXT
-                            {request.Pagination.PerPage} ROWS ONLY; ",
+                            {request.Pagination.PerPage} ROWS ONLY;",
                         request
                     );
                     break;
@@ -105,7 +105,7 @@ namespace AlpimiAPI.Entities.EClassroom.Queries
                             INNER JOIN [Schedule] s ON s.[Id] = c.[ScheduleId]
                             LEFT JOIN [ClassroomClassroomType] cct ON cct.[ClassroomId] = c.[Id]
                             LEFT JOIN [ClassroomType] ct on ct.[Id] = cct.[ClassroomTypeId]
-                            WHERE s.[UserId] = @FilteredId AND (c.[ScheduleId] = @Id OR ct.[Id] = @Id); ",
+                            WHERE s.[UserId] = @FilteredId AND (c.[ScheduleId] = @Id OR ct.[Id] = @Id);",
                         request
                     );
                     classrooms = await _dbService.GetAll<Classroom>(
@@ -123,7 +123,7 @@ namespace AlpimiAPI.Entities.EClassroom.Queries
                             OFFSET
                             {request.Pagination.Offset} ROWS
                             FETCH NEXT
-                            {request.Pagination.PerPage} ROWS ONLY; ",
+                            {request.Pagination.PerPage} ROWS ONLY;",
                         request
                     );
                     break;

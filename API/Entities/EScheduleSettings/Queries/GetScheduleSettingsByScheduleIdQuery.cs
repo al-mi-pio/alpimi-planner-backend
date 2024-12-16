@@ -36,7 +36,7 @@ namespace AlpimiAPI.Entities.EScheduleSettings.Queries
                             SELECT
                             [Id], [SchoolHour], [SchoolYearStart], [SchoolYearEnd], [ScheduleId], [SchoolDays]
                             FROM [ScheduleSettings] 
-                            WHERE [ScheduleId] = @ScheduleId; ",
+                            WHERE [ScheduleId] = @ScheduleId;",
                         request
                     );
                     break;
@@ -47,7 +47,7 @@ namespace AlpimiAPI.Entities.EScheduleSettings.Queries
                             ss.[Id], [SchoolHour], [SchoolYearStart], [SchoolYearEnd], [ScheduleId], [SchoolDays]
                             FROM [ScheduleSettings] ss
                             JOIN [Schedule] s ON s.[Id] = ss.[ScheduleId]
-                            WHERE [ScheduleId] = @ScheduleId AND s.[UserId] = @FilteredId; ",
+                            WHERE [ScheduleId] = @ScheduleId AND s.[UserId] = @FilteredId;",
                         request
                     );
                     break;

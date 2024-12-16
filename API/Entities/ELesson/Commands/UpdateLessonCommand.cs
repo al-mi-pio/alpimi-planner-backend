@@ -126,7 +126,7 @@ namespace AlpimiAPI.Entities.ELesson.Commands
                     SELECT 
                     [Id]
                     FROM [Lesson] 
-                    WHERE [Name] = @Name AND [SubgroupId] = '{originalLesson .Value .SubgroupId}' AND [Id] != '{request.Id}'; ",
+                    WHERE [Name] = @Name AND [SubgroupId] = '{originalLesson .Value .SubgroupId}' AND [Id] != '{request.Id}';",
                 request.dto
             );
 
@@ -201,7 +201,7 @@ namespace AlpimiAPI.Entities.ELesson.Commands
                         FROM [ClassroomType] ct
                         LEFT JOIN [LessonClassroomType] lct ON lct.[ClassroomTypeId] = ct.[Id]
                         LEFT JOIN [Lesson] l ON l.[Id] = lct.[LessonId]
-                        WHERE l.[Id] = @Id; ",
+                        WHERE l.[Id] = @Id;",
                     request
                 );
 
@@ -220,7 +220,7 @@ namespace AlpimiAPI.Entities.ELesson.Commands
                                 VALUES (
                                 '{Guid.NewGuid()}',   
                                 @Id,
-                                '{classroomTypeId}'); ",
+                                '{classroomTypeId}');",
                             request
                         );
                     }
@@ -232,7 +232,7 @@ namespace AlpimiAPI.Entities.ELesson.Commands
                         await _dbService.Delete(
                             $@"
                                 DELETE [LessonClassroomType] 
-                                WHERE [LessonId] = @Id AND [ClassroomTypeId] = '{classroomType}'; ",
+                                WHERE [LessonId] = @Id AND [ClassroomTypeId] = '{classroomType}';",
                             request
                         );
                     }

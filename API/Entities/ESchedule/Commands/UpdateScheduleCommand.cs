@@ -86,7 +86,7 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
                     INSERTED.[Id], 
                     INSERTED.[Name], 
                     INSERTED.[UserId]
-                    WHERE [Id] = '{request.Id}'; ",
+                    WHERE [Id] = '{request.Id}';",
                 request.dto
             );
 

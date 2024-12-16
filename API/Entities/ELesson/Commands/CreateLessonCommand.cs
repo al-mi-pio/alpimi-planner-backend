@@ -94,7 +94,7 @@ namespace AlpimiAPI.Entities.ELesson.Commands
                     SELECT 
                     [Id]
                     FROM [Lesson] 
-                    WHERE [Name] = @Name AND [SubgroupId] = @SubgroupId; ",
+                    WHERE [Name] = @Name AND [SubgroupId] = @SubgroupId;",
                 request.dto
             );
 
@@ -173,7 +173,7 @@ namespace AlpimiAPI.Entities.ELesson.Commands
                     0,
                     @AmountOfHours,
                     @LessonTypeId,
-                    @SubgroupId); ",
+                    @SubgroupId);",
                 request.dto
             );
 
@@ -190,7 +190,7 @@ namespace AlpimiAPI.Entities.ELesson.Commands
                             VALUES (
                             '{Guid.NewGuid()}',   
                             '{insertedId}',
-                            '{classroomTypeId}'); ",
+                            '{classroomTypeId}');",
                         ""
                     );
                 }

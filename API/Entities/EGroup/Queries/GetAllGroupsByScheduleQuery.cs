@@ -73,7 +73,7 @@ namespace AlpimiAPI.Entities.EGroup.Queries
                             SELECT 
                             COUNT(*)
                             FROM [Group] 
-                            WHERE [ScheduleId] = @ScheduleId; ",
+                            WHERE [ScheduleId] = @ScheduleId;",
                         request
                     );
                     groups = await _dbService.GetAll<Group>(
@@ -88,7 +88,7 @@ namespace AlpimiAPI.Entities.EGroup.Queries
                             OFFSET
                             {request.Pagination.Offset} ROWS
                             FETCH NEXT
-                            {request.Pagination.PerPage} ROWS ONLY; ",
+                            {request.Pagination.PerPage} ROWS ONLY;",
                         request
                     );
                     break;
@@ -99,7 +99,7 @@ namespace AlpimiAPI.Entities.EGroup.Queries
                             COUNT(*)
                             FROM [Group] g
                             INNER JOIN [Schedule] s ON s.[Id]=g.[ScheduleId]
-                            WHERE s.[UserId] = @FilteredId AND g.[ScheduleId] = @ScheduleId; ",
+                            WHERE s.[UserId] = @FilteredId AND g.[ScheduleId] = @ScheduleId;",
                         request
                     );
                     groups = await _dbService.GetAll<Group>(
@@ -115,7 +115,7 @@ namespace AlpimiAPI.Entities.EGroup.Queries
                             OFFSET
                             {request.Pagination.Offset} ROWS
                             FETCH NEXT
-                            {request.Pagination.PerPage} ROWS ONLY; ",
+                            {request.Pagination.PerPage} ROWS ONLY;",
                         request
                     );
                     break;

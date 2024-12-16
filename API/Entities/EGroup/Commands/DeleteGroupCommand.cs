@@ -22,7 +22,7 @@ namespace AlpimiAPI.Entities.EGroup.Commands
                     await _dbService.Delete(
                         @"
                             DELETE [Group] 
-                            WHERE [Id] = @Id; ",
+                            WHERE [Id] = @Id;",
                         request
                     );
                     break;
@@ -32,7 +32,7 @@ namespace AlpimiAPI.Entities.EGroup.Commands
                             DELETE g
                             FROM [Group] g
                             INNER JOIN [Schedule] s ON s.[Id] = g.[ScheduleId]
-                            WHERE s.[UserId] = @FilteredId AND g.[Id] = @Id; ",
+                            WHERE s.[UserId] = @FilteredId AND g.[Id] = @Id;",
                         request
                     );
                     break;

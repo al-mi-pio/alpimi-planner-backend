@@ -22,7 +22,7 @@ namespace AlpimiAPI.Entities.EStudent.Commands
                     await _dbService.Delete(
                         @"
                             DELETE [Student] 
-                            WHERE [Id] = @Id; ",
+                            WHERE [Id] = @Id;",
                         request
                     );
                     break;
@@ -33,7 +33,7 @@ namespace AlpimiAPI.Entities.EStudent.Commands
                             FROM [Student] st
                             INNER JOIN [Group] g on g.[Id] = st.[GroupId]
                             INNER JOIN [Schedule] s ON s.[Id] = g.[ScheduleId]
-                            WHERE s.[UserId] = @FilteredId AND st.[Id] = @Id; ",
+                            WHERE s.[UserId] = @FilteredId AND st.[Id] = @Id;",
                         request
                     );
                     break;

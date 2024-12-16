@@ -75,7 +75,7 @@ namespace AlpimiAPI.Entities.ESubgroup.Queries
                             FROM [Subgroup] sg
                             LEFT JOIN [StudentSubgroup] ssg ON ssg.[SubgroupId] = sg.[Id]
                             LEFT JOIN [Student] st ON st.[Id] = ssg.[StudentId]
-                            WHERE sg.[GroupId] = @Id OR st.[Id] = @Id; ",
+                            WHERE sg.[GroupId] = @Id OR st.[Id] = @Id;",
                         request
                     );
                     subgroups = await _dbService.GetAll<Subgroup>(
@@ -92,7 +92,7 @@ namespace AlpimiAPI.Entities.ESubgroup.Queries
                             OFFSET
                             {request.Pagination.Offset} ROWS
                             FETCH NEXT
-                            {request.Pagination.PerPage} ROWS ONLY; ",
+                            {request.Pagination.PerPage} ROWS ONLY;",
                         request
                     );
                     break;
@@ -106,7 +106,7 @@ namespace AlpimiAPI.Entities.ESubgroup.Queries
                             INNER JOIN [Schedule] s ON s.[Id] = g.[ScheduleId]
                             LEFT JOIN [StudentSubgroup] ssg ON ssg.[SubgroupId] = sg.[Id]
                             LEFT JOIN [Student] st ON st.[Id] = ssg.[StudentId]
-                            WHERE s.[UserId] = @FilteredId AND (sg.[GroupId] = @Id OR st.[Id] = @Id); ",
+                            WHERE s.[UserId] = @FilteredId AND (sg.[GroupId] = @Id OR st.[Id] = @Id);",
                         request
                     );
                     subgroups = await _dbService.GetAll<Subgroup>(
@@ -125,7 +125,7 @@ namespace AlpimiAPI.Entities.ESubgroup.Queries
                             OFFSET
                             {request.Pagination.Offset} ROWS
                             FETCH NEXT
-                            {request.Pagination.PerPage} ROWS ONLY; ",
+                            {request.Pagination.PerPage} ROWS ONLY;",
                         request
                     );
                     break;

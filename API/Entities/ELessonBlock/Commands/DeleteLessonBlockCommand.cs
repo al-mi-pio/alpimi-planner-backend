@@ -28,7 +28,7 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                     SELECT DISTINCT
                     [LessonId] 
                     FROM [LessonBlock] 
-                    WHERE [Id] = '{request.Id}' OR [ClusterId] = '{request.Id}'; ",
+                    WHERE [Id] = '{request.Id}' OR [ClusterId] = '{request.Id}';",
                 ""
             );
 
@@ -38,7 +38,7 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                     await _dbService.Delete(
                         @"
                             DELETE [LessonBlock] 
-                            WHERE [Id] = @Id OR [ClusterId] = @Id; ",
+                            WHERE [Id] = @Id OR [ClusterId] = @Id;",
                         request
                     );
                     break;
@@ -50,7 +50,7 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                             INNER JOIN [Lesson] l ON l.[Id] = lb.[LessonId]
                             INNER JOIN [LessonType] lt ON lt.[Id] = l.[LessonTypeId]
                             INNER JOIN [Schedule] s ON s.[Id] = lt.[ScheduleId]
-                            WHERE s.[UserId] = @FilteredId AND (lb.[Id] = @Id OR lb.[ClusterId] = @Id); ",
+                            WHERE s.[UserId] = @FilteredId AND (lb.[Id] = @Id OR lb.[ClusterId] = @Id);",
                         request
                     );
                     break;

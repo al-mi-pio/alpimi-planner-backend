@@ -92,7 +92,7 @@ namespace AlpimiAPI.Entities.EDayOff.Commands
                     @Name,
                     @From,
                     @To,
-                    '{scheduleSettings.Value.Id}'); ",
+                    '{scheduleSettings.Value.Id}');",
                 request.dto
             );
 

@@ -68,7 +68,7 @@ namespace AlpimiAPI.Entities.ESubgroup.Commands
                     SELECT 
                     [Id]
                     FROM [Group] 
-                    WHERE [Name] = @Name AND [ScheduleId]='{group.Value.ScheduleId}'; ",
+                    WHERE [Name] = @Name AND [ScheduleId]='{group.Value.ScheduleId}';",
                 request.dto
             );
 
@@ -84,7 +84,7 @@ namespace AlpimiAPI.Entities.ESubgroup.Commands
                     SELECT 
                     [Id]
                     FROM [Subgroup] 
-                    WHERE [Name] = @Name AND [GroupId] = @GroupId; ",
+                    WHERE [Name] = @Name AND [GroupId] = @GroupId;",
                 request.dto
             );
 
@@ -105,7 +105,7 @@ namespace AlpimiAPI.Entities.ESubgroup.Commands
                     '{request.Id}',   
                     @Name,
                     @StudentCount,
-                    @GroupId); ",
+                    @GroupId);",
                 request.dto
             );
 

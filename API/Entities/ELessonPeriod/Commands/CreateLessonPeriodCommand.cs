@@ -102,7 +102,7 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Commands
                     VALUES (
                     '{request.Id}',
                     @Start,
-                    '{scheduleSettings.Value.Id}'); ",
+                    '{scheduleSettings.Value.Id}');",
                 request.dto
             );
 

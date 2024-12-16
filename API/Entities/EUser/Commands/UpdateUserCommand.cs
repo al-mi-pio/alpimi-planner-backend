@@ -51,7 +51,7 @@ namespace AlpimiAPI.Entities.EUser.Commands
                         SELECT 
                         [CustomURL]
                         FROM [User]
-                        WHERE [CustomURL] = @CustomURL AND [Id] != '{request.Id}'; ",
+                        WHERE [CustomURL] = @CustomURL AND [Id] != '{request.Id}';",
                     request.dto
                 );
                 if (userURL != null)
@@ -74,7 +74,7 @@ namespace AlpimiAPI.Entities.EUser.Commands
                     INSERTED.[Id], 
                     INSERTED.[Login], 
                     INSERTED.[CustomURL]
-                    WHERE [Id] = '{request.Id}'; ",
+                    WHERE [Id] = '{request.Id}';",
                 request.dto
             );
 

@@ -52,7 +52,7 @@ namespace AlpimiAPI.Entities.ETeacher.Commands
                     SELECT 
                     [Id]
                     FROM [Teacher] 
-                    WHERE [Name] = @Name AND [Surname] = @Surname  AND [ScheduleId] = @ScheduleId; ",
+                    WHERE [Name] = @Name AND [Surname] = @Surname  AND [ScheduleId] = @ScheduleId;",
                 request.dto
             );
 

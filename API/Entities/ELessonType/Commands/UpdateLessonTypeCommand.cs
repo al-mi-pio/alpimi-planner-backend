@@ -65,7 +65,7 @@ namespace AlpimiAPI.Entities.ELessonType.Commands
                     SELECT 
                     [Id]
                     FROM [LessonType] 
-                    WHERE [Name] = @Name AND [ScheduleId] = '{originalLessonType .Value .ScheduleId}' AND [Id] != '{request.Id}'; ",
+                    WHERE [Name] = @Name AND [ScheduleId] = '{originalLessonType .Value .ScheduleId}' AND [Id] != '{request.Id}';",
                 request.dto
             );
 
@@ -86,7 +86,7 @@ namespace AlpimiAPI.Entities.ELessonType.Commands
                     INSERTED.[Name],
                     INSERTED.[Color],
                     INSERTED.[ScheduleId]
-                    WHERE [Id] = '{request.Id}'; ",
+                    WHERE [Id] = '{request.Id}';",
                 request.dto
             );
 

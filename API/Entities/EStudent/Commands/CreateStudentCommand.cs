@@ -55,7 +55,7 @@ namespace AlpimiAPI.Entities.EStudent.Commands
                     st.[Id]
                     FROM [Student] st
                     INNER JOIN [Group] g on g.[Id] = st.[GroupId]
-                    WHERE [AlbumNumber] = @AlbumNumber AND g.[ScheduleId] = '{group .Value .ScheduleId}'; ",
+                    WHERE [AlbumNumber] = @AlbumNumber AND g.[ScheduleId] = '{group .Value .ScheduleId}';",
                 request.dto
             );
 
@@ -127,7 +127,7 @@ namespace AlpimiAPI.Entities.EStudent.Commands
                     VALUES (
                     '{request.Id}',   
                     @AlbumNumber,
-                    @GroupId); ",
+                    @GroupId);",
                 request.dto
             );
 
@@ -144,7 +144,7 @@ namespace AlpimiAPI.Entities.EStudent.Commands
                             VALUES (
                             '{Guid.NewGuid()}',   
                             '{insertedId}',
-                            '{subgroupId}'); ",
+                            '{subgroupId}');",
                         ""
                     );
                 }

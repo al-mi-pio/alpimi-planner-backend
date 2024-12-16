@@ -85,7 +85,7 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
                     VALUES (
                     '{request.Id}',   
                     @Name,
-                    '{request.UserId}'); ",
+                    '{request.UserId}');",
                 request.dto
             );
             await _dbService.Post<Guid>(
@@ -100,7 +100,7 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
                     @SchoolYearStart, 
                     @SchoolYearEnd,
                     @SchoolDays,
-                    '{request.Id}'); ",
+                    '{request.Id}');",
                 request.dto
             );
 

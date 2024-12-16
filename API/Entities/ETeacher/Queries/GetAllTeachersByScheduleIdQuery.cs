@@ -73,7 +73,7 @@ namespace AlpimiAPI.Entities.ETeacher.Queries
                             SELECT 
                             COUNT(*)
                             FROM [Teacher] 
-                            WHERE [ScheduleId] = @ScheduleId; ",
+                            WHERE [ScheduleId] = @ScheduleId;",
                         request
                     );
                     teachers = await _dbService.GetAll<Teacher>(
@@ -88,7 +88,7 @@ namespace AlpimiAPI.Entities.ETeacher.Queries
                             OFFSET
                             {request.Pagination.Offset} ROWS
                             FETCH NEXT
-                            {request.Pagination.PerPage} ROWS ONLY; ",
+                            {request.Pagination.PerPage} ROWS ONLY;",
                         request
                     );
                     break;
@@ -99,7 +99,7 @@ namespace AlpimiAPI.Entities.ETeacher.Queries
                             COUNT(*)
                             FROM [Teacher] t
                             INNER JOIN [Schedule] s ON s.[Id]=t.[ScheduleId]
-                            WHERE s.[UserId] = @FilteredId AND t.[ScheduleId] = @ScheduleId; ",
+                            WHERE s.[UserId] = @FilteredId AND t.[ScheduleId] = @ScheduleId;",
                         request
                     );
                     teachers = await _dbService.GetAll<Teacher>(
@@ -115,7 +115,7 @@ namespace AlpimiAPI.Entities.ETeacher.Queries
                             OFFSET
                             {request.Pagination.Offset} ROWS
                             FETCH NEXT
-                            {request.Pagination.PerPage} ROWS ONLY; ",
+                            {request.Pagination.PerPage} ROWS ONLY;",
                         request
                     );
                     break;

@@ -181,7 +181,7 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                     INNER JOIN [LessonType] lt ON lt.[Id] = l.[LessonTypeId]
                     INNER JOIN [Schedule] s ON s.[Id] = lt.[ScheduleId]
                     INNER JOIN [ScheduleSettings] ss ON ss.[ScheduleId] = s.[Id]
-                    WHERE lb.[Id] = @Id OR lb.[ClusterId] = @Id; ",
+                    WHERE lb.[Id] = @Id OR lb.[ClusterId] = @Id;",
                 request
             );
 
@@ -190,7 +190,7 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                     SELECT 
                     count(*)
                     FROM [LessonPeriod] 
-                    WHERE ScheduleSettingsId = '{scheduleSettings!.Id}'; ",
+                    WHERE ScheduleSettingsId = '{scheduleSettings!.Id}';",
                 ""
             );
 
@@ -253,7 +253,7 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                     [LessonEnd] = @LessonEnd, 
                     [ClassroomId] = @ClassroomId, 
                     [TeacherId] = @TeacherId
-                    WHERE [Id] = '{request.Id}' OR [ClusterId] = '{request.Id}'; ",
+                    WHERE [Id] = '{request.Id}' OR [ClusterId] = '{request.Id}';",
                 request.dto
             );
 

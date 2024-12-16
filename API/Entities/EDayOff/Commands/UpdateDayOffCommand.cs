@@ -38,7 +38,7 @@ namespace AlpimiAPI.Entities.EDayOff.Commands
                             SELECT 
                             [Id], [Name], [From], [To], [ScheduleSettingsId]
                             FROM [DayOff] 
-                            WHERE [Id]=@Id; ",
+                            WHERE [Id]=@Id;",
                         request
                     );
                     break;
@@ -50,7 +50,7 @@ namespace AlpimiAPI.Entities.EDayOff.Commands
                             FROM [DayOff] do
                             INNER JOIN [ScheduleSettings] ss ON ss.[Id] = do.[ScheduleSettingsId]
                             INNER JOIN [Schedule] s ON s.[Id] = ss.[ScheduleId]
-                            WHERE s.[UserId] = @FilteredId AND do.[Id] = @Id; ",
+                            WHERE s.[UserId] = @FilteredId AND do.[Id] = @Id;",
                         request
                     );
                     break;
@@ -113,7 +113,7 @@ namespace AlpimiAPI.Entities.EDayOff.Commands
                     INSERTED.[From],
                     INSERTED.[To],
                     INSERTED.[ScheduleSettingsId]
-                    WHERE [Id] = '{request.Id}'; ",
+                    WHERE [Id] = '{request.Id}';",
                 request.dto
             );
 

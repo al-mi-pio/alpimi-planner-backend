@@ -75,7 +75,7 @@ namespace AlpimiAPI.Entities.EDayOff.Queries
                             COUNT(*)
                             FROM [DayOff] do
                             INNER JOIN [ScheduleSettings] ss ON ss.[Id] = do.[ScheduleSettingsId]
-                            WHERE ss.[ScheduleId] = @ScheduleId; ",
+                            WHERE ss.[ScheduleId] = @ScheduleId;",
                         request
                     );
                     daysOff = await _dbService.GetAll<DayOff>(
@@ -91,7 +91,7 @@ namespace AlpimiAPI.Entities.EDayOff.Queries
                             OFFSET
                             {request.Pagination.Offset} ROWS
                             FETCH NEXT
-                            {request.Pagination.PerPage} ROWS ONLY; ",
+                            {request.Pagination.PerPage} ROWS ONLY;",
                         request
                     );
                     break;
@@ -103,7 +103,7 @@ namespace AlpimiAPI.Entities.EDayOff.Queries
                             FROM [DayOff] do
                             INNER JOIN [ScheduleSettings] ss ON ss.[Id] = do.[ScheduleSettingsId]
                             INNER JOIN [Schedule] s ON s.[Id]=ss.[ScheduleId]
-                            WHERE s.[UserId] = @FilteredId AND ss.[ScheduleId] = @ScheduleId; ",
+                            WHERE s.[UserId] = @FilteredId AND ss.[ScheduleId] = @ScheduleId;",
                         request
                     );
                     daysOff = await _dbService.GetAll<DayOff>(
@@ -120,7 +120,7 @@ namespace AlpimiAPI.Entities.EDayOff.Queries
                             OFFSET
                             {request.Pagination.Offset} ROWS
                             FETCH NEXT
-                            {request.Pagination.PerPage} ROWS ONLY; ",
+                            {request.Pagination.PerPage} ROWS ONLY;",
                         request
                     );
                     break;

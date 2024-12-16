@@ -25,19 +25,19 @@ namespace AlpimiAPI.Entities.EClassroomType.Commands
                     await _dbService.Delete(
                         @"
                             DELETE [LessonClassroomType] 
-                            WHERE [ClassroomTypeId] = @Id; ",
+                            WHERE [ClassroomTypeId] = @Id;",
                         request
                     );
                     await _dbService.Delete(
                         @"
                             DELETE [ClassroomClassroomType] 
-                            WHERE [ClassroomTypeId] = @Id; ",
+                            WHERE [ClassroomTypeId] = @Id;",
                         request
                     );
                     await _dbService.Delete(
                         @"
                             DELETE [ClassroomType] 
-                            WHERE [Id] = @Id; ",
+                            WHERE [Id] = @Id;",
                         request
                     );
                     break;
@@ -48,7 +48,7 @@ namespace AlpimiAPI.Entities.EClassroomType.Commands
                             FROM [ClassroomClassroomType] cct
                             INNER JOIN [ClassroomType] ct ON ct.[Id] = cct.[ClassroomTypeId]
                             INNER JOIN [Schedule] s ON s.[Id] = ct.[ScheduleId] 
-                            WHERE s.[UserId] = @FilteredId AND cct.[ClassroomTypeId] = @Id; ",
+                            WHERE s.[UserId] = @FilteredId AND cct.[ClassroomTypeId] = @Id;",
                         request
                     );
                     await _dbService.Delete(
@@ -57,7 +57,7 @@ namespace AlpimiAPI.Entities.EClassroomType.Commands
                             FROM [LessonClassroomType] lct
                             INNER JOIN [ClassroomType] ct ON ct.[Id] = lct.[ClassroomTypeId]
                             INNER JOIN [Schedule] s ON s.[Id] = ct.[ScheduleId]
-                            WHERE s.[UserId] = @FilteredId AND lct.[ClassroomTypeId] = @Id; ",
+                            WHERE s.[UserId] = @FilteredId AND lct.[ClassroomTypeId] = @Id;",
                         request
                     );
                     await _dbService.Delete(
@@ -65,7 +65,7 @@ namespace AlpimiAPI.Entities.EClassroomType.Commands
                             DELETE ct
                             FROM [ClassroomType] ct
                             INNER JOIN [Schedule] s ON s.[Id] = ct.[ScheduleId]
-                            WHERE s.[UserId] = @FilteredId AND ct.[Id] = @Id; ",
+                            WHERE s.[UserId] = @FilteredId AND ct.[Id] = @Id;",
                         request
                     );
                     break;

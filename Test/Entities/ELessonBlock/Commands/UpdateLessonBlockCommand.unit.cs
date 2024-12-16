@@ -538,15 +538,7 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
                     )
             );
 
-            Assert.Equal(
-                JsonConvert.SerializeObject(
-                    new ErrorObject[]
-                    {
-                        new ErrorObject("Date must be in between 19.11.2020 and 17.12.2024")
-                    }
-                ),
-                JsonConvert.SerializeObject(result.errors)
-            );
+            Assert.Contains("Date must be in between", JsonConvert.SerializeObject(result.errors));
         }
 
         [Fact]

@@ -3,7 +3,6 @@ using AlpimiAPI.Entities.EClassroomType.DTO;
 using AlpimiAPI.Entities.EClassroomType.Queries;
 using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
-using AlpimiAPI.Settings;
 using AlpimiAPI.Utilities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;

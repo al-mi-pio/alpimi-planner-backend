@@ -4,8 +4,6 @@ using AlpimiAPI.Entities.EDayOff;
 using AlpimiAPI.Entities.ELessonBlock;
 using AlpimiAPI.Entities.ELessonPeriod;
 using AlpimiAPI.Entities.ELessonPeriod.Queries;
-using AlpimiAPI.Entities.ESchedule;
-using AlpimiAPI.Entities.ESchedule.Queries;
 using AlpimiAPI.Entities.EScheduleSettings.DTO;
 using AlpimiAPI.Entities.EScheduleSettings.Queries;
 using AlpimiAPI.Locales;
@@ -180,17 +178,7 @@ namespace AlpimiAPI.Entities.EScheduleSettings.Commands
                 request.dto
             );
 
-            GetScheduleHandler getScheduleHandler = new GetScheduleHandler(_dbService);
-            GetScheduleQuery getScheduleQuery = new GetScheduleQuery(
-                scheduleSettings!.ScheduleId,
-                new Guid(),
-                "Admin"
-            );
-            ActionResult<Schedule?> user = await getScheduleHandler.Handle(
-                getScheduleQuery,
-                cancellationToken
-            );
-            scheduleSettings.Schedule = user.Value!;
+            scheduleSettings!.Schedule = originalScheduleSettings.Value.Schedule;
 
             return scheduleSettings;
         }

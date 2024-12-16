@@ -1,7 +1,5 @@
 ﻿using System.Data;
-using AlpimiAPI.Utilities;
 using Dapper;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace AlpimiAPI.Database

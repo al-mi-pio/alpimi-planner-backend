@@ -8,7 +8,6 @@ using AlpimiTest.TestSetup;
 using AlpimiTest.TestUtilities;
 using Microsoft.Extensions.Localization;
 using Moq;
-using Newtonsoft.Json;
 using Xunit;
 
 namespace AlpimiTest.Entities.ELessonPeriod.Commands

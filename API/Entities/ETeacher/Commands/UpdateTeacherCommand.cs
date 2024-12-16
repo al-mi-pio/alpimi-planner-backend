@@ -1,6 +1,4 @@
 ﻿using AlpimiAPI.Database;
-using AlpimiAPI.Entities.ESchedule;
-using AlpimiAPI.Entities.ESchedule.Queries;
 using AlpimiAPI.Entities.ETeacher.DTO;
 using AlpimiAPI.Entities.ETeacher.Queries;
 using AlpimiAPI.Locales;
@@ -87,17 +85,7 @@ namespace AlpimiAPI.Entities.ETeacher.Commands
                 request.dto
             );
 
-            GetScheduleHandler getScheduleHandler = new GetScheduleHandler(_dbService);
-            GetScheduleQuery getScheduleQuery = new GetScheduleQuery(
-                teacher!.ScheduleId,
-                new Guid(),
-                "Admin"
-            );
-            ActionResult<Schedule?> toInsertSchedule = await getScheduleHandler.Handle(
-                getScheduleQuery,
-                cancellationToken
-            );
-            teacher.Schedule = toInsertSchedule.Value!;
+            teacher!.Schedule = originalTeacher.Value.Schedule;
 
             return teacher;
         }

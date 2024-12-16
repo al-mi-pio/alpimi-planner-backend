@@ -1,13 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Security.Cryptography;
 using System.Text;
-using AlpimiAPI.Database;
-using AlpimiAPI.Entities.EUser;
-using AlpimiAPI.Entities.EUser.Queries;
 using AlpimiAPI.Utilities;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
 namespace AlpimiAPI.Entities.EAuth.Queries

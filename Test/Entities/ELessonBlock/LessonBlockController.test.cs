@@ -3,11 +3,9 @@ using System.Net.Http.Headers;
 using AlpimiAPI.Entities.ELesson.DTO;
 using AlpimiAPI.Entities.ELessonBlock;
 using AlpimiAPI.Responses;
-using AlpimiAPI.Settings;
 using AlpimiAPI.Utilities;
 using AlpimiTest.TestSetup;
 using AlpimiTest.TestUtilities;
-using Azure;
 using Xunit;
 
 namespace AlpimiTest.Entities.ELessonBlock

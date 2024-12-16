@@ -1,5 +1,4 @@
 ﻿using AlpimiAPI.Database;
-using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Entities.ETeacher;
 using AlpimiAPI.Entities.ETeacher.Commands;
 using AlpimiAPI.Locales;

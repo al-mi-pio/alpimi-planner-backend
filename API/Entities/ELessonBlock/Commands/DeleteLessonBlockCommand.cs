@@ -41,7 +41,7 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                 default:
                     await _dbService.Delete(
                         @"
-                            DELETE l
+                            DELETE lb
                             FROM [LessonBlock] lb
                             INNER JOIN [Lesson] l ON l.[Id] = lb.[LessonId]
                             INNER JOIN [LessonType] lt ON lt.[Id] = l.[LessonTypeId]

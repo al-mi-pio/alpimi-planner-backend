@@ -366,7 +366,7 @@ namespace AlpimiTest.Entities.ELessonBlock
             var jsonResponse = await response.Content.ReadFromJsonAsync<
                 ApiGetResponse<LessonDTO>
             >();
-            Assert.Equal(22, jsonResponse!.Content.CurrentHours);
+            Assert.Equal(24, jsonResponse!.Content.CurrentHours);
         }
 
         [Fact]

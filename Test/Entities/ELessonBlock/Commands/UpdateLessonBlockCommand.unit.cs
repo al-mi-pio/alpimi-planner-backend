@@ -31,6 +31,8 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
         [Fact]
         public async Task ThrowsErrorWhenWrongTeacherIdIsGiven()
         {
+            var dto = MockData.GetUpdateLessonBlockDTODetails();
+            dto.TeacherId = new Guid();
             _dbService
                 .Setup(s => s.Get<LessonBlock>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetLessonBlockDetails());
@@ -52,7 +54,7 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
 
             var updateLessonBlockCommand = new UpdateLessonBlockCommand(
                 new Guid(),
-                MockData.GetUpdateLessonBlockDTODetails(),
+                dto,
                 new Guid(),
                 "User"
             );
@@ -86,6 +88,9 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
         {
             var teacher = MockData.GetTeacherDetails();
             teacher.ScheduleId = Guid.NewGuid();
+            var dto = MockData.GetUpdateLessonBlockDTODetails();
+            dto.ClassroomId = Guid.NewGuid();
+            dto.TeacherId = Guid.NewGuid();
             _dbService
                 .Setup(s => s.Get<LessonBlock>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetLessonBlockDetails());
@@ -110,7 +115,7 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
 
             var updateLessonBlockCommand = new UpdateLessonBlockCommand(
                 new Guid(),
-                MockData.GetUpdateLessonBlockDTODetails(),
+                dto,
                 new Guid(),
                 "User"
             );
@@ -140,6 +145,8 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
         [Fact]
         public async Task ThrowsErrorWhenWrongClassroomIdIsGiven()
         {
+            var dto = MockData.GetUpdateLessonBlockDTODetails();
+            dto.ClassroomId = new Guid();
             _dbService
                 .Setup(s => s.Get<LessonBlock>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetLessonBlockDetails());
@@ -161,7 +168,7 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
 
             var updateLessonBlockCommand = new UpdateLessonBlockCommand(
                 new Guid(),
-                MockData.GetUpdateLessonBlockDTODetails(),
+                dto,
                 new Guid(),
                 "User"
             );
@@ -195,6 +202,9 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
         {
             var classroom = MockData.GetClassroomDetails();
             classroom.ScheduleId = Guid.NewGuid();
+            var dto = MockData.GetUpdateLessonBlockDTODetails();
+            dto.ClassroomId = Guid.NewGuid();
+            dto.TeacherId = Guid.NewGuid();
             _dbService
                 .Setup(s => s.Get<LessonBlock>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetLessonBlockDetails());
@@ -219,7 +229,7 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
 
             var updateLessonBlockCommand = new UpdateLessonBlockCommand(
                 new Guid(),
-                MockData.GetUpdateLessonBlockDTODetails(),
+                dto,
                 new Guid(),
                 "User"
             );

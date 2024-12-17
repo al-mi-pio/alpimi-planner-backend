@@ -26,20 +26,18 @@ namespace AlpimiTest.Entities.ELessonPeriod.Commands
         [Fact]
         public async Task ThrowsErrorWhenLessonPeriodsOverlap()
         {
-            var dto = MockData.GetUpdateLessonPeriodDTODetails();
             var scheduleSettings = MockData.GetScheduleSettingsDetails();
             var lessonPeriod = MockData.GetLessonPeriodDetails();
+            lessonPeriod.Id = Guid.NewGuid();
+            var dto = MockData.GetUpdateLessonPeriodDTODetails();
+            dto.Start = lessonPeriod.Start;
             _dbService
                 .Setup(s => s.Get<ScheduleSettings>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(scheduleSettings);
             _dbService
                 .Setup(s => s.GetAll<LessonPeriod>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(
-                    new List<LessonPeriod>
-                    {
-                        MockData.GetLessonPeriodDetails(),
-                        MockData.GetLessonPeriodDetails()
-                    }
+                    new List<LessonPeriod> { lessonPeriod, MockData.GetLessonPeriodDetails() }
                 );
             _dbService
                 .Setup(s => s.Get<LessonPeriod>(It.IsAny<string>(), It.IsAny<object>()))

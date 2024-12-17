@@ -63,17 +63,17 @@ namespace AlpimiAPI.Entities.EScheduleSettings.Commands
                 throw new ApiErrorException(errors);
             }
 
-            GetScheduleSettingsByScheduleIdHandler getScheduleSettingsByScheduleIdHandler =
-                new GetScheduleSettingsByScheduleIdHandler(_dbService);
-            GetScheduleSettingsByScheduleIdQuery getScheduleSettingsByScheduleIdQuery =
-                new GetScheduleSettingsByScheduleIdQuery(
-                    request.ScheduleId,
-                    request.FilteredId,
-                    request.Role
-                );
+            GetScheduleSettingsHandler getScheduleSettingsHandler = new GetScheduleSettingsHandler(
+                _dbService
+            );
+            GetScheduleSettingsQuery getScheduleSettingsQuery = new GetScheduleSettingsQuery(
+                request.ScheduleId,
+                request.FilteredId,
+                request.Role
+            );
             ActionResult<ScheduleSettings?> originalScheduleSettings =
-                await getScheduleSettingsByScheduleIdHandler.Handle(
-                    getScheduleSettingsByScheduleIdQuery,
+                await getScheduleSettingsHandler.Handle(
+                    getScheduleSettingsQuery,
                     cancellationToken
                 );
 

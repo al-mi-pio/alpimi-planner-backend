@@ -19,6 +19,9 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
             CancellationToken cancellationToken
         )
         {
+            await _dbService.Raw(
+                "ALTER TABLE LessonBlock NOCHECK CONSTRAINT FK_LessonBlock_Classroom_ClassroomId"
+            );
             switch (request.Role)
             {
                 case "Admin":
@@ -40,6 +43,9 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
                     );
                     break;
             }
+            await _dbService.Raw(
+                "ALTER TABLE LessonBlock CHECK CONSTRAINT FK_LessonBlock_Classroom_ClassroomId"
+            );
         }
     }
 }

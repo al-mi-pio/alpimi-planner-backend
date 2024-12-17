@@ -82,7 +82,7 @@ namespace AlpimiAPI.Entities.EScheduleSettings
         }
 
         /// <summary>
-        /// Gets schedule settings by id
+        /// Gets schedule settings by ScheduleId or ScheduleSettingsId
         /// </summary>
         /// <remarks>
         /// - JWT token is required
@@ -101,54 +101,6 @@ namespace AlpimiAPI.Entities.EScheduleSettings
             string privileges = Privileges.GetUserRoleFromToken(Authorization);
 
             var query = new GetScheduleSettingsQuery(id, filteredId, privileges);
-            try
-            {
-                ScheduleSettings? result = await _mediator.Send(query);
-                if (result == null)
-                {
-                    return NotFound(
-                        new ApiErrorResponse(
-                            404,
-                            [new ErrorObject(_str["notFound", "ScheduleSettings"])]
-                        )
-                    );
-                }
-
-                var response = new ApiGetResponse<ScheduleSettingsDTO>(DataTrimmer.Trim(result));
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(
-                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError", ex])])
-                );
-            }
-        }
-
-        /// <summary>
-        /// Gets schedule settings by schedule id
-        /// </summary>
-        /// <remarks>
-        /// - JWT token is required
-        /// </remarks>
-        [HttpGet("bySchedule/{scheduleId}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiErrorResponse), 400)]
-        [ProducesResponseType(typeof(ApiErrorResponse), 401)]
-        [ProducesResponseType(typeof(ApiErrorResponse), 404)]
-        public async Task<ActionResult<ApiGetResponse<ScheduleDTO>>> GetOneByScheduleId(
-            [FromRoute] Guid scheduleId,
-            [FromHeader] string Authorization
-        )
-        {
-            Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
-            string privileges = Privileges.GetUserRoleFromToken(Authorization);
-
-            var query = new GetScheduleSettingsByScheduleIdQuery(
-                scheduleId,
-                filteredId,
-                privileges
-            );
             try
             {
                 ScheduleSettings? result = await _mediator.Send(query);

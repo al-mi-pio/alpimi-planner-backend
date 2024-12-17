@@ -44,10 +44,7 @@ namespace AlpimiTest.Entities.EScheduleSettings
         {
             _client.DefaultRequestHeaders.Authorization = null;
 
-            var response = await _client.GetAsync($"/api/ScheduleSettings/bySchedule/{new Guid()}");
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-
-            response = await _client.PatchAsJsonAsync(
+            var response = await _client.PatchAsJsonAsync(
                 $"/api/ScheduleSettings/{new Guid()}",
                 MockData.GetUpdateScheduleSettingsDTO()
             );
@@ -66,10 +63,7 @@ namespace AlpimiTest.Entities.EScheduleSettings
             }
             _client.DefaultRequestHeaders.Authorization = null;
 
-            var response = await _client.GetAsync($"/api/ScheduleSettings/bySchedule/{new Guid()}");
-            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
-
-            response = await _client.PatchAsJsonAsync(
+            var response = await _client.PatchAsJsonAsync(
                 $"/api/ScheduleSettings/{new Guid()}",
                 MockData.GetUpdateScheduleSettingsDTO()
             );
@@ -137,12 +131,10 @@ namespace AlpimiTest.Entities.EScheduleSettings
         }
 
         [Fact]
-        public async Task GetScheduleSettingsReturnsScheduleSettings()
+        public async Task GetScheduleSettingsReturnsScheduleSettingsIFAValidScheduleIdIsProvided()
         {
             var scheduleSettings = MockData.GetCreateScheduleDTODetails();
-            var scheduleSettingsId = await _client.GetAsync(
-                $"/api/ScheduleSettings/bySchedule/{scheduleId}"
-            );
+            var scheduleSettingsId = await _client.GetAsync($"/api/ScheduleSettings/{scheduleId}");
             var jsonScheduleSettingsId = await scheduleSettingsId.Content.ReadFromJsonAsync<
                 ApiGetResponse<ScheduleSettingsDTO>
             >();
@@ -164,22 +156,33 @@ namespace AlpimiTest.Entities.EScheduleSettings
         }
 
         [Fact]
-        public async Task GetScheduleSettingsThrowsNotFoundErrorWhenWrongUserAttemptsUpdate()
+        public async Task GetScheduleSettingsReturnsScheduleSettingsIFAValidScheduleSettingsIdIsProvided()
         {
-            var scheduleSettingsId = await _client.GetAsync(
-                $"/api/ScheduleSettings/bySchedule/{scheduleId}"
+            var scheduleSettings = MockData.GetScheduleSettingsDetails();
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", new Guid())
             );
-            var jsonScheduleSettingsId = await scheduleSettingsId.Content.ReadFromJsonAsync<
+
+            var response = await _client.GetAsync($"/api/ScheduleSettings/{scheduleId}");
+            var jsonResponse = await response.Content.ReadFromJsonAsync<
                 ApiGetResponse<ScheduleSettingsDTO>
             >();
+
+            Assert.Equal(jsonResponse!.Content.SchoolYearStart, scheduleSettings.SchoolYearStart);
+            Assert.Equal(jsonResponse.Content.SchoolYearEnd, scheduleSettings.SchoolYearEnd);
+            Assert.Equal(jsonResponse.Content.SchoolHour, scheduleSettings.SchoolHour);
+        }
+
+        [Fact]
+        public async Task GetScheduleSettingsThrowsNotFoundErrorWhenWrongUserAttemptsUpdate()
+        {
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("User", "User", new Guid())
             );
 
-            var response = await _client.GetAsync(
-                $"/api/ScheduleSettings/{jsonScheduleSettingsId!.Content.Id}"
-            );
+            var response = await _client.GetAsync($"/api/ScheduleSettings/{scheduleId}");
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
@@ -193,51 +196,6 @@ namespace AlpimiTest.Entities.EScheduleSettings
             );
 
             var response = await _client.GetAsync($"/api/ScheduleSettings/{new Guid()}");
-
-            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
-        }
-
-        [Fact]
-        public async Task GetScheduleSettingsByScheduleIdReturnsScheduleSettings()
-        {
-            var scheduleSettings = MockData.GetCreateScheduleDTODetails();
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-                "Bearer",
-                TestAuthorization.GetToken("Admin", "User", new Guid())
-            );
-
-            var response = await _client.GetAsync($"/api/ScheduleSettings/bySchedule/{scheduleId}");
-            var jsonResponse = await response.Content.ReadFromJsonAsync<
-                ApiGetResponse<ScheduleSettingsDTO>
-            >();
-
-            Assert.Equal(jsonResponse!.Content.SchoolYearStart, scheduleSettings.SchoolYearStart);
-            Assert.Equal(jsonResponse.Content.SchoolYearEnd, scheduleSettings.SchoolYearEnd);
-            Assert.Equal(jsonResponse.Content.SchoolHour, scheduleSettings.SchoolHour);
-        }
-
-        [Fact]
-        public async Task GetScheduleSettingsByScheduleIdThrowsNotFoundErrorWhenWrongUserAttemptsUpdate()
-        {
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-                "Bearer",
-                TestAuthorization.GetToken("User", "User", new Guid())
-            );
-
-            var response = await _client.GetAsync($"/api/ScheduleSettings/bySchedule/{scheduleId}");
-
-            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
-        }
-
-        [Fact]
-        public async Task GetScheduleSettingsByScheduleIdThrowsNotFoundErrorWhenWrongIdIsGiven()
-        {
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-                "Bearer",
-                TestAuthorization.GetToken("Admin", "User", new Guid())
-            );
-
-            var response = await _client.GetAsync($"/api/ScheduleSettings/bySchedule/{new Guid()}");
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }

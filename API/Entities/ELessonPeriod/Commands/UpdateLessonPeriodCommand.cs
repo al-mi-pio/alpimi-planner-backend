@@ -100,13 +100,14 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Commands
 
             if (allLessonsPeriods.Value.Item1 != null)
             {
-                for (int i = 0; i < allLessonsPeriods.Value.Item1.Count() - 1; i++)
+                foreach (var oneLessonPeriod in allLessonsPeriods.Value.Item1)
                 {
                     if (
-                        allLessonsPeriods
-                            .Value.Item1.ElementAt(i)
-                            .Start.AddMinutes(originalLessonPeriod.ScheduleSettings.SchoolHour)
-                        > allLessonsPeriods.Value.Item1.ElementAt(i + 1).Start
+                        request.dto.Start
+                            > oneLessonPeriod.Start.AddMinutes(-scheduleSettings.Value.SchoolHour)
+                        && request.dto.Start
+                            < oneLessonPeriod.Start.AddMinutes(scheduleSettings.Value.SchoolHour)
+                        && oneLessonPeriod.Id != originalLessonPeriod.Id
                     )
                     {
                         throw new ApiErrorException(

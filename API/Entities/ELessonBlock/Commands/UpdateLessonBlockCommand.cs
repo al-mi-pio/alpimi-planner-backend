@@ -106,12 +106,6 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                     ) - (oneLessonBlock.LessonEnd - oneLessonBlock.LessonStart + 1);
             }
 
-            request.dto.LessonEnd = request.dto.LessonEnd ?? oneLessonBlock.LessonEnd;
-            request.dto.LessonStart = request.dto.LessonStart ?? oneLessonBlock.LessonStart;
-            request.dto.ClassroomId = request.dto.ClassroomId ?? oneLessonBlock.ClassroomId;
-            request.dto.TeacherId = request.dto.TeacherId ?? oneLessonBlock.TeacherId;
-            request.dto.WeekDay = request.dto.WeekDay ?? (int)oneLessonBlock.LessonDate.DayOfWeek;
-
             List<ErrorObject> errors = new List<ErrorObject>();
             if (request.dto.TeacherId != null)
             {
@@ -164,6 +158,12 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                     );
                 }
             }
+
+            request.dto.LessonEnd = request.dto.LessonEnd ?? oneLessonBlock.LessonEnd;
+            request.dto.LessonStart = request.dto.LessonStart ?? oneLessonBlock.LessonStart;
+            request.dto.ClassroomId = request.dto.ClassroomId ?? oneLessonBlock.ClassroomId;
+            request.dto.TeacherId = request.dto.TeacherId ?? oneLessonBlock.TeacherId;
+            request.dto.WeekDay = request.dto.WeekDay ?? (int)oneLessonBlock.LessonDate.DayOfWeek;
 
             var scheduleSettings = await _dbService.Get<ScheduleSettings?>(
                 @"

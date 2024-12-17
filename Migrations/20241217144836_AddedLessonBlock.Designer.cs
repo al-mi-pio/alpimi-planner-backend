@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace alpimi_planner_backend.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20241214195348_AddedLessonBlock")]
+    [Migration("20241217144836_AddedLessonBlock")]
     partial class AddedLessonBlock
     {
         /// <inheritdoc />

@@ -194,7 +194,7 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                                 scheduleSettings.SchoolYearEnd.DayNumber
                                 - request.dto.LessonDate.DayNumber
                             ) / (7.0 * request.dto.WeekInterval!.Value)
-                        )
+                        ) + 1
                     );
                 }
             }
@@ -245,7 +245,7 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                 cancellationToken
             );
 
-            if (amountOfLessonsToInsert > 1)
+            if (request.dto.WeekInterval != null)
             {
                 return request.ClusterId;
             }

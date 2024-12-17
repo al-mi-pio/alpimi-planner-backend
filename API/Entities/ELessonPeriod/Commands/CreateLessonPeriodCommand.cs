@@ -34,17 +34,17 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Commands
             CancellationToken cancellationToken
         )
         {
-            GetScheduleSettingsByScheduleIdHandler getScheduleSettingsByScheduleIdHandler =
-                new GetScheduleSettingsByScheduleIdHandler(_dbService);
-            GetScheduleSettingsByScheduleIdQuery getScheduleSettingsByScheduleIdQuery =
-                new GetScheduleSettingsByScheduleIdQuery(
-                    request.dto.ScheduleId,
-                    request.FilteredId,
-                    request.Role
-                );
+            GetScheduleSettingsHandler getScheduleSettingsHandler = new GetScheduleSettingsHandler(
+                _dbService
+            );
+            GetScheduleSettingsQuery getScheduleSettingsQuery = new GetScheduleSettingsQuery(
+                request.dto.ScheduleId,
+                request.FilteredId,
+                request.Role
+            );
             ActionResult<ScheduleSettings?> scheduleSettings =
-                await getScheduleSettingsByScheduleIdHandler.Handle(
-                    getScheduleSettingsByScheduleIdQuery,
+                await getScheduleSettingsHandler.Handle(
+                    getScheduleSettingsQuery,
                     cancellationToken
                 );
 

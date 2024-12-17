@@ -245,7 +245,7 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                 cancellationToken
             );
 
-            if (amountOfLessonsToInsert > 1)
+            if (request.dto.WeekInterval != null)
             {
                 return request.ClusterId;
             }

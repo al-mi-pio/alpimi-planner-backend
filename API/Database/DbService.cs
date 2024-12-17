@@ -41,5 +41,10 @@ namespace AlpimiAPI.Database
         {
             await _db.ExecuteAsync(command, parms);
         }
+
+        public async Task Raw(string command)
+        {
+            await _db.ExecuteAsync(command);
+        }
     }
 }

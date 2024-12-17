@@ -107,6 +107,7 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Commands
                             > oneLessonPeriod.Start.AddMinutes(-scheduleSettings.Value.SchoolHour)
                         && request.dto.Start
                             < oneLessonPeriod.Start.AddMinutes(scheduleSettings.Value.SchoolHour)
+                        && oneLessonPeriod.Id != originalLessonPeriod.Id
                     )
                     {
                         throw new ApiErrorException(

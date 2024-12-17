@@ -3,7 +3,5 @@
     public class UpdateScheduleDTO
     {
         public string? Name { get; set; }
-
-        public int? SchoolHour { get; set; }
     }
 }

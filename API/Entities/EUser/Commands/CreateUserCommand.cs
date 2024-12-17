@@ -1,23 +1,18 @@
 ﻿using System.Security.Cryptography;
 using AlpimiAPI.Database;
+using AlpimiAPI.Entities.EUser.DTO;
 using AlpimiAPI.Entities.EUser.Queries;
+using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
 using AlpimiAPI.Settings;
 using AlpimiAPI.Utilities;
-using alpimi_planner_backend.API.Locales;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 
 namespace AlpimiAPI.Entities.EUser.Commands
 {
-    public record CreateUserCommand(
-        Guid Id,
-        Guid AuthId,
-        string Login,
-        string CustomURL,
-        string Password
-    ) : IRequest<Guid>;
+    public record CreateUserCommand(Guid Id, Guid AuthId, CreateUserDTO dto) : IRequest<Guid>;
 
     public class CreateUserHandler : IRequestHandler<CreateUserCommand, Guid>
     {
@@ -37,7 +32,7 @@ namespace AlpimiAPI.Entities.EUser.Commands
         {
             GetUserByLoginHandler getUserByLoginHandler = new GetUserByLoginHandler(_dbService);
             GetUserByLoginQuery getUserByLoginQuery = new GetUserByLoginQuery(
-                request.Login,
+                request.dto.Login,
                 new Guid(),
                 "Admin"
             );
@@ -49,33 +44,37 @@ namespace AlpimiAPI.Entities.EUser.Commands
             List<ErrorObject> errors = new List<ErrorObject>();
             if (user.Value != null)
             {
-                errors.Add(new ErrorObject(_str["alreadyExists", "User", request.Login]));
+                errors.Add(new ErrorObject(_str["alreadyExists", "User", request.dto.Login]));
             }
 
             var userURL = await _dbService.Get<string>(
-                @"SELECT [CustomURL]
-                FROM [User]
-                WHERE [CustomURL] = @CustomURL;",
-                request
+                @"
+                    SELECT 
+                    [CustomURL]
+                    FROM [User]
+                    WHERE [CustomURL] = @CustomURL;",
+                request.dto
             );
 
             if (userURL != null)
             {
-                errors.Add(new ErrorObject(_str["alreadyExists", "URL", request.CustomURL]));
+                errors.Add(new ErrorObject(_str["alreadyExists", "URL", request.dto.CustomURL]));
             }
-            if (request.Password.Length < AuthSettings.MinimumPasswordLength)
+
+            if (request.dto.Password.Length < AuthSettings.MinimumPasswordLength)
             {
                 errors.Add(
                     new ErrorObject(_str["shortPassword", AuthSettings.MinimumPasswordLength])
                 );
             }
 
-            if (request.Password.Length > AuthSettings.MaximumPasswordLength)
+            if (request.dto.Password.Length > AuthSettings.MaximumPasswordLength)
             {
                 errors.Add(
                     new ErrorObject(_str["longPassword", AuthSettings.MaximumPasswordLength])
                 );
             }
+
             RequiredCharacterTypes[]? requiredCharacterTypes = AuthSettings.RequiredCharacters;
             bool requiredCharactersError = false;
 
@@ -83,21 +82,21 @@ namespace AlpimiAPI.Entities.EUser.Commands
             {
                 if (requiredCharacterTypes.Contains(RequiredCharacterTypes.BigLetter))
                 {
-                    if (!request.Password.Any(char.IsUpper))
+                    if (!request.dto.Password.Any(char.IsUpper))
                     {
                         requiredCharactersError = true;
                     }
                 }
                 if (requiredCharacterTypes.Contains(RequiredCharacterTypes.SmallLetter))
                 {
-                    if (!request.Password.Any(char.IsLower))
+                    if (!request.dto.Password.Any(char.IsLower))
                     {
                         requiredCharactersError = true;
                     }
                 }
                 if (requiredCharacterTypes.Contains(RequiredCharacterTypes.Digit))
                 {
-                    if (!request.Password.Any(char.IsDigit))
+                    if (!request.dto.Password.Any(char.IsDigit))
                     {
                         requiredCharactersError = true;
                     }
@@ -106,8 +105,8 @@ namespace AlpimiAPI.Entities.EUser.Commands
                 {
                     if (
                         !(
-                            request.Password.Any(char.IsSymbol)
-                            || request.Password.Any(char.IsPunctuation)
+                            request.dto.Password.Any(char.IsSymbol)
+                            || request.dto.Password.Any(char.IsPunctuation)
                         )
                     )
                     {
@@ -131,15 +130,21 @@ namespace AlpimiAPI.Entities.EUser.Commands
             }
 
             var insertedId = await _dbService.Post<Guid>(
-                @"
-                    INSERT INTO [User] ([Id],[Login],[CustomURL])
-                    OUTPUT INSERTED.Id                    
-                    VALUES (@Id,@Login,@CustomURL);",
-                request
+                $@"
+                    INSERT INTO [User] 
+                    ([Id], [Login], [CustomURL])
+                    OUTPUT 
+                    INSERTED.Id                    
+                    VALUES (
+                    '{request.Id}',
+                    @Login,
+                    @CustomURL);",
+                request.dto
             );
+
             byte[] salt = RandomNumberGenerator.GetBytes(16);
             byte[] hash = Rfc2898DeriveBytes.Pbkdf2(
-                request.Password,
+                request.dto.Password,
                 salt,
                 Configuration.GetHashIterations(),
                 Configuration.GetHashAlgorithm(),
@@ -147,16 +152,17 @@ namespace AlpimiAPI.Entities.EUser.Commands
             );
 
             await _dbService.Post<Guid>(
-                @"
-                    INSERT INTO [Auth] ([Id],[Password],[Salt],[Role],[UserId])
-                    OUTPUT INSERTED.UserId                    
-                    VALUES (@AuthId,'"
-                    + Convert.ToBase64String(hash)
-                    + "','"
-                    + Convert.ToBase64String(salt)
-                    + "','"
-                    + "User"
-                    + "',@Id);",
+                $@"
+                    INSERT INTO [Auth] 
+                    ([Id], [Password], [Salt], [Role], [UserId])
+                    OUTPUT 
+                    INSERTED.UserId                    
+                    VALUES (
+                    @AuthId,
+                    '{Convert.ToBase64String(hash)}',
+                    '{Convert.ToBase64String(salt)}',
+                    'User',
+                    @Id);",
                 request
             );
 

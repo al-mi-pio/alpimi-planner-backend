@@ -1,7 +1,7 @@
 ﻿using AlpimiAPI.Entities.EAuth.Queries;
+using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
 using AlpimiAPI.Utilities;
-using alpimi_planner_backend.API.Locales;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -34,7 +34,6 @@ namespace AlpimiAPI.Entities.EAuth
         /// <remarks>
         /// Provide a valid token inside the Authorization header with the 'Bearer' prefix
         /// </remarks>
-
         [AllowAnonymous]
         [HttpPost]
         [Route("login")]
@@ -44,7 +43,7 @@ namespace AlpimiAPI.Entities.EAuth
             [FromBody] DTO.LoginDTO request
         )
         {
-            var query = new LoginQuery(request.Login, request.Password);
+            var query = new LoginQuery(request);
             try
             {
                 string result = await _mediator.Send(query);
@@ -68,7 +67,6 @@ namespace AlpimiAPI.Entities.EAuth
         /// </summary>
         /// <remarks>
         /// Takes a valid token from Authorization header and returns another one with a new expiration date
-        ///
         /// - JWT token is required
         /// </remarks>
         [Authorize]

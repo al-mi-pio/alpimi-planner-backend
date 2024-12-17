@@ -1,9 +1,8 @@
 ﻿using AlpimiAPI.Database;
+using AlpimiAPI.Entities.ESchedule.DTO;
 using AlpimiAPI.Entities.ESchedule.Queries;
-using AlpimiAPI.Entities.EUser;
-using AlpimiAPI.Entities.EUser.Queries;
+using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
-using alpimi_planner_backend.API.Locales;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
@@ -12,8 +11,7 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
 {
     public record UpdateScheduleCommand(
         Guid Id,
-        string? Name,
-        int? SchoolHour,
+        UpdateScheduleDTO dto,
         Guid FilteredId,
         string Role
     ) : IRequest<Schedule?>;
@@ -34,13 +32,29 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
             CancellationToken cancellationToken
         )
         {
-            if (request.Name != null)
+            GetScheduleHandler getScheduleHandler = new GetScheduleHandler(_dbService);
+            GetScheduleQuery getScheduleQuery = new GetScheduleQuery(
+                request.Id,
+                request.FilteredId,
+                request.Role
+            );
+            ActionResult<Schedule?> originalSchedule = await getScheduleHandler.Handle(
+                getScheduleQuery,
+                cancellationToken
+            );
+
+            if (originalSchedule.Value == null)
+            {
+                return null;
+            }
+
+            if (request.dto.Name != null)
             {
                 GetScheduleByNameHandler getScheduleByNameHandler = new GetScheduleByNameHandler(
                     _dbService
                 );
                 GetScheduleByNameQuery getScheduleByNameQuery = new GetScheduleByNameQuery(
-                    request.Name,
+                    request.dto.Name,
                     request.FilteredId,
                     "User"
                 );
@@ -51,49 +65,32 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
 
                 if (scheduleName.Value != null)
                 {
-                    throw new ApiErrorException(
-                        [new ErrorObject(_str["alreadyExists", "Schedule", request.Name])]
-                    );
+                    if (scheduleName.Value.Id != request.Id)
+                    {
+                        throw new ApiErrorException(
+                            [new ErrorObject(_str["alreadyExists", "Schedule", request.dto.Name])]
+                        );
+                    }
                 }
             }
 
-            Schedule? schedule;
-            switch (request.Role)
-            {
-                case "Admin":
-                    schedule = await _dbService.Update<Schedule?>(
-                        @"
-                    UPDATE [Schedule] 
-                    SET [Name]=CASE WHEN @Name IS NOT NULL THEN @Name 
-                    ELSE [Name] END,[SchoolHour]=CASE WHEN @SchoolHour IS NOT NULL THEN @SchoolHour ELSE [SchoolHour] END 
-                    OUTPUT INSERTED.[Id], INSERTED.[Name], INSERTED.[SchoolHour]
-                    WHERE [Id]=@Id;",
-                        request
-                    );
-                    break;
-                default:
-                    schedule = await _dbService.Update<Schedule?>(
-                        @"
-                     UPDATE [Schedule] 
-                    SET [Name]=CASE WHEN @Name IS NOT NULL THEN @Name 
-                    ELSE [Name] END,[SchoolHour]=CASE WHEN @SchoolHour IS NOT NULL THEN @SchoolHour ELSE [SchoolHour] END 
-                    OUTPUT INSERTED.[Id], INSERTED.[Name], INSERTED.[SchoolHour]
-                    WHERE [Id]=@Id and [UserId]=@FilteredId;",
-                        request
-                    );
-                    break;
-            }
+            request.dto.Name = request.dto.Name ?? originalSchedule.Value.Name;
 
-            if (schedule != null)
-            {
-                GetUserHandler getUserHandler = new GetUserHandler(_dbService);
-                GetUserQuery getUserQuery = new GetUserQuery(schedule.UserId, new Guid(), "Admin");
-                ActionResult<User?> user = await getUserHandler.Handle(
-                    getUserQuery,
-                    cancellationToken
-                );
-                schedule.User = user.Value!;
-            }
+            var schedule = await _dbService.Update<Schedule?>(
+                $@"
+                    UPDATE [Schedule] 
+                    SET 
+                    [Name] = @Name 
+                    OUTPUT
+                    INSERTED.[Id], 
+                    INSERTED.[Name], 
+                    INSERTED.[UserId]
+                    WHERE [Id] = '{request.Id}';",
+                request.dto
+            );
+
+            schedule!.User = originalSchedule.Value.User;
+
             return schedule;
         }
     }

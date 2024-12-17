@@ -1,7 +1,5 @@
 ﻿using System.Data;
-using AlpimiAPI.Utilities;
 using Dapper;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace AlpimiAPI.Database
@@ -42,6 +40,11 @@ namespace AlpimiAPI.Database
         public async Task Delete(string command, object parms)
         {
             await _db.ExecuteAsync(command, parms);
+        }
+
+        public async Task Raw(string command)
+        {
+            await _db.ExecuteAsync(command);
         }
     }
 }

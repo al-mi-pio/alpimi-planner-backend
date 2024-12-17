@@ -1,10 +1,10 @@
 ﻿using AlpimiAPI.Database;
 using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Entities.ESchedule.Commands;
+using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
 using AlpimiTest.TestSetup;
 using AlpimiTest.TestUtilities;
-using alpimi_planner_backend.API.Locales;
 using Microsoft.Extensions.Localization;
 using Moq;
 using Newtonsoft.Json;
@@ -24,52 +24,22 @@ namespace AlpimiTest.Entities.ESchedule.Commands
         }
 
         [Fact]
-        public async Task CreatesSchedule()
+        public async Task ThrowsErrorWhenNameIsTaken()
         {
-            var schedule = MockData.GetScheduleDetails();
-
-            _dbService
-                .Setup(s => s.Post<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(schedule);
-
-            var createScheduleCommand = new CreateScheduleCommand(
-                schedule.Id,
-                schedule.UserId,
-                schedule.Name,
-                schedule.SchoolHour
-            );
-
-            var createScheduleHandler = new CreateScheduleHandler(_dbService.Object, _str.Object);
-
-            var result = await createScheduleHandler.Handle(
-                createScheduleCommand,
-                new CancellationToken()
-            );
-
-            Assert.Equal(schedule.Id, result);
-        }
-
-        [Fact]
-        public async Task ThrowsErrorWheNameIsTaken()
-        {
-            var schedule = MockData.GetScheduleDetails();
-
-            _dbService
-                .Setup(s => s.Post<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(schedule);
+            var dto = MockData.GetCreateScheduleDTODetails();
+            dto.Name = "TakenName";
+            var scheduleSettings = MockData.GetScheduleSettingsDetails();
             _dbService
                 .Setup(s => s.Get<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(schedule);
+                .ReturnsAsync(scheduleSettings.Schedule);
 
             var createScheduleCommand = new CreateScheduleCommand(
-                schedule.Id,
-                schedule.UserId,
-                "TakenName",
-                schedule.SchoolHour
+                scheduleSettings.Schedule.Id,
+                scheduleSettings.Schedule.UserId,
+                scheduleSettings.Id,
+                dto
             );
-
             var createScheduleHandler = new CreateScheduleHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createScheduleHandler.Handle(
@@ -84,6 +54,159 @@ namespace AlpimiTest.Entities.ESchedule.Commands
                     {
                         new ErrorObject("There is already a Schedule with the name TakenName")
                     }
+                ),
+                JsonConvert.SerializeObject(result.errors)
+            );
+        }
+
+        [Fact]
+        public async Task ThrowsErrorWhenDateStartIsAfterDateEnd()
+        {
+            var dto = MockData.GetCreateScheduleDTODetails();
+            dto.SchoolYearStart = new DateOnly(2050, 10, 10);
+            var scheduleSettings = MockData.GetScheduleSettingsDetails();
+
+            var createScheduleCommand = new CreateScheduleCommand(
+                scheduleSettings.Schedule.Id,
+                scheduleSettings.Schedule.UserId,
+                scheduleSettings.Id,
+                dto
+            );
+            var createScheduleHandler = new CreateScheduleHandler(_dbService.Object, _str.Object);
+            var result = await Assert.ThrowsAsync<ApiErrorException>(
+                async () =>
+                    await createScheduleHandler.Handle(
+                        createScheduleCommand,
+                        new CancellationToken()
+                    )
+            );
+
+            Assert.Equal(
+                JsonConvert.SerializeObject(
+                    new ErrorObject[]
+                    {
+                        new ErrorObject("The end date cannot happen before the start date")
+                    }
+                ),
+                JsonConvert.SerializeObject(result.errors)
+            );
+        }
+
+        [Fact]
+        public async Task ThrowsErrorWhenSchoolHourIsLessThan1()
+        {
+            var dto = MockData.GetCreateScheduleDTODetails();
+            dto.SchoolHour = 0;
+            var scheduleSettings = MockData.GetScheduleSettingsDetails();
+
+            var createScheduleCommand = new CreateScheduleCommand(
+                scheduleSettings.Schedule.Id,
+                scheduleSettings.Schedule.UserId,
+                scheduleSettings.Id,
+                dto
+            );
+            var createScheduleHandler = new CreateScheduleHandler(_dbService.Object, _str.Object);
+            var result = await Assert.ThrowsAsync<ApiErrorException>(
+                async () =>
+                    await createScheduleHandler.Handle(
+                        createScheduleCommand,
+                        new CancellationToken()
+                    )
+            );
+
+            Assert.Equal(
+                JsonConvert.SerializeObject(
+                    new ErrorObject[] { new ErrorObject("SchoolHour parameter is invalid") }
+                ),
+                JsonConvert.SerializeObject(result.errors)
+            );
+        }
+
+        [Fact]
+        public async Task ThrowsErrorWhenSchoolHourIsMoreThan1440()
+        {
+            var dto = MockData.GetCreateScheduleDTODetails();
+            dto.SchoolHour = 1441;
+            var scheduleSettings = MockData.GetScheduleSettingsDetails();
+
+            var createScheduleCommand = new CreateScheduleCommand(
+                scheduleSettings.Schedule.Id,
+                scheduleSettings.Schedule.UserId,
+                scheduleSettings.Id,
+                dto
+            );
+            var createScheduleHandler = new CreateScheduleHandler(_dbService.Object, _str.Object);
+            var result = await Assert.ThrowsAsync<ApiErrorException>(
+                async () =>
+                    await createScheduleHandler.Handle(
+                        createScheduleCommand,
+                        new CancellationToken()
+                    )
+            );
+
+            Assert.Equal(
+                JsonConvert.SerializeObject(
+                    new ErrorObject[] { new ErrorObject("SchoolHour parameter is invalid") }
+                ),
+                JsonConvert.SerializeObject(result.errors)
+            );
+        }
+
+        [Fact]
+        public async Task ThrowsErrorWhenSchoolDaysLengthIsOtherThan7()
+        {
+            var dto = MockData.GetCreateScheduleDTODetails();
+            dto.SchoolDays = "1111";
+            var scheduleSettings = MockData.GetScheduleSettingsDetails();
+
+            var createScheduleCommand = new CreateScheduleCommand(
+                scheduleSettings.Schedule.Id,
+                scheduleSettings.Schedule.UserId,
+                scheduleSettings.Id,
+                dto
+            );
+            var createScheduleHandler = new CreateScheduleHandler(_dbService.Object, _str.Object);
+            var result = await Assert.ThrowsAsync<ApiErrorException>(
+                async () =>
+                    await createScheduleHandler.Handle(
+                        createScheduleCommand,
+                        new CancellationToken()
+                    )
+            );
+
+            Assert.Equal(
+                JsonConvert.SerializeObject(
+                    new ErrorObject[] { new ErrorObject("SchoolDays parameter is invalid") }
+                ),
+                JsonConvert.SerializeObject(result.errors)
+            );
+        }
+
+        [Fact]
+        public async Task ThrowsErrorWhenSchoolDaysContainsSomethingOtherThan1Or0()
+        {
+            var dto = MockData.GetCreateScheduleDTODetails();
+            dto.SchoolDays = "1100115";
+            var scheduleSettings = MockData.GetScheduleSettingsDetails();
+
+            var createScheduleCommand = new CreateScheduleCommand(
+                scheduleSettings.Schedule.Id,
+                scheduleSettings.Schedule.UserId,
+                scheduleSettings.Id,
+                dto
+            );
+            var createScheduleHandler = new CreateScheduleHandler(_dbService.Object, _str.Object);
+            var result = await Assert.ThrowsAsync<ApiErrorException>(
+                async () =>
+                    await createScheduleHandler.Handle(
+                        createScheduleCommand,
+                        new CancellationToken()
+                    )
+            );
+
+            Assert.Equal(
+                JsonConvert.SerializeObject(
+                    new ErrorObject[] { new ErrorObject("SchoolDays parameter is invalid") }
                 ),
                 JsonConvert.SerializeObject(result.errors)
             );

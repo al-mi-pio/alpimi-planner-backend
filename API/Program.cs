@@ -4,10 +4,10 @@ using System.Reflection;
 using System.Text;
 using AlpimiAPI;
 using AlpimiAPI.Database;
+using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
 using AlpimiAPI.Settings;
 using AlpimiAPI.Utilities;
-using alpimi_planner_backend.API.Locales;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Data.SqlClient;
@@ -21,6 +21,7 @@ DotNetEnv.Env.Load();
 try
 {
     builder.Services.AddControllers();
+
     builder.Services.AddMediatR(cfg =>
         cfg.RegisterServicesFromAssemblies(typeof(Program).Assembly)
     );
@@ -31,8 +32,19 @@ try
 
     builder.Services.AddScoped<IDbService, DbService>();
 
-    // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+    builder.Services.AddLocalization();
+
+    builder.Services.Configure<RequestLocalizationOptions>(options =>
+    {
+        var supportedCultures = new List<CultureInfo>
+        {
+            new CultureInfo("en-US"),
+            new CultureInfo("pl-PL")
+        };
+    });
+
     builder.Services.AddEndpointsApiExplorer();
+
     if (builder.Environment.IsDevelopment())
     {
         builder.Services.AddSwaggerGen(options =>
@@ -67,6 +79,7 @@ try
             );
         });
     }
+
     builder
         .Services.AddAuthentication(option =>
         {
@@ -92,25 +105,30 @@ try
             {
                 OnChallenge = context =>
                 {
+                    var _str = context.HttpContext.RequestServices.GetRequiredService<
+                        IStringLocalizer<Errors>
+                    >();
+
                     context.HandleResponse();
 
                     context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                     context.Response.ContentType = "application/json";
                     var jsonResponse = System.Text.Json.JsonSerializer.Serialize(
-                        new ApiErrorResponse(401, [new ErrorObject("You are not authenticated")])
+                        new ApiErrorResponse(401, [new ErrorObject(_str["notAuthenticated"])])
                     );
 
                     return context.Response.WriteAsync(jsonResponse);
                 },
                 OnForbidden = context =>
                 {
+                    var _str = context.HttpContext.RequestServices.GetRequiredService<
+                        IStringLocalizer<Errors>
+                    >();
+
                     context.Response.StatusCode = StatusCodes.Status403Forbidden;
                     context.Response.ContentType = "application/json";
                     var jsonResponse = System.Text.Json.JsonSerializer.Serialize(
-                        new ApiErrorResponse(
-                            403,
-                            [new ErrorObject("You have no permission to access this resource")]
-                        )
+                        new ApiErrorResponse(403, [new ErrorObject(_str["notAuthorized"])])
                     );
 
                     return context.Response.WriteAsync(jsonResponse);
@@ -125,6 +143,7 @@ try
         var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
         c.IncludeXmlComments(xmlPath);
     });
+
     builder
         .Services.AddControllers()
         .ConfigureApiBehaviorOptions(options =>
@@ -142,17 +161,6 @@ try
             };
         });
 
-    builder.Services.AddLocalization();
-
-    builder.Services.Configure<RequestLocalizationOptions>(options =>
-    {
-        var supportedCultures = new List<CultureInfo>
-        {
-            new CultureInfo("en-US"),
-            new CultureInfo("pl-PL")
-        };
-    });
-
     builder.Services.AddRateLimiter(options =>
     {
         options
@@ -160,26 +168,30 @@ try
                 "FixedWindow",
                 limiterOptions =>
                 {
-                    limiterOptions.PermitLimit = RateLimiterSettings.permitLimit;
-                    limiterOptions.Window = RateLimiterSettings.timeWindow;
+                    limiterOptions.PermitLimit = Configuration.GetPermitLimit();
+                    limiterOptions.Window = Configuration.GetTimeWindow();
                 }
             )
             .OnRejected = async (context, _) =>
         {
+            var _str = context.HttpContext.RequestServices.GetRequiredService<
+                IStringLocalizer<Errors>
+            >();
+
             context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
             context.HttpContext.Response.ContentType = "application/json";
             var jsonResponse = System.Text.Json.JsonSerializer.Serialize(
-                new ApiErrorResponse(429, [new ErrorObject("Too many requests. Try again later")])
+                new ApiErrorResponse(429, [new ErrorObject(_str["tooManyRequests"])])
             );
             await context.HttpContext.Response.WriteAsync(jsonResponse);
         };
     });
 
     var app = builder.Build();
-    var adminInit = new AdminInit(app.Services.GetService<IStringLocalizer<General>>()!);
 
     if (!app.Environment.IsEnvironment("Testing"))
     {
+        var adminInit = new AdminInit(app.Services.GetService<IStringLocalizer<General>>()!);
         await adminInit.StartupBase();
     }
 
@@ -190,7 +202,6 @@ try
         c.RouteTemplate = "api/{documentname}/swagger.json";
     });
 
-    //app.UseSwaggerUI();
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/api/v1/swagger.json", "API V1");
@@ -209,11 +220,15 @@ try
 
     app.MapControllers();
 
+    Dapper.SqlMapper.AddTypeHandler(new DateOnlyTypeHandler());
+
+    Dapper.SqlMapper.AddTypeHandler(new TimeOnlyTypeHandler());
+
     app.Run();
 }
-catch (Exception ex) when (ex.Message == "Connection String")
+catch (ApiErrorException ex)
 {
-    Console.WriteLine("Cannot connect to the database. Is connection string correct?");
+    Console.WriteLine(ex.errors.FirstOrDefault()!.message);
     Console.WriteLine("Press any key to exit...");
     Console.ReadKey();
 }

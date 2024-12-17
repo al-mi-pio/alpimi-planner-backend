@@ -133,7 +133,7 @@
     <value>Password cannot be longer than {0} characters</value>
   </data>
   <data name="notFound" xml:space="preserve">
-    <value>{0} was not found</value>
+    <value>Entity was not found</value>
   </data>
   <data name="passwordMustContain" xml:space="preserve">
     <value>Password must contain at least one of the following: {0}</value>
@@ -143,5 +143,47 @@
   </data>
   <data name="unknownError" xml:space="preserve">
     <value>An error occured: {0}</value>
+  </data>
+  <data name="connectionError" xml:space="preserve">
+    <value>There was a problem connecting with the database. Check your connection string and internet access</value>
+  </data>
+  <data name="tooManyRequests" xml:space="preserve">
+    <value>Too many requests. Try again later</value>
+  </data>
+  <data name="notAuthenticated" xml:space="preserve">
+    <value>You are not authenticated</value>
+  </data>
+  <data name="notAuthorized" xml:space="preserve">
+    <value>You have no permission to access this resource</value>
+  </data>
+  <data name="scheduleDate" xml:space="preserve">
+    <value>The end date cannot happen before the start date</value>
+  </data>
+  <data name="dateOutOfRange" xml:space="preserve">
+    <value>Date must be in between {0} and {1}</value>
+  </data>
+  <data name="scheduleTime" xml:space="preserve">
+    <value>The end time cannot happen before the start time</value>
+  </data>
+  <data name="timeOverlap" xml:space="preserve">
+    <value>{0}s cannot overlap</value>
+  </data>
+  <data name="outOfRange" xml:space="preserve">
+    <value>There are {0} outside of provided range. Please change them first</value>
+  </data>
+  <data name="tooManyStudents" xml:space="preserve">
+    <value>Student count in a subgroup cannot be greater than the student count in a group</value>
+  </data>
+  <data name="duplicateData" xml:space="preserve">
+    <value>Cannot add multiple {0} with the value {1}</value>
+  </data>
+  <data name="resourceNotFound" xml:space="preserve">
+    <value>{0} with id {1} was not found</value>
+  </data>
+  <data name="wrongSet" xml:space="preserve">
+    <value>{0} must be in the same {1} as {2}</value>
+  </data>
+  <data name="badWeekDay" xml:space="preserve">
+    <value>Lessons cannot occur on {0}</value>
   </data>
 </root>

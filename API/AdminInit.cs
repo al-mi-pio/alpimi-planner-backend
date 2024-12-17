@@ -2,8 +2,9 @@
 using AlpimiAPI.Database;
 using AlpimiAPI.Entities.EUser;
 using AlpimiAPI.Entities.EUser.Queries;
+using AlpimiAPI.Locales;
+using AlpimiAPI.Responses;
 using AlpimiAPI.Utilities;
-using alpimi_planner_backend.API.Locales;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Localization;
@@ -29,13 +30,17 @@ namespace AlpimiAPI
             try
             {
                 admins = await _dbService.Get<string>(
-                    "SELECT [Role] FROM [Auth] WHERE [Role] = 'Admin';",
+                    @"
+                        SELECT 
+                        [Role]
+                        FROM [Auth]
+                        WHERE [Role] = 'Admin';",
                     ""
                 );
             }
             catch (Exception)
             {
-                throw new Exception("Connection String");
+                throw new ApiErrorException([new ErrorObject(_str["connectionError"])]);
             }
 
             if (admins == null)
@@ -48,7 +53,7 @@ namespace AlpimiAPI
                 {
                     do
                     {
-                        System.Console.WriteLine(_str["login"]);
+                        Console.WriteLine(_str["login"]);
                         login = Console.ReadLine();
 
                         GetUserByLoginHandler getUserByLoginHandler = new GetUserByLoginHandler(
@@ -79,16 +84,18 @@ namespace AlpimiAPI
                     } while (password != Console.ReadLine() || password == "");
 
                     var userId = await _dbService.Post<Guid>(
-                        @"
-                    INSERT INTO [User] ([Id],[Login],[CustomURL])
-                    OUTPUT INSERTED.Id                    
-                    VALUES ('"
-                            + Guid.NewGuid()
-                            + "','"
-                            + login
-                            + "',NULL);",
+                        $@"
+                            INSERT INTO [User] 
+                            ([Id], [Login], [CustomURL])
+                            OUTPUT 
+                            INSERTED.Id                    
+                            VALUES (
+                            '{Guid.NewGuid()}',
+                            '{login}',
+                            NULL);",
                         ""
                     );
+
                     byte[] salt = RandomNumberGenerator.GetBytes(16);
                     byte[] hash = Rfc2898DeriveBytes.Pbkdf2(
                         password!,
@@ -99,18 +106,17 @@ namespace AlpimiAPI
                     );
 
                     await _dbService.Post<Guid>(
-                        @"
-                    INSERT INTO [Auth] ([Id],[Password],[Salt],[Role],[UserId])
-                    OUTPUT INSERTED.UserId                    
-                    VALUES ('"
-                            + Guid.NewGuid()
-                            + "','"
-                            + Convert.ToBase64String(hash)
-                            + "','"
-                            + Convert.ToBase64String(salt)
-                            + "','Admin','"
-                            + userId
-                            + "');",
+                        $@"
+                            INSERT INTO [Auth] 
+                            ([Id], [Password], [Salt], [Role], [UserId])
+                            OUTPUT 
+                            INSERTED.UserId                    
+                            VALUES (
+                            '{Guid.NewGuid()}',
+                            '{Convert.ToBase64String(hash)}',
+                            '{Convert.ToBase64String(salt)}',
+                            'Admin',
+                            '{userId}');",
                         ""
                     );
                     Console.WriteLine(_str["success"]);

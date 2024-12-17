@@ -9,5 +9,14 @@ namespace AlpimiAPI.Entities.ESchedule.DTO
 
         [Required]
         public required int SchoolHour { get; set; }
+
+        [Required]
+        public required DateOnly SchoolYearStart { get; set; }
+
+        [Required]
+        public required DateOnly SchoolYearEnd { get; set; }
+
+        [Required]
+        public required string SchoolDays { get; set; }
     }
 }

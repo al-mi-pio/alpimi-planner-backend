@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Net.Http.Headers;
-using AlpimiAPI.Settings;
+using AlpimiAPI.Utilities;
+using AlpimiTest.TestSetup;
 using AlpimiTest.TestUtilities;
 using Xunit;
 
@@ -30,27 +31,25 @@ namespace AlpimiTest.Entities.EAuth
         }
 
         [Fact]
-        public async Task RefreshTokenThrowsUnothorizedErrorWhenNoJWTTokenIsGiven()
+        public async Task AuthControllerThrowsTooManyRequests()
         {
-            _client.DefaultRequestHeaders.Authorization = null;
-            var response = await _client.GetAsync("/api/Auth/refresh");
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-        }
+            for (int i = 0; i != Configuration.GetPermitLimit(); i++)
+            {
+                await _client.GetAsync("/api/Auth/refresh");
+            }
 
-        [Fact]
-        public async Task RefreshTokenReturnsOKStatusCodeWhenCorrectJWTTokenIsGiven()
-        {
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-                "Bearer",
-                TestAuthorization.GetToken("Admin", "Random", new Guid())
+            var response = await _client.GetAsync("/api/Auth/refresh");
+            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
+
+            response = await _client.PostAsJsonAsync(
+                "/api/Auth/login",
+                MockData.GetLoginDTODetails()
             );
-            var response = await _client.GetAsync("/api/Auth/refresh");
-
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
         }
 
         [Fact]
-        public async Task LoginReturnOKStatusCode()
+        public async Task LoginReturnsOKStatusCode()
         {
             var loginRequest = MockData.GetLoginDTODetails();
 
@@ -60,15 +59,26 @@ namespace AlpimiTest.Entities.EAuth
         }
 
         [Fact]
-        public async Task AuthControllerThrowsTooManyRequests()
+        public async Task RefreshTokenReturnsOKStatusCodeWhenCorrectJWTTokenIsGiven()
+        {
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "Random", new Guid())
+            );
+
+            var response = await _client.GetAsync("/api/Auth/refresh");
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task RefreshTokenThrowsUnothorizedErrorWhenNoJWTTokenIsGiven()
         {
             _client.DefaultRequestHeaders.Authorization = null;
-            for (int i = 0; i != RateLimiterSettings.permitLimit; i++)
-            {
-                await _client.GetAsync("/api/Auth/refresh");
-            }
+
             var response = await _client.GetAsync("/api/Auth/refresh");
-            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
+
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         }
     }
 }

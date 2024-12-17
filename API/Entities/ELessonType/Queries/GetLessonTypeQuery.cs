@@ -62,6 +62,7 @@ namespace AlpimiAPI.Entities.ELessonType.Queries
                 );
                 lessonType.Schedule = schedule.Value!;
             }
+
             return lessonType;
         }
     }

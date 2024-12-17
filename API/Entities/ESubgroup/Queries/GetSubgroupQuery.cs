@@ -63,6 +63,7 @@ namespace AlpimiAPI.Entities.ESubgroup.Queries
                 );
                 subgroup.Group = group.Value!;
             }
+
             return subgroup;
         }
     }

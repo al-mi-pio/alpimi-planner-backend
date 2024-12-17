@@ -108,11 +108,12 @@ namespace AlpimiAPI.Entities.EStudent.Commands
                     else if (subgroup.Value.GroupId != request.dto.GroupId)
                     {
                         errors.Add(
-                            new ErrorObject(_str["resourceNotFound", "Subgroup", subgroupId])
+                            new ErrorObject(_str["wrongSet", "Subgroup", "Group", "Student"])
                         );
                     }
                 }
             }
+
             if (errors.Count != 0)
             {
                 throw new ApiErrorException(errors);
@@ -121,7 +122,7 @@ namespace AlpimiAPI.Entities.EStudent.Commands
             var insertedId = await _dbService.Post<Guid>(
                 $@"
                     INSERT INTO [Student] 
-                    ([Id],[AlbumNumber],[GroupId])
+                    ([Id], [AlbumNumber], [GroupId])
                     OUTPUT 
                     INSERTED.Id                    
                     VALUES (
@@ -138,7 +139,7 @@ namespace AlpimiAPI.Entities.EStudent.Commands
                     await _dbService.Post<Guid>(
                         $@"
                             INSERT INTO [StudentSubgroup] 
-                            ([Id],[StudentId],[SubgroupId])
+                            ([Id], [StudentId], [SubgroupId])
                             OUTPUT 
                             INSERTED.Id                    
                             VALUES (

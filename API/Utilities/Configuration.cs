@@ -3,7 +3,7 @@ using AlpimiAPI.Settings;
 
 namespace AlpimiAPI.Utilities
 {
-    public class Configuration
+    public static class Configuration
     {
         private static readonly string? _connectionString = Environment.GetEnvironmentVariable(
             "CONNECTION_STRING"
@@ -25,6 +25,16 @@ namespace AlpimiAPI.Utilities
         private static readonly string? _testConnectionString = Environment.GetEnvironmentVariable(
             "TEST_CONNECTION_STRING"
         );
+        private static readonly string? _permitLimit = Environment.GetEnvironmentVariable(
+            "PERMIT_LIMIT"
+        );
+        private static readonly string? _timeWindow = Environment.GetEnvironmentVariable(
+            "TIME_WINDOW"
+        );
+        public const int perPage = PaginationSettings.perPage;
+        public const int page = PaginationSettings.page;
+        public const string sortBy = PaginationSettings.sortBy;
+        public const string sortOrder = PaginationSettings.sortOrder;
 
         public static string? GetConnectionString()
         {
@@ -88,6 +98,24 @@ namespace AlpimiAPI.Utilities
                 return new HashAlgorithmName(AuthSettings.HashAlgorithm);
             }
             return new HashAlgorithmName(_hashAlgorithm);
+        }
+
+        public static int GetPermitLimit()
+        {
+            if (_permitLimit == null)
+            {
+                return RateLimiterSettings.permitLimit;
+            }
+            return Convert.ToInt32(_permitLimit);
+        }
+
+        public static TimeSpan GetTimeWindow()
+        {
+            if (_timeWindow == null)
+            {
+                return RateLimiterSettings.timeWindow;
+            }
+            return TimeSpan.FromSeconds(Convert.ToInt32(_timeWindow));
         }
     }
 }

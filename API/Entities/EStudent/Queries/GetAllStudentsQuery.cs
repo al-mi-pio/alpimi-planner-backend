@@ -72,7 +72,7 @@ namespace AlpimiAPI.Entities.EStudent.Queries
                             INNER JOIN [Group] g ON g.[Id] = st.[GroupId]
                             LEFT JOIN [StudentSubgroup] ssg ON ssg.[StudentId] = st.[Id]
                             LEFT JOIN [Subgroup] sg ON sg.[Id] = ssg.[SubgroupId]
-                            WHERE st.[GroupId] = @Id OR g.[ScheduleId] = @Id OR sg.[Id] = @Id",
+                            WHERE st.[GroupId] = @Id OR g.[ScheduleId] = @Id OR sg.[Id] = @Id;",
                         request
                     );
                     students = await _dbService.GetAll<Student>(
@@ -90,21 +90,21 @@ namespace AlpimiAPI.Entities.EStudent.Queries
                             OFFSET
                             {request.Pagination.Offset} ROWS
                             FETCH NEXT
-                            {request.Pagination.PerPage} ROWS ONLY; ",
+                            {request.Pagination.PerPage} ROWS ONLY;",
                         request
                     );
                     break;
                 default:
                     count = await _dbService.Get<int>(
                         @"
-                            SELECT COUNT(*)
+                            SELECT
+                            COUNT(*)
                             FROM [Student] st
                             INNER JOIN [Group] g ON g.[Id] = st.[GroupId]
                             INNER JOIN [Schedule] s ON s.[Id] = g.[ScheduleId]
                             LEFT JOIN [StudentSubgroup] ssg ON ssg.[StudentId] = st.[Id]
                             LEFT JOIN [Subgroup] sg ON sg.[Id] = ssg.[SubgroupId]
-                            WHERE s.[UserId] = @FilteredId AND (st.[GroupId] = @Id OR g.[ScheduleId] = @Id OR sg.[Id] = @Id)
-                            ",
+                            WHERE s.[UserId] = @FilteredId AND (st.[GroupId] = @Id OR g.[ScheduleId] = @Id OR sg.[Id] = @Id);",
                         request
                     );
                     students = await _dbService.GetAll<Student>(
@@ -123,11 +123,12 @@ namespace AlpimiAPI.Entities.EStudent.Queries
                             OFFSET
                             {request.Pagination.Offset} ROWS
                             FETCH NEXT
-                            {request.Pagination.PerPage} ROWS ONLY; ",
+                            {request.Pagination.PerPage} ROWS ONLY;",
                         request
                     );
                     break;
             }
+
             if (students != null)
             {
                 foreach (var student in students)
@@ -145,6 +146,7 @@ namespace AlpimiAPI.Entities.EStudent.Queries
                     student.Group = group.Value!;
                 }
             }
+
             return (students, count);
         }
     }

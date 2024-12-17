@@ -57,6 +57,7 @@ namespace AlpimiAPI.Entities.ESchedule.Queries
                 );
                 schedule.User = user.Value!;
             }
+
             return schedule;
         }
     }

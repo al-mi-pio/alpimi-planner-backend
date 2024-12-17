@@ -1,8 +1,6 @@
 ﻿using AlpimiAPI.Database;
 using AlpimiAPI.Entities.ESchedule.DTO;
 using AlpimiAPI.Entities.ESchedule.Queries;
-using AlpimiAPI.Entities.EUser;
-using AlpimiAPI.Entities.EUser.Queries;
 using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
 using MediatR;
@@ -44,6 +42,7 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
                 getScheduleQuery,
                 cancellationToken
             );
+
             if (originalSchedule.Value == null)
             {
                 return null;
@@ -90,10 +89,7 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
                 request.dto
             );
 
-            GetUserHandler getUserHandler = new GetUserHandler(_dbService);
-            GetUserQuery getUserQuery = new GetUserQuery(schedule!.UserId, new Guid(), "Admin");
-            ActionResult<User?> user = await getUserHandler.Handle(getUserQuery, cancellationToken);
-            schedule.User = user.Value!;
+            schedule!.User = originalSchedule.Value.User;
 
             return schedule;
         }

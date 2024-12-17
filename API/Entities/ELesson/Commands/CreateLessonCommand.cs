@@ -33,11 +33,10 @@ namespace AlpimiAPI.Entities.ELesson.Commands
             CancellationToken cancellationToken
         )
         {
+            List<ErrorObject> errors = new List<ErrorObject>();
             if (request.dto.AmountOfHours < 1)
             {
-                throw new ApiErrorException(
-                    [new ErrorObject(_str["badParameter", "AmountOfHours"])]
-                );
+                errors.Add(new ErrorObject(_str["badParameter", "AmountOfHours"]));
             }
 
             GetLessonTypeHandler getLessonTypeHandler = new GetLessonTypeHandler(_dbService);
@@ -53,12 +52,10 @@ namespace AlpimiAPI.Entities.ELesson.Commands
 
             if (lessonType.Value == null)
             {
-                throw new ApiErrorException(
-                    [
-                        new ErrorObject(
-                            _str["resourceNotFound", "LessonType", request.dto.LessonTypeId]
-                        )
-                    ]
+                errors.Add(
+                    new ErrorObject(
+                        _str["resourceNotFound", "LessonType", request.dto.LessonTypeId]
+                    )
                 );
             }
 
@@ -75,8 +72,20 @@ namespace AlpimiAPI.Entities.ELesson.Commands
 
             if (subgroup.Value == null)
             {
+                errors.Add(
+                    new ErrorObject(_str["resourceNotFound", "Subgroup", request.dto.SubgroupId])
+                );
+            }
+
+            if (errors.Count != 0)
+            {
+                throw new ApiErrorException(errors);
+            }
+
+            if (subgroup.Value!.Group.ScheduleId != lessonType.Value!.ScheduleId)
+            {
                 throw new ApiErrorException(
-                    [new ErrorObject(_str["resourceNotFound", "Subgroup", request.dto.SubgroupId])]
+                    [new ErrorObject(_str["wrongSet", "Subgroup", "Schedule", "LessonType"])]
                 );
             }
 
@@ -96,7 +105,6 @@ namespace AlpimiAPI.Entities.ELesson.Commands
                 );
             }
 
-            List<ErrorObject> errors = new List<ErrorObject>();
             if (request.dto.ClassroomTypeIds != null)
             {
                 var duplicates = request
@@ -140,7 +148,14 @@ namespace AlpimiAPI.Entities.ELesson.Commands
                             )
                         );
                     }
+                    else if (classroomType.Value.ScheduleId != lessonType.Value.ScheduleId)
+                    {
+                        errors.Add(
+                            new ErrorObject(_str["wrongSet", "ClassroomType", "Schedule", "Lesson"])
+                        );
+                    }
                 }
+
                 if (errors.Count != 0)
                 {
                     throw new ApiErrorException(errors);
@@ -150,12 +165,13 @@ namespace AlpimiAPI.Entities.ELesson.Commands
             var insertedId = await _dbService.Post<Guid>(
                 $@"
                     INSERT INTO [Lesson] 
-                    ([Id],[Name],[AmountOfHours],[LessonTypeId],[SubgroupId])
+                    ([Id], [Name], [CurrentHours], [AmountOfHours], [LessonTypeId], [SubgroupId])
                     OUTPUT 
                     INSERTED.Id                    
                     VALUES (
                     '{request.Id}',   
                     @Name,
+                    0,
                     @AmountOfHours,
                     @LessonTypeId,
                     @SubgroupId);",
@@ -169,7 +185,7 @@ namespace AlpimiAPI.Entities.ELesson.Commands
                     await _dbService.Post<Guid>(
                         $@"
                             INSERT INTO [LessonClassroomType] 
-                            ([Id],[LessonId],[ClassroomTypeId])
+                            ([Id], [LessonId], [ClassroomTypeId])
                             OUTPUT 
                             INSERTED.Id                    
                             VALUES (

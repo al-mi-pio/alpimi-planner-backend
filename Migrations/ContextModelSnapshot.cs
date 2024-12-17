@@ -151,6 +151,9 @@ namespace alpimi_planner_backend.Migrations
                     b.Property<int>("AmountOfHours")
                         .HasColumnType("int");
 
+                    b.Property<int>("CurrentHours")
+                        .HasColumnType("int");
+
                     b.Property<Guid>("LessonTypeId")
                         .HasColumnType("uniqueidentifier");
 
@@ -165,17 +168,54 @@ namespace alpimi_planner_backend.Migrations
 
                     b.HasIndex("LessonTypeId");
 
+                    b.HasIndex("SubgroupId");
+
                     b.ToTable("Lesson");
                 });
 
-            modelBuilder.Entity("AlpimiAPI.Entities.ELessonPerioid.LessonPeriod", b =>
+            modelBuilder.Entity("AlpimiAPI.Entities.ELessonBlock.LessonBlock", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<TimeOnly>("Finish")
-                        .HasColumnType("time");
+                    b.Property<Guid?>("ClassroomId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ClusterId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateOnly>("LessonDate")
+                        .HasColumnType("date");
+
+                    b.Property<int>("LessonEnd")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("LessonId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("LessonStart")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("TeacherId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClassroomId");
+
+                    b.HasIndex("LessonId");
+
+                    b.HasIndex("TeacherId");
+
+                    b.ToTable("LessonBlock");
+                });
+
+            modelBuilder.Entity("AlpimiAPI.Entities.ELessonPeriod.LessonPeriod", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("ScheduleSettingsId")
                         .HasColumnType("uniqueidentifier");
@@ -241,6 +281,10 @@ namespace alpimi_planner_backend.Migrations
 
                     b.Property<Guid>("ScheduleId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("SchoolDays")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("SchoolHour")
                         .HasColumnType("int");
@@ -463,10 +507,43 @@ namespace alpimi_planner_backend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("AlpimiAPI.Entities.ESubgroup.Subgroup", "Subgroup")
+                        .WithMany()
+                        .HasForeignKey("SubgroupId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.Navigation("LessonType");
+
+                    b.Navigation("Subgroup");
                 });
 
-            modelBuilder.Entity("AlpimiAPI.Entities.ELessonPerioid.LessonPeriod", b =>
+            modelBuilder.Entity("AlpimiAPI.Entities.ELessonBlock.LessonBlock", b =>
+                {
+                    b.HasOne("AlpimiAPI.Entities.EClassroom.Classroom", "Classroom")
+                        .WithMany()
+                        .HasForeignKey("ClassroomId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("AlpimiAPI.Entities.ELesson.Lesson", "Lesson")
+                        .WithMany()
+                        .HasForeignKey("LessonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AlpimiAPI.Entities.ETeacher.Teacher", "Teacher")
+                        .WithMany()
+                        .HasForeignKey("TeacherId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.Navigation("Classroom");
+
+                    b.Navigation("Lesson");
+
+                    b.Navigation("Teacher");
+                });
+
+            modelBuilder.Entity("AlpimiAPI.Entities.ELessonPeriod.LessonPeriod", b =>
                 {
                     b.HasOne("AlpimiAPI.Entities.EScheduleSettings.ScheduleSettings", "ScheduleSettings")
                         .WithMany()

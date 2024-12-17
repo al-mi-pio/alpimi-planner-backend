@@ -75,13 +75,13 @@ namespace AlpimiAPI.Entities.EDayOff.Queries
                             COUNT(*)
                             FROM [DayOff] do
                             INNER JOIN [ScheduleSettings] ss ON ss.[Id] = do.[ScheduleSettingsId]
-                            WHERE ss.[ScheduleId] = @ScheduleId",
+                            WHERE ss.[ScheduleId] = @ScheduleId;",
                         request
                     );
                     daysOff = await _dbService.GetAll<DayOff>(
                         $@"
                             SELECT
-                            do.[Id], do.[Name], [From],[To],[ScheduleSettingsId] 
+                            do.[Id], do.[Name], [From], [To], [ScheduleSettingsId] 
                             FROM [DayOff] do
                             INNER JOIN [ScheduleSettings] ss ON ss.[Id] = do.[ScheduleSettingsId]
                             WHERE ss.[ScheduleId] = @ScheduleId 
@@ -91,25 +91,25 @@ namespace AlpimiAPI.Entities.EDayOff.Queries
                             OFFSET
                             {request.Pagination.Offset} ROWS
                             FETCH NEXT
-                            {request.Pagination.PerPage} ROWS ONLY; ",
+                            {request.Pagination.PerPage} ROWS ONLY;",
                         request
                     );
                     break;
                 default:
                     count = await _dbService.Get<int>(
                         @"
-                            SELECT COUNT(*)
+                            SELECT 
+                            COUNT(*)
                             FROM [DayOff] do
                             INNER JOIN [ScheduleSettings] ss ON ss.[Id] = do.[ScheduleSettingsId]
                             INNER JOIN [Schedule] s ON s.[Id]=ss.[ScheduleId]
-                            WHERE s.[UserId] = @FilteredId AND ss.[ScheduleId] = @ScheduleId
-                            ",
+                            WHERE s.[UserId] = @FilteredId AND ss.[ScheduleId] = @ScheduleId;",
                         request
                     );
                     daysOff = await _dbService.GetAll<DayOff>(
                         $@"
                             SELECT 
-                            do.[Id], do.[Name], [From],[To],[ScheduleSettingsId]
+                            do.[Id], do.[Name], [From], [To], [ScheduleSettingsId]
                             FROM [DayOff] do
                             INNER JOIN [ScheduleSettings] ss ON ss.[Id] = do.[ScheduleSettingsId]
                             INNER JOIN [Schedule] s ON s.[Id]=ss.[ScheduleId]
@@ -120,11 +120,12 @@ namespace AlpimiAPI.Entities.EDayOff.Queries
                             OFFSET
                             {request.Pagination.Offset} ROWS
                             FETCH NEXT
-                            {request.Pagination.PerPage} ROWS ONLY; ",
+                            {request.Pagination.PerPage} ROWS ONLY;",
                         request
                     );
                     break;
             }
+
             if (daysOff != null)
             {
                 foreach (var dayOff in daysOff)
@@ -145,6 +146,7 @@ namespace AlpimiAPI.Entities.EDayOff.Queries
                     dayOff.ScheduleSettings = scheduleSettings.Value!;
                 }
             }
+
             return (daysOff, count);
         }
     }

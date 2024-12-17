@@ -75,7 +75,7 @@ namespace AlpimiAPI.Entities.EClassroom.Queries
                             FROM [Classroom] c
                             LEFT JOIN [ClassroomClassroomType] cct ON cct.[ClassroomId] = c.[Id]
                             LEFT JOIN [ClassroomType] ct on ct.[Id] = cct.[ClassroomTypeId]
-                            WHERE c.[ScheduleId] = @Id OR ct.[Id] = @Id",
+                            WHERE c.[ScheduleId] = @Id OR ct.[Id] = @Id;",
                         request
                     );
                     classrooms = await _dbService.GetAll<Classroom>(
@@ -92,14 +92,15 @@ namespace AlpimiAPI.Entities.EClassroom.Queries
                             OFFSET
                             {request.Pagination.Offset} ROWS
                             FETCH NEXT
-                            {request.Pagination.PerPage} ROWS ONLY; ",
+                            {request.Pagination.PerPage} ROWS ONLY;",
                         request
                     );
                     break;
                 default:
                     count = await _dbService.Get<int>(
                         @"
-                            SELECT COUNT(*)
+                            SELECT
+                            COUNT(*)
                             FROM [Classroom] c
                             INNER JOIN [Schedule] s ON s.[Id] = c.[ScheduleId]
                             LEFT JOIN [ClassroomClassroomType] cct ON cct.[ClassroomId] = c.[Id]
@@ -122,11 +123,12 @@ namespace AlpimiAPI.Entities.EClassroom.Queries
                             OFFSET
                             {request.Pagination.Offset} ROWS
                             FETCH NEXT
-                            {request.Pagination.PerPage} ROWS ONLY; ",
+                            {request.Pagination.PerPage} ROWS ONLY;",
                         request
                     );
                     break;
             }
+
             if (classrooms != null)
             {
                 foreach (var classroom in classrooms)
@@ -144,6 +146,7 @@ namespace AlpimiAPI.Entities.EClassroom.Queries
                     classroom.Schedule = schedule.Value!;
                 }
             }
+
             return (classrooms, count);
         }
     }

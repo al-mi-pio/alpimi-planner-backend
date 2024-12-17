@@ -16,6 +16,9 @@ namespace AlpimiAPI.Entities.ETeacher.Commands
 
         public async Task Handle(DeleteTeacherCommand request, CancellationToken cancellationToken)
         {
+            await _dbService.Raw(
+                "ALTER TABLE LessonBlock NOCHECK CONSTRAINT FK_LessonBlock_Teacher_TeacherId"
+            );
             switch (request.Role)
             {
                 case "Admin":
@@ -37,6 +40,9 @@ namespace AlpimiAPI.Entities.ETeacher.Commands
                     );
                     break;
             }
+            await _dbService.Raw(
+                "ALTER TABLE LessonBlock CHECK CONSTRAINT FK_LessonBlock_Teacher_TeacherId"
+            );
         }
     }
 }

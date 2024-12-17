@@ -73,7 +73,7 @@ namespace AlpimiAPI.Entities.ELessonType.Queries
                             SELECT 
                             COUNT(*)
                             FROM [LessonType] 
-                            WHERE [ScheduleId] = @ScheduleId",
+                            WHERE [ScheduleId] = @ScheduleId;",
                         request
                     );
                     lessonTypes = await _dbService.GetAll<LessonType>(
@@ -88,18 +88,18 @@ namespace AlpimiAPI.Entities.ELessonType.Queries
                             OFFSET
                             {request.Pagination.Offset} ROWS
                             FETCH NEXT
-                            {request.Pagination.PerPage} ROWS ONLY; ",
+                            {request.Pagination.PerPage} ROWS ONLY;",
                         request
                     );
                     break;
                 default:
                     count = await _dbService.Get<int>(
                         @"
-                            SELECT COUNT(*)
+                            SELECT
+                            COUNT(*)
                             FROM [LessonType] lt
                             INNER JOIN [Schedule] s ON s.[Id] = lt.[ScheduleId]
-                            WHERE s.[UserId] = @FilteredId AND lt.[ScheduleId] = @ScheduleId
-                            ",
+                            WHERE s.[UserId] = @FilteredId AND lt.[ScheduleId] = @ScheduleId;",
                         request
                     );
                     lessonTypes = await _dbService.GetAll<LessonType>(
@@ -115,11 +115,12 @@ namespace AlpimiAPI.Entities.ELessonType.Queries
                             OFFSET
                             {request.Pagination.Offset} ROWS
                             FETCH NEXT
-                            {request.Pagination.PerPage} ROWS ONLY; ",
+                            {request.Pagination.PerPage} ROWS ONLY;",
                         request
                     );
                     break;
             }
+
             if (lessonTypes != null)
             {
                 foreach (var lessonType in lessonTypes)
@@ -137,6 +138,7 @@ namespace AlpimiAPI.Entities.ELessonType.Queries
                     lessonType.Schedule = schedule.Value!;
                 }
             }
+
             return (lessonTypes, count);
         }
     }

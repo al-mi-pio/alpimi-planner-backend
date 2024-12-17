@@ -36,7 +36,6 @@ namespace AlpimiTest.TestUtilities
                 expires: expires,
                 signingCredentials: cred
             );
-
             var tokenHandler = new JwtSecurityTokenHandler();
 
             return tokenHandler.WriteToken(token);

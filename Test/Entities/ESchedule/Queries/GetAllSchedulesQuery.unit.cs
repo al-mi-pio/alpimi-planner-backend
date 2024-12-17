@@ -30,7 +30,6 @@ namespace AlpimiTest.Entities.ESchedule.Queries
                 new PaginationParams(-20, 0, "Id", "ASC")
             );
             var getSchedulesHandler = new GetSchedulesHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await getSchedulesHandler.Handle(getSchedulesQuery, new CancellationToken())
@@ -53,7 +52,6 @@ namespace AlpimiTest.Entities.ESchedule.Queries
                 new PaginationParams(20, -1, "Id", "ASC")
             );
             var getSchedulesHandler = new GetSchedulesHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await getSchedulesHandler.Handle(getSchedulesQuery, new CancellationToken())
@@ -76,7 +74,6 @@ namespace AlpimiTest.Entities.ESchedule.Queries
                 new PaginationParams(20, 0, "wrong", "ASC")
             );
             var getSchedulesHandler = new GetSchedulesHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await getSchedulesHandler.Handle(getSchedulesQuery, new CancellationToken())
@@ -99,7 +96,6 @@ namespace AlpimiTest.Entities.ESchedule.Queries
                 new PaginationParams(20, 0, "Id", "wrong")
             );
             var getSchedulesHandler = new GetSchedulesHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await getSchedulesHandler.Handle(getSchedulesQuery, new CancellationToken())
@@ -122,7 +118,6 @@ namespace AlpimiTest.Entities.ESchedule.Queries
                 new PaginationParams(20, 0, "wrong", "wrong")
             );
             var getSchedulesHandler = new GetSchedulesHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await getSchedulesHandler.Handle(getSchedulesQuery, new CancellationToken())

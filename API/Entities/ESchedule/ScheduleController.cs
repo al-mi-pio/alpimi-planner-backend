@@ -3,7 +3,6 @@ using AlpimiAPI.Entities.ESchedule.DTO;
 using AlpimiAPI.Entities.ESchedule.Queries;
 using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
-using AlpimiAPI.Settings;
 using AlpimiAPI.Utilities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -57,93 +56,13 @@ namespace AlpimiAPI.Entities.ESchedule
             try
             {
                 var result = await _mediator.Send(command);
+
                 var response = new ApiGetResponse<Guid>(result);
                 return Ok(response);
             }
             catch (ApiErrorException ex)
             {
                 return BadRequest(new ApiErrorResponse(400, ex.errors));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(
-                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError", ex])])
-                );
-            }
-        }
-
-        /// <summary>
-        /// Gets a Schedule
-        /// </summary>
-        /// <remarks>
-        /// - JWT token is required
-        /// </remarks>
-        [HttpGet("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiErrorResponse), 400)]
-        [ProducesResponseType(typeof(ApiErrorResponse), 401)]
-        [ProducesResponseType(typeof(ApiErrorResponse), 404)]
-        public async Task<ActionResult<ApiGetResponse<ScheduleDTO>>> GetOne(
-            [FromRoute] Guid id,
-            [FromHeader] string Authorization
-        )
-        {
-            Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
-            string privileges = Privileges.GetUserRoleFromToken(Authorization);
-
-            var query = new GetScheduleQuery(id, filteredId, privileges);
-            try
-            {
-                Schedule? result = await _mediator.Send(query);
-                if (result == null)
-                {
-                    return NotFound(
-                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "Schedule"])])
-                    );
-                }
-                var response = new ApiGetResponse<ScheduleDTO>(DataTrimmer.Trim(result));
-
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(
-                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError", ex])])
-                );
-            }
-        }
-
-        /// <summary>
-        /// Gets a Schedule by Name
-        /// </summary>
-        /// <remarks>
-        /// - JWT token is required
-        /// </remarks>
-        [HttpGet("byName/{name}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiErrorResponse), 400)]
-        [ProducesResponseType(typeof(ApiErrorResponse), 401)]
-        [ProducesResponseType(typeof(ApiErrorResponse), 404)]
-        public async Task<ActionResult<ApiGetResponse<ScheduleDTO>>> GetOneByName(
-            [FromRoute] string name,
-            [FromHeader] string Authorization
-        )
-        {
-            Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
-            string privileges = Privileges.GetUserRoleFromToken(Authorization);
-
-            var query = new GetScheduleByNameQuery(name, filteredId, privileges);
-            try
-            {
-                Schedule? result = await _mediator.Send(query);
-                if (result == null)
-                {
-                    return NotFound(
-                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "Schedule"])])
-                    );
-                }
-                var response = new ApiGetResponse<ScheduleDTO>(DataTrimmer.Trim(result));
-                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -215,6 +134,7 @@ namespace AlpimiAPI.Entities.ESchedule
                         new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "Schedule"])])
                     );
                 }
+
                 var response = new ApiGetResponse<ScheduleDTO>(DataTrimmer.Trim(result));
                 return Ok(response);
             }
@@ -242,10 +162,10 @@ namespace AlpimiAPI.Entities.ESchedule
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
         public async Task<ActionResult<ApiGetAllResponse<IEnumerable<ScheduleDTO>>>> GetAll(
             [FromHeader] string Authorization,
-            [FromQuery] int perPage = PaginationSettings.perPage,
-            [FromQuery] int page = PaginationSettings.page,
-            [FromQuery] string sortBy = PaginationSettings.sortBy,
-            [FromQuery] string sortOrder = PaginationSettings.sortOrder
+            [FromQuery] int perPage = Configuration.perPage,
+            [FromQuery] int page = Configuration.page,
+            [FromQuery] string sortBy = Configuration.sortBy,
+            [FromQuery] string sortOrder = Configuration.sortOrder
         )
         {
             Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
@@ -259,6 +179,7 @@ namespace AlpimiAPI.Entities.ESchedule
             try
             {
                 (IEnumerable<Schedule>?, int) result = await _mediator.Send(query);
+
                 var response = new ApiGetAllResponse<IEnumerable<ScheduleDTO>>(
                     result.Item1!.Select(DataTrimmer.Trim),
                     new Pagination(result.Item2, perPage, page, sortBy, sortOrder)
@@ -268,6 +189,88 @@ namespace AlpimiAPI.Entities.ESchedule
             catch (ApiErrorException ex)
             {
                 return BadRequest(new ApiErrorResponse(400, ex.errors));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(
+                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError", ex])])
+                );
+            }
+        }
+
+        /// <summary>
+        /// Gets a Schedule
+        /// </summary>
+        /// <remarks>
+        /// - JWT token is required
+        /// </remarks>
+        [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 400)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 401)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 404)]
+        public async Task<ActionResult<ApiGetResponse<ScheduleDTO>>> GetOne(
+            [FromRoute] Guid id,
+            [FromHeader] string Authorization
+        )
+        {
+            Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
+            string privileges = Privileges.GetUserRoleFromToken(Authorization);
+
+            var query = new GetScheduleQuery(id, filteredId, privileges);
+            try
+            {
+                Schedule? result = await _mediator.Send(query);
+                if (result == null)
+                {
+                    return NotFound(
+                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "Schedule"])])
+                    );
+                }
+
+                var response = new ApiGetResponse<ScheduleDTO>(DataTrimmer.Trim(result));
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(
+                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError", ex])])
+                );
+            }
+        }
+
+        /// <summary>
+        /// Gets a Schedule by Name
+        /// </summary>
+        /// <remarks>
+        /// - JWT token is required
+        /// </remarks>
+        [HttpGet("byName/{name}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 400)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 401)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 404)]
+        public async Task<ActionResult<ApiGetResponse<ScheduleDTO>>> GetOneByName(
+            [FromRoute] string name,
+            [FromHeader] string Authorization
+        )
+        {
+            Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
+            string privileges = Privileges.GetUserRoleFromToken(Authorization);
+
+            var query = new GetScheduleByNameQuery(name, filteredId, privileges);
+            try
+            {
+                Schedule? result = await _mediator.Send(query);
+                if (result == null)
+                {
+                    return NotFound(
+                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "Schedule"])])
+                    );
+                }
+
+                var response = new ApiGetResponse<ScheduleDTO>(DataTrimmer.Trim(result));
+                return Ok(response);
             }
             catch (Exception ex)
             {

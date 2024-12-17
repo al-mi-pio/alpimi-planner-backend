@@ -1,9 +1,8 @@
 ﻿using System.Net;
 using System.Net.Http.Headers;
-using AlpimiAPI.Entities.ELessonType;
 using AlpimiAPI.Entities.ELessonType.DTO;
 using AlpimiAPI.Responses;
-using AlpimiAPI.Settings;
+using AlpimiAPI.Utilities;
 using AlpimiTest.TestSetup;
 using AlpimiTest.TestUtilities;
 using Xunit;
@@ -41,231 +40,6 @@ namespace AlpimiTest.Entities.ELessonType
         }
 
         [Fact]
-        public async Task LessonTypeIsDeleted()
-        {
-            var lessonTypeRequest = MockData.GetCreateLessonTypeDTODetails(scheduleId);
-            var lessonTypeId = await DbHelper.SetupLessonType(_client, lessonTypeRequest);
-
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-                "Bearer",
-                TestAuthorization.GetToken("Admin", "User", new Guid())
-            );
-
-            var response = await _client.DeleteAsync($"/api/LessonType/{lessonTypeId}");
-            Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
-
-            var query = $"?scheduleId={scheduleId}";
-            response = await _client.GetAsync($"/api/LessonType");
-            var stringResponse = await response.Content.ReadAsStringAsync();
-            Assert.DoesNotContain(lessonTypeRequest.Name, stringResponse);
-        }
-
-        [Fact]
-        public async Task LessonTypeIsCreated()
-        {
-            var lessonTypeRequest = MockData.GetCreateLessonTypeDTODetails(scheduleId);
-
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-                "Bearer",
-                TestAuthorization.GetToken("Admin", "User", userId)
-            );
-
-            var response = await _client.PostAsJsonAsync("/api/LessonType", lessonTypeRequest);
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-
-            var query = $"?scheduleId={scheduleId}";
-            response = await _client.GetAsync($"/api/LessonType{query}");
-            var stringResponse = await response.Content.ReadAsStringAsync();
-            Assert.Contains(lessonTypeRequest.Name, stringResponse);
-        }
-
-        [Fact]
-        public async Task UpdateLessonTypeReturnsUpdatedLessonType()
-        {
-            var lessonTypeUpdateRequest = MockData.GetUpdateLessonTypeDTODetails();
-            var lessonTypeId = await DbHelper.SetupLessonType(
-                _client,
-                MockData.GetCreateLessonTypeDTODetails(scheduleId)
-            );
-
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-                "Bearer",
-                TestAuthorization.GetToken("Admin", "Bob", userId)
-            );
-
-            var response = await _client.PatchAsJsonAsync(
-                $"/api/LessonType/{lessonTypeId}",
-                lessonTypeUpdateRequest
-            );
-            var jsonResponse = await response.Content.ReadFromJsonAsync<
-                ApiGetResponse<LessonTypeDTO>
-            >();
-
-            Assert.Equal(lessonTypeUpdateRequest.Name, jsonResponse!.Content.Name);
-        }
-
-        [Fact]
-        public async Task UpdateLessonTypeThrowsNotFoundErrorWhenWrongIdIsGiven()
-        {
-            var lessonTypeUpdateRequest = MockData.GetUpdateLessonTypeDTODetails();
-
-            var lessonTypeId = await DbHelper.SetupLessonType(
-                _client,
-                MockData.GetCreateLessonTypeDTODetails(scheduleId)
-            );
-
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-                "Bearer",
-                TestAuthorization.GetToken("Admin", "User", userId)
-            );
-            var response = await _client.PatchAsJsonAsync(
-                $"/api/LessonType/{new Guid()}",
-                lessonTypeUpdateRequest
-            );
-
-            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
-        }
-
-        [Fact]
-        public async Task UpdateLessonTypeThrowsNotFoundErrorWhenWrongUserAttemptsUpdate()
-        {
-            var lessonTypeUpdateRequest = MockData.GetUpdateLessonTypeDTODetails();
-
-            var lessonTypeId = await DbHelper.SetupLessonType(
-                _client,
-                MockData.GetCreateLessonTypeDTODetails(scheduleId)
-            );
-
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-                "Bearer",
-                TestAuthorization.GetToken("User", "User", new Guid())
-            );
-            var response = await _client.PatchAsJsonAsync(
-                $"/api/LessonType/{lessonTypeId}",
-                lessonTypeUpdateRequest
-            );
-
-            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
-        }
-
-        [Fact]
-        public async Task GetAllLessonTypeReturnsDaysOff()
-        {
-            var lessonTypeRequest1 = MockData.GetCreateLessonTypeDTODetails(scheduleId);
-            var lessonTypeRequest2 = MockData.GetCreateSecondLessonTypeDTODetails(scheduleId);
-
-            await DbHelper.SetupLessonType(_client, lessonTypeRequest1);
-            await DbHelper.SetupLessonType(_client, lessonTypeRequest2);
-
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-                "Bearer",
-                TestAuthorization.GetToken("Admin", "User", userId)
-            );
-            var query = $"?scheduleId={scheduleId}";
-            var response = await _client.GetAsync($"/api/LessonType{query}");
-            var stringResponse = await response.Content.ReadAsStringAsync();
-
-            Assert.Contains(lessonTypeRequest1.Name, stringResponse);
-            Assert.Contains(lessonTypeRequest2.Name, stringResponse);
-        }
-
-        [Fact]
-        public async Task GetAllLessonTypeReturnsEmptyContentWhenWrongUserAttemptsGet()
-        {
-            var lessonTypeRequest1 = MockData.GetCreateLessonTypeDTODetails(scheduleId);
-            var lessonTypeRequest2 = MockData.GetCreateSecondLessonTypeDTODetails(scheduleId);
-
-            await DbHelper.SetupLessonType(_client, lessonTypeRequest1);
-            await DbHelper.SetupLessonType(_client, lessonTypeRequest2);
-
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-                "Bearer",
-                TestAuthorization.GetToken("User", "User", new Guid())
-            );
-            var query = $"?scheduleId={scheduleId}";
-            var response = await _client.GetAsync($"/api/LessonType{query}");
-            var stringResponse = await response.Content.ReadAsStringAsync();
-
-            Assert.DoesNotContain(lessonTypeRequest1.Name, stringResponse);
-            Assert.DoesNotContain(lessonTypeRequest2.Name, stringResponse);
-        }
-
-        [Fact]
-        public async Task GetAllLessonTypeReturnsEmptyContentWhenWrongIdIsGiven()
-        {
-            var lessonTypeRequest1 = MockData.GetCreateLessonTypeDTODetails(scheduleId);
-            var lessonTypeRequest2 = MockData.GetCreateSecondLessonTypeDTODetails(scheduleId);
-
-            await DbHelper.SetupLessonType(_client, lessonTypeRequest1);
-            await DbHelper.SetupLessonType(_client, lessonTypeRequest2);
-
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-                "Bearer",
-                TestAuthorization.GetToken("Admin", "User", userId)
-            );
-            var query = $"?scheduleId={new Guid()}";
-            var response = await _client.GetAsync($"/api/LessonType{query}");
-            var stringResponse = await response.Content.ReadAsStringAsync();
-
-            Assert.DoesNotContain(lessonTypeRequest1.Name, stringResponse);
-            Assert.DoesNotContain(lessonTypeRequest2.Name, stringResponse);
-        }
-
-        [Fact]
-        public async Task GetLessonTypeReturnsLessonType()
-        {
-            var lessonTypeRequest = MockData.GetCreateLessonTypeDTODetails(scheduleId);
-
-            var lessonTypeId = await DbHelper.SetupLessonType(_client, lessonTypeRequest);
-
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-                "Bearer",
-                TestAuthorization.GetToken("Admin", "User", userId)
-            );
-
-            var response = await _client.GetAsync($"/api/LessonType/{lessonTypeId}");
-            var jsonResponse = await response.Content.ReadFromJsonAsync<
-                ApiGetResponse<LessonTypeDTO>
-            >();
-
-            Assert.Equal(lessonTypeRequest.Name, jsonResponse!.Content.Name);
-        }
-
-        [Fact]
-        public async Task GetScheduleThrowsNotFoundWhenWrongIdIsGiven()
-        {
-            var lessonTypeRequest = MockData.GetCreateLessonTypeDTODetails(scheduleId);
-
-            await DbHelper.SetupLessonType(_client, lessonTypeRequest);
-
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-                "Bearer",
-                TestAuthorization.GetToken("Admin", "User", userId)
-            );
-
-            var response = await _client.GetAsync($"/api/LessonType/{new Guid()}");
-
-            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
-        }
-
-        [Fact]
-        public async Task GetScheduleThrowsNotFoundErrorWhenWrongUserTokenIsGiven()
-        {
-            var lessonTypeRequest = MockData.GetCreateLessonTypeDTODetails(scheduleId);
-
-            var lessonTypeId = await DbHelper.SetupLessonType(_client, lessonTypeRequest);
-
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-                "Bearer",
-                TestAuthorization.GetToken("User", "User", new Guid())
-            );
-
-            var response = await _client.GetAsync($"/api/LessonType/{lessonTypeId}");
-
-            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
-        }
-
-        [Fact]
         public async Task LessonTypeControllerThrowsUnauthorized()
         {
             _client.DefaultRequestHeaders.Authorization = null;
@@ -296,11 +70,10 @@ namespace AlpimiTest.Entities.ELessonType
         [Fact]
         public async Task LessonTypeControllerThrowsTooManyRequests()
         {
-            for (int i = 0; i != RateLimiterSettings.permitLimit; i++)
+            for (int i = 0; i != Configuration.GetPermitLimit(); i++)
             {
                 await _client.GetAsync("/api/LessonType");
             }
-
             _client.DefaultRequestHeaders.Authorization = null;
 
             var response = await _client.DeleteAsync($"/api/LessonType/{new Guid()}");
@@ -324,6 +97,217 @@ namespace AlpimiTest.Entities.ELessonType
 
             response = await _client.GetAsync($"/api/LessonType/{new Guid()}");
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task LessonTypeIsCreated()
+        {
+            var lessonTypeRequest = MockData.GetCreateLessonTypeDTODetails(scheduleId);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", userId)
+            );
+
+            var response = await _client.PostAsJsonAsync("/api/LessonType", lessonTypeRequest);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            var query = $"?scheduleId={scheduleId}";
+            response = await _client.GetAsync($"/api/LessonType{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            Assert.Contains(lessonTypeRequest.Name, stringResponse);
+        }
+
+        [Fact]
+        public async Task LessonTypeIsDeleted()
+        {
+            var lessonTypeRequest = MockData.GetCreateLessonTypeDTODetails(scheduleId);
+            var lessonTypeId = await DbHelper.SetupLessonType(_client, lessonTypeRequest);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", new Guid())
+            );
+
+            var response = await _client.DeleteAsync($"/api/LessonType/{lessonTypeId}");
+            Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+
+            var query = $"?scheduleId={scheduleId}";
+            response = await _client.GetAsync($"/api/LessonType");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            Assert.DoesNotContain(lessonTypeRequest.Name, stringResponse);
+        }
+
+        [Fact]
+        public async Task UpdateLessonTypeReturnsUpdatedLessonType()
+        {
+            var lessonTypeUpdateRequest = MockData.GetUpdateLessonTypeDTODetails();
+            var lessonTypeId = await DbHelper.SetupLessonType(
+                _client,
+                MockData.GetCreateLessonTypeDTODetails(scheduleId)
+            );
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "Bob", userId)
+            );
+
+            var response = await _client.PatchAsJsonAsync(
+                $"/api/LessonType/{lessonTypeId}",
+                lessonTypeUpdateRequest
+            );
+            var jsonResponse = await response.Content.ReadFromJsonAsync<
+                ApiGetResponse<LessonTypeDTO>
+            >();
+
+            Assert.Equal(lessonTypeUpdateRequest.Name, jsonResponse!.Content.Name);
+        }
+
+        [Fact]
+        public async Task UpdateLessonTypeThrowsNotFoundErrorWhenWrongUserAttemptsUpdate()
+        {
+            var lessonTypeUpdateRequest = MockData.GetUpdateLessonTypeDTODetails();
+            var lessonTypeId = await DbHelper.SetupLessonType(
+                _client,
+                MockData.GetCreateLessonTypeDTODetails(scheduleId)
+            );
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("User", "User", new Guid())
+            );
+
+            var response = await _client.PatchAsJsonAsync(
+                $"/api/LessonType/{lessonTypeId}",
+                lessonTypeUpdateRequest
+            );
+
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task UpdateLessonTypeThrowsNotFoundErrorWhenWrongIdIsGiven()
+        {
+            var lessonTypeUpdateRequest = MockData.GetUpdateLessonTypeDTODetails();
+            var lessonTypeId = await DbHelper.SetupLessonType(
+                _client,
+                MockData.GetCreateLessonTypeDTODetails(scheduleId)
+            );
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", userId)
+            );
+
+            var response = await _client.PatchAsJsonAsync(
+                $"/api/LessonType/{new Guid()}",
+                lessonTypeUpdateRequest
+            );
+
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task GetAllLessonTypeReturnsLessonTypes()
+        {
+            var lessonTypeRequest1 = MockData.GetCreateLessonTypeDTODetails(scheduleId);
+            var lessonTypeRequest2 = MockData.GetCreateSecondLessonTypeDTODetails(scheduleId);
+            await DbHelper.SetupLessonType(_client, lessonTypeRequest1);
+            await DbHelper.SetupLessonType(_client, lessonTypeRequest2);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", userId)
+            );
+
+            var query = $"?scheduleId={scheduleId}";
+            var response = await _client.GetAsync($"/api/LessonType{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+
+            Assert.Contains(lessonTypeRequest1.Name, stringResponse);
+            Assert.Contains(lessonTypeRequest2.Name, stringResponse);
+        }
+
+        [Fact]
+        public async Task GetAllLessonTypeReturnsEmptyContentWhenWrongUserAttemptsGet()
+        {
+            var lessonTypeRequest1 = MockData.GetCreateLessonTypeDTODetails(scheduleId);
+            var lessonTypeRequest2 = MockData.GetCreateSecondLessonTypeDTODetails(scheduleId);
+            await DbHelper.SetupLessonType(_client, lessonTypeRequest1);
+            await DbHelper.SetupLessonType(_client, lessonTypeRequest2);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("User", "User", new Guid())
+            );
+
+            var query = $"?scheduleId={scheduleId}";
+            var response = await _client.GetAsync($"/api/LessonType{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+
+            Assert.DoesNotContain(lessonTypeRequest1.Name, stringResponse);
+            Assert.DoesNotContain(lessonTypeRequest2.Name, stringResponse);
+        }
+
+        [Fact]
+        public async Task GetAllLessonTypeReturnsEmptyContentWhenWrongIdIsGiven()
+        {
+            var lessonTypeRequest1 = MockData.GetCreateLessonTypeDTODetails(scheduleId);
+            var lessonTypeRequest2 = MockData.GetCreateSecondLessonTypeDTODetails(scheduleId);
+            await DbHelper.SetupLessonType(_client, lessonTypeRequest1);
+            await DbHelper.SetupLessonType(_client, lessonTypeRequest2);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", userId)
+            );
+
+            var query = $"?scheduleId={new Guid()}";
+            var response = await _client.GetAsync($"/api/LessonType{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+
+            Assert.DoesNotContain(lessonTypeRequest1.Name, stringResponse);
+            Assert.DoesNotContain(lessonTypeRequest2.Name, stringResponse);
+        }
+
+        [Fact]
+        public async Task GetLessonTypeReturnsLessonType()
+        {
+            var lessonTypeRequest = MockData.GetCreateLessonTypeDTODetails(scheduleId);
+            var lessonTypeId = await DbHelper.SetupLessonType(_client, lessonTypeRequest);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", userId)
+            );
+
+            var response = await _client.GetAsync($"/api/LessonType/{lessonTypeId}");
+            var jsonResponse = await response.Content.ReadFromJsonAsync<
+                ApiGetResponse<LessonTypeDTO>
+            >();
+
+            Assert.Equal(lessonTypeRequest.Name, jsonResponse!.Content.Name);
+        }
+
+        [Fact]
+        public async Task GetScheduleThrowsNotFoundErrorWhenWrongUserTokenIsGiven()
+        {
+            var lessonTypeRequest = MockData.GetCreateLessonTypeDTODetails(scheduleId);
+            var lessonTypeId = await DbHelper.SetupLessonType(_client, lessonTypeRequest);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("User", "User", new Guid())
+            );
+
+            var response = await _client.GetAsync($"/api/LessonType/{lessonTypeId}");
+
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task GetScheduleThrowsNotFoundWhenWrongIdIsGiven()
+        {
+            var lessonTypeRequest = MockData.GetCreateLessonTypeDTODetails(scheduleId);
+            await DbHelper.SetupLessonType(_client, lessonTypeRequest);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", userId)
+            );
+
+            var response = await _client.GetAsync($"/api/LessonType/{new Guid()}");
+
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
     }
 }

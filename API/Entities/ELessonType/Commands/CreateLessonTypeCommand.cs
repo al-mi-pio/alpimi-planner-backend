@@ -33,7 +33,7 @@ namespace AlpimiAPI.Entities.ELessonType.Commands
             CancellationToken cancellationToken
         )
         {
-            if (request.dto.Color < 1) //TODO: w przyszłości jak odkryjemy jak kolorystykę zrobimy to trzeba zmienić
+            if (request.dto.Color < 0 || request.dto.Color > 359)
             {
                 throw new ApiErrorException([new ErrorObject(_str["badParameter", "Color"])]);
             }
@@ -44,11 +44,11 @@ namespace AlpimiAPI.Entities.ELessonType.Commands
                 request.FilteredId,
                 request.Role
             );
-
             ActionResult<Schedule?> schedule = await getScheduleHandler.Handle(
                 getScheduleQuery,
                 cancellationToken
             );
+
             if (schedule.Value == null)
             {
                 throw new ApiErrorException(
@@ -75,7 +75,7 @@ namespace AlpimiAPI.Entities.ELessonType.Commands
             var insertedId = await _dbService.Post<Guid>(
                 $@"
                     INSERT INTO [LessonType] 
-                    ([Id],[Name],[Color],[ScheduleId])
+                    ([Id], [Name], [Color], [ScheduleId])
                     OUTPUT 
                     INSERTED.Id                    
                     VALUES (

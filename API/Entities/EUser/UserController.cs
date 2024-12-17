@@ -49,93 +49,13 @@ namespace AlpimiAPI.Entities.EUser
             try
             {
                 var result = await _mediator.Send(command);
+
                 var response = new ApiGetResponse<Guid>(result);
                 return Ok(response);
             }
             catch (ApiErrorException ex)
             {
                 return BadRequest(new ApiErrorResponse(400, ex.errors));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(
-                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError", ex])])
-                );
-            }
-        }
-
-        /// <summary>
-        /// Gets a User
-        /// </summary>
-        /// <remarks>
-        /// - JWT token is required
-        /// </remarks>
-        [HttpGet("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiErrorResponse), 400)]
-        [ProducesResponseType(typeof(ApiErrorResponse), 401)]
-        [ProducesResponseType(typeof(ApiErrorResponse), 404)]
-        public async Task<ActionResult<ApiGetResponse<User>>> GetOne(
-            [FromRoute] Guid id,
-            [FromHeader] string Authorization
-        )
-        {
-            Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
-            string privileges = Privileges.GetUserRoleFromToken(Authorization);
-
-            var query = new GetUserQuery(id, filteredId, privileges);
-            try
-            {
-                User? result = await _mediator.Send(query);
-
-                if (result == null)
-                {
-                    return NotFound(
-                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "User"])])
-                    );
-                }
-                var response = new ApiGetResponse<User>(result);
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(
-                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError", ex])])
-                );
-            }
-        }
-
-        /// <summary>
-        /// Gets a User by Login
-        /// </summary>
-        /// <remarks>
-        /// - JWT token is required
-        /// </remarks>
-        [HttpGet("byLogin/{login}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiErrorResponse), 400)]
-        [ProducesResponseType(typeof(ApiErrorResponse), 401)]
-        [ProducesResponseType(typeof(ApiErrorResponse), 404)]
-        public async Task<ActionResult<ApiGetResponse<User>>> GetOneByLogin(
-            [FromRoute] string login,
-            [FromHeader] string Authorization
-        )
-        {
-            Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
-            string privileges = Privileges.GetUserRoleFromToken(Authorization);
-
-            var query = new GetUserByLoginQuery(login, filteredId, privileges);
-            try
-            {
-                User? result = await _mediator.Send(query);
-                if (result == null)
-                {
-                    return NotFound(
-                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "User"])])
-                    );
-                }
-                var response = new ApiGetResponse<User>(result);
-                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -206,12 +126,96 @@ namespace AlpimiAPI.Entities.EUser
                         new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "User"])])
                     );
                 }
+
                 var response = new ApiGetResponse<User>(result);
                 return Ok(response);
             }
             catch (ApiErrorException ex)
             {
                 return BadRequest(new ApiErrorResponse(400, ex.errors));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(
+                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError", ex])])
+                );
+            }
+        }
+
+        /// <summary>
+        /// Gets a User
+        /// </summary>
+        /// <remarks>
+        /// - JWT token is required
+        /// </remarks>
+        [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 400)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 401)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 404)]
+        public async Task<ActionResult<ApiGetResponse<User>>> GetOne(
+            [FromRoute] Guid id,
+            [FromHeader] string Authorization
+        )
+        {
+            Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
+            string privileges = Privileges.GetUserRoleFromToken(Authorization);
+
+            var query = new GetUserQuery(id, filteredId, privileges);
+            try
+            {
+                User? result = await _mediator.Send(query);
+
+                if (result == null)
+                {
+                    return NotFound(
+                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "User"])])
+                    );
+                }
+
+                var response = new ApiGetResponse<User>(result);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(
+                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError", ex])])
+                );
+            }
+        }
+
+        /// <summary>
+        /// Gets a User by Login
+        /// </summary>
+        /// <remarks>
+        /// - JWT token is required
+        /// </remarks>
+        [HttpGet("byLogin/{login}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 400)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 401)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 404)]
+        public async Task<ActionResult<ApiGetResponse<User>>> GetOneByLogin(
+            [FromRoute] string login,
+            [FromHeader] string Authorization
+        )
+        {
+            Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
+            string privileges = Privileges.GetUserRoleFromToken(Authorization);
+
+            var query = new GetUserByLoginQuery(login, filteredId, privileges);
+            try
+            {
+                User? result = await _mediator.Send(query);
+                if (result == null)
+                {
+                    return NotFound(
+                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "User"])])
+                    );
+                }
+
+                var response = new ApiGetResponse<User>(result);
+                return Ok(response);
             }
             catch (Exception ex)
             {

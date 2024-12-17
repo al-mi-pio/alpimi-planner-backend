@@ -3,7 +3,6 @@ using AlpimiAPI.Entities.ELesson.DTO;
 using AlpimiAPI.Entities.ELesson.Queries;
 using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
-using AlpimiAPI.Settings;
 using AlpimiAPI.Utilities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -53,6 +52,7 @@ namespace AlpimiAPI.Entities.ELesson
             try
             {
                 var result = await _mediator.Send(command);
+
                 var response = new ApiGetResponse<Guid>(result);
                 return Ok(response);
             }
@@ -130,6 +130,7 @@ namespace AlpimiAPI.Entities.ELesson
                         new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "Lesson"])])
                     );
                 }
+
                 var response = new ApiGetResponse<LessonDTO>(DataTrimmer.Trim(result));
                 return Ok(response);
             }
@@ -158,10 +159,10 @@ namespace AlpimiAPI.Entities.ELesson
         public async Task<ActionResult<ApiGetAllResponse<IEnumerable<LessonDTO>>>> GetAll(
             [FromHeader] string Authorization,
             [FromQuery] Guid id,
-            [FromQuery] int perPage = PaginationSettings.perPage,
-            [FromQuery] int page = PaginationSettings.page,
-            [FromQuery] string sortBy = PaginationSettings.sortBy,
-            [FromQuery] string sortOrder = PaginationSettings.sortOrder
+            [FromQuery] int perPage = Configuration.perPage,
+            [FromQuery] int page = Configuration.page,
+            [FromQuery] string sortBy = Configuration.sortBy,
+            [FromQuery] string sortOrder = Configuration.sortOrder
         )
         {
             Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
@@ -176,6 +177,7 @@ namespace AlpimiAPI.Entities.ELesson
             try
             {
                 (IEnumerable<Lesson>?, int) result = await _mediator.Send(query);
+
                 var response = new ApiGetAllResponse<IEnumerable<LessonDTO>>(
                     result.Item1!.Select(DataTrimmer.Trim),
                     new Pagination(result.Item2, perPage, page, sortBy, sortOrder)
@@ -223,8 +225,8 @@ namespace AlpimiAPI.Entities.ELesson
                         new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "Lesson"])])
                     );
                 }
-                var response = new ApiGetResponse<LessonDTO>(DataTrimmer.Trim(result));
 
+                var response = new ApiGetResponse<LessonDTO>(DataTrimmer.Trim(result));
                 return Ok(response);
             }
             catch (Exception ex)

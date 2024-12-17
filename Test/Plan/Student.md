@@ -2,11 +2,12 @@
 
 ## `ALL` `api/Student/*`
 
+- [StudentSettingsControllerThrowsUnauthorized()](../Entities/EStudent/StudentController.test.cs) - **integrity**  
+  Check if returns an error when token is not provided
+
 - [StudentControllerThrowsTooManyRequests()](../Entities/EStudent/StudentController.test.cs) - **integrity**  
   Check if returns an error when request is sent too many times
 
-- [StudentSettingsControllerThrowsUnauthorized()](../Entities/EStudent/StudentController.test.cs) - **integrity**  
-  Check if returns an error when token is not provided
 
 ## `POST` `api/Student`
 
@@ -16,9 +17,6 @@
 - [StudentIsCreatedWithSubgroups()](../Entities/EStudent/StudentController.test.cs) - **integrity**  
   Check if student is created with subgroups when provided with correct data
 
-- [ThrowsErrorWhenAlbumNumberIsAlreadyTaken](../Entities/EStudent/CreateStudentCommand.unit.cs) - **unit**  
-  Check if returns an error when a taken album number is provided
-
 - [ThrowsErrorWhenWrongGroupIdIsGiven()](../Entities/EStudent/CreateStudentCommand.unit.cs) - **unit** 
   Check if returns an error when incorrect group id is provided
 
@@ -27,6 +25,47 @@
 
 - [ThrowsErrorWhenDuplicatedSubgroupIdsAreGiven()](../Entities/EStudent/CreateStudentCommand.unit.cs) - **unit**
   Check if returns an error when duplicated subgroup ids are provided
+
+- [ThrowsErrorWhenGroupIdsFromStudentAndSubgroupDontMatch()](../Entities/EStudent/CreateStudentCommand.unit.cs) - **unit**
+  Check if returns an error when student and subgroup are from different groups
+
+- [ThrowsErrorWhenAlbumNumberIsAlreadyTaken](../Entities/EStudent/CreateStudentCommand.unit.cs) - **unit**  
+  Check if returns an error when a taken album number is provided
+
+
+## `DELETE` `api/Student/{id}`
+
+- [StudentIsDeleted()](../Entities/EStudent/StudentController.test.cs) - **integrity**  
+  Check if schedule is deleted when a valid token is provided
+
+
+## `PATCH` `api/Student/{id}`
+
+- [UpdateStudentReturnsUpdatedStudent()](../Entities/EStudent/StudentController.test.cs) - **integrity**  
+  Check if returns an updated student when provided with correct data
+
+- [UpdateStudentUpdatesStudentsSubgroups()](../Entities/EStudent/StudentController.test.cs) - **integrity**  
+  Check if updates students subgroups when provided with correct data
+
+- [updateStudentThrowsNotFoundErrorWhenWrongIdIsGiven()](../Entities/EStudent/StudentController.test.cs) - **integrity**  
+  Check if returns an error when student doesn't exists
+
+- [UpdateStudentThrowsNotFoundErrorWhenWrongUserAttemptsUpdate()](../Entities/EStudent/StudentController.test.cs) - **integrity**  
+  Check if returns an error when student is inaccessible for user
+
+- [ThrowsErrorWhenAlbumNumberIsAlreadyTaken()](../Entities/EStudent/Commands/UpdateStudentCommand.unit.cs) - **unit**  
+  Check if returns an error when a taken album number is provided
+
+- [ThrowsErrorWhenWrongSubgroupIdIsGiven()](../Entities/EStudent/UpdateStudentCommand.unit.cs) - **unit**
+  Check if returns an error when incorrect subgroup id is provided
+
+- [ThrowsErrorWhenDuplicatedSubgroupIdsAreGiven()](../Entities/EStudent/UpdateStudentCommand.unit.cs) - **unit**
+  Check if returns an error when duplicated subgroup ids are provided
+
+- [ThrowsErrorWhenGroupIdsFromStudentAndSubgroupDontMatch()](../Entities/EStudent/UpdateStudentCommand.unit.cs) - **unit**
+  Check if returns an error when student and subgroup are from different groups
+
+
 ## `GET` `api/Student`
 
 - [GetAllStudentsReturnsStudentsFromGroupIfGroupIdIsProvided()](../Entities/EStudent/StudentController.test.cs) - **integrity**  
@@ -59,6 +98,7 @@
 - [ThrowsMultipleErrorMessages()](../Entities/EStudent/Queries/GetAllStudent.unit.cs) - **unit**  
   Check if returns multiple errors when provided with multiple invalid parameters
 
+
 ## `GET` `api/Student{id}`
 
 - [GetStudentReturnsStudent()](../Entities/EStudent/StudentController.test.cs) - **integrity**  
@@ -69,34 +109,5 @@
 
 - [GetStudentThrowsNotFoundWhenWrongIdIsGiven()](../Entities/EStudent/StudentController.test.cs) - **integrity**  
   Check if returns no days off when wrong id is provided
-
-## `DELETE` `api/Student/{id}`
-
-- [StudentIsDeleted()](../Entities/EStudent/StudentController.test.cs) - **integrity**  
-  Check if schedule is deleted when a valid token is provided
-
-## `PATCH` `api/Student/{id}`
-
-- [UpdateStudentReturnsUpdatedStudent()](../Entities/EStudent/StudentController.test.cs) - **integrity**  
-  Check if returns an updated student when provided with correct data
-
-- [UpdateStudentUpdatesStudentsSubgroups()](../Entities/EStudent/StudentController.test.cs) - **integrity**  
-  Check if updates students subgroups when provided with correct data
-
-- [updateStudentThrowsNotFoundErrorWhenWrongIdIsGiven()](../Entities/EStudent/StudentController.test.cs) - **integrity**  
-  Check if returns an error when student doesn't exists
-
-- [UpdateStudentThrowsNotFoundErrorWhenWrongUserAttemptsUpdate()](../Entities/EStudent/StudentController.test.cs) - **integrity**  
-  Check if returns an error when student is inaccessible for user
-
-- [ThrowsErrorWhenAlbumNumberIsAlreadyTaken()](../Entities/EStudent/Commands/UpdateStudentCommand.unit.cs) - **unit**  
-  Check if returns an error when a taken album number is provided
-
-- [ThrowsErrorWhenWrongSubgroupIdIsGiven()](../Entities/EStudent/CreateStudentCommand.unit.cs) - **unit**
-  Check if returns an error when incorrect subgroup id is provided
-
-- [ThrowsErrorWhenDuplicatedSubgroupIdsAreGiven()](../Entities/EStudent/CreateStudentCommand.unit.cs) - **unit**
-  Check if returns an error when duplicated subgroup ids are provided
-
 
 

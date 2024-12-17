@@ -73,7 +73,7 @@ namespace AlpimiAPI.Entities.EClassroomType.Queries
                             LEFT JOIN [Classroom] c ON c.[Id] = cct.[ClassroomId]
                             LEFT JOIN [LessonClassroomType] lct ON lct.[ClassroomTypeId] = ct.[Id]
                             LEFT JOIN [Lesson] l ON l.[Id] = lct.[LessonId]
-                            WHERE ct.[ScheduleId] = @Id OR c.[Id] = @Id OR l.[Id] = @Id",
+                            WHERE ct.[ScheduleId] = @Id OR c.[Id] = @Id OR l.[Id] = @Id;",
                         request
                     );
                     classroomTypes = await _dbService.GetAll<ClassroomType>(
@@ -92,21 +92,22 @@ namespace AlpimiAPI.Entities.EClassroomType.Queries
                             OFFSET
                             {request.Pagination.Offset} ROWS
                             FETCH NEXT
-                            {request.Pagination.PerPage} ROWS ONLY; ",
+                            {request.Pagination.PerPage} ROWS ONLY;",
                         request
                     );
                     break;
                 default:
                     count = await _dbService.Get<int>(
                         @"
-                            SELECT COUNT(*)
+                            SELECT
+                            COUNT(*)
                             FROM [ClassroomType] ct
                             INNER JOIN [Schedule] s ON s.[Id] = ct.[ScheduleId]
                             LEFT JOIN [ClassroomClassroomType] cct ON cct.[ClassroomTypeId] = ct.[Id]
                             LEFT JOIN [Classroom] c ON c.[Id] = cct.[ClassroomId]
                             LEFT JOIN [LessonClassroomType] lct ON lct.[ClassroomTypeId] = ct.[Id]
                             LEFT JOIN [Lesson] l ON l.[Id] = lct.[LessonId]
-                            WHERE s.[UserId] = @FilteredId AND (ct.[ScheduleId] = @Id OR c.[Id] = @Id OR l.[Id] = @Id); ",
+                            WHERE s.[UserId] = @FilteredId AND (ct.[ScheduleId] = @Id OR c.[Id] = @Id OR l.[Id] = @Id);",
                         request
                     );
                     classroomTypes = await _dbService.GetAll<ClassroomType>(
@@ -126,11 +127,12 @@ namespace AlpimiAPI.Entities.EClassroomType.Queries
                             OFFSET
                             {request.Pagination.Offset} ROWS
                             FETCH NEXT
-                            {request.Pagination.PerPage} ROWS ONLY; ",
+                            {request.Pagination.PerPage} ROWS ONLY;",
                         request
                     );
                     break;
             }
+
             if (classroomTypes != null)
             {
                 foreach (var classroomType in classroomTypes)
@@ -148,6 +150,7 @@ namespace AlpimiAPI.Entities.EClassroomType.Queries
                     classroomType.Schedule = schedule.Value!;
                 }
             }
+
             return (classroomTypes, count);
         }
     }

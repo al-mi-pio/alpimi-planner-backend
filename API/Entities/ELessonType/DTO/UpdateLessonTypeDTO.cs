@@ -3,6 +3,7 @@
     public class UpdateLessonTypeDTO
     {
         public string? Name { get; set; }
+
         public int? Color { get; set; }
     }
 }

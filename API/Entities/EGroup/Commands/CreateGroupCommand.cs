@@ -43,11 +43,11 @@ namespace AlpimiAPI.Entities.EGroup.Commands
                 request.FilteredId,
                 request.Role
             );
-
             ActionResult<Schedule?> schedule = await getScheduleHandler.Handle(
                 getScheduleQuery,
                 cancellationToken
             );
+
             if (schedule.Value == null)
             {
                 throw new ApiErrorException(
@@ -91,7 +91,7 @@ namespace AlpimiAPI.Entities.EGroup.Commands
             var insertedId = await _dbService.Post<Guid>(
                 $@"
                     INSERT INTO [Group] 
-                    ([Id],[Name],[StudentCount],[ScheduleId])
+                    ([Id], [Name], [StudentCount], [ScheduleId])
                     OUTPUT 
                     INSERTED.Id                    
                     VALUES (

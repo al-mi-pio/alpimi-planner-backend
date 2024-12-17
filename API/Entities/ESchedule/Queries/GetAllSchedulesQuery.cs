@@ -64,7 +64,7 @@ namespace AlpimiAPI.Entities.ESchedule.Queries
                         @"
                             SELECT 
                             COUNT(*) 
-                            from [Schedule]",
+                            from [Schedule];",
                         ""
                     );
                     schedules = await _dbService.GetAll<Schedule>(
@@ -78,7 +78,7 @@ namespace AlpimiAPI.Entities.ESchedule.Queries
                             OFFSET
                             {request.Pagination.Offset} ROWS
                             FETCH NEXT
-                            {request.Pagination.PerPage} ROWS ONLY; ",
+                            {request.Pagination.PerPage} ROWS ONLY;",
                         request.Pagination
                     );
                     break;
@@ -88,7 +88,7 @@ namespace AlpimiAPI.Entities.ESchedule.Queries
                             SELECT 
                             COUNT(*) 
                             from [Schedule] 
-                            WHERE [UserId] = @FilteredId",
+                            WHERE [UserId] = @FilteredId;",
                         request
                     );
                     schedules = await _dbService.GetAll<Schedule>(
@@ -103,7 +103,7 @@ namespace AlpimiAPI.Entities.ESchedule.Queries
                             OFFSET
                             {request.Pagination.Offset} ROWS
                             FETCH NEXT
-                            {request.Pagination.PerPage} ROWS ONLY; ",
+                            {request.Pagination.PerPage} ROWS ONLY;",
                         request
                     );
                     break;
@@ -126,6 +126,7 @@ namespace AlpimiAPI.Entities.ESchedule.Queries
                     schedule.User = user.Value!;
                 }
             }
+
             return (schedules, count);
         }
     }

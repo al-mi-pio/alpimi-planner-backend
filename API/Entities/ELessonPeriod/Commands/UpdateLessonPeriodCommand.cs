@@ -1,5 +1,6 @@
 ﻿using AlpimiAPI.Database;
 using AlpimiAPI.Entities.ELessonPeriod.DTO;
+using AlpimiAPI.Entities.ELessonPeriod.Queries;
 using AlpimiAPI.Entities.EScheduleSettings;
 using AlpimiAPI.Entities.EScheduleSettings.Queries;
 using AlpimiAPI.Locales;
@@ -41,7 +42,7 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Commands
                     originalLessonPeriod = await _dbService.Get<LessonPeriod?>(
                         @"
                             SELECT 
-                            [Id],[Start],[Finish],[ScheduleSettingsId]
+                            [Id], [Start], [ScheduleSettingsId]
                             FROM [LessonPeriod] 
                             WHERE [Id]=@Id;",
                         request
@@ -51,7 +52,7 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Commands
                     originalLessonPeriod = await _dbService.Get<LessonPeriod?>(
                         @"
                             SELECT 
-                            lp.[Id],lp.[Start],lp.[Finish],lp.[ScheduleSettingsId]
+                            lp.[Id], lp.[Start], lp.[ScheduleSettingsId]
                             FROM [LessonPeriod] lp
                             INNER JOIN [ScheduleSettings] ss ON ss.[Id] = lp.[ScheduleSettingsId]
                             INNER JOIN [Schedule] s ON s.[Id] = ss.[ScheduleId]
@@ -67,60 +68,69 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Commands
             }
 
             request.dto.Start = request.dto.Start ?? originalLessonPeriod.Start;
-            request.dto.Finish = request.dto.Finish ?? originalLessonPeriod.Finish;
 
-            if (request.dto.Start > request.dto.Finish)
-            {
-                throw new ApiErrorException([new ErrorObject(_str["scheduleDate"])]);
-            }
-
-            var lessonPeriodOverlap = await _dbService.GetAll<LessonPeriod>(
-                $@"
-                    SELECT 
-                    lp.[Id]
-                    FROM [LessonPeriod] lp
-                    INNER JOIN [ScheduleSettings] ss ON ss.[Id] = lp.[ScheduleSettingsId]
-                    INNER JOIN [Schedule] s ON s.[Id]=ss.[ScheduleId]
-                    WHERE s.[UserId] = '{request.FilteredId}' AND ss.[Id] = '{originalLessonPeriod.ScheduleSettingsId}'
-                    AND lp.[Id] != '{request.Id}'
-                    AND ((([Start] > @Start AND [Start] < @Finish) 
-                    OR ([Finish] > @Start AND [Finish] < @Finish))
-                    OR ([Start] = @Start AND [Finish] = @Finish)); ",
-                request.dto
+            GetScheduleSettingsHandler getScheduleSettingsHandler = new GetScheduleSettingsHandler(
+                _dbService
             );
-            if (lessonPeriodOverlap!.Any())
+            GetScheduleSettingsQuery getScheduleSettingsQuery = new GetScheduleSettingsQuery(
+                originalLessonPeriod!.ScheduleSettingsId,
+                new Guid(),
+                "Admin"
+            );
+            ActionResult<ScheduleSettings?> scheduleSettings =
+                await getScheduleSettingsHandler.Handle(
+                    getScheduleSettingsQuery,
+                    cancellationToken
+                );
+
+            GetAllLessonPeriodByScheduleHandler getAllLessonPeriodByScheduleHandler =
+                new GetAllLessonPeriodByScheduleHandler(_dbService, _str);
+            GetAllLessonPeriodByScheduleQuery getAllLessonPeriodByScheduleQuery =
+                new GetAllLessonPeriodByScheduleQuery(
+                    scheduleSettings.Value!.ScheduleId,
+                    request.FilteredId,
+                    request.Role,
+                    new PaginationParams(1440, 0, "Start", "ASC")
+                );
+            ActionResult<(IEnumerable<LessonPeriod>?, int)> allLessonsPeriods =
+                await getAllLessonPeriodByScheduleHandler.Handle(
+                    getAllLessonPeriodByScheduleQuery,
+                    cancellationToken
+                );
+
+            if (allLessonsPeriods.Value.Item1 != null)
             {
-                throw new ApiErrorException([new ErrorObject(_str["timeOverlap"])]);
+                foreach (var oneLessonPeriod in allLessonsPeriods.Value.Item1)
+                {
+                    if (
+                        request.dto.Start
+                            > oneLessonPeriod.Start.AddMinutes(-scheduleSettings.Value.SchoolHour)
+                        && request.dto.Start
+                            < oneLessonPeriod.Start.AddMinutes(scheduleSettings.Value.SchoolHour)
+                        && oneLessonPeriod.Id != originalLessonPeriod.Id
+                    )
+                    {
+                        throw new ApiErrorException(
+                            [new ErrorObject(_str["timeOverlap", "LessonPeriod"])]
+                        );
+                    }
+                }
             }
 
             var lessonPeriod = await _dbService.Update<LessonPeriod?>(
                 $@"
                     UPDATE [LessonPeriod] 
                     SET
-                    [Start] = @Start, [Finish] = @Finish
+                    [Start] = @Start
                     OUTPUT
                     INSERTED.[Id],
                     INSERTED.[Start],
-                    INSERTED.[Finish],
                     INSERTED.[ScheduleSettingsId]
                     WHERE [Id] = '{request.Id}';",
                 request.dto
             );
 
-            GetScheduleSettingsHandler getScheduleSettingsHandler = new GetScheduleSettingsHandler(
-                _dbService
-            );
-            GetScheduleSettingsQuery getScheduleSettingsQuery = new GetScheduleSettingsQuery(
-                lessonPeriod!.ScheduleSettingsId,
-                new Guid(),
-                "Admin"
-            );
-            ActionResult<ScheduleSettings?> toInsertScheduleSettings =
-                await getScheduleSettingsHandler.Handle(
-                    getScheduleSettingsQuery,
-                    cancellationToken
-                );
-            lessonPeriod.ScheduleSettings = toInsertScheduleSettings.Value!;
+            lessonPeriod!.ScheduleSettings = scheduleSettings.Value;
 
             return lessonPeriod;
         }

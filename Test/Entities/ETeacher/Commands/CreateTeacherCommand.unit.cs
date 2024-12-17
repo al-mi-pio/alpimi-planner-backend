@@ -59,7 +59,6 @@ namespace AlpimiTest.Entities.ETeacher.Commands
         {
             var dto = MockData.GetCreateTeacherDTODetails(new Guid());
             var schedule = MockData.GetScheduleDetails();
-
             _dbService
                 .Setup(s => s.Get<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(schedule);
@@ -73,9 +72,7 @@ namespace AlpimiTest.Entities.ETeacher.Commands
                 new Guid(),
                 "User"
             );
-
             var createTeacherHandler = new CreateTeacherHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createTeacherHandler.Handle(createTeacherCommand, new CancellationToken())

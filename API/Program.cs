@@ -21,6 +21,7 @@ DotNetEnv.Env.Load();
 try
 {
     builder.Services.AddControllers();
+
     builder.Services.AddMediatR(cfg =>
         cfg.RegisterServicesFromAssemblies(typeof(Program).Assembly)
     );
@@ -42,8 +43,8 @@ try
         };
     });
 
-    // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
+
     if (builder.Environment.IsDevelopment())
     {
         builder.Services.AddSwaggerGen(options =>
@@ -78,6 +79,7 @@ try
             );
         });
     }
+
     builder
         .Services.AddAuthentication(option =>
         {
@@ -141,6 +143,7 @@ try
         var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
         c.IncludeXmlComments(xmlPath);
     });
+
     builder
         .Services.AddControllers()
         .ConfigureApiBehaviorOptions(options =>
@@ -165,8 +168,8 @@ try
                 "FixedWindow",
                 limiterOptions =>
                 {
-                    limiterOptions.PermitLimit = RateLimiterSettings.permitLimit;
-                    limiterOptions.Window = RateLimiterSettings.timeWindow;
+                    limiterOptions.PermitLimit = Configuration.GetPermitLimit();
+                    limiterOptions.Window = Configuration.GetTimeWindow();
                 }
             )
             .OnRejected = async (context, _) =>
@@ -199,7 +202,6 @@ try
         c.RouteTemplate = "api/{documentname}/swagger.json";
     });
 
-    //app.UseSwaggerUI();
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/api/v1/swagger.json", "API V1");
@@ -219,6 +221,7 @@ try
     app.MapControllers();
 
     Dapper.SqlMapper.AddTypeHandler(new DateOnlyTypeHandler());
+
     Dapper.SqlMapper.AddTypeHandler(new TimeOnlyTypeHandler());
 
     app.Run();

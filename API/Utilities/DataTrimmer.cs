@@ -8,12 +8,15 @@ using AlpimiAPI.Entities.EGroup;
 using AlpimiAPI.Entities.EGroup.DTO;
 using AlpimiAPI.Entities.ELesson;
 using AlpimiAPI.Entities.ELesson.DTO;
+using AlpimiAPI.Entities.ELessonBlock;
 using AlpimiAPI.Entities.ELessonPeriod;
 using AlpimiAPI.Entities.ELessonPeriod.DTO;
 using AlpimiAPI.Entities.ELessonType;
 using AlpimiAPI.Entities.ELessonType.DTO;
 using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Entities.ESchedule.DTO;
+using AlpimiAPI.Entities.EScheduleSettings;
+using AlpimiAPI.Entities.EScheduleSettings.DTO;
 using AlpimiAPI.Entities.EStudent;
 using AlpimiAPI.Entities.EStudent.DTO;
 using AlpimiAPI.Entities.ESubgroup;
@@ -43,12 +46,7 @@ namespace AlpimiAPI.Utilities
 
         public static LessonPeriodDTO Trim(LessonPeriod data)
         {
-            return new LessonPeriodDTO
-            {
-                Id = data.Id,
-                Start = data.Start,
-                Finish = data.Finish
-            };
+            return new LessonPeriodDTO { Id = data.Id, Start = data.Start, };
         }
 
         public static ClassroomTypeDTO Trim(ClassroomType data)
@@ -123,9 +121,37 @@ namespace AlpimiAPI.Utilities
             {
                 Id = data.Id,
                 Name = data.Name,
+                CurrentHours = data.CurrentHours,
                 AmountOfHours = data.AmountOfHours,
                 LessonType = Trim(data.LessonType),
-                SubgroupId = data.SubgroupId //tu też trzeba to zmienić
+                Subgroup = Trim(data.Subgroup)
+            };
+        }
+
+        public static ScheduleSettingsDTO Trim(ScheduleSettings data)
+        {
+            return new ScheduleSettingsDTO
+            {
+                Id = data.Id,
+                SchoolHour = data.SchoolHour,
+                SchoolYearStart = data.SchoolYearStart,
+                SchoolYearEnd = data.SchoolYearEnd,
+                SchoolDays = data.SchoolDays
+            };
+        }
+
+        public static LessonBlockDTO Trim(LessonBlock data)
+        {
+            return new LessonBlockDTO
+            {
+                Id = data.Id,
+                LessonDate = data.LessonDate,
+                LessonStart = data.LessonStart,
+                LessonEnd = data.LessonEnd,
+                Lesson = Trim(data.Lesson),
+                Classroom = data.Classroom == null ? null : Trim(data.Classroom),
+                Teacher = data.Teacher == null ? null : Trim(data.Teacher),
+                ClusterId = data.ClusterId
             };
         }
     }

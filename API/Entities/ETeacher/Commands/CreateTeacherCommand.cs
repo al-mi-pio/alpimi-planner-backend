@@ -35,11 +35,11 @@ namespace AlpimiAPI.Entities.ETeacher.Commands
                 request.FilteredId,
                 request.Role
             );
-
             ActionResult<Schedule?> schedule = await getScheduleHandler.Handle(
                 getScheduleQuery,
                 cancellationToken
             );
+
             if (schedule.Value == null)
             {
                 throw new ApiErrorException(
@@ -74,7 +74,7 @@ namespace AlpimiAPI.Entities.ETeacher.Commands
             var insertedId = await _dbService.Post<Guid>(
                 $@"
                     INSERT INTO [Teacher] 
-                    ([Id],[Name],[Surname],[ScheduleId])
+                    ([Id], [Name], [Surname], [ScheduleId])
                     OUTPUT 
                     INSERTED.Id                    
                     VALUES (

@@ -36,7 +36,7 @@ namespace AlpimiAPI.Entities.EDayOff.Commands
                     originalDayOff = await _dbService.Get<DayOff?>(
                         @"
                             SELECT 
-                            [Id],[Name],[From],[To],[ScheduleSettingsId]
+                            [Id], [Name], [From], [To], [ScheduleSettingsId]
                             FROM [DayOff] 
                             WHERE [Id]=@Id;",
                         request
@@ -46,7 +46,7 @@ namespace AlpimiAPI.Entities.EDayOff.Commands
                     originalDayOff = await _dbService.Get<DayOff?>(
                         @"
                             SELECT 
-                            do.[Id],do.[Name],do.[From],do.[To],do.[ScheduleSettingsId]
+                            do.[Id], do.[Name], do.[From], do.[To], do.[ScheduleSettingsId]
                             FROM [DayOff] do
                             INNER JOIN [ScheduleSettings] ss ON ss.[Id] = do.[ScheduleSettingsId]
                             INNER JOIN [Schedule] s ON s.[Id] = ss.[ScheduleId]
@@ -106,7 +106,7 @@ namespace AlpimiAPI.Entities.EDayOff.Commands
                 $@"
                     UPDATE [DayOff] 
                     SET 
-                    [Name] = @Name ,[From] = @From, [To] = @To 
+                    [Name] = @Name, [From] = @From, [To] = @To 
                     OUTPUT
                     INSERTED.[Id], 
                     INSERTED.[Name],

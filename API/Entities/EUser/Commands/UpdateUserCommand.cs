@@ -65,11 +65,11 @@ namespace AlpimiAPI.Entities.EUser.Commands
             request.dto.CustomURL = request.dto.CustomURL ?? originalUser.Value.CustomURL;
             request.dto.Login = request.dto.Login ?? originalUser.Value.Login;
 
-            User? user = await _dbService.Update<User?>(
+            var user = await _dbService.Update<User?>(
                 $@"
-                UPDATE [User] 
-                SET
-                    [Login]=@Login, [CustomURL]=@CustomURL
+                    UPDATE [User] 
+                    SET
+                    [Login] = @Login, [CustomURL] = @CustomURL
                     OUTPUT 
                     INSERTED.[Id], 
                     INSERTED.[Login], 

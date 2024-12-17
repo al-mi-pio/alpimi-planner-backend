@@ -2,22 +2,45 @@
 
 ## `ALL` `api/ClassroomType/*`
 
+- [ClassroomTypeSettingsControllerThrowsUnauthorized()](../Entities/EClassroomType/ClassroomTypeController.test.cs) - **integrity**  
+  Check if returns an error when token is not provided
+
 - [ClassroomTypeControllerThrowsTooManyRequests()](../Entities/EClassroomType/ClassroomTypeController.test.cs) - **integrity**  
   Check if returns an error when request is sent too many times
 
-- [ClassroomTypeSettingsControllerThrowsUnauthorized()](../Entities/EClassroomType/ClassroomTypeController.test.cs) - **integrity**  
-  Check if returns an error when token is not provided
 
 ## `POST` `api/ClassroomType`
 
 - [ClassroomTypeIsCreated()](../Entities/EClassroomType/ClassroomTypeController.test.cs) - **integrity**  
   Check if classroom type is created when provided with correct data
 
+- [ThrowsErrorWhenWrongScheduleIdIsGiven()](../Entities/EClassroomType/CreateClassroomTypeCommand.unit.cs) - **unit** 
+  Check if returns an error when incorrect id is provided
+
 - [ThrowsErrorWhenNameIsAlreadyTaken()](../Entities/EClassroomType/CreateClassroomTypeCommand.unit.cs) - **unit**  
   Check if returns an error when a taken name  is provided
 
-- [ThrowsErrorWhenWrongScheduleIdIsGiven()](../Entities/EClassroomType/CreateClassroomTypeCommand.unit.cs) - **unit** 
-  Check if returns an error when incorrect id is provided
+
+## `DELETE` `api/ClassroomType/{id}`
+
+- [ClassroomTypeIsDeleted()](../Entities/EClassroomType/ClassroomTypeController.test.cs) - **integrity**  
+  Check if schedule is deleted when a valid token is provided
+
+
+## `PATCH` `api/ClassroomType/{id}`
+
+- [UpdateClassroomTypeReturnsUpdatedClassroomType()](../Entities/EClassroomType/ClassroomTypeController.test.cs) - **integrity**  
+  Check if returns an updated day off when provided with correct data
+
+- [pdateClassroomTypeThrowsNotFoundErrorWhenWrongIdIsGiven()](../Entities/EClassroomType/ClassroomTypeController.test.cs) - **integrity**  
+  Check if returns an error when day off doesn't exists
+
+- [UpdateClassroomTypeThrowsNotFoundErrorWhenWrongUserAttemptsUpdate()](../Entities/EClassroomType/ClassroomTypeController.test.cs) - **integrity**  
+  Check if returns an error when day off is inaccessible for user
+
+- [ThrowsErrorWhenNameAndSurnameAreAlreadyTaken()](../Entities/EClassroomType/Commands/UpdateClassroomTypeCommand.unit.cs) - **unit**  
+  Check if returns an error when out of range date is provided
+
 
 ## `GET` `api/ClassroomType`
 
@@ -51,6 +74,7 @@
 - [ThrowsMultipleErrorMessages()](../Entities/EClassroomType/Queries/GetAllClassroomType.unit.cs) - **unit**  
   Check if returns multiple errors when provided with multiple invalid parameters
 
+
 ## `GET` `api/ClassroomType{id}`
 
 - [GetClassroomTypeReturnsClassroomType()](../Entities/EClassroomType/ClassroomTypeController.test.cs) - **integrity**  
@@ -61,24 +85,4 @@
 
 - [GetClassroomTypeThrowsNotFoundWhenWrongIdIsGiven()](../Entities/EClassroomType/ClassroomTypeController.test.cs) - **integrity**  
   Check if returns no days off when wrong id is provided
-
-## `DELETE` `api/ClassroomType/{id}`
-
-- [ClassroomTypeIsDeleted()](../Entities/EClassroomType/ClassroomTypeController.test.cs) - **integrity**  
-  Check if schedule is deleted when a valid token is provided
-
-## `PATCH` `api/ClassroomType/{id}`
-
-- [UpdateClassroomTypeReturnsUpdatedClassroomType()](../Entities/EClassroomType/ClassroomTypeController.test.cs) - **integrity**  
-  Check if returns an updated day off when provided with correct data
-
-- [pdateClassroomTypeThrowsNotFoundErrorWhenWrongIdIsGiven()](../Entities/EClassroomType/ClassroomTypeController.test.cs) - **integrity**  
-  Check if returns an error when day off doesn't exists
-
-- [UpdateClassroomTypeThrowsNotFoundErrorWhenWrongUserAttemptsUpdate()](../Entities/EClassroomType/ClassroomTypeController.test.cs) - **integrity**  
-  Check if returns an error when day off is inaccessible for user
-
-- [ThrowsErrorWhenNameAndSurnameAreAlreadyTaken()](../Entities/EClassroomType/Commands/UpdateClassroomTypeCommand.unit.cs) - **unit**  
-  Check if returns an error when out of range date is provided
-
 

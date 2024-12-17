@@ -33,12 +33,10 @@ namespace AlpimiTest.Entities.ELessonType.Commands
                 new Guid(),
                 "User"
             );
-
             var createLessonTypeHandler = new CreateLessonTypeHandler(
                 _dbService.Object,
                 _str.Object
             );
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createLessonTypeHandler.Handle(
@@ -64,7 +62,6 @@ namespace AlpimiTest.Entities.ELessonType.Commands
         public async Task ThrowsErrorWhenNameIsAlreadyTaken()
         {
             var dto = MockData.GetCreateLessonTypeDTODetails(new Guid());
-
             _dbService
                 .Setup(s => s.Get<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetScheduleDetails());
@@ -78,12 +75,10 @@ namespace AlpimiTest.Entities.ELessonType.Commands
                 new Guid(),
                 "User"
             );
-
             var createLessonTypeHandler = new CreateLessonTypeHandler(
                 _dbService.Object,
                 _str.Object
             );
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createLessonTypeHandler.Handle(
@@ -99,7 +94,7 @@ namespace AlpimiTest.Entities.ELessonType.Commands
         }
 
         [Fact]
-        public async Task ThrowsErrorWhenColorIsLessThan1()
+        public async Task ThrowsErrorWhenColorIsLessThan0()
         {
             var dto = MockData.GetCreateLessonTypeDTODetails(new Guid());
             dto.Color = -1;
@@ -110,12 +105,37 @@ namespace AlpimiTest.Entities.ELessonType.Commands
                 new Guid(),
                 "User"
             );
-
             var createLessonTypeHandler = new CreateLessonTypeHandler(
                 _dbService.Object,
                 _str.Object
             );
+            var result = await Assert.ThrowsAsync<ApiErrorException>(
+                async () =>
+                    await createLessonTypeHandler.Handle(
+                        createLessonTypeCommand,
+                        new CancellationToken()
+                    )
+            );
 
+            Assert.Equal("Color parameter is invalid", result.errors.First().message);
+        }
+
+        [Fact]
+        public async Task ThrowsErrorWhenColorIsMoreThan359()
+        {
+            var dto = MockData.GetCreateLessonTypeDTODetails(new Guid());
+            dto.Color = 360;
+
+            var createLessonTypeCommand = new CreateLessonTypeCommand(
+                new Guid(),
+                dto,
+                new Guid(),
+                "User"
+            );
+            var createLessonTypeHandler = new CreateLessonTypeHandler(
+                _dbService.Object,
+                _str.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createLessonTypeHandler.Handle(

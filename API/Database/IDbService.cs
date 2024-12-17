@@ -7,5 +7,6 @@
         Task<T?> Post<T>(string command, object parms);
         Task<T?> Update<T>(string command, object parms);
         Task Delete(string command, object parms);
+        Task Raw(string command);
     }
 }

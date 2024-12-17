@@ -27,7 +27,6 @@ namespace AlpimiTest.Entities.ESchedule.Commands
         public async Task ThrowsErrorWhenURLAlreadyExists()
         {
             var dto = MockData.GetUpdateScheduleDTODetails();
-
             _dbService
                 .Setup(s => s.Get<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetScheduleDetails());
@@ -38,9 +37,7 @@ namespace AlpimiTest.Entities.ESchedule.Commands
                 new Guid(),
                 "Admin"
             );
-
             var updateScheduleHandler = new UpdateScheduleHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateScheduleHandler.Handle(

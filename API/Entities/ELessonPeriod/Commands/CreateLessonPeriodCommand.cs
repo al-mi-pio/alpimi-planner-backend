@@ -1,6 +1,6 @@
 ﻿using AlpimiAPI.Database;
-using AlpimiAPI.Entities.ELessonPeriod;
 using AlpimiAPI.Entities.ELessonPeriod.DTO;
+using AlpimiAPI.Entities.ELessonPeriod.Queries;
 using AlpimiAPI.Entities.EScheduleSettings;
 using AlpimiAPI.Entities.EScheduleSettings.Queries;
 using AlpimiAPI.Locales;
@@ -34,25 +34,20 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Commands
             CancellationToken cancellationToken
         )
         {
-            if (request.dto.Finish < request.dto.Start)
-            {
-                throw new ApiErrorException([new ErrorObject(_str["scheduleTime"])]);
-            }
-
-            GetScheduleSettingsByScheduleIdHandler getScheduleSettingsByScheduleIdHandler =
-                new GetScheduleSettingsByScheduleIdHandler(_dbService);
-            GetScheduleSettingsByScheduleIdQuery getScheduleSettingsByScheduleIdQuery =
-                new GetScheduleSettingsByScheduleIdQuery(
-                    request.dto.ScheduleId,
-                    request.FilteredId,
-                    request.Role
-                );
-
+            GetScheduleSettingsHandler getScheduleSettingsHandler = new GetScheduleSettingsHandler(
+                _dbService
+            );
+            GetScheduleSettingsQuery getScheduleSettingsQuery = new GetScheduleSettingsQuery(
+                request.dto.ScheduleId,
+                request.FilteredId,
+                request.Role
+            );
             ActionResult<ScheduleSettings?> scheduleSettings =
-                await getScheduleSettingsByScheduleIdHandler.Handle(
-                    getScheduleSettingsByScheduleIdQuery,
+                await getScheduleSettingsHandler.Handle(
+                    getScheduleSettingsQuery,
                     cancellationToken
                 );
+
             if (scheduleSettings.Value == null)
             {
                 throw new ApiErrorException(
@@ -64,34 +59,48 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Commands
                 );
             }
 
-            var lessonPeriodOverlap = await _dbService.GetAll<LessonPeriod>(
-                $@"
-                    SELECT 
-                    lp.[Id]
-                    FROM [LessonPeriod] lp
-                    INNER JOIN [ScheduleSettings] ss ON ss.[Id] = lp.[ScheduleSettingsId]
-                    INNER JOIN [Schedule] s ON s.[Id]=ss.[ScheduleId]
-                    WHERE s.[UserId] = '{request.FilteredId}' AND ss.[ScheduleId] = @ScheduleId
-                    AND ((([Start] > @Start AND [Start] < @Finish) 
-                    OR ([Finish] > @Start AND [Finish] < @Finish))
-                    OR ([Start] = @Start AND [Finish] = @Finish));",
-                request.dto
-            );
-            if (lessonPeriodOverlap!.Any())
+            GetAllLessonPeriodByScheduleHandler getAllLessonPeriodByScheduleHandler =
+                new GetAllLessonPeriodByScheduleHandler(_dbService, _str);
+            GetAllLessonPeriodByScheduleQuery getAllLessonPeriodByScheduleQuery =
+                new GetAllLessonPeriodByScheduleQuery(
+                    request.dto.ScheduleId,
+                    request.FilteredId,
+                    request.Role,
+                    new PaginationParams(1440, 0, "Start", "ASC")
+                );
+            ActionResult<(IEnumerable<LessonPeriod>?, int)> allLessonsPeriods =
+                await getAllLessonPeriodByScheduleHandler.Handle(
+                    getAllLessonPeriodByScheduleQuery,
+                    cancellationToken
+                );
+
+            if (allLessonsPeriods.Value.Item1 != null)
             {
-                throw new ApiErrorException([new ErrorObject(_str["timeOverlap"])]);
+                foreach (var lessonPeriod in allLessonsPeriods.Value.Item1)
+                {
+                    if (
+                        request.dto.Start
+                            > lessonPeriod.Start.AddMinutes(-scheduleSettings.Value.SchoolHour)
+                        && request.dto.Start
+                            < lessonPeriod.Start.AddMinutes(scheduleSettings.Value.SchoolHour)
+                    )
+                    {
+                        throw new ApiErrorException(
+                            [new ErrorObject(_str["timeOverlap", "LessonPeriod"])]
+                        );
+                    }
+                }
             }
 
             var insertedId = await _dbService.Post<Guid>(
                 $@"
                     INSERT INTO [LessonPeriod] 
-                    ([Id],[Start],[Finish],[ScheduleSettingsId])
+                    ([Id], [Start], [ScheduleSettingsId])
                     OUTPUT 
                     INSERTED.Id                    
                     VALUES (
                     '{request.Id}',
                     @Start,
-                    @Finish,
                     '{scheduleSettings.Value.Id}');",
                 request.dto
             );

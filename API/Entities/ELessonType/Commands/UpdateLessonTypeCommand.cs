@@ -1,8 +1,6 @@
 ﻿using AlpimiAPI.Database;
 using AlpimiAPI.Entities.ELessonType.DTO;
 using AlpimiAPI.Entities.ELessonType.Queries;
-using AlpimiAPI.Entities.ESchedule;
-using AlpimiAPI.Entities.ESchedule.Queries;
 using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
 using MediatR;
@@ -34,9 +32,12 @@ namespace AlpimiAPI.Entities.ELessonType.Commands
             CancellationToken cancellationToken
         )
         {
-            if (request.dto.Color < 1) // TODO: w przyszłości jak odkryjemy jak kolorystykę zrobimy to trzeba zmienić
+            if (request.dto.Color != null)
             {
-                throw new ApiErrorException([new ErrorObject(_str["badParameter", "Color"])]);
+                if (request.dto.Color < 0 || request.dto.Color > 359)
+                {
+                    throw new ApiErrorException([new ErrorObject(_str["badParameter", "Color"])]);
+                }
             }
 
             GetLessonTypeHandler getLessonTypeHandler = new GetLessonTypeHandler(_dbService);
@@ -87,17 +88,7 @@ namespace AlpimiAPI.Entities.ELessonType.Commands
                 request.dto
             );
 
-            GetScheduleHandler getScheduleHandler = new GetScheduleHandler(_dbService);
-            GetScheduleQuery getScheduleQuery = new GetScheduleQuery(
-                lessonType!.ScheduleId,
-                new Guid(),
-                "Admin"
-            );
-            ActionResult<Schedule?> toInsertSchedule = await getScheduleHandler.Handle(
-                getScheduleQuery,
-                cancellationToken
-            );
-            lessonType.Schedule = toInsertSchedule.Value!;
+            lessonType!.Schedule = originalLessonType.Value.Schedule;
 
             return lessonType;
         }

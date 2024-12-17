@@ -3,7 +3,6 @@ using AlpimiAPI.Entities.EClassroomType.DTO;
 using AlpimiAPI.Entities.EClassroomType.Queries;
 using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
-using AlpimiAPI.Settings;
 using AlpimiAPI.Utilities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -58,6 +57,7 @@ namespace AlpimiAPI.Entities.EClassroomType
             try
             {
                 var result = await _mediator.Send(command);
+
                 var response = new ApiGetResponse<Guid>(result);
                 return Ok(response);
             }
@@ -138,6 +138,7 @@ namespace AlpimiAPI.Entities.EClassroomType
                         )
                     );
                 }
+
                 var response = new ApiGetResponse<ClassroomTypeDTO>(DataTrimmer.Trim(result));
                 return Ok(response);
             }
@@ -166,10 +167,10 @@ namespace AlpimiAPI.Entities.EClassroomType
         public async Task<ActionResult<ApiGetAllResponse<IEnumerable<ClassroomTypeDTO>>>> GetAll(
             [FromHeader] string Authorization,
             [FromQuery] Guid id,
-            [FromQuery] int perPage = PaginationSettings.perPage,
-            [FromQuery] int page = PaginationSettings.page,
-            [FromQuery] string sortBy = PaginationSettings.sortBy,
-            [FromQuery] string sortOrder = PaginationSettings.sortOrder
+            [FromQuery] int perPage = Configuration.perPage,
+            [FromQuery] int page = Configuration.page,
+            [FromQuery] string sortBy = Configuration.sortBy,
+            [FromQuery] string sortOrder = Configuration.sortOrder
         )
         {
             Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
@@ -184,6 +185,7 @@ namespace AlpimiAPI.Entities.EClassroomType
             try
             {
                 (IEnumerable<ClassroomType>?, int) result = await _mediator.Send(query);
+
                 var response = new ApiGetAllResponse<IEnumerable<ClassroomTypeDTO>>(
                     result.Item1!.Select(DataTrimmer.Trim),
                     new Pagination(result.Item2, perPage, page, sortBy, sortOrder)
@@ -234,8 +236,8 @@ namespace AlpimiAPI.Entities.EClassroomType
                         )
                     );
                 }
-                var response = new ApiGetResponse<ClassroomTypeDTO>(DataTrimmer.Trim(result));
 
+                var response = new ApiGetResponse<ClassroomTypeDTO>(DataTrimmer.Trim(result));
                 return Ok(response);
             }
             catch (Exception ex)

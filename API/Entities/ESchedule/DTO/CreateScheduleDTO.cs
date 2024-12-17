@@ -15,5 +15,8 @@ namespace AlpimiAPI.Entities.ESchedule.DTO
 
         [Required]
         public required DateOnly SchoolYearEnd { get; set; }
+
+        [Required]
+        public required string SchoolDays { get; set; }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using AlpimiAPI.Database;
 using AlpimiAPI.Entities.ELessonType;
 using AlpimiAPI.Entities.ELessonType.Queries;
+using AlpimiAPI.Entities.ESubgroup;
+using AlpimiAPI.Entities.ESubgroup.Queries;
 using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
 using MediatR;
@@ -81,7 +83,7 @@ namespace AlpimiAPI.Entities.ELesson.Queries
                     lessons = await _dbService.GetAll<Lesson>(
                         $@"
                             SELECT
-                            l.[Id], l.[Name], [AmountOfHours], l.[LessonTypeId], l.[SubgroupId]  
+                            l.[Id], l.[Name], [CurrentHours], [AmountOfHours], l.[LessonTypeId], l.[SubgroupId]  
                             FROM [Lesson] l
                             INNER JOIN [Subgroup] sg ON sg.[Id] = l.[SubgroupId]
                             INNER JOIN [Group] g ON g.[Id] = sg.[GroupId]
@@ -92,7 +94,7 @@ namespace AlpimiAPI.Entities.ELesson.Queries
                             OFFSET
                             {request.Pagination.Offset} ROWS
                             FETCH NEXT
-                            {request.Pagination.PerPage} ROWS ONLY; ",
+                            {request.Pagination.PerPage} ROWS ONLY;",
                         request
                     );
                     break;
@@ -105,14 +107,13 @@ namespace AlpimiAPI.Entities.ELesson.Queries
                             INNER JOIN [Subgroup] sg ON sg.[Id] = l.[SubgroupId]
                             INNER JOIN [Group] g ON g.[Id] = sg.[GroupId]
                             INNER JOIN [Schedule] s ON s.[Id] = g.[ScheduleId]
-                            WHERE s.[UserId] = @FilteredId AND (sg.[Id] = @Id OR g.[Id] = @Id)
-                            ",
+                            WHERE s.[UserId] = @FilteredId AND (sg.[Id] = @Id OR g.[Id] = @Id);",
                         request
                     );
                     lessons = await _dbService.GetAll<Lesson>(
                         $@"
                             SELECT 
-                            l.[Id], l.[Name], [AmountOfHours], l.[LessonTypeId], l.[SubgroupId]  
+                            l.[Id], l.[Name], [CurrentHours], [AmountOfHours], l.[LessonTypeId], l.[SubgroupId]  
                             FROM [Lesson] l
                             INNER JOIN [Subgroup] sg ON sg.[Id] = l.[SubgroupId]
                             INNER JOIN [Group] g ON g.[Id] = sg.[GroupId]
@@ -124,11 +125,12 @@ namespace AlpimiAPI.Entities.ELesson.Queries
                             OFFSET
                             {request.Pagination.Offset} ROWS
                             FETCH NEXT
-                            {request.Pagination.PerPage} ROWS ONLY; ",
+                            {request.Pagination.PerPage} ROWS ONLY;",
                         request
                     );
                     break;
             }
+
             if (lessons != null)
             {
                 foreach (var lesson in lessons)
@@ -146,8 +148,21 @@ namespace AlpimiAPI.Entities.ELesson.Queries
                         cancellationToken
                     );
                     lesson.LessonType = lessonType.Value!;
+
+                    GetSubgroupHandler getSubgroupHandler = new GetSubgroupHandler(_dbService);
+                    GetSubgroupQuery getSubgroupQuery = new GetSubgroupQuery(
+                        lesson.SubgroupId,
+                        new Guid(),
+                        "Admin"
+                    );
+                    ActionResult<Subgroup?> subgroup = await getSubgroupHandler.Handle(
+                        getSubgroupQuery,
+                        cancellationToken
+                    );
+                    lesson.Subgroup = subgroup.Value!;
                 }
             }
+
             return (lessons, count);
         }
     }

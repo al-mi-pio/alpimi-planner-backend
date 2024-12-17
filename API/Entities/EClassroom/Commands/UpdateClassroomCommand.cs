@@ -3,8 +3,6 @@ using AlpimiAPI.Entities.EClassroom.DTO;
 using AlpimiAPI.Entities.EClassroom.Queries;
 using AlpimiAPI.Entities.EClassroomType;
 using AlpimiAPI.Entities.EClassroomType.Queries;
-using AlpimiAPI.Entities.ESchedule;
-using AlpimiAPI.Entities.ESchedule.Queries;
 using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
 using MediatR;
@@ -36,9 +34,14 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
             CancellationToken cancellationToken
         )
         {
-            if (request.dto.Capacity < 1)
+            if (request.dto.Capacity != null)
             {
-                throw new ApiErrorException([new ErrorObject(_str["badParameter", "Capacity"])]);
+                if (request.dto.Capacity < 1)
+                {
+                    throw new ApiErrorException(
+                        [new ErrorObject(_str["badParameter", "Capacity"])]
+                    );
+                }
             }
 
             GetClassroomHandler getClassroomHandler = new GetClassroomHandler(_dbService);
@@ -119,7 +122,16 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
                             )
                         );
                     }
+                    else if (classroomType.Value.ScheduleId != originalClassroom.Value.ScheduleId)
+                    {
+                        errors.Add(
+                            new ErrorObject(
+                                _str["wrongSet", "ClassroomType", "Schedule", "Classroom"]
+                            )
+                        );
+                    }
                 }
+
                 if (errors.Count != 0)
                 {
                     throw new ApiErrorException(errors);
@@ -132,12 +144,11 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
                         FROM [ClassroomType] ct
                         LEFT JOIN [ClassroomClassroomType] cct ON cct.[ClassroomTypeId] = ct.[Id]
                         LEFT JOIN [Classroom] c ON c.[Id] = cct.[ClassroomId]
-                        WHERE c.[Id] = @Id",
+                        WHERE c.[Id] = @Id;",
                     request
                 );
 
                 classroomTypes = classroomTypes ?? [];
-
                 foreach (Guid classroomTypeId in request.dto.ClassroomTypeIds)
                 {
                     if (!classroomTypes.Contains(classroomTypeId))
@@ -145,7 +156,7 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
                         await _dbService.Post<Guid>(
                             $@"
                                 INSERT INTO [ClassroomClassroomType] 
-                                ([Id],[ClassroomId],[ClassroomTypeId])
+                                ([Id], [ClassroomId], [ClassroomTypeId])
                                 OUTPUT 
                                 INSERTED.Id                    
                                 VALUES (
@@ -184,17 +195,7 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
                 request.dto
             );
 
-            GetScheduleHandler getScheduleHandler = new GetScheduleHandler(_dbService);
-            GetScheduleQuery getScheduleQuery = new GetScheduleQuery(
-                classroom!.ScheduleId,
-                new Guid(),
-                "Admin"
-            );
-            ActionResult<Schedule?> toInsertSchedule = await getScheduleHandler.Handle(
-                getScheduleQuery,
-                cancellationToken
-            );
-            classroom.Schedule = toInsertSchedule.Value!;
+            classroom!.Schedule = originalClassroom.Value.Schedule!;
 
             return classroom;
         }

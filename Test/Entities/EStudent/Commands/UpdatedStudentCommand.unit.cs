@@ -2,6 +2,7 @@
 using AlpimiAPI.Entities.EGroup;
 using AlpimiAPI.Entities.EStudent;
 using AlpimiAPI.Entities.EStudent.Commands;
+using AlpimiAPI.Entities.ESubgroup;
 using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
 using AlpimiTest.TestSetup;
@@ -27,7 +28,6 @@ namespace AlpimiTest.Entities.EStudent.Commands
         public async Task ThrowsErrorWhenAlbumNumberIsAlreadyTaken()
         {
             var dto = MockData.GetUpdateStudentDTODetails();
-
             _dbService
                 .Setup(s => s.Get<Student>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetStudentDetails());
@@ -44,9 +44,7 @@ namespace AlpimiTest.Entities.EStudent.Commands
                 new Guid(),
                 "Admin"
             );
-
             var updateStudentHandler = new UpdateStudentHandler(_dbService.Object, _str.Object);
-
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateStudentHandler.Handle(updateStudentCommand, new CancellationToken())
@@ -54,6 +52,39 @@ namespace AlpimiTest.Entities.EStudent.Commands
 
             Assert.Equal(
                 "There is already a Student with the name newNumber",
+                result.errors.First().message
+            );
+        }
+
+        [Fact]
+        public async Task ThrowsErrorWhenWrongSubgroupIdIsGiven()
+        {
+            var dto = MockData.GetUpdateStudentDTODetails();
+            dto.SubgroupIds = [new Guid()];
+
+            _dbService
+                .Setup(s => s.Get<Student>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetStudentDetails());
+            _dbService
+                .Setup(s => s.Get<Group>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetGroupDetails());
+
+            var createStudentCommand = new UpdateStudentCommand(
+                new Guid(),
+                dto,
+                new Guid(),
+                "User"
+            );
+
+            var createStudentHandler = new UpdateStudentHandler(_dbService.Object, _str.Object);
+
+            var result = await Assert.ThrowsAsync<ApiErrorException>(
+                async () =>
+                    await createStudentHandler.Handle(createStudentCommand, new CancellationToken())
+            );
+
+            Assert.Equal(
+                "Subgroup with id 00000000-0000-0000-0000-000000000000 was not found",
                 result.errors.First().message
             );
         }
@@ -95,10 +126,12 @@ namespace AlpimiTest.Entities.EStudent.Commands
         }
 
         [Fact]
-        public async Task ThrowsErrorWhenWrongSubgroupIdIsGiven()
+        public async Task ThrowsErrorWhenGroupIdsFromStudentAndSubgroupDontMatch()
         {
             var dto = MockData.GetUpdateStudentDTODetails();
             dto.SubgroupIds = [new Guid()];
+            var subgroup = MockData.GetSubgroupDetails();
+            subgroup.GroupId = Guid.NewGuid();
 
             _dbService
                 .Setup(s => s.Get<Student>(It.IsAny<string>(), It.IsAny<object>()))
@@ -106,6 +139,9 @@ namespace AlpimiTest.Entities.EStudent.Commands
             _dbService
                 .Setup(s => s.Get<Group>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetGroupDetails());
+            _dbService
+                .Setup(s => s.Get<Subgroup>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(subgroup);
 
             var createStudentCommand = new UpdateStudentCommand(
                 new Guid(),
@@ -122,7 +158,7 @@ namespace AlpimiTest.Entities.EStudent.Commands
             );
 
             Assert.Equal(
-                "Subgroup with id 00000000-0000-0000-0000-000000000000 was not found",
+                "Subgroup must be in the same Group as Student",
                 result.errors.First().message
             );
         }

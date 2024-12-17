@@ -15,12 +15,7 @@ namespace AlpimiTest.TestSetup
             { "invalidLoginOrPassword", "Invalid login or password" },
             { "invalidPassword", "Invalid password" },
             { "scheduleDate", "The end date cannot happen before the start date" },
-            { "timeOverlap", "Start time and end time cannot overlap" },
             { "scheduleTime", "The end time cannot happen before the start time" },
-            {
-                "outOfRange",
-                "There are days off outside of provided range. Please change them first"
-            },
             {
                 "tooManyStudents",
                 "Student count in a subgroup cannot be greater than the student count in a group"
@@ -36,6 +31,16 @@ namespace AlpimiTest.TestSetup
                 args => new LocalizedString(
                     "badParameter",
                     string.Format("{0} parameter is invalid", args[0])
+                )
+            },
+            {
+                "outOfRange",
+                args => new LocalizedString(
+                    "outOfRange",
+                    string.Format(
+                        "There are {0} outside of provided range. Please change them first",
+                        args[0]
+                    )
                 )
             },
             {
@@ -60,6 +65,13 @@ namespace AlpimiTest.TestSetup
                 )
             },
             {
+                "timeOverlap",
+                args => new LocalizedString(
+                    "timeOverlap",
+                    string.Format("{0}s cannot overlap", args[0])
+                )
+            },
+            {
                 "alreadyExists",
                 args => new LocalizedString(
                     "alreadyExists",
@@ -77,6 +89,13 @@ namespace AlpimiTest.TestSetup
                 )
             },
             {
+                "badWeekDay",
+                args => new LocalizedString(
+                    "badWeekDay",
+                    string.Format("Lessons cannot occur on {0}", args[0])
+                )
+            },
+            {
                 "dateOutOfRange",
                 args => new LocalizedString(
                     "dateOutofRange",
@@ -88,6 +107,13 @@ namespace AlpimiTest.TestSetup
                 args => new LocalizedString(
                     "duplicateData",
                     string.Format("Cannot add multiple {0} with the value {1}", args[0], args[1])
+                )
+            },
+            {
+                "wrongSet",
+                args => new LocalizedString(
+                    "wrongSet",
+                    string.Format("{0} must be in the same {1} as {2}", args[0], args[1], args[2])
                 )
             }
         };
@@ -101,6 +127,7 @@ namespace AlpimiTest.TestSetup
                         return localizedErrorsWithoutArgs[key](args);
                     }
                 );
+
             _str.Setup(localizer => localizer[It.IsAny<string>()])
                 .Returns(
                     (string key) =>

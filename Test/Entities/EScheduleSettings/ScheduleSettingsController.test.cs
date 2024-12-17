@@ -1,8 +1,8 @@
 ﻿using System.Net;
 using System.Net.Http.Headers;
-using AlpimiAPI.Entities.EScheduleSettings;
+using AlpimiAPI.Entities.EScheduleSettings.DTO;
 using AlpimiAPI.Responses;
-using AlpimiAPI.Settings;
+using AlpimiAPI.Utilities;
 using AlpimiTest.TestSetup;
 using AlpimiTest.TestUtilities;
 using Xunit;
@@ -40,10 +40,43 @@ namespace AlpimiTest.Entities.EScheduleSettings
         }
 
         [Fact]
-        public async Task UpdateScheduleSettingsReturnsUpdatedSchedule()
+        public async Task ScheduleSettingsControllerThrowsUnauthorized()
+        {
+            _client.DefaultRequestHeaders.Authorization = null;
+
+            var response = await _client.PatchAsJsonAsync(
+                $"/api/ScheduleSettings/{new Guid()}",
+                MockData.GetUpdateScheduleSettingsDTO()
+            );
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+
+            response = await _client.GetAsync($"/api/ScheduleSettings/{new Guid()}");
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task ScheduleControllerThrowsTooManyRequests()
+        {
+            for (int i = 0; i != Configuration.GetPermitLimit(); i++)
+            {
+                await _client.GetAsync($"/api/ScheduleSettings/{new Guid()}");
+            }
+            _client.DefaultRequestHeaders.Authorization = null;
+
+            var response = await _client.PatchAsJsonAsync(
+                $"/api/ScheduleSettings/{new Guid()}",
+                MockData.GetUpdateScheduleSettingsDTO()
+            );
+            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
+
+            response = await _client.GetAsync($"/api/ScheduleSettings/{new Guid()}");
+            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task UpdateScheduleSettingsReturnsUpdatedScheduleSettings()
         {
             var updateScheduleSettings = MockData.GetUpdateScheduleSettingsDTO();
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", new Guid())
@@ -54,7 +87,7 @@ namespace AlpimiTest.Entities.EScheduleSettings
                 updateScheduleSettings
             );
             var jsonResponse = await response.Content.ReadFromJsonAsync<
-                ApiGetResponse<ScheduleSettings>
+                ApiGetResponse<ScheduleSettingsDTO>
             >();
 
             Assert.Equal(
@@ -63,21 +96,6 @@ namespace AlpimiTest.Entities.EScheduleSettings
             );
             Assert.Equal(jsonResponse.Content.SchoolYearEnd, updateScheduleSettings.SchoolYearEnd);
             Assert.Equal(jsonResponse.Content.SchoolHour, updateScheduleSettings.SchoolHour);
-        }
-
-        [Fact]
-        public async Task UpdateScheduleSettingsThrowsNotFoundErrorWhenWrongIdIsGiven()
-        {
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-                "Bearer",
-                TestAuthorization.GetToken("Admin", "User", new Guid())
-            );
-
-            var response = await _client.PatchAsJsonAsync(
-                $"/api/ScheduleSettings/{new Guid()}",
-                MockData.GetUpdateScheduleSettingsDTO()
-            );
-            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
         [Fact]
@@ -92,66 +110,34 @@ namespace AlpimiTest.Entities.EScheduleSettings
                 $"/api/ScheduleSettings/{scheduleId}",
                 MockData.GetUpdateScheduleSettingsDTO()
             );
-            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
-        }
-
-        [Fact]
-        public async Task GetScheduleSettingsByScheduleIdReturnsScheduleSettings()
-        {
-            var scheduleSettings = MockData.GetCreateScheduleDTODetails();
-
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-                "Bearer",
-                TestAuthorization.GetToken("Admin", "User", new Guid())
-            );
-
-            var response = await _client.GetAsync($"/api/ScheduleSettings/bySchedule/{scheduleId}");
-            var jsonResponse = await response.Content.ReadFromJsonAsync<
-                ApiGetResponse<ScheduleSettings>
-            >();
-
-            Assert.Equal(jsonResponse!.Content.SchoolYearStart, scheduleSettings.SchoolYearStart);
-            Assert.Equal(jsonResponse.Content.SchoolYearEnd, scheduleSettings.SchoolYearEnd);
-            Assert.Equal(jsonResponse.Content.SchoolHour, scheduleSettings.SchoolHour);
-        }
-
-        [Fact]
-        public async Task GetScheduleSettingsByScheduleIdThrowsNotFoundErrorWhenWrongUserAttemptsUpdate()
-        {
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-                "Bearer",
-                TestAuthorization.GetToken("User", "User", new Guid())
-            );
-
-            var response = await _client.GetAsync($"/api/ScheduleSettings/bySchedule/{scheduleId}");
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
         [Fact]
-        public async Task GetScheduleSettingsByScheduleIdThrowsNotFoundErrorWhenWrongIdIsGiven()
+        public async Task UpdateScheduleSettingsThrowsNotFoundErrorWhenWrongIdIsGiven()
         {
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", new Guid())
             );
 
-            var response = await _client.GetAsync($"/api/ScheduleSettings/bySchedule/{new Guid()}");
+            var response = await _client.PatchAsJsonAsync(
+                $"/api/ScheduleSettings/{new Guid()}",
+                MockData.GetUpdateScheduleSettingsDTO()
+            );
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
         [Fact]
-        public async Task GetScheduleSettingsReturnsScheduleSettings()
+        public async Task GetScheduleSettingsReturnsScheduleSettingsIFAValidScheduleIdIsProvided()
         {
             var scheduleSettings = MockData.GetCreateScheduleDTODetails();
-            var scheduleSettingsId = await _client.GetAsync(
-                $"/api/ScheduleSettings/bySchedule/{scheduleId}"
-            );
+            var scheduleSettingsId = await _client.GetAsync($"/api/ScheduleSettings/{scheduleId}");
             var jsonScheduleSettingsId = await scheduleSettingsId.Content.ReadFromJsonAsync<
-                ApiGetResponse<ScheduleSettings>
+                ApiGetResponse<ScheduleSettingsDTO>
             >();
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", new Guid())
@@ -161,7 +147,26 @@ namespace AlpimiTest.Entities.EScheduleSettings
                 $"/api/ScheduleSettings/{jsonScheduleSettingsId!.Content.Id}"
             );
             var jsonResponse = await response.Content.ReadFromJsonAsync<
-                ApiGetResponse<ScheduleSettings>
+                ApiGetResponse<ScheduleSettingsDTO>
+            >();
+
+            Assert.Equal(jsonResponse!.Content.SchoolYearStart, scheduleSettings.SchoolYearStart);
+            Assert.Equal(jsonResponse.Content.SchoolYearEnd, scheduleSettings.SchoolYearEnd);
+            Assert.Equal(jsonResponse.Content.SchoolHour, scheduleSettings.SchoolHour);
+        }
+
+        [Fact]
+        public async Task GetScheduleSettingsReturnsScheduleSettingsIFAValidScheduleSettingsIdIsProvided()
+        {
+            var scheduleSettings = MockData.GetScheduleSettingsDetails();
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", new Guid())
+            );
+
+            var response = await _client.GetAsync($"/api/ScheduleSettings/{scheduleId}");
+            var jsonResponse = await response.Content.ReadFromJsonAsync<
+                ApiGetResponse<ScheduleSettingsDTO>
             >();
 
             Assert.Equal(jsonResponse!.Content.SchoolYearStart, scheduleSettings.SchoolYearStart);
@@ -172,21 +177,12 @@ namespace AlpimiTest.Entities.EScheduleSettings
         [Fact]
         public async Task GetScheduleSettingsThrowsNotFoundErrorWhenWrongUserAttemptsUpdate()
         {
-            var scheduleSettingsId = await _client.GetAsync(
-                $"/api/ScheduleSettings/bySchedule/{scheduleId}"
-            );
-            var jsonScheduleSettingsId = await scheduleSettingsId.Content.ReadFromJsonAsync<
-                ApiGetResponse<ScheduleSettings>
-            >();
-
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("User", "User", new Guid())
             );
 
-            var response = await _client.GetAsync(
-                $"/api/ScheduleSettings/{jsonScheduleSettingsId!.Content.Id}"
-            );
+            var response = await _client.GetAsync($"/api/ScheduleSettings/{scheduleId}");
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
@@ -202,45 +198,6 @@ namespace AlpimiTest.Entities.EScheduleSettings
             var response = await _client.GetAsync($"/api/ScheduleSettings/{new Guid()}");
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
-        }
-
-        [Fact]
-        public async Task ScheduleSettingsControllerThrowsUnauthorized()
-        {
-            _client.DefaultRequestHeaders.Authorization = null;
-
-            var response = await _client.GetAsync($"/api/ScheduleSettings/bySchedule/{new Guid()}");
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-
-            response = await _client.PatchAsJsonAsync(
-                $"/api/ScheduleSettings/{new Guid()}",
-                MockData.GetUpdateScheduleSettingsDTO()
-            );
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-
-            response = await _client.GetAsync($"/api/ScheduleSettings/{new Guid()}");
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-        }
-
-        [Fact]
-        public async Task ScheduleControllerThrowsTooManyRequests()
-        {
-            for (int i = 0; i != RateLimiterSettings.permitLimit; i++)
-            {
-                await _client.GetAsync($"/api/ScheduleSettings/{new Guid()}");
-            }
-
-            var response = await _client.GetAsync($"/api/ScheduleSettings/bySchedule/{new Guid()}");
-            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
-
-            response = await _client.PatchAsJsonAsync(
-                $"/api/ScheduleSettings/{new Guid()}",
-                MockData.GetUpdateScheduleSettingsDTO()
-            );
-            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
-
-            response = await _client.GetAsync($"/api/ScheduleSettings/{new Guid()}");
-            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
         }
     }
 }

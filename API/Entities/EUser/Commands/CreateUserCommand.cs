@@ -74,6 +74,7 @@ namespace AlpimiAPI.Entities.EUser.Commands
                     new ErrorObject(_str["longPassword", AuthSettings.MaximumPasswordLength])
                 );
             }
+
             RequiredCharacterTypes[]? requiredCharacterTypes = AuthSettings.RequiredCharacters;
             bool requiredCharactersError = false;
 
@@ -131,7 +132,7 @@ namespace AlpimiAPI.Entities.EUser.Commands
             var insertedId = await _dbService.Post<Guid>(
                 $@"
                     INSERT INTO [User] 
-                    ([Id],[Login],[CustomURL])
+                    ([Id], [Login], [CustomURL])
                     OUTPUT 
                     INSERTED.Id                    
                     VALUES (
@@ -140,6 +141,7 @@ namespace AlpimiAPI.Entities.EUser.Commands
                     @CustomURL);",
                 request.dto
             );
+
             byte[] salt = RandomNumberGenerator.GetBytes(16);
             byte[] hash = Rfc2898DeriveBytes.Pbkdf2(
                 request.dto.Password,
@@ -152,7 +154,7 @@ namespace AlpimiAPI.Entities.EUser.Commands
             await _dbService.Post<Guid>(
                 $@"
                     INSERT INTO [Auth] 
-                    ([Id],[Password],[Salt],[Role],[UserId])
+                    ([Id], [Password], [Salt], [Role], [UserId])
                     OUTPUT 
                     INSERTED.UserId                    
                     VALUES (

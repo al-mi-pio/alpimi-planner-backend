@@ -40,6 +40,7 @@ namespace AlpimiAPI.Entities.EUser.Queries
                     );
                     break;
             }
+
             return user;
         }
     }

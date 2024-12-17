@@ -194,7 +194,7 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                                 scheduleSettings.SchoolYearEnd.DayNumber
                                 - request.dto.LessonDate.DayNumber
                             ) / (7.0 * request.dto.WeekInterval!.Value)
-                        )
+                        ) + 1
                     );
                 }
             }

@@ -9,23 +9,27 @@ using Microsoft.Extensions.Localization;
 
 namespace AlpimiAPI.Entities.ESchedule.Queries
 {
-    public record GetAllSchedulesQuery(Guid FilteredId, string Role, PaginationParams Pagination)
-        : IRequest<(IEnumerable<Schedule>?, int)>;
+    public record GetAllSchedulesByURLQuery(
+        string URL,
+        Guid FilteredId,
+        string Role,
+        PaginationParams Pagination
+    ) : IRequest<(IEnumerable<Schedule>?, int)>;
 
-    public class GetAllSchedulesHandler
-        : IRequestHandler<GetAllSchedulesQuery, (IEnumerable<Schedule>?, int)>
+    public class GetAllSchedulesByURLHandler
+        : IRequestHandler<GetAllSchedulesByURLQuery, (IEnumerable<Schedule>?, int)>
     {
         private readonly IDbService _dbService;
         private readonly IStringLocalizer<Errors> _str;
 
-        public GetAllSchedulesHandler(IDbService dbService, IStringLocalizer<Errors> str)
+        public GetAllSchedulesByURLHandler(IDbService dbService, IStringLocalizer<Errors> str)
         {
             _dbService = dbService;
             _str = str;
         }
 
         public async Task<(IEnumerable<Schedule>?, int)> Handle(
-            GetAllSchedulesQuery request,
+            GetAllSchedulesByURLQuery request,
             CancellationToken cancellationToken
         )
         {
@@ -64,14 +68,18 @@ namespace AlpimiAPI.Entities.ESchedule.Queries
                         @"
                             SELECT 
                             COUNT(*) 
-                            FROM [Schedule];",
-                        ""
+                            FROM [Schedule] s
+                            INNER JOIN [User] u ON u.[Id] = s.[UserId]
+                            WHERE u.[CustomURL] = @URL;",
+                        request
                     );
                     schedules = await _dbService.GetAll<Schedule>(
                         $@"
                             SELECT 
-                            [Id], [Name], [UserId]
-                            FROM [Schedule] 
+                            s.[Id], [Name], [UserId]
+                            FROM [Schedule] s
+                            INNER JOIN [User] u ON u.[Id] = s.[UserId]
+                            WHERE u.[CustomURL] = @URL
                             ORDER BY 
                             {request.Pagination.SortBy}
                             {request.Pagination.SortOrder}
@@ -79,7 +87,34 @@ namespace AlpimiAPI.Entities.ESchedule.Queries
                             {request.Pagination.Offset} ROWS
                             FETCH NEXT
                             {request.Pagination.PerPage} ROWS ONLY;",
-                        request.Pagination
+                        request
+                    );
+                    break;
+                case "User":
+                    count = await _dbService.Get<int>(
+                        @"
+                            SELECT 
+                            COUNT(*) 
+                            FROM [Schedule] s
+                            INNER JOIN [User] u ON u.[Id] = s.[UserId]
+                            WHERE [UserId] = @FilteredId AND u.[CustomURL] = @URL;",
+                        request
+                    );
+                    schedules = await _dbService.GetAll<Schedule>(
+                        $@"
+                            SELECT 
+                            s.[Id], [Name], [UserId] 
+                            FROM [Schedule] s
+                            INNER JOIN [User] u ON u.[Id] = s.[UserId]
+                            WHERE [UserId] = @FilteredId AND u.[CustomURL] = @URL
+                            ORDER BY 
+                            {request.Pagination.SortBy}
+                            {request.Pagination.SortOrder}
+                            OFFSET
+                            {request.Pagination.Offset} ROWS
+                            FETCH NEXT
+                            {request.Pagination.PerPage} ROWS ONLY;",
+                        request
                     );
                     break;
                 default:
@@ -87,16 +122,20 @@ namespace AlpimiAPI.Entities.ESchedule.Queries
                         @"
                             SELECT 
                             COUNT(*) 
-                            FROM [Schedule] 
-                            WHERE [UserId] = @FilteredId;",
+                            FROM [Schedule] s
+                            INNER JOIN [User] u ON u.[Id] = s.[UserId]
+                            INNER JOIN [ScheduleSettings] ss ON ss.[ScheduleId] = s.[Id]
+                            WHERE u.[CustomURL] = @URL AND ss.[IsPublic] = 'TRUE';",
                         request
                     );
                     schedules = await _dbService.GetAll<Schedule>(
                         $@"
                             SELECT 
-                            [Id], [Name], [UserId] 
-                            FROM [Schedule]
-                            WHERE [UserId] = @FilteredId
+                            s.[Id], [Name], [UserId] 
+                            FROM [Schedule] s
+                            INNER JOIN [User] u ON u.[Id] = s.[UserId]
+                            INNER JOIN [ScheduleSettings] ss ON ss.[ScheduleId] = s.[Id]
+                            WHERE u.[CustomURL] = @URL AND ss.[IsPublic] = 'TRUE'
                             ORDER BY 
                             {request.Pagination.SortBy}
                             {request.Pagination.SortOrder}

@@ -70,20 +70,16 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
                 throw new ApiErrorException(errors);
             }
 
-            GetScheduleByNameHandler getScheduleByNameHandler = new GetScheduleByNameHandler(
-                _dbService
-            );
-            GetScheduleByNameQuery getScheduleByNameQuery = new GetScheduleByNameQuery(
-                request.dto.Name,
-                request.UserId,
-                "User"
-            );
-            ActionResult<Schedule?> scheduleName = await getScheduleByNameHandler.Handle(
-                getScheduleByNameQuery,
-                cancellationToken
+            var scheduleName = await _dbService.Get<Schedule?>(
+                $@"
+                       SELECT
+                       [Id], [Name], [UserId] 
+                       FROM [Schedule] 
+                       WHERE [Name] = @Name;",
+                request.dto
             );
 
-            if (scheduleName.Value != null)
+            if (scheduleName != null)
             {
                 throw new ApiErrorException(
                     [new ErrorObject(_str["alreadyExists", "Schedule", request.dto.Name])]
@@ -111,7 +107,7 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
             await _dbService.Post<Guid>(
                 $@"
                     INSERT INTO [ScheduleSettings] 
-                    ([Id], [SchoolHour], [SchoolYearStart], [SchoolYearEnd], [SchoolDays], [ScheduleId])
+                    ([Id], [SchoolHour], [SchoolYearStart], [SchoolYearEnd], [SchoolDays], [IsPublic], [ScheduleId])
                     OUTPUT 
                     INSERTED.Id
                     VALUES (
@@ -120,6 +116,7 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
                     @SchoolYearStart, 
                     @SchoolYearEnd,
                     @SchoolDays,
+                    'FALSE',
                     '{request.Id}');",
                 request.dto
             );

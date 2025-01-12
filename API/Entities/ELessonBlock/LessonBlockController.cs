@@ -166,14 +166,14 @@ namespace AlpimiAPI.Entities.ELessonBlock
         /// <remarks>
         /// Possible parameters are: SubroupId, GroupId, ScheduleId, ClusterId, TeacherId, ClassroomId or LessonId
         /// Returned LessonBlocks can be filtered by given date range
-        /// - JWT token is required
         /// </remarks>
         [HttpGet]
+        [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
         public async Task<ActionResult<ApiGetAllResponse<IEnumerable<LessonBlockDTO>>>> GetAll(
-            [FromHeader] string Authorization,
+            [FromHeader] string? Authorization,
             [FromQuery] Guid id,
             [FromQuery] DateOnly? fromDate = null,
             [FromQuery] DateOnly? toDate = null,

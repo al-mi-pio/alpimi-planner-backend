@@ -95,7 +95,7 @@ namespace AlpimiAPI.Entities.EDayOff.Queries
                         request
                     );
                     break;
-                default:
+                case "User":
                     count = await _dbService.Get<int>(
                         @"
                             SELECT 
@@ -114,6 +114,35 @@ namespace AlpimiAPI.Entities.EDayOff.Queries
                             INNER JOIN [ScheduleSettings] ss ON ss.[Id] = do.[ScheduleSettingsId]
                             INNER JOIN [Schedule] s ON s.[Id]=ss.[ScheduleId]
                             WHERE s.[UserId] = @FilteredId AND ss.[ScheduleId] = @ScheduleId 
+                            ORDER BY
+                            {request.Pagination.SortBy}
+                            {request.Pagination.SortOrder}
+                            OFFSET
+                            {request.Pagination.Offset} ROWS
+                            FETCH NEXT
+                            {request.Pagination.PerPage} ROWS ONLY;",
+                        request
+                    );
+                    break;
+                default:
+                    count = await _dbService.Get<int>(
+                        @"
+                            SELECT 
+                            COUNT(*)
+                            FROM [DayOff] do
+                            INNER JOIN [ScheduleSettings] ss ON ss.[Id] = do.[ScheduleSettingsId]
+                            INNER JOIN [Schedule] s ON s.[Id]=ss.[ScheduleId]
+                            WHERE ss.[IsPublic] = 'TRUE' AND ss.[ScheduleId] = @ScheduleId;",
+                        request
+                    );
+                    daysOff = await _dbService.GetAll<DayOff>(
+                        $@"
+                            SELECT 
+                            do.[Id], do.[Name], [From], [To], [ScheduleSettingsId]
+                            FROM [DayOff] do
+                            INNER JOIN [ScheduleSettings] ss ON ss.[Id] = do.[ScheduleSettingsId]
+                            INNER JOIN [Schedule] s ON s.[Id]=ss.[ScheduleId]
+                            WHERE ss.[IsPublic] = 'TRUE' AND ss.[ScheduleId] = @ScheduleId 
                             ORDER BY
                             {request.Pagination.SortBy}
                             {request.Pagination.SortOrder}

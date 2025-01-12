@@ -8,7 +8,6 @@ using AlpimiAPI.Utilities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace AlpimiAPI.Entities.ESchedule.Commands
 {
@@ -71,27 +70,20 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
                     );
                 }
 
-                GetScheduleByNameHandler getScheduleByNameHandler = new GetScheduleByNameHandler(
-                    _dbService
-                );
-                GetScheduleByNameQuery getScheduleByNameQuery = new GetScheduleByNameQuery(
-                    request.dto.Name,
-                    request.FilteredId,
-                    "User"
-                );
-                ActionResult<Schedule?> scheduleName = await getScheduleByNameHandler.Handle(
-                    getScheduleByNameQuery,
-                    cancellationToken
+                var scheduleName = await _dbService.Get<Schedule?>(
+                    $@"
+                       SELECT
+                       [Id], [Name], [UserId] 
+                       FROM [Schedule] 
+                       WHERE [Name] = @Name;",
+                    request.dto
                 );
 
-                if (scheduleName.Value != null)
+                if (scheduleName != null)
                 {
-                    if (scheduleName.Value.Id != request.Id)
-                    {
-                        throw new ApiErrorException(
-                            [new ErrorObject(_str["alreadyExists", "Schedule", request.dto.Name])]
-                        );
-                    }
+                    throw new ApiErrorException(
+                        [new ErrorObject(_str["alreadyExists", "Schedule", request.dto.Name])]
+                    );
                 }
             }
 

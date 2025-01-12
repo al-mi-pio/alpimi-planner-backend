@@ -1,12 +1,18 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using AlpimiAPI.Entities.EStudent;
 
 namespace AlpimiAPI.Utilities
 {
     public static class Privileges
     {
-        public static Guid GetUserIdFromToken(string authorization)
+        public static Guid GetUserIdFromToken(string? authorization)
         {
+            if (authorization == null)
+            {
+                return new Guid();
+            }
+
             var token = authorization.ToString().Split(" ").Last();
             var jwtHandler = new JwtSecurityTokenHandler();
             var jwtToken = jwtHandler.ReadJwtToken(token);
@@ -15,14 +21,19 @@ namespace AlpimiAPI.Utilities
             return Guid.Parse(userIdClaim.Value);
         }
 
-        public static string GetUserRoleFromToken(string authorization)
+        public static string GetUserRoleFromToken(string? authorization)
         {
+            if (authorization == null)
+            {
+                return "Student";
+            }
+
             var token = authorization.ToString().Split(" ").Last();
             var jwtHandler = new JwtSecurityTokenHandler();
             var jwtToken = jwtHandler.ReadJwtToken(token);
-            Claim RoleClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)!;
+            Claim userRoleClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)!;
 
-            return (RoleClaim.Value);
+            return (userRoleClaim.Value);
         }
 
         public static string GetUserLoginFromToken(string authorization)
@@ -30,9 +41,9 @@ namespace AlpimiAPI.Utilities
             var token = authorization.ToString().Split(" ").Last();
             var jwtHandler = new JwtSecurityTokenHandler();
             var jwtToken = jwtHandler.ReadJwtToken(token);
-            Claim RoleClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == "login")!;
+            Claim userLoginClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == "login")!;
 
-            return (RoleClaim.Value);
+            return (userLoginClaim.Value);
         }
     }
 }

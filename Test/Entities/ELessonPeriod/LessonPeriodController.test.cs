@@ -54,10 +54,6 @@ namespace AlpimiTest.Entities.ELessonPeriod
             );
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
 
-            var query = $"?scheduleId={new Guid()}";
-            response = await _client.GetAsync($"/api/LessonPeriod{query}");
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-
             response = await _client.PatchAsJsonAsync(
                 $"/api/LessonPeriod/{new Guid()}",
                 MockData.GetUpdateLessonPeriodDTODetails()
@@ -210,6 +206,24 @@ namespace AlpimiTest.Entities.ELessonPeriod
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)
             );
+
+            var query = $"?scheduleId={scheduleId}";
+            var response = await _client.GetAsync($"/api/LessonPeriod{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+
+            Assert.Contains(lessonPeriodRequest1.Start.ToString(), stringResponse);
+            Assert.Contains(lessonPeriodRequest2.Start.ToString(), stringResponse);
+        }
+
+        [Fact]
+        public async Task GetAllLessonPeriodsReturnsLessonPeriodsFromPublicSchedules()
+        {
+            await DbHelper.PublishSchedule(_client, scheduleId);
+            var lessonPeriodRequest1 = MockData.GetCreateLessonPeriodDTODetails(scheduleId);
+            var lessonPeriodRequest2 = MockData.GetCreateSecondLessonPeriodDTODetails(scheduleId);
+            await DbHelper.SetupLessonPeriod(_client, lessonPeriodRequest1);
+            var lessonPeriodId = await DbHelper.SetupLessonPeriod(_client, lessonPeriodRequest2);
+            _client.DefaultRequestHeaders.Authorization = null;
 
             var query = $"?scheduleId={scheduleId}";
             var response = await _client.GetAsync($"/api/LessonPeriod{query}");

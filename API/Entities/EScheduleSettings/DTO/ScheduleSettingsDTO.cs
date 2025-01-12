@@ -11,5 +11,7 @@
         public required DateOnly SchoolYearEnd { get; set; }
 
         public required string SchoolDays { get; set; }
+
+        public required bool IsPublic { get; set; }
     }
 }

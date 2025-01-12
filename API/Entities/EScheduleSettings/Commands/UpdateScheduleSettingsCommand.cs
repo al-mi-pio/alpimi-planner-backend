@@ -90,6 +90,7 @@ namespace AlpimiAPI.Entities.EScheduleSettings.Commands
                 request.dto.SchoolYearEnd ?? originalScheduleSettings.Value.SchoolYearEnd;
             request.dto.SchoolDays =
                 request.dto.SchoolDays ?? originalScheduleSettings.Value.SchoolDays;
+            request.dto.IsPublic = request.dto.IsPublic ?? originalScheduleSettings.Value.IsPublic;
 
             if (request.dto.SchoolYearStart > request.dto.SchoolYearEnd)
             {
@@ -169,13 +170,15 @@ namespace AlpimiAPI.Entities.EScheduleSettings.Commands
                     [SchoolHour] = @SchoolHour,
                     [SchoolYearStart] = @SchoolYearStart, 
                     [SchoolYearEnd] = @SchoolYearEnd, 
-                    [SchoolDays] = @SchoolDays
+                    [SchoolDays] = @SchoolDays,
+                    [IsPublic] = @IsPublic
                     OUTPUT 
                     INSERTED.[Id], 
                     INSERTED.[SchoolHour], 
                     INSERTED.[SchoolYearStart], 
                     INSERTED.[SchoolYearEnd], 
                     INSERTED.[SchoolDays],
+                    INSERTED.[IsPublic],
                     INSERTED.[ScheduleId]
                     WHERE [ScheduleId] = '{request.ScheduleId}';",
                 request.dto

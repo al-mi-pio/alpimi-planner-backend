@@ -77,8 +77,11 @@
 - [GetAllClassroomsReturnsClassroomsFromScheduleIfShceduleIdIsProvided()](../Entities/EClassroom/ClassroomController.test.cs) - **integrity**  
   Check if returns two classrooms when a valid token is provided
 
-- [GetAllClassroomsReturnsClassroomsFromClassroomTypeIfClassroomTypeIdIsProvided()](../Entities/EClassroom/ClassroomController.test.cs) - **integrity**  
-  Check if returns two classrooms when a valid token is provided
+- [GetAllClassroomsReturnsClassroomFromClassroomTypeIfClassroomTypeIdIsProvided()](../Entities/EClassroom/ClassroomController.test.cs) - **integrity**  
+  Check if returns one classroom when a valid token is provided
+
+- [GetAllClassroomsReturnsClassroomsFromPublicSchedules()](../Entities/EClassroom/ClassroomController.test.cs) - **integrity**  
+  Check if returns two classrooms when no token is provided
 
 - [GetAllClassroomsReturnsEmptyContentWhenWrongUserAttemptsGet()](../Entities/EClassroom/ClassroomController.test.cs) - **integrity**  
   Check if returns no classrooms when other user's token is provided

@@ -150,14 +150,14 @@ namespace AlpimiAPI.Entities.EGroup
         /// Gets all Groups by ScheduleId
         /// </summary>
         /// <remarks>
-        /// - JWT token is required
         /// </remarks>
         [HttpGet]
+        [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
         public async Task<ActionResult<ApiGetAllResponse<IEnumerable<GroupDTO>>>> GetAll(
-            [FromHeader] string Authorization,
+            [FromHeader] string? Authorization,
             [FromQuery] Guid scheduleId,
             [FromQuery] int perPage = Configuration.perPage,
             [FromQuery] int page = Configuration.page,

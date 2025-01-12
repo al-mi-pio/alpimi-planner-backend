@@ -240,37 +240,47 @@ namespace AlpimiAPI.Entities.ESchedule
         }
 
         /// <summary>
-        /// Gets a Schedule by Name
+        /// Gets all schedules by URL
         /// </summary>
         /// <remarks>
-        /// - JWT token is required
         /// </remarks>
-        [HttpGet("byName/{name}")]
+        [HttpGet("byURL")]
+        [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
         [ProducesResponseType(typeof(ApiErrorResponse), 404)]
-        public async Task<ActionResult<ApiGetResponse<ScheduleDTO>>> GetOneByName(
-            [FromRoute] string name,
-            [FromHeader] string Authorization
+        public async Task<ActionResult<ApiGetAllResponse<IEnumerable<ScheduleDTO>>>> GetAllByUrl(
+            [FromHeader] string? Authorization,
+            [FromQuery] string url,
+            [FromQuery] int perPage = Configuration.perPage,
+            [FromQuery] int page = Configuration.page,
+            [FromQuery] string sortBy = Configuration.sortBy,
+            [FromQuery] string sortOrder = Configuration.sortOrder
         )
         {
             Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
             string privileges = Privileges.GetUserRoleFromToken(Authorization);
 
-            var query = new GetScheduleByNameQuery(name, filteredId, privileges);
+            var query = new GetAllSchedulesByURLQuery(
+                url,
+                filteredId,
+                privileges,
+                new PaginationParams(perPage, (page - 1) * perPage, sortBy, sortOrder)
+            );
             try
             {
-                Schedule? result = await _mediator.Send(query);
-                if (result == null)
-                {
-                    return NotFound(
-                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "Schedule"])])
-                    );
-                }
+                (IEnumerable<Schedule>?, int) result = await _mediator.Send(query);
 
-                var response = new ApiGetResponse<ScheduleDTO>(DataTrimmer.Trim(result));
+                var response = new ApiGetAllResponse<IEnumerable<ScheduleDTO>>(
+                    result.Item1!.Select(DataTrimmer.Trim),
+                    new Pagination(result.Item2, perPage, page, sortBy, sortOrder)
+                );
                 return Ok(response);
+            }
+            catch (ApiErrorException ex)
+            {
+                return BadRequest(new ApiErrorResponse(400, ex.errors));
             }
             catch (Exception ex)
             {

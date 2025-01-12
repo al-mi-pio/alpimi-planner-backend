@@ -9,6 +9,7 @@ using AlpimiAPI.Entities.ELessonBlock.DTO;
 using AlpimiAPI.Entities.ELessonPeriod.DTO;
 using AlpimiAPI.Entities.ELessonType.DTO;
 using AlpimiAPI.Entities.ESchedule.DTO;
+using AlpimiAPI.Entities.EScheduleSettings.DTO;
 using AlpimiAPI.Entities.EStudent.DTO;
 using AlpimiAPI.Entities.ESubgroup.DTO;
 using AlpimiAPI.Entities.ETeacher.DTO;
@@ -257,6 +258,19 @@ namespace AlpimiTest.TestSetup
             >();
 
             return jsonLessonBlockId!.Content;
+        }
+
+        public static async Task PublishSchedule(HttpClient _client, Guid scheduleId)
+        {
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "Bob", new Guid())
+            );
+
+            await _client.PatchAsJsonAsync(
+                $"/api/ScheduleSettings/{scheduleId}",
+                new UpdateScheduleSettingsDTO() { IsPublic = true }
+            );
         }
     }
 }

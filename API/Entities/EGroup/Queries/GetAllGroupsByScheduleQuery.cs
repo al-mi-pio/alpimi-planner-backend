@@ -92,7 +92,7 @@ namespace AlpimiAPI.Entities.EGroup.Queries
                         request
                     );
                     break;
-                default:
+                case "User":
                     count = await _dbService.Get<int>(
                         @"
                             SELECT
@@ -105,10 +105,39 @@ namespace AlpimiAPI.Entities.EGroup.Queries
                     groups = await _dbService.GetAll<Group>(
                         $@"
                             SELECT 
-                            g.[Id], g.[Name], [StudentCount],[ScheduleId] 
+                            g.[Id], g.[Name], [StudentCount], [ScheduleId] 
                             FROM [Group] g
                             INNER JOIN [Schedule] s ON s.[Id]=g.[ScheduleId]
                             WHERE s.[UserId] = @FilteredId AND g.[ScheduleId] = @ScheduleId 
+                            ORDER BY
+                            {request.Pagination.SortBy}
+                            {request.Pagination.SortOrder}
+                            OFFSET
+                            {request.Pagination.Offset} ROWS
+                            FETCH NEXT
+                            {request.Pagination.PerPage} ROWS ONLY;",
+                        request
+                    );
+                    break;
+                default:
+                    count = await _dbService.Get<int>(
+                        @"
+                            SELECT
+                            COUNT(*)
+                            FROM [Group] g
+                            INNER JOIN [Schedule] s ON s.[Id]=g.[ScheduleId]
+                            INNER JOIN [ScheduleSettings] ss ON ss.[ScheduleId] = s.[Id]
+                            WHERE ss.[IsPublic] = 'TRUE' AND g.[ScheduleId] = @ScheduleId;",
+                        request
+                    );
+                    groups = await _dbService.GetAll<Group>(
+                        $@"
+                            SELECT 
+                            g.[Id], g.[Name], [StudentCount], g.[ScheduleId] 
+                            FROM [Group] g
+                            INNER JOIN [Schedule] s ON s.[Id]=g.[ScheduleId]
+                            INNER JOIN [ScheduleSettings] ss ON ss.[ScheduleId] = s.[Id]
+                            WHERE ss.[IsPublic] = 'TRUE' AND g.[ScheduleId] = @ScheduleId 
                             ORDER BY
                             {request.Pagination.SortBy}
                             {request.Pagination.SortOrder}

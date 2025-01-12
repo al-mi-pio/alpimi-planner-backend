@@ -9,5 +9,7 @@
         public DateOnly? SchoolYearEnd { get; set; }
 
         public string? SchoolDays { get; set; }
+
+        public bool? IsPublic { get; set; }
     }
 }

@@ -58,10 +58,6 @@ namespace AlpimiTest.Entities.ESubgroup
             );
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
 
-            var query = $"?groupId={new Guid()}";
-            response = await _client.GetAsync($"/api/Subgroup{query}");
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-
             response = await _client.PatchAsJsonAsync(
                 $"/api/Subgroup/{new Guid()}",
                 MockData.GetUpdateSubgroupDTODetails()
@@ -274,6 +270,24 @@ namespace AlpimiTest.Entities.ESubgroup
 
             Assert.Contains(subgroupRequest1.Name, stringResponse);
             Assert.DoesNotContain(subgroupRequest2.Name, stringResponse);
+        }
+
+        [Fact]
+        public async Task GetAllSubgroupsReturnsSubgroupsFromPublicSchedules()
+        {
+            await DbHelper.PublishSchedule(_client, scheduleId);
+            var subgroupRequest1 = MockData.GetCreateSubgroupDTODetails(groupId);
+            var subgroupRequest2 = MockData.GetCreateSecondSubgroupDTODetails(groupId);
+            await DbHelper.SetupSubgroup(_client, subgroupRequest1);
+            await DbHelper.SetupSubgroup(_client, subgroupRequest2);
+            _client.DefaultRequestHeaders.Authorization = null;
+
+            var query = $"?id={groupId}";
+            var response = await _client.GetAsync($"/api/Subgroup{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+
+            Assert.Contains(subgroupRequest1.Name, stringResponse);
+            Assert.Contains(subgroupRequest2.Name, stringResponse);
         }
 
         [Fact]

@@ -96,7 +96,7 @@ namespace AlpimiAPI.Entities.EClassroom.Queries
                         request
                     );
                     break;
-                default:
+                case "User":
                     count = await _dbService.Get<int>(
                         @"
                             SELECT
@@ -117,6 +117,39 @@ namespace AlpimiAPI.Entities.EClassroom.Queries
                             LEFT JOIN [ClassroomClassroomType] cct ON cct.[ClassroomId] = c.[Id]
                             LEFT JOIN [ClassroomType] ct on ct.[Id] = cct.[ClassroomTypeId]
                             WHERE s.[UserId] = @FilteredId AND (c.[ScheduleId] = @Id OR ct.[Id] = @Id)
+                            ORDER BY
+                            {request.Pagination.SortBy}
+                            {request.Pagination.SortOrder}
+                            OFFSET
+                            {request.Pagination.Offset} ROWS
+                            FETCH NEXT
+                            {request.Pagination.PerPage} ROWS ONLY;",
+                        request
+                    );
+                    break;
+                default:
+                    count = await _dbService.Get<int>(
+                        @"
+                            SELECT
+                            COUNT(*)
+                            FROM [Classroom] c
+                            INNER JOIN [Schedule] s ON s.[Id] = c.[ScheduleId]
+                            INNER JOIN [ScheduleSettings] ss ON ss.[ScheduleId] = s.[Id]
+                            LEFT JOIN [ClassroomClassroomType] cct ON cct.[ClassroomId] = c.[Id]
+                            LEFT JOIN [ClassroomType] ct on ct.[Id] = cct.[ClassroomTypeId]
+                            WHERE ss.[IsPublic] = 'TRUE' AND (c.[ScheduleId] = @Id OR ct.[Id] = @Id);",
+                        request
+                    );
+                    classrooms = await _dbService.GetAll<Classroom>(
+                        $@"
+                            SELECT 
+                            c.[Id], c.[Name], c.[Capacity], c.[ScheduleId] 
+                            FROM [Classroom] c
+                            INNER JOIN [Schedule] s ON s.[Id] = c.[ScheduleId]
+                            INNER JOIN [ScheduleSettings] ss ON ss.[ScheduleId] = s.[Id]
+                            LEFT JOIN [ClassroomClassroomType] cct ON cct.[ClassroomId] = c.[Id]
+                            LEFT JOIN [ClassroomType] ct on ct.[Id] = cct.[ClassroomTypeId]
+                            WHERE ss.[IsPublic] = 'TRUE' AND (c.[ScheduleId] = @Id OR ct.[Id] = @Id)
                             ORDER BY
                             {request.Pagination.SortBy}
                             {request.Pagination.SortOrder}

@@ -76,6 +76,7 @@ namespace AlpimiTest.TestUtilities
                 SchoolYearStart = new DateOnly(2020, 11, 19),
                 SchoolYearEnd = new DateOnly(2025, 11, 19),
                 SchoolDays = "0111110",
+                IsPublic = false,
                 ScheduleId = new Guid(),
                 Schedule = GetScheduleDetails()
             };

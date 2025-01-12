@@ -136,7 +136,8 @@ namespace AlpimiAPI.Utilities
                 SchoolHour = data.SchoolHour,
                 SchoolYearStart = data.SchoolYearStart,
                 SchoolYearEnd = data.SchoolYearEnd,
-                SchoolDays = data.SchoolDays
+                SchoolDays = data.SchoolDays,
+                IsPublic = data.IsPublic
             };
         }
 

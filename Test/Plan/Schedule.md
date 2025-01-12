@@ -61,13 +61,13 @@
 
 ## `GET` `api/Schedule`
 
-- [GetAllScheduleReturnsSchedules()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
+- [GetAllSchedulesReturnsSchedules()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
   Check if returns two schedules when a valid token is provided
 
-- [GetAllScheduleReturnsEmptyContentWhenWrongUserAttemptsGet()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
+- [GetAllSchedulesReturnsEmptyContentWhenWrongUserAttemptsGet()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
   Check if returns no schedules when other user's token is provided
 
-- [GetAllScheduleReturnsOnlyUserMadeSchedules()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
+- [GetAllSchedulesReturnsOnlyUserMadeSchedules()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
   Check if returns a schedule when valid token is provided
 
 - [ThrowsErrorWhenIncorrectPerPageIsGiven()](../Entities/ESchedule/Queries/GetSchedulesQuery.unit.cs) - **unit**  

@@ -16,7 +16,6 @@ namespace AlpimiTest.Entities.EClassroom
         HttpClient _client;
         Guid userId;
         Guid scheduleId;
-        Guid publicScheduleId;
 
         public ClassroomControllerTest()
         {

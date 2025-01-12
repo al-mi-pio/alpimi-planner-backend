@@ -240,7 +240,7 @@ namespace AlpimiAPI.Entities.ESchedule
         }
 
         /// <summary>
-        /// Gets a Schedule by Name
+        /// Gets all schedules by URL
         /// </summary>
         /// <remarks>
         /// </remarks>

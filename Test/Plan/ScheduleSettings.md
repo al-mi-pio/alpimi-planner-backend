@@ -47,11 +47,14 @@
 
 ## `GET` `api/ScheduleSettings/{id}`
 
-- [GetScheduleSettingsReturnsScheduleSettingsIFAValidScheduleIdIsProvided()](../Entities/EScheduleSettings/ScheduleSettingsController.test.cs) - **integrity**
+- [GetScheduleSettingsReturnsScheduleSettingsIfAValidScheduleIdIsProvided()](../Entities/EScheduleSettings/ScheduleSettingsController.test.cs) - **integrity**
   Check if returns schedule settings when a valid schedule id is provided
 
-- [GetScheduleSettingsReturnsScheduleSettingsIFAValidScheduleSettingsIdIsProvided()](../Entities/EScheduleSettings/ScheduleSettingsController.test.cs) - **integrity**
+- [GetScheduleSettingsReturnsScheduleSettingsIfAValidScheduleSettingsIdIsProvided()](../Entities/EScheduleSettings/ScheduleSettingsController.test.cs) - **integrity**
   Check if returns schedule settings when a valid schedule settings id is provided
+
+- [GetAllScheduleSettingssReturnsScheduleSettingssFromPublicSchedules()](../Entities/EScheduleSettings/ScheduleSettingsController.test.cs) - **integrity**  
+  Check if returns schedule settings when no token is provided
 
 - [GetScheduleSettingsThrowsNotFoundErrorWhenWrongUserAttemptsUpdate()](../Entities/EScheduleSettings/ScheduleSettingsController.test.cs) - **integrity**  
   Check if returns an error when schedule settings are inaccessible for user

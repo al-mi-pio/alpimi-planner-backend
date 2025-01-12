@@ -47,6 +47,9 @@
 - [GetAllLessonPeriodByScheduleReturnsLessonPeriods()](../Entities/ELessonPeriod/LessonPeriodController.test.cs) - **integrity**  
   Check if returns two lesson periods when a valid token is provided
 
+- [GetAllLessonPeriodsReturnsLessonPeriodsFromPublicSchedules()](../Entities/ELessonPeriod/LessonPeriodController.test.cs) - **integrity**  
+  Check if returns two lesson periods when no token is provided
+	
 - [GetAllLessonPeriodByScheduleReturnsEmptyContentWhenWrongUserAttemptsGet()](../Entities/ELessonPeriod/LessonPeriodController.test.cs) - **integrity**  
   Check if returns no lesson periods when other user's token is provided
 

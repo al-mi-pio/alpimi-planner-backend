@@ -53,6 +53,9 @@
 - [GetAllDayOffByScheduleReturnsDaysOff()](../Entities/EDayOff/DayOffController.test.cs) - **integrity**  
   Check if returns two days off when a valid token is provided
 
+- [GetAllDayOffsReturnsDayOffsFromPublicSchedules()](../Entities/EDayOff/DayOffController.test.cs) - **integrity**  
+  Check if returns two days off when no token is provided
+
 - [GetAllDayOffByScheduleReturnsEmptyContentWhenWrongUserAttemptsGet()](../Entities/EDayOff/DayOffController.test.cs) - **integrity**  
   Check if returns no days off when other user's token is provided
 

@@ -11,12 +11,12 @@ using Xunit;
 namespace AlpimiTest.Entities.ESchedule.Queries
 {
     [Collection("Sequential Tests")]
-    public class GetAllSchedulesQueryUnit
+    public class GetAllSchedulesByURLQueryUnit
     {
         private readonly Mock<IDbService> _dbService = new();
         private readonly Mock<IStringLocalizer<Errors>> _str;
 
-        public GetAllSchedulesQueryUnit()
+        public GetAllSchedulesByURLQueryUnit()
         {
             _str = ResourceSetup.Setup();
         }
@@ -24,12 +24,16 @@ namespace AlpimiTest.Entities.ESchedule.Queries
         [Fact]
         public async Task ThrowsErrorWhenIncorrectPerPageIsGiven()
         {
-            var getSchedulesQuery = new GetAllSchedulesQuery(
+            var getSchedulesQuery = new GetAllSchedulesByURLQuery(
+                "URl",
                 new Guid(),
                 "Admin",
                 new PaginationParams(-20, 0, "Id", "ASC")
             );
-            var getSchedulesHandler = new GetAllSchedulesHandler(_dbService.Object, _str.Object);
+            var getSchedulesHandler = new GetAllSchedulesByURLHandler(
+                _dbService.Object,
+                _str.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await getSchedulesHandler.Handle(getSchedulesQuery, new CancellationToken())
@@ -46,12 +50,16 @@ namespace AlpimiTest.Entities.ESchedule.Queries
         [Fact]
         public async Task ThrowsErrorWhenIncorrectPageIsGiven()
         {
-            var getSchedulesQuery = new GetAllSchedulesQuery(
+            var getSchedulesQuery = new GetAllSchedulesByURLQuery(
+                "URl",
                 new Guid(),
                 "Admin",
                 new PaginationParams(20, -1, "Id", "ASC")
             );
-            var getSchedulesHandler = new GetAllSchedulesHandler(_dbService.Object, _str.Object);
+            var getSchedulesHandler = new GetAllSchedulesByURLHandler(
+                _dbService.Object,
+                _str.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await getSchedulesHandler.Handle(getSchedulesQuery, new CancellationToken())
@@ -68,12 +76,16 @@ namespace AlpimiTest.Entities.ESchedule.Queries
         [Fact]
         public async Task ThrowsErrorWhenIncorrectSortByIsGiven()
         {
-            var getSchedulesQuery = new GetAllSchedulesQuery(
+            var getSchedulesQuery = new GetAllSchedulesByURLQuery(
+                "URl",
                 new Guid(),
                 "Admin",
                 new PaginationParams(20, 0, "wrong", "ASC")
             );
-            var getSchedulesHandler = new GetAllSchedulesHandler(_dbService.Object, _str.Object);
+            var getSchedulesHandler = new GetAllSchedulesByURLHandler(
+                _dbService.Object,
+                _str.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await getSchedulesHandler.Handle(getSchedulesQuery, new CancellationToken())
@@ -90,12 +102,16 @@ namespace AlpimiTest.Entities.ESchedule.Queries
         [Fact]
         public async Task ThrowsErrorWhenIncorrectSortOrderIsGiven()
         {
-            var getSchedulesQuery = new GetAllSchedulesQuery(
+            var getSchedulesQuery = new GetAllSchedulesByURLQuery(
+                "URl",
                 new Guid(),
                 "Admin",
                 new PaginationParams(20, 0, "Id", "wrong")
             );
-            var getSchedulesHandler = new GetAllSchedulesHandler(_dbService.Object, _str.Object);
+            var getSchedulesHandler = new GetAllSchedulesByURLHandler(
+                _dbService.Object,
+                _str.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await getSchedulesHandler.Handle(getSchedulesQuery, new CancellationToken())
@@ -112,12 +128,16 @@ namespace AlpimiTest.Entities.ESchedule.Queries
         [Fact]
         public async Task ThrowsMultipleErrorMessages()
         {
-            var getSchedulesQuery = new GetAllSchedulesQuery(
+            var getSchedulesQuery = new GetAllSchedulesByURLQuery(
+                "URl",
                 new Guid(),
                 "Admin",
                 new PaginationParams(20, 0, "wrong", "wrong")
             );
-            var getSchedulesHandler = new GetAllSchedulesHandler(_dbService.Object, _str.Object);
+            var getSchedulesHandler = new GetAllSchedulesByURLHandler(
+                _dbService.Object,
+                _str.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await getSchedulesHandler.Handle(getSchedulesQuery, new CancellationToken())

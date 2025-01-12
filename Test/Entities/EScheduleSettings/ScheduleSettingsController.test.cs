@@ -49,9 +49,6 @@ namespace AlpimiTest.Entities.EScheduleSettings
                 MockData.GetUpdateScheduleSettingsDTO()
             );
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-
-            response = await _client.GetAsync($"/api/ScheduleSettings/{new Guid()}");
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         }
 
         [Fact]
@@ -131,7 +128,7 @@ namespace AlpimiTest.Entities.EScheduleSettings
         }
 
         [Fact]
-        public async Task GetScheduleSettingsReturnsScheduleSettingsIFAValidScheduleIdIsProvided()
+        public async Task GetScheduleSettingsReturnsScheduleSettingsIfAValidScheduleIdIsProvided()
         {
             var scheduleSettings = MockData.GetCreateScheduleDTODetails();
             var scheduleSettingsId = await _client.GetAsync($"/api/ScheduleSettings/{scheduleId}");
@@ -156,13 +153,30 @@ namespace AlpimiTest.Entities.EScheduleSettings
         }
 
         [Fact]
-        public async Task GetScheduleSettingsReturnsScheduleSettingsIFAValidScheduleSettingsIdIsProvided()
+        public async Task GetScheduleSettingsReturnsScheduleSettingsIfAValidScheduleSettingsIdIsProvided()
         {
             var scheduleSettings = MockData.GetScheduleSettingsDetails();
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", new Guid())
             );
+
+            var response = await _client.GetAsync($"/api/ScheduleSettings/{scheduleId}");
+            var jsonResponse = await response.Content.ReadFromJsonAsync<
+                ApiGetResponse<ScheduleSettingsDTO>
+            >();
+
+            Assert.Equal(jsonResponse!.Content.SchoolYearStart, scheduleSettings.SchoolYearStart);
+            Assert.Equal(jsonResponse.Content.SchoolYearEnd, scheduleSettings.SchoolYearEnd);
+            Assert.Equal(jsonResponse.Content.SchoolHour, scheduleSettings.SchoolHour);
+        }
+
+        [Fact]
+        public async Task GetAllScheduleSettingssReturnsScheduleSettingssFromPublicSchedules()
+        {
+            await DbHelper.PublishSchedule(_client, scheduleId);
+            var scheduleSettings = MockData.GetScheduleSettingsDetails();
+            _client.DefaultRequestHeaders.Authorization = null;
 
             var response = await _client.GetAsync($"/api/ScheduleSettings/{scheduleId}");
             var jsonResponse = await response.Content.ReadFromJsonAsync<

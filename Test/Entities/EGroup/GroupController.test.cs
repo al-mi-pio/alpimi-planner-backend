@@ -53,10 +53,6 @@ namespace AlpimiTest.Entities.EGroup
             );
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
 
-            var query = $"?scheduleId={new Guid()}";
-            response = await _client.GetAsync($"/api/Group{query}");
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-
             response = await _client.PatchAsJsonAsync(
                 $"/api/Group/{new Guid()}",
                 MockData.GetUpdateGroupDTODetails()
@@ -212,6 +208,24 @@ namespace AlpimiTest.Entities.EGroup
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)
             );
+
+            var query = $"?scheduleId={scheduleId}";
+            var response = await _client.GetAsync($"/api/Group{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+
+            Assert.Contains(groupRequest1.Name, stringResponse);
+            Assert.Contains(groupRequest2.Name, stringResponse);
+        }
+
+        [Fact]
+        public async Task GetAllGroupsReturnsGroupsFromPublicSchedules()
+        {
+            await DbHelper.PublishSchedule(_client, scheduleId);
+            var groupRequest1 = MockData.GetCreateGroupDTODetails(scheduleId);
+            var groupRequest2 = MockData.GetCreateSecondGroupDTODetails(scheduleId);
+            await DbHelper.SetupGroup(_client, groupRequest1);
+            await DbHelper.SetupGroup(_client, groupRequest2);
+            _client.DefaultRequestHeaders.Authorization = null;
 
             var query = $"?scheduleId={scheduleId}";
             var response = await _client.GetAsync($"/api/Group{query}");

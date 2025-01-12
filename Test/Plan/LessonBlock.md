@@ -140,6 +140,9 @@
 - [GetAllLessonBlocksReturnsLessonBlocksFromClsterIfClusterIdIsProvided()](../Entities/ELessonBlock/LessonBlockController.test.cs) - **integrity**  
   Check if returns lesson blocks when a valid classroom id provided
 
+- [GetAllLessonBlocksReturnsLessonBlocksFromPublicSchedules()](../Entities/ELessonBlock/LessonBlockController.test.cs) - **integrity**  
+  Check if returns lesson blocks when no token is provided
+
 - [GetAllLessonBlocksReturnsLessonBlocksFromProvidedDateRange()](../Entities/ELessonBlock/LessonBlockController.test.cs) - **integrity**  
   Check if returns lesson blocks when a valid date range is provided
 

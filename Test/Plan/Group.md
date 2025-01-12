@@ -62,6 +62,9 @@
 - [GetAllGroupsByScheduleReturnsGroups()](../Entities/EGroup/GroupController.test.cs) - **integrity**  
   Check if returns two groups when a valid token is provided
 
+- [GetAllGroupsReturnsGroupsFromPublicSchedules()](../Entities/EGroup/GroupController.test.cs) - **integrity**  
+  Check if returns two groups when no token is provided
+
 - [GetAllGroupsByScheduleReturnsEmptyContentWhenWrongUserAttemptsGet()](../Entities/EGroup/GroupController.test.cs) - **integrity**  
   Check if returns no groups when other user's token is provided
 

@@ -61,42 +61,59 @@
 
 ## `GET` `api/Schedule`
 
-- [GetAllScheduleReturnsSchedules()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
+- [GetAllSchedulesReturnsSchedules()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
   Check if returns two schedules when a valid token is provided
 
-- [GetAllScheduleReturnsEmptyContentWhenWrongUserAttemptsGet()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
+- [GetAllSchedulesReturnsEmptyContentWhenWrongUserAttemptsGet()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
   Check if returns no schedules when other user's token is provided
 
-- [GetAllScheduleReturnsOnlyUserMadeSchedules()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
+- [GetAllSchedulesReturnsOnlyUserMadeSchedules()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
   Check if returns a schedule when valid token is provided
 
-- [ThrowsErrorWhenIncorrectPerPageIsGiven()](../Entities/ESchedule/Queries/GetSchedulesQuery.unit.cs) - **unit**  
+- [ThrowsErrorWhenIncorrectPerPageIsGiven()](../Entities/ESchedule/Queries/GetAllSchedulesQuery.unit.cs) - **unit**  
   Check if returns an error when provided with invalid perPage
 
-- [ThrowsErrorWhenIncorrectPageIsGiven()](../Entities/ESchedule/Queries/GetSchedulesQuery.unit.cs) - **unit**  
+- [ThrowsErrorWhenIncorrectPageIsGiven()](../Entities/ESchedule/Queries/GetAllSchedulesQuery.unit.cs) - **unit**  
   Check if returns an error when provided with invalid page
 
-- [ThrowsErrorWhenIncorrectSortByIsGiven()](../Entities/ESchedule/Queries/GetSchedulesQuery.unit.cs) - **unit**  
+- [ThrowsErrorWhenIncorrectSortByIsGiven()](../Entities/ESchedule/Queries/GetAllSchedulesQuery.unit.cs) - **unit**  
   Check if returns an error when provided with invalid sortBy
 
-- [ThrowsErrorWhenIncorrectSortOrderIsGiven()](../Entities/ESchedule/Queries/GetSchedulesQuery.unit.cs) - **unit**  
+- [ThrowsErrorWhenIncorrectSortOrderIsGiven()](../Entities/ESchedule/Queries/GetAllSchedulesQuery.unit.cs) - **unit**  
   Check if returns an error when provided with invalid sortOrder
 
-- [ThrowsMultipleErrorMessages()](../Entities/ESchedule/Queries/GetSchedulesQuery.unit.cs) - **unit**  
+- [ThrowsMultipleErrorMessages()](../Entities/ESchedule/Queries/GetAllSchedulesQuery.unit.cs) - **unit**  
   Check if returns multiple errors when provided with multiple invalid parameters
 
 
-  ## `GET` `api/Schedule/byName/{name}`
+  ## `GET` `api/Schedule/byURL`
 
-- [GetScheduleByNameReturnsSchedule()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
-  Check if returns a schedule when a valid token is provided
+- [GetAllSchedulesByURLReturnsSchedulesFromURL()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
+  Check if returns two schedules when a valid URL is provided
 
-- [GetScheduleByNameThrowsNotFoundErrorWhenWrongUserTokenIsGiven())](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
-  Check if returns an error when a schedule is inaccessible for user
+- [GetAllSchedulesReturnsSchedulesFromPublicSchedules()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
+  Check if returns one schedule when no token is provided
 
-- [GetScheduleByNameThrowsNotFoundWhenWrongIdIsGiven()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
-  Check if returns an error when a schedule doesn't exists
+- [GetAllSchedulesByURLReturnsEmptyContentWhenWrongUserAttemptsGet()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
+  Check if returns no schedules when other user's token is provided
 
+- [GetAllSchedulesByURLReturnsOnlyUserMadeSchedules()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
+  Check if returns a schedule when valid token is provided
+
+- [ThrowsErrorWhenIncorrectPerPageIsGiven()](../Entities/ESchedule/Queries/GetAllSchedulesByURLQuery.unit.cs) - **unit**  
+  Check if returns an error when provided with invalid perPage
+
+- [ThrowsErrorWhenIncorrectPageIsGiven()](../Entities/ESchedule/Queries/GetAllSchedulesByURLQuery.unit.cs) - **unit**  
+  Check if returns an error when provided with invalid page
+
+- [ThrowsErrorWhenIncorrectSortByIsGiven()](../Entities/ESchedule/Queries/GetAllSchedulesByURLQuery.unit.cs) - **unit**  
+  Check if returns an error when provided with invalid sortBy
+
+- [ThrowsErrorWhenIncorrectSortOrderIsGiven()](../Entities/ESchedule/Queries/GetAllSchedulesByURLQuery.unit.cs) - **unit**  
+  Check if returns an error when provided with invalid sortOrder
+
+- [ThrowsMultipleErrorMessages()](../Entities/ESchedule/Queries/GetAllSchedulesByURLQuery.unit.cs) - **unit**  
+  Check if returns multiple errors when provided with multiple invalid parameters
 
 ## `GET` `api/Schedule/{id}`
 

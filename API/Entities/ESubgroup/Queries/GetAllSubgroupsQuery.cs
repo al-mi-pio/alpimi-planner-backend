@@ -96,7 +96,7 @@ namespace AlpimiAPI.Entities.ESubgroup.Queries
                         request
                     );
                     break;
-                default:
+                case "User":
                     count = await _dbService.Get<int>(
                         @"
                             SELECT
@@ -119,6 +119,41 @@ namespace AlpimiAPI.Entities.ESubgroup.Queries
                             LEFT JOIN [StudentSubgroup] ssg ON ssg.[SubgroupId] = sg.[Id]
                             LEFT JOIN [Student] st ON st.[Id] = ssg.[StudentId]
                             WHERE s.[UserId] = @FilteredId AND (sg.[GroupId] = @Id OR st.[Id] = @Id)
+                            ORDER BY
+                            {request.Pagination.SortBy}
+                            {request.Pagination.SortOrder}
+                            OFFSET
+                            {request.Pagination.Offset} ROWS
+                            FETCH NEXT
+                            {request.Pagination.PerPage} ROWS ONLY;",
+                        request
+                    );
+                    break;
+                default:
+                    count = await _dbService.Get<int>(
+                        @"
+                            SELECT
+                            COUNT(*)
+                            FROM [Subgroup] sg
+                            INNER JOIN [Group] g ON g.[Id] = sg.[GroupId]
+                            INNER JOIN [Schedule] s ON s.[Id] = g.[ScheduleId]
+                            INNER JOIN [ScheduleSettings] ss ON ss.[ScheduleId] = s.[Id]
+                            LEFT JOIN [StudentSubgroup] ssg ON ssg.[SubgroupId] = sg.[Id]
+                            LEFT JOIN [Student] st ON st.[Id] = ssg.[StudentId]
+                            WHERE ss.[IsPublic] = 'TRUE' AND (sg.[GroupId] = @Id OR st.[Id] = @Id);",
+                        request
+                    );
+                    subgroups = await _dbService.GetAll<Subgroup>(
+                        $@"
+                            SELECT 
+                            sg.[Id], sg.[Name], sg.[StudentCount],sg.[GroupId] 
+                            FROM [Subgroup] sg
+                            INNER JOIN [Group] g ON g.[Id] = sg.[GroupId]
+                            INNER JOIN [Schedule] s ON s.[Id] = g.[ScheduleId]
+                            INNER JOIN [ScheduleSettings] ss ON ss.[ScheduleId] = s.[Id]
+                            LEFT JOIN [StudentSubgroup] ssg ON ssg.[SubgroupId] = sg.[Id]
+                            LEFT JOIN [Student] st ON st.[Id] = ssg.[StudentId]
+                            WHERE ss.[IsPublic] = 'TRUE' AND (sg.[GroupId] = @Id OR st.[Id] = @Id)
                             ORDER BY
                             {request.Pagination.SortBy}
                             {request.Pagination.SortOrder}

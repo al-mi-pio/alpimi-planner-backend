@@ -85,16 +85,16 @@ namespace AlpimiAPI.Entities.EScheduleSettings
         /// Gets schedule settings by ScheduleId or ScheduleSettingsId
         /// </summary>
         /// <remarks>
-        /// - JWT token is required
         /// </remarks>
         [HttpGet("{id}")]
+        [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
         [ProducesResponseType(typeof(ApiErrorResponse), 404)]
         public async Task<ActionResult<ApiGetResponse<ScheduleDTO>>> Get(
             [FromRoute] Guid id,
-            [FromHeader] string Authorization
+            [FromHeader] string? Authorization
         )
         {
             Guid filteredId = Privileges.GetUserIdFromToken(Authorization);

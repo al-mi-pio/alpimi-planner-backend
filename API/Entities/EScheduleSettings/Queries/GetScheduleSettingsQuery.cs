@@ -31,9 +31,20 @@ namespace AlpimiAPI.Entities.EScheduleSettings.Queries
                     scheduleSettings = await _dbService.Get<ScheduleSettings?>(
                         @"
                             SELECT
-                            [Id], [SchoolHour], [SchoolYearStart], [SchoolYearEnd], [ScheduleId], [SchoolDays]
+                            [Id], [SchoolHour], [SchoolYearStart], [SchoolYearEnd], [ScheduleId], [SchoolDays], [IsPublic]
                             FROM [ScheduleSettings] 
                             WHERE [Id] = @Id OR [ScheduleId] = @Id;",
+                        request
+                    );
+                    break;
+                case "User":
+                    scheduleSettings = await _dbService.Get<ScheduleSettings?>(
+                        @"
+                            SELECT 
+                            ss.[Id], [SchoolHour], [SchoolYearStart], [SchoolYearEnd], [ScheduleId], [SchoolDays], [IsPublic]
+                            FROM [ScheduleSettings] ss 
+                            JOIN [Schedule] s ON s.[Id] = ss.[ScheduleId]
+                            WHERE s.[UserId] = @FilteredId AND (ss.[Id] = @Id OR [ScheduleId] = @Id);",
                         request
                     );
                     break;
@@ -41,10 +52,9 @@ namespace AlpimiAPI.Entities.EScheduleSettings.Queries
                     scheduleSettings = await _dbService.Get<ScheduleSettings?>(
                         @"
                             SELECT 
-                            ss.[Id], [SchoolHour], [SchoolYearStart], [SchoolYearEnd], [ScheduleId], [SchoolDays]
-                            FROM [ScheduleSettings] ss 
-                            JOIN [Schedule] s ON s.[Id] = ss.[ScheduleId]
-                            WHERE (ss.[Id] = @Id OR [ScheduleId] = @Id) AND s.[UserId] = @FilteredId;",
+                            [Id], [SchoolHour], [SchoolYearStart], [SchoolYearEnd], [ScheduleId], [SchoolDays], [IsPublic]
+                            FROM [ScheduleSettings] 
+                            WHERE [IsPublic] = 'TRUE' AND ([Id] = @Id OR [ScheduleId] = @Id)",
                         request
                     );
                     break;

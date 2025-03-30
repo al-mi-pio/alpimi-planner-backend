@@ -42,13 +42,13 @@
 ## `PATCH` `api/Subgroup/{id}`
 
 - [UpdateSubgroupReturnsUpdatedSubgroup()](../Entities/ESubgroup/SubgroupController.test.cs) - **integrity**  
-  Check if returns an updated day off when provided with correct data
+  Check if returns an updated subgroup when provided with correct data
 
-- [updateSubgroupThrowsNotFoundErrorWhenWrongIdIsGiven()](../Entities/ESubgroup/SubgroupController.test.cs) - **integrity**  
-  Check if returns an error when day off doesn't exists
+- [UpdateSubgroupThrowsNotFoundErrorWhenWrongIdIsGiven()](../Entities/ESubgroup/SubgroupController.test.cs) - **integrity**  
+  Check if returns an error when subgroup doesn't exists
 
 - [UpdateSubgroupThrowsNotFoundErrorWhenWrongUserAttemptsUpdate()](../Entities/ESubgroup/SubgroupController.test.cs) - **integrity**  
-  Check if returns an error when day off is inaccessible for user
+  Check if returns an error when subgroup is inaccessible for user
 
 - [ThrowsErrorWhenNameIsAlreadyTakenBySubgroup()](../Entities/ESubgroup/Commands/UpdateSubgroupCommand.unit.cs) - **unit**  
   Check if returns an error when a taken by subgroup name is provided
@@ -62,6 +62,23 @@
 - [ThrowsErrorWhenStudentCountInSubgroupIsMoreThanGroup()](../Entities/ESubgroup/Commands/UpdateSubgroupCommand.unit.cs) - **unit** 
   Check if returns an error when student count is more than student count of a group
 
+## `PATCH` `api/Subgroup/join`
+
+- [JoinSubgroupReturnsJointSubgroupId()](../Entities/ESubgroup/SubgroupController.test.cs) - **integrity**  
+  Check if returns an joint subgroup Id
+
+- [JoinSubgroupThrowsErrorWhenWrongIdIsGiven()](../Entities/ESubgroup/SubgroupController.test.cs) - **integrity**  
+  Check if returns an error when atleast one of the subgroups doesn't exists
+
+- [JoinSubgroupThrowsErrorWhenWrongUserAttemptsUpdate()](../Entities/ESubgroup/SubgroupController.test.cs) - **integrity**  
+  Check if returns an error when atleast one of the subgroups is inaccessible for user
+
+- [ThrowsErrorWhenDuplicatedSubgroupIdsAreGiven()](../Entities/ESubgroup/Commands/JoinSubgroupCommand.unit.cs) - **unit**  
+  Check if returns an error when duplicated subgroup ids are provided
+
+- [ThrowsErrorWhenWrongSubgroupIdIsGiven()](../Entities/ESubgroup/Commands/JoinSubgroupCommand.unit.cs) - **unit** 
+  Check if returns an error when incorrect subgroup id is provided
+
 
 ## `GET` `api/Subgroup`
 
@@ -70,6 +87,9 @@
 
 - [GetAllSubgroupsReturnsSubgroupsFromGroupIfGroupIdIsProvided()](../Entities/ESubgroup/SubgroupController.test.cs) - **integrity**  
   Check if returns two subgroups when a valid group id provided
+
+- [GetAllSubgroupsReturnsSubgroupsFromJointSubgroupIfJointSubgroupIdIsProvided()](../Entities/ESubgroup/SubgroupController.test.cs) - **integrity**  
+  Check if returns two subgroups when a valid joint subgroup id provided
 
 - [GetAllSubgroupsReturnsSubgroupsFromPublicSchedules()](../Entities/ESubgroup/SubgroupController.test.cs) - **integrity**   
   Check if returns two classrooms when no token is provided

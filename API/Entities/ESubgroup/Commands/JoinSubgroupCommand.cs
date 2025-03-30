@@ -1,6 +1,4 @@
 ﻿using AlpimiAPI.Database;
-using AlpimiAPI.Entities.EGroup;
-using AlpimiAPI.Entities.EGroup.Queries;
 using AlpimiAPI.Entities.ESubgroup.Queries;
 using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
@@ -44,7 +42,7 @@ namespace AlpimiAPI.Entities.ESubgroup.Commands
                 foreach (var duplicate in duplicates)
                 {
                     duplicateErrors.Add(
-                        new ErrorObject(_str["duplicateData", "Subgroup", duplicate])
+                        new ErrorObject(_str["duplicateData", "Subgroups", duplicate])
                     );
                 }
                 throw new ApiErrorException(duplicateErrors);
@@ -55,15 +53,15 @@ namespace AlpimiAPI.Entities.ESubgroup.Commands
             {
                 GetSubgroupHandler getSubgroupHandler = new GetSubgroupHandler(_dbService);
                 GetSubgroupQuery getSubgroupQuery = new GetSubgroupQuery(
-                    request.Id,
+                    subgroupId,
                     request.FilteredId,
                     request.Role
                 );
-                ActionResult<Subgroup?> originalSubgroup = await getSubgroupHandler.Handle(
+                ActionResult<Subgroup?> subgroup = await getSubgroupHandler.Handle(
                     getSubgroupQuery,
                     cancellationToken
                 );
-                if (originalSubgroup.Value == null)
+                if (subgroup.Value == null)
                 {
                     errors.Add(new ErrorObject(_str["resourceNotFound", "Subgroup", subgroupId]));
                 }
@@ -81,7 +79,7 @@ namespace AlpimiAPI.Entities.ESubgroup.Commands
                     SET
                     [JointSubgroupId] = @Id
                     OUTPUT
-                    INSERTED.[Id],
+                    INSERTED.[Id]
                     WHERE [Id] = '{subgroupId}';",
                     request
                 );

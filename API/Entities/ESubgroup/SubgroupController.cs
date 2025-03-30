@@ -241,5 +241,45 @@ namespace AlpimiAPI.Entities.ESubgroup
                 );
             }
         }
+
+        /// <summary>
+        /// Joins subgroups
+        /// </summary>
+        /// <remarks>
+        /// - JWT token is required
+        /// </remarks>
+        [HttpPatch]
+        [Route("join")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 400)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 401)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 404)]
+        public async Task<ActionResult<Guid>> JoinSubgroups(
+            [FromBody] IEnumerable<Guid> ids,
+            [FromHeader] string Authorization
+        )
+        {
+            Guid filteredId = Privileges.GetUserIdFromToken(Authorization);
+            string privileges = Privileges.GetUserRoleFromToken(Authorization);
+
+            var query = new JoinSubgroupCommand(Guid.NewGuid(), ids, filteredId, privileges);
+            try
+            {
+                var result = await _mediator.Send(query);
+
+                var response = new ApiGetResponse<Guid>(result);
+                return Ok(response);
+            }
+            catch (ApiErrorException ex)
+            {
+                return BadRequest(new ApiErrorResponse(400, ex.errors));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(
+                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError", ex])])
+                );
+            }
+        }
     }
 }

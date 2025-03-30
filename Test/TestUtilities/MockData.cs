@@ -135,6 +135,7 @@ namespace AlpimiTest.TestUtilities
                 Name = "K03",
                 StudentCount = 16,
                 GroupId = new Guid(),
+                JointSubgroupId = new Guid(),
                 Group = GetGroupDetails()
             };
         }

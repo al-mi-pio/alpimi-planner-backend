@@ -29,7 +29,7 @@ namespace AlpimiAPI.Entities.ESubgroup.Queries
                     subgroup = await _dbService.Get<Subgroup?>(
                         @"
                             SELECT 
-                            [Id], [Name], [StudentCount], [GroupId] 
+                            [Id], [Name], [StudentCount], [JointSubgroupId], [GroupId] 
                             FROM [Subgroup] 
                             WHERE [Id] = @Id;",
                         request
@@ -39,7 +39,7 @@ namespace AlpimiAPI.Entities.ESubgroup.Queries
                     subgroup = await _dbService.Get<Subgroup?>(
                         @"
                             SELECT 
-                            sg.[Id], sg.[Name], sg.[StudentCount], [GroupId] 
+                            sg.[Id], sg.[Name], sg.[StudentCount], sg.[JointSubgroupId], [GroupId] 
                             FROM [Subgroup] sg
                             INNER JOIN [Group] g ON g.[Id] = sg.[GroupId]
                             INNER JOIN [Schedule] s ON g.[ScheduleId] = s.[Id]

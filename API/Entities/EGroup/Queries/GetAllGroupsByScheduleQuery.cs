@@ -99,7 +99,8 @@ namespace AlpimiAPI.Entities.EGroup.Queries
                             COUNT(*)
                             FROM [Group] g
                             INNER JOIN [Schedule] s ON s.[Id]=g.[ScheduleId]
-                            WHERE s.[UserId] = @FilteredId AND g.[ScheduleId] = @ScheduleId;",
+                            INNER JOIN [ScheduleSettings] ss ON ss.[ScheduleId] = s.[Id]
+                            WHERE (s.[UserId] = @FilteredId OR ss.[IsPublic] = 'TRUE') AND g.[ScheduleId] = @ScheduleId;",
                         request
                     );
                     groups = await _dbService.GetAll<Group>(
@@ -108,7 +109,8 @@ namespace AlpimiAPI.Entities.EGroup.Queries
                             g.[Id], g.[Name], [StudentCount], [ScheduleId] 
                             FROM [Group] g
                             INNER JOIN [Schedule] s ON s.[Id]=g.[ScheduleId]
-                            WHERE s.[UserId] = @FilteredId AND g.[ScheduleId] = @ScheduleId 
+                            INNER JOIN [ScheduleSettings] ss ON ss.[ScheduleId] = s.[Id]
+                            WHERE (s.[UserId] = @FilteredId OR ss.[IsPublic] = 'TRUE') AND g.[ScheduleId] = @ScheduleId 
                             ORDER BY
                             {request.Pagination.SortBy}
                             {request.Pagination.SortOrder}

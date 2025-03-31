@@ -103,9 +103,10 @@ namespace AlpimiAPI.Entities.EClassroom.Queries
                             COUNT(*)
                             FROM [Classroom] c
                             INNER JOIN [Schedule] s ON s.[Id] = c.[ScheduleId]
+                            INNER JOIN [ScheduleSettings] ss ON ss.[ScheduleId] = s.[Id]
                             LEFT JOIN [ClassroomClassroomType] cct ON cct.[ClassroomId] = c.[Id]
                             LEFT JOIN [ClassroomType] ct on ct.[Id] = cct.[ClassroomTypeId]
-                            WHERE s.[UserId] = @FilteredId AND (c.[ScheduleId] = @Id OR ct.[Id] = @Id);",
+                            WHERE (s.[UserId] = @FilteredId OR ss.[IsPublic] = 'TRUE') AND (c.[ScheduleId] = @Id OR ct.[Id] = @Id);",
                         request
                     );
                     classrooms = await _dbService.GetAll<Classroom>(
@@ -114,9 +115,10 @@ namespace AlpimiAPI.Entities.EClassroom.Queries
                             c.[Id], c.[Name], c.[Capacity], [ScheduleId] 
                             FROM [Classroom] c
                             INNER JOIN [Schedule] s ON s.[Id] = c.[ScheduleId]
+                            INNER JOIN [ScheduleSettings] ss ON ss.[ScheduleId] = s.[Id]
                             LEFT JOIN [ClassroomClassroomType] cct ON cct.[ClassroomId] = c.[Id]
                             LEFT JOIN [ClassroomType] ct on ct.[Id] = cct.[ClassroomTypeId]
-                            WHERE s.[UserId] = @FilteredId AND (c.[ScheduleId] = @Id OR ct.[Id] = @Id)
+                            WHERE (s.[UserId] = @FilteredId OR ss.[IsPublic] = 'TRUE') AND (c.[ScheduleId] = @Id OR ct.[Id] = @Id)
                             ORDER BY
                             {request.Pagination.SortBy}
                             {request.Pagination.SortOrder}

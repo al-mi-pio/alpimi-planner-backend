@@ -98,13 +98,14 @@ namespace AlpimiAPI.Entities.ESubgroup.Commands
             var insertedId = await _dbService.Post<Guid>(
                 $@"
                     INSERT INTO [Subgroup] 
-                    ([Id], [Name], [StudentCount], [GroupId])
+                    ([Id], [Name], [StudentCount], [JointSubgroupId],[GroupId])
                     OUTPUT 
                     INSERTED.Id                    
                     VALUES (
                     '{request.Id}',   
                     @Name,
                     @StudentCount,
+                    '{Guid.NewGuid()}',
                     @GroupId);",
                 request.dto
             );

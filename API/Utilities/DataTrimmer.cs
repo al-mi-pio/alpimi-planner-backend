@@ -101,6 +101,7 @@ namespace AlpimiAPI.Utilities
                 Id = data.Id,
                 Name = data.Name,
                 StudentCount = data.StudentCount,
+                JointSubgroupId = data.JointSubgroupId,
                 Group = Trim(data.Group)
             };
         }

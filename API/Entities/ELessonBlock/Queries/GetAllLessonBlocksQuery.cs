@@ -147,7 +147,8 @@ namespace AlpimiAPI.Entities.ELessonBlock.Queries
                             INNER JOIN [Subgroup] sg ON sg.[Id] = l.[SubgroupId]
                             INNER JOIN [Group] g ON g.[Id] = sg.[GroupId]
                             INNER JOIN [Schedule] s on s.[Id] = g.[ScheduleId]
-                            WHERE s.[UserId] = @FilteredId AND (sg.[Id] = @Id OR g.[Id] = @Id OR g.[ScheduleId] = @Id OR l.[Id] = @Id OR [TeacherId] = @Id OR [ClassroomId] = @Id OR [ClusterId] = @Id) AND lb.[LessonDate] BETWEEN @FromDate AND @ToDate;",
+                            INNER JOIN [ScheduleSettings] ss ON ss.[ScheduleId] = s.[Id]
+                            WHERE (s.[UserId] = @FilteredId OR ss.[IsPublic] = 'TRUE') AND (sg.[Id] = @Id OR g.[Id] = @Id OR g.[ScheduleId] = @Id OR l.[Id] = @Id OR [TeacherId] = @Id OR [ClassroomId] = @Id OR [ClusterId] = @Id) AND lb.[LessonDate] BETWEEN @FromDate AND @ToDate;",
                         request
                     );
                     lessonBlocks = await _dbService.GetAll<LessonBlock>(
@@ -159,7 +160,8 @@ namespace AlpimiAPI.Entities.ELessonBlock.Queries
                             INNER JOIN [Subgroup] sg ON sg.[Id] = l.[SubgroupId]
                             INNER JOIN [Group] g ON g.[Id] = sg.[GroupId]
                             INNER JOIN [Schedule] s on s.[Id] = g.[ScheduleId]
-                            WHERE s.[UserId] = @FilteredId AND (sg.[Id] = @Id OR g.[Id] = @Id OR g.[ScheduleId] = @Id OR l.[Id] = @Id OR [TeacherId] = @Id OR [ClassroomId] = @Id OR [ClusterId] = @Id) AND lb.[LessonDate] BETWEEN @FromDate AND @ToDate
+                            INNER JOIN [ScheduleSettings] ss ON ss.[ScheduleId] = s.[Id]
+                            WHERE (s.[UserId] = @FilteredId OR ss.[IsPublic] = 'TRUE') AND (sg.[Id] = @Id OR g.[Id] = @Id OR g.[ScheduleId] = @Id OR l.[Id] = @Id OR [TeacherId] = @Id OR [ClassroomId] = @Id OR [ClusterId] = @Id) AND lb.[LessonDate] BETWEEN @FromDate AND @ToDate
                             ORDER BY
                             {request.Pagination.SortBy}
                             {request.Pagination.SortOrder}

@@ -102,7 +102,7 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Queries
                             FROM [LessonPeriod] lp
                             INNER JOIN [ScheduleSettings] ss ON ss.[Id] = lp.[ScheduleSettingsId]
                             INNER JOIN [Schedule] s ON s.[Id]=ss.[ScheduleId]
-                            WHERE s.[UserId] = @FilteredId AND ss.[ScheduleId] =@ScheduleId;",
+                            WHERE (s.[UserId] = @FilteredId OR ss.[IsPublic] = 'TRUE') AND ss.[ScheduleId] =@ScheduleId;",
                         request
                     );
                     lessonPeriods = await _dbService.GetAll<LessonPeriod>(
@@ -112,7 +112,7 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Queries
                             FROM [LessonPeriod] lp
                             INNER JOIN [ScheduleSettings] ss ON ss.[Id] = lp.[ScheduleSettingsId]
                             INNER JOIN [Schedule] s ON s.[Id]=ss.[ScheduleId]
-                            WHERE s.[UserId] = @FilteredId AND ss.[ScheduleId] = @ScheduleId 
+                            WHERE (s.[UserId] = @FilteredId OR ss.[IsPublic] = 'TRUE') AND ss.[ScheduleId] = @ScheduleId 
                             ORDER BY
                             {request.Pagination.SortBy}
                             {request.Pagination.SortOrder}

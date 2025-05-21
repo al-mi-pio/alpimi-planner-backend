@@ -10,8 +10,6 @@ namespace AlpimiAPI.Entities.ESubgroup.DTO
 
         public required int StudentCount { get; set; }
 
-        public required Guid JointSubgroupId { get; set; }
-
         public required GroupDTO Group { get; set; }
     }
 }

@@ -221,7 +221,7 @@ namespace AlpimiAPI.Entities.ELesson.Commands
                         await _dbService.Delete(
                             $@"
                                 DELETE [LessonSubgroup] 
-                                WHERE [LessontId] = @Id AND [SubgroupId] = '{subgroup}';",
+                                WHERE [LessonId] = @Id AND [SubgroupId] = '{subgroup}';",
                             request
                         );
                     }

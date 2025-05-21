@@ -79,9 +79,9 @@ namespace AlpimiAPI.Entities.ELesson.Queries
                             COUNT(*)
                             FROM [Lesson] l
                             INNER JOIN [Teacher] t ON t.[Id] = l.[TeacherId]
-                            INNER JOIN [Group] g ON g.[Id] = sg.[GroupId]
                             LEFT JOIN [LessonSubgroup] lsg ON lsg.[LessonId] = l.[Id]
                             LEFT JOIN [Subgroup] sg ON sg.[Id] = lsg.[SubgroupId]
+                            LEFT JOIN [Group] g ON g.[Id] = sg.[GroupId]
                             WHERE sg.[Id] = @Id OR g.[Id] = @Id OR t.[Id] = @Id;",
                         request
                     );

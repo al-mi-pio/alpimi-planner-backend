@@ -11,5 +11,7 @@
         public Guid? TeacherId { get; set; }
 
         public IEnumerable<Guid>? ClassroomTypeIds { get; set; }
+
+        public IEnumerable<Guid>? SubgroupIds { get; set; }
     }
 }

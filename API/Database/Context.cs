@@ -52,13 +52,6 @@ namespace AlpimiAPI.Database
 
             modelBuilder
                 .Entity<Lesson>()
-                .HasOne(l => l.Subgroup)
-                .WithMany()
-                .HasForeignKey(l => l.SubgroupId)
-                .OnDelete(DeleteBehavior.NoAction);
-
-            modelBuilder
-                .Entity<LessonBlock>()
                 .HasOne(l => l.Teacher)
                 .WithMany()
                 .HasForeignKey(l => l.TeacherId)

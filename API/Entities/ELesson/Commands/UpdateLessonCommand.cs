@@ -5,6 +5,8 @@ using AlpimiAPI.Entities.ELesson.DTO;
 using AlpimiAPI.Entities.ELesson.Queries;
 using AlpimiAPI.Entities.ELessonType;
 using AlpimiAPI.Entities.ELessonType.Queries;
+using AlpimiAPI.Entities.ESubgroup;
+using AlpimiAPI.Entities.ESubgroup.Queries;
 using AlpimiAPI.Entities.ETeacher;
 using AlpimiAPI.Entities.ETeacher.Queries;
 using AlpimiAPI.Locales;
@@ -94,12 +96,12 @@ namespace AlpimiAPI.Entities.ELesson.Commands
                 request.FilteredId,
                 request.Role
             );
-            ActionResult<Teacher?> subgroup = await getTeacherHandler.Handle(
+            ActionResult<Teacher?> teacher = await getTeacherHandler.Handle(
                 getTeacherQuery,
                 cancellationToken
             );
 
-            if (subgroup.Value == null)
+            if (teacher.Value == null)
             {
                 errors.Add(
                     new ErrorObject(_str["resourceNotFound", "Teacher", request.dto.TeacherId])
@@ -111,7 +113,7 @@ namespace AlpimiAPI.Entities.ELesson.Commands
                 throw new ApiErrorException(errors);
             }
 
-            if (subgroup.Value!.Group.ScheduleId != lessonType.Value!.ScheduleId)
+            if (teacher.Value!.ScheduleId != lessonType.Value!.ScheduleId)
             {
                 throw new ApiErrorException(
                     [new ErrorObject(_str["wrongSet", "Teacher", "Schedule", "LessonType"])]
@@ -132,6 +134,98 @@ namespace AlpimiAPI.Entities.ELesson.Commands
                 throw new ApiErrorException(
                     [new ErrorObject(_str["alreadyExists", "Lesson", request.dto.Name])]
                 );
+            }
+            if (request.dto.SubgroupIds != null)
+            {
+                var duplicates = request
+                    .dto.SubgroupIds.GroupBy(g => g)
+                    .Where(g => g.Count() > 1)
+                    .Select(g => g.Key);
+
+                if (duplicates.Any())
+                {
+                    List<ErrorObject> duplicateErrors = new List<ErrorObject>();
+                    foreach (var duplicate in duplicates)
+                    {
+                        duplicateErrors.Add(
+                            new ErrorObject(_str["duplicateData", "Subgroup", duplicate])
+                        );
+                    }
+                    throw new ApiErrorException(duplicateErrors);
+                }
+
+                foreach (var subgroupId in request.dto.SubgroupIds)
+                {
+                    GetSubgroupHandler getSubgroupHandler = new GetSubgroupHandler(_dbService);
+                    GetSubgroupQuery getSubgroupQuery = new GetSubgroupQuery(
+                        subgroupId,
+                        request.FilteredId,
+                        request.Role
+                    );
+                    ActionResult<Subgroup?> subgroup = await getSubgroupHandler.Handle(
+                        getSubgroupQuery,
+                        cancellationToken
+                    );
+
+                    if (subgroup.Value == null)
+                    {
+                        errors.Add(
+                            new ErrorObject(_str["resourceNotFound", "Subgroup", subgroupId])
+                        );
+                    }
+                    else if (
+                        lessonType.Value != null
+                        && subgroup.Value.Group.ScheduleId != lessonType.Value.ScheduleId
+                    )
+                    {
+                        errors.Add(
+                            new ErrorObject(_str["wrongSet", "Subgroup", "Schedule", "LessonType"])
+                        );
+                    }
+                }
+
+                var subgroups = await _dbService.GetAll<Guid>(
+                    $@"
+                        SELECT
+                        sg.[Id]
+                        FROM [Subgroup] sg
+                        LEFT JOIN [LessonSubgroup] lsg ON lsg.[SubgroupId] = sg.[Id]
+                        LEFT JOIN [Lesson] l ON l.[Id] = lsg.[LessonId]
+                        WHERE l.[Id] = @Id;",
+                    request
+                );
+
+                subgroups = subgroups ?? [];
+                foreach (Guid subgroupId in request.dto.SubgroupIds)
+                {
+                    if (!subgroups.Contains(subgroupId))
+                    {
+                        await _dbService.Post<Guid>(
+                            $@"
+                                INSERT INTO [LessonSubgroup] 
+                                ([Id], [LessonId], [SubgroupId])
+                                OUTPUT 
+                                INSERTED.Id                    
+                                VALUES (
+                                '{Guid.NewGuid()}',   
+                                @Id,
+                                '{subgroupId}');",
+                            request
+                        );
+                    }
+                }
+                foreach (Guid subgroup in subgroups)
+                {
+                    if (!request.dto.SubgroupIds.Contains(subgroup))
+                    {
+                        await _dbService.Delete(
+                            $@"
+                                DELETE [LessonSubgroup] 
+                                WHERE [LessontId] = @Id AND [SubgroupId] = '{subgroup}';",
+                            request
+                        );
+                    }
+                }
             }
 
             if (request.dto.ClassroomTypeIds != null)
@@ -253,8 +347,8 @@ namespace AlpimiAPI.Entities.ELesson.Commands
                 request.dto
             );
 
-            lesson!.LessonType = lessonType.Value;
-            lesson.Teacher = subgroup.Value;
+            lesson!.LessonType = lessonType.Value!;
+            lesson.Teacher = teacher.Value;
 
             return lesson;
         }

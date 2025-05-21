@@ -78,9 +78,11 @@ namespace AlpimiAPI.Entities.ELesson.Queries
                             SELECT 
                             COUNT(*)
                             FROM [Lesson] l
-                            INNER JOIN [Teacher] sg ON sg.[Id] = l.[TeacherId]
+                            INNER JOIN [Teacher] t ON t.[Id] = l.[TeacherId]
                             INNER JOIN [Group] g ON g.[Id] = sg.[GroupId]
-                            WHERE sg.[Id] = @Id OR g.[Id] = @Id;",
+                            LEFT JOIN [LessonSubgroup] lsg ON lsg.[LessonId] = l.[Id]
+                            LEFT JOIN [Subgroup] sg ON sg.[Id] = lsg.[SubgroupId]
+                            WHERE sg.[Id] = @Id OR g.[Id] = @Id OR t.[Id] = @Id;",
                         request
                     );
                     lessons = await _dbService.GetAll<Lesson>(
@@ -88,9 +90,11 @@ namespace AlpimiAPI.Entities.ELesson.Queries
                             SELECT
                             l.[Id], l.[Name], [CurrentHours], [AmountOfHours], l.[LessonTypeId], l.[TeacherId]  
                             FROM [Lesson] l
-                            INNER JOIN [Teacher] sg ON sg.[Id] = l.[TeacherId]
-                            INNER JOIN [Group] g ON g.[Id] = sg.[GroupId]
-                            WHERE sg.[Id] = @Id OR g.[Id] = @Id
+                            INNER JOIN [Teacher] t ON t.[Id] = l.[TeacherId]
+                            LEFT JOIN [LessonSubgroup] lsg ON lsg.[LessonId] = l.[Id]
+                            LEFT JOIN [Subgroup] sg ON sg.[Id] = lsg.[SubgroupId]
+                            LEFT JOIN [Group] g ON g.[Id] = sg.[GroupId]
+                            WHERE t.[Id] = @Id OR g.[Id] = @Id OR sg.[Id] = @Id
                             ORDER BY
                             {request.Pagination.SortBy}
                             {request.Pagination.SortOrder}
@@ -107,10 +111,12 @@ namespace AlpimiAPI.Entities.ELesson.Queries
                             SELECT 
                             COUNT(*)
                             FROM [Lesson] l
-                            INNER JOIN [Teacher] sg ON sg.[Id] = l.[TeacherId]
-                            INNER JOIN [Group] g ON g.[Id] = sg.[GroupId]
-                            INNER JOIN [Schedule] s ON s.[Id] = g.[ScheduleId]
-                            WHERE s.[UserId] = @FilteredId AND (sg.[Id] = @Id OR g.[Id] = @Id);",
+                            INNER JOIN [Teacher] t ON t.[Id] = l.[TeacherId]
+                            INNER JOIN [Schedule] s ON s.[Id] = t.[ScheduleId]
+                            LEFT JOIN [LessonSubgroup] lsg ON lsg.[LessonId] = l.[Id]
+                            LEFT JOIN [Subgroup] sg ON sg.[Id] = lsg.[SubgroupId]
+                            LEFT JOIN [Group] g ON g.[Id] = sg.[GroupId]
+                            WHERE s.[UserId] = @FilteredId AND (t.[Id] = @Id OR g.[Id] = @Id OR sg.[Id] = @Id);",
                         request
                     );
                     lessons = await _dbService.GetAll<Lesson>(
@@ -118,10 +124,12 @@ namespace AlpimiAPI.Entities.ELesson.Queries
                             SELECT 
                             l.[Id], l.[Name], [CurrentHours], [AmountOfHours], l.[LessonTypeId], l.[TeacherId]  
                             FROM [Lesson] l
-                            INNER JOIN [Teacher] sg ON sg.[Id] = l.[TeacherId]
-                            INNER JOIN [Group] g ON g.[Id] = sg.[GroupId]
-                            INNER JOIN [Schedule] s ON s.[Id] = g.[ScheduleId]
-                            WHERE s.[UserId] = @FilteredId AND (sg.[Id] = @Id OR g.[Id] = @Id)
+                            INNER JOIN [Teacher] t ON t.[Id] = l.[TeacherId]
+                            INNER JOIN [Schedule] s ON s.[Id] = t.[ScheduleId]
+                            LEFT JOIN [LessonSubgroup] lsg ON lsg.[LessonId] = l.[Id]
+                            LEFT JOIN [Subgroup] sg ON sg.[Id] = lsg.[SubgroupId]
+                            LEFT JOIN [Group] g ON g.[Id] = sg.[GroupId]
+                            WHERE s.[UserId] = @FilteredId AND (t.[Id] = @Id OR g.[Id] = @Id OR sg.[Id] = @Id)
                             ORDER BY
                             {request.Pagination.SortBy}
                             {request.Pagination.SortOrder}

@@ -17,5 +17,7 @@ namespace AlpimiAPI.Entities.ELesson.DTO
         public required Guid TeacherId { get; set; }
 
         public IEnumerable<Guid>? ClassroomTypeIds { get; set; }
+
+        public required IEnumerable<Guid> SubgroupIds { get; set; }
     }
 }

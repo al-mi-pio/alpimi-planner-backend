@@ -34,7 +34,7 @@ namespace AlpimiAPI.Entities.ELessonBlock.Queries
                     lessonBlock = await _dbService.Get<LessonBlock?>(
                         @"
                             SELECT 
-                            [Id], [LessonDate], [LessonStart], [LessonEnd], [LessonId], [ClassroomId], [TeacherId], [ClusterId] 
+                            [Id], [LessonDate], [LessonStart], [LessonEnd], [LessonId], [ClassroomId], [ClusterId] 
                             FROM [LessonBlock] 
                             WHERE [Id] = @Id;",
                         request
@@ -44,7 +44,7 @@ namespace AlpimiAPI.Entities.ELessonBlock.Queries
                     lessonBlock = await _dbService.Get<LessonBlock?>(
                         @"
                             SELECT 
-                            lb.[Id], [LessonDate], [LessonStart], [LessonEnd], [LessonId], [ClassroomId], [TeacherId], [ClusterId]  
+                            lb.[Id], [LessonDate], [LessonStart], [LessonEnd], [LessonId], [ClassroomId], [ClusterId]  
                             FROM [LessonBlock] lb
                             INNER JOIN [Lesson] l ON l.[Id] = lb.[LessonId]
                             INNER JOIN [LessonType] lt ON lt.[Id] = l.[LessonTypeId]
@@ -82,21 +82,6 @@ namespace AlpimiAPI.Entities.ELessonBlock.Queries
                         cancellationToken
                     );
                     lessonBlock.Classroom = classroom.Value!;
-                }
-
-                if (lessonBlock.TeacherId != null)
-                {
-                    GetTeacherHandler getTeacherHandler = new GetTeacherHandler(_dbService);
-                    GetTeacherQuery getTeacherQuery = new GetTeacherQuery(
-                        lessonBlock.TeacherId.Value,
-                        new Guid(),
-                        "Admin"
-                    );
-                    ActionResult<Teacher?> teacher = await getTeacherHandler.Handle(
-                        getTeacherQuery,
-                        cancellationToken
-                    );
-                    lessonBlock.Teacher = teacher.Value!;
                 }
             }
             return lessonBlock;

@@ -22,10 +22,6 @@ namespace AlpimiAPI.Entities.ELessonBlock
 
         public Classroom? Classroom { get; set; }
 
-        public Guid? TeacherId { get; set; }
-
-        public Teacher? Teacher { get; set; }
-
         public required Guid ClusterId { get; set; }
     }
 }

@@ -1,8 +1,8 @@
 ﻿using AlpimiAPI.Database;
 using AlpimiAPI.Entities.ELessonType;
 using AlpimiAPI.Entities.ELessonType.Queries;
-using AlpimiAPI.Entities.ESubgroup;
-using AlpimiAPI.Entities.ESubgroup.Queries;
+using AlpimiAPI.Entities.ETeacher;
+using AlpimiAPI.Entities.ETeacher.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -31,7 +31,7 @@ namespace AlpimiAPI.Entities.ELesson.Queries
                     lesson = await _dbService.Get<Lesson?>(
                         @"
                             SELECT 
-                            [Id], [Name], [CurrentHours], [AmountOfHours], [LessonTypeId], [SubgroupId] 
+                            [Id], [Name], [CurrentHours], [AmountOfHours], [LessonTypeId], [TeacherId] 
                             FROM [Lesson] 
                             WHERE [Id] = @Id;",
                         request
@@ -41,7 +41,7 @@ namespace AlpimiAPI.Entities.ELesson.Queries
                     lesson = await _dbService.Get<Lesson?>(
                         @"
                             SELECT 
-                            l.[Id], l.[Name], [CurrentHours], [AmountOfHours], l.[LessonTypeId], l.[SubgroupId]  
+                            l.[Id], l.[Name], [CurrentHours], [AmountOfHours], l.[LessonTypeId], l.[TeacherId]  
                             FROM [Lesson] l
                             INNER JOIN [LessonType] lt ON lt.[Id] = l.[LessonTypeId]
                             INNER JOIN [Schedule] s ON lt.[ScheduleId] = s.[Id]
@@ -65,17 +65,17 @@ namespace AlpimiAPI.Entities.ELesson.Queries
                 );
                 lesson.LessonType = lessonType.Value!;
 
-                GetSubgroupHandler getSubgroupHandler = new GetSubgroupHandler(_dbService);
-                GetSubgroupQuery getSubgroupQuery = new GetSubgroupQuery(
-                    lesson.SubgroupId,
+                GetTeacherHandler getTeacherHandler = new GetTeacherHandler(_dbService);
+                GetTeacherQuery getTeacherQuery = new GetTeacherQuery(
+                    lesson.TeacherId,
                     new Guid(),
                     "Admin"
                 );
-                ActionResult<Subgroup?> subgroup = await getSubgroupHandler.Handle(
-                    getSubgroupQuery,
+                ActionResult<Teacher?> subgroup = await getTeacherHandler.Handle(
+                    getTeacherQuery,
                     cancellationToken
                 );
-                lesson.Subgroup = subgroup.Value!;
+                lesson.Teacher = subgroup.Value!;
             }
 
             return lesson;

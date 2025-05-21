@@ -1,5 +1,5 @@
 ﻿using AlpimiAPI.Entities.ELessonType;
-using AlpimiAPI.Entities.ESubgroup;
+using AlpimiAPI.Entities.ETeacher;
 
 namespace AlpimiAPI.Entities.ELesson
 {
@@ -17,8 +17,8 @@ namespace AlpimiAPI.Entities.ELesson
 
         public required LessonType LessonType { get; set; }
 
-        public required Guid SubgroupId { get; set; }
+        public required Guid TeacherId { get; set; }
 
-        public required Subgroup Subgroup { get; set; }
+        public required Teacher Teacher { get; set; }
     }
 }

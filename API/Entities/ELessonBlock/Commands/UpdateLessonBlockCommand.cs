@@ -100,30 +100,6 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
             }
 
             List<ErrorObject> errors = new List<ErrorObject>();
-            if (request.dto.TeacherId != null)
-            {
-                GetTeacherHandler getTeacherHandler = new GetTeacherHandler(_dbService);
-                GetTeacherQuery getTeacherQuery = new GetTeacherQuery(
-                    request.dto.TeacherId.Value,
-                    request.FilteredId,
-                    request.Role
-                );
-                ActionResult<Teacher?> teacher = await getTeacherHandler.Handle(
-                    getTeacherQuery,
-                    cancellationToken
-                );
-                if (teacher.Value == null)
-                {
-                    errors.Add(
-                        new ErrorObject(_str["resourceNotFound", "Teacher", request.dto.TeacherId])
-                    );
-                }
-                else if (oneLessonBlock.Lesson.LessonType.ScheduleId != teacher.Value.ScheduleId)
-                {
-                    errors.Add(new ErrorObject(_str["wrongSet", "Teacher", "Schedule", "Lesson"]));
-                }
-            }
-
             if (request.dto.ClassroomId != null)
             {
                 GetClassroomHandler getClassroomHandler = new GetClassroomHandler(_dbService);
@@ -155,7 +131,6 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
             request.dto.LessonEnd = request.dto.LessonEnd ?? oneLessonBlock.LessonEnd;
             request.dto.LessonStart = request.dto.LessonStart ?? oneLessonBlock.LessonStart;
             request.dto.ClassroomId = request.dto.ClassroomId ?? oneLessonBlock.ClassroomId;
-            request.dto.TeacherId = request.dto.TeacherId ?? oneLessonBlock.TeacherId;
             request.dto.WeekDay = request.dto.WeekDay ?? (int)oneLessonBlock.LessonDate.DayOfWeek;
 
             var scheduleSettings = await _dbService.Get<ScheduleSettings?>(
@@ -237,8 +212,7 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                     [LessonDate] = DATEADD(DAY,{daysDifference},[LessonDate]), 
                     [LessonStart] = @LessonStart, 
                     [LessonEnd] = @LessonEnd, 
-                    [ClassroomId] = @ClassroomId, 
-                    [TeacherId] = @TeacherId
+                    [ClassroomId] = @ClassroomId
                     WHERE [Id] = '{request.Id}' OR [ClusterId] = '{request.Id}';",
                 request.dto
             );

@@ -161,14 +161,14 @@ namespace alpimi_planner_backend.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("SubgroupId")
+                    b.Property<Guid>("TeacherId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("LessonTypeId");
 
-                    b.HasIndex("SubgroupId");
+                    b.HasIndex("TeacherId");
 
                     b.ToTable("Lesson");
                 });
@@ -197,16 +197,11 @@ namespace alpimi_planner_backend.Migrations
                     b.Property<int>("LessonStart")
                         .HasColumnType("int");
 
-                    b.Property<Guid?>("TeacherId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ClassroomId");
 
                     b.HasIndex("LessonId");
-
-                    b.HasIndex("TeacherId");
 
                     b.ToTable("LessonBlock");
                 });
@@ -334,9 +329,6 @@ namespace alpimi_planner_backend.Migrations
                     b.Property<Guid>("GroupId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("JointSubgroupId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -431,6 +423,25 @@ namespace alpimi_planner_backend.Migrations
                     b.ToTable("LessonClassroomType");
                 });
 
+            modelBuilder.Entity("AlpimiAPI.Relations.LessonSubgroup", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("LessonId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("SubgroupId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LessonId");
+
+                    b.ToTable("LessonSubgroup");
+                });
+
             modelBuilder.Entity("AlpimiAPI.Relations.StudentSubgroup", b =>
                 {
                     b.Property<Guid>("Id")
@@ -513,15 +524,15 @@ namespace alpimi_planner_backend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AlpimiAPI.Entities.ESubgroup.Subgroup", "Subgroup")
+                    b.HasOne("AlpimiAPI.Entities.ETeacher.Teacher", "Teacher")
                         .WithMany()
-                        .HasForeignKey("SubgroupId")
+                        .HasForeignKey("TeacherId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("LessonType");
 
-                    b.Navigation("Subgroup");
+                    b.Navigation("Teacher");
                 });
 
             modelBuilder.Entity("AlpimiAPI.Entities.ELessonBlock.LessonBlock", b =>
@@ -537,16 +548,9 @@ namespace alpimi_planner_backend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AlpimiAPI.Entities.ETeacher.Teacher", "Teacher")
-                        .WithMany()
-                        .HasForeignKey("TeacherId")
-                        .OnDelete(DeleteBehavior.NoAction);
-
                     b.Navigation("Classroom");
 
                     b.Navigation("Lesson");
-
-                    b.Navigation("Teacher");
                 });
 
             modelBuilder.Entity("AlpimiAPI.Entities.ELessonPeriod.LessonPeriod", b =>
@@ -638,6 +642,17 @@ namespace alpimi_planner_backend.Migrations
                 });
 
             modelBuilder.Entity("AlpimiAPI.Relations.LessonClassroomType", b =>
+                {
+                    b.HasOne("AlpimiAPI.Entities.ELesson.Lesson", "Lesson")
+                        .WithMany()
+                        .HasForeignKey("LessonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Lesson");
+                });
+
+            modelBuilder.Entity("AlpimiAPI.Relations.LessonSubgroup", b =>
                 {
                     b.HasOne("AlpimiAPI.Entities.ELesson.Lesson", "Lesson")
                         .WithMany()

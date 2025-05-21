@@ -40,6 +40,7 @@ namespace AlpimiAPI.Database
         public DbSet<StudentSubgroup> StudentSubgroup { get; set; }
         public DbSet<ClassroomClassroomType> ClassroomClassroomType { get; set; }
         public DbSet<LessonClassroomType> LessonClassroomType { get; set; }
+        public DbSet<LessonSubgroup> LessonSubgroup { get; set; }
         #endregion
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

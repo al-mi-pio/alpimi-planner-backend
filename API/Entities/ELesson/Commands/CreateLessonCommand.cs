@@ -6,6 +6,8 @@ using AlpimiAPI.Entities.ELessonType;
 using AlpimiAPI.Entities.ELessonType.Queries;
 using AlpimiAPI.Entities.ESubgroup;
 using AlpimiAPI.Entities.ESubgroup.Queries;
+using AlpimiAPI.Entities.ETeacher;
+using AlpimiAPI.Entities.ETeacher.Queries;
 using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
 using MediatR;
@@ -59,22 +61,67 @@ namespace AlpimiAPI.Entities.ELesson.Commands
                 );
             }
 
-            GetSubgroupHandler getSubgroupHandler = new GetSubgroupHandler(_dbService);
-            GetSubgroupQuery getSubgroupQuery = new GetSubgroupQuery(
-                request.dto.SubgroupId,
+            GetTeacherHandler getTeacherHandler = new GetTeacherHandler(_dbService);
+            GetTeacherQuery getTeacherQuery = new GetTeacherQuery(
+                request.dto.TeacherId,
                 request.FilteredId,
                 request.Role
             );
-            ActionResult<Subgroup?> subgroup = await getSubgroupHandler.Handle(
-                getSubgroupQuery,
+            ActionResult<Teacher?> teacher = await getTeacherHandler.Handle(
+                getTeacherQuery,
                 cancellationToken
             );
 
-            if (subgroup.Value == null)
+            if (teacher.Value == null)
             {
                 errors.Add(
-                    new ErrorObject(_str["resourceNotFound", "Subgroup", request.dto.SubgroupId])
+                    new ErrorObject(_str["resourceNotFound", "Teacher", request.dto.TeacherId])
                 );
+            }
+
+            var duplicates = request
+                .dto.SubgroupIds.GroupBy(g => g)
+                .Where(g => g.Count() > 1)
+                .Select(g => g.Key);
+
+            if (duplicates.Any())
+            {
+                List<ErrorObject> duplicateErrors = new List<ErrorObject>();
+                foreach (var duplicate in duplicates)
+                {
+                    duplicateErrors.Add(
+                        new ErrorObject(_str["duplicateData", "Subgroup", duplicate])
+                    );
+                }
+                throw new ApiErrorException(duplicateErrors);
+            }
+
+            foreach (var subgroupId in request.dto.SubgroupIds)
+            {
+                GetSubgroupHandler getSubgroupHandler = new GetSubgroupHandler(_dbService);
+                GetSubgroupQuery getSubgroupQuery = new GetSubgroupQuery(
+                    subgroupId,
+                    request.FilteredId,
+                    request.Role
+                );
+                ActionResult<Subgroup?> subgroup = await getSubgroupHandler.Handle(
+                    getSubgroupQuery,
+                    cancellationToken
+                );
+
+                if (subgroup.Value == null)
+                {
+                    errors.Add(new ErrorObject(_str["resourceNotFound", "Subgroup", subgroupId]));
+                }
+                else if (
+                    lessonType.Value != null
+                    && subgroup.Value.Group.ScheduleId != lessonType.Value.ScheduleId
+                )
+                {
+                    errors.Add(
+                        new ErrorObject(_str["wrongSet", "Subgroup", "Schedule", "LessonType"])
+                    );
+                }
             }
 
             if (errors.Count != 0)
@@ -82,10 +129,10 @@ namespace AlpimiAPI.Entities.ELesson.Commands
                 throw new ApiErrorException(errors);
             }
 
-            if (subgroup.Value!.Group.ScheduleId != lessonType.Value!.ScheduleId)
+            if (teacher.Value!.ScheduleId != lessonType.Value!.ScheduleId)
             {
                 throw new ApiErrorException(
-                    [new ErrorObject(_str["wrongSet", "Subgroup", "Schedule", "LessonType"])]
+                    [new ErrorObject(_str["wrongSet", "Teacher", "Schedule", "LessonType"])]
                 );
             }
 
@@ -94,7 +141,7 @@ namespace AlpimiAPI.Entities.ELesson.Commands
                     SELECT 
                     [Id]
                     FROM [Lesson] 
-                    WHERE [Name] = @Name AND [SubgroupId] = @SubgroupId;",
+                    WHERE [Name] = @Name AND [TeacherId] = @TeacherId;",
                 request.dto
             );
 
@@ -107,7 +154,7 @@ namespace AlpimiAPI.Entities.ELesson.Commands
 
             if (request.dto.ClassroomTypeIds != null)
             {
-                var duplicates = request
+                duplicates = request
                     .dto.ClassroomTypeIds.GroupBy(g => g)
                     .Where(g => g.Count() > 1)
                     .Select(g => g.Key);
@@ -165,7 +212,7 @@ namespace AlpimiAPI.Entities.ELesson.Commands
             var insertedId = await _dbService.Post<Guid>(
                 $@"
                     INSERT INTO [Lesson] 
-                    ([Id], [Name], [CurrentHours], [AmountOfHours], [LessonTypeId], [SubgroupId])
+                    ([Id], [Name], [CurrentHours], [AmountOfHours], [LessonTypeId], [TeacherId])
                     OUTPUT 
                     INSERTED.Id                    
                     VALUES (
@@ -174,7 +221,7 @@ namespace AlpimiAPI.Entities.ELesson.Commands
                     0,
                     @AmountOfHours,
                     @LessonTypeId,
-                    @SubgroupId);",
+                    @TeacherId);",
                 request.dto
             );
 
@@ -195,6 +242,21 @@ namespace AlpimiAPI.Entities.ELesson.Commands
                         ""
                     );
                 }
+            }
+            foreach (Guid subgroupId in request.dto.SubgroupIds)
+            {
+                await _dbService.Post<Guid>(
+                    $@"
+                        INSERT INTO [LessonSubgroup] 
+                        ([Id], [LessonId], [SubgroupId])
+                        OUTPUT 
+                        INSERTED.Id                    
+                        VALUES (
+                        '{Guid.NewGuid()}',   
+                        '{insertedId}',
+                        '{subgroupId}');",
+                    ""
+                );
             }
 
             return insertedId;

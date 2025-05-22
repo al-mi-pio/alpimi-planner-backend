@@ -11,7 +11,5 @@ namespace AlpimiAPI.Entities.ELessonBlock.DTO
         public int? LessonEnd { get; set; }
 
         public Guid? ClassroomId { get; set; }
-
-        public Guid? TeacherId { get; set; }
     }
 }

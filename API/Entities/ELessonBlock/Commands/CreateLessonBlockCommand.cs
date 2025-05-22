@@ -5,8 +5,6 @@ using AlpimiAPI.Entities.ELesson;
 using AlpimiAPI.Entities.ELesson.Queries;
 using AlpimiAPI.Entities.ELessonBlock.DTO;
 using AlpimiAPI.Entities.EScheduleSettings;
-using AlpimiAPI.Entities.ETeacher;
-using AlpimiAPI.Entities.ETeacher.Queries;
 using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
 using MediatR;
@@ -56,35 +54,6 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                 errors.Add(
                     new ErrorObject(_str["resourceNotFound", "Lesson", request.dto.LessonId])
                 );
-            }
-
-            if (request.dto.TeacherId != null)
-            {
-                GetTeacherHandler getTeacherHandler = new GetTeacherHandler(_dbService);
-                GetTeacherQuery getTeacherQuery = new GetTeacherQuery(
-                    request.dto.TeacherId.Value,
-                    request.FilteredId,
-                    request.Role
-                );
-                ActionResult<Teacher?> teacher = await getTeacherHandler.Handle(
-                    getTeacherQuery,
-                    cancellationToken
-                );
-                if (teacher.Value == null)
-                {
-                    errors.Add(
-                        new ErrorObject(_str["resourceNotFound", "Teacher", request.dto.TeacherId])
-                    );
-                }
-                else if (lesson.Value != null)
-                {
-                    if (lesson.Value.LessonType.ScheduleId != teacher.Value.ScheduleId)
-                    {
-                        errors.Add(
-                            new ErrorObject(_str["wrongSet", "Teacher", "Schedule", "Lesson"])
-                        );
-                    }
-                }
             }
 
             if (request.dto.ClassroomId != null)
@@ -209,7 +178,7 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                 await _dbService.Post<Guid>(
                     $@"
                     INSERT INTO [LessonBlock] 
-                    ([Id], [LessonDate], [LessonStart], [LessonEnd], [LessonId], [ClassroomId], [TeacherId], [ClusterId])
+                    ([Id], [LessonDate], [LessonStart], [LessonEnd], [LessonId], [ClassroomId], [ClusterId])
                     OUTPUT 
                     INSERTED.Id                    
                     VALUES (
@@ -219,7 +188,6 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                     @LessonEnd,
                     @LessonId,
                     @ClassroomId,
-                    @TeacherId,
                     '{request.ClusterId}');",
                     request.dto
                 );

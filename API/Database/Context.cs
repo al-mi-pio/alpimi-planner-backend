@@ -40,6 +40,7 @@ namespace AlpimiAPI.Database
         public DbSet<StudentSubgroup> StudentSubgroup { get; set; }
         public DbSet<ClassroomClassroomType> ClassroomClassroomType { get; set; }
         public DbSet<LessonClassroomType> LessonClassroomType { get; set; }
+        public DbSet<LessonSubgroup> LessonSubgroup { get; set; }
         #endregion
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -52,13 +53,6 @@ namespace AlpimiAPI.Database
 
             modelBuilder
                 .Entity<Lesson>()
-                .HasOne(l => l.Subgroup)
-                .WithMany()
-                .HasForeignKey(l => l.SubgroupId)
-                .OnDelete(DeleteBehavior.NoAction);
-
-            modelBuilder
-                .Entity<LessonBlock>()
                 .HasOne(l => l.Teacher)
                 .WithMany()
                 .HasForeignKey(l => l.TeacherId)

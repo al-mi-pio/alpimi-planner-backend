@@ -1,11 +1,8 @@
 ﻿using AlpimiAPI.Database;
-using AlpimiAPI.Entities.EClassroom;
-using AlpimiAPI.Entities.ELessonBlock;
 using AlpimiAPI.Entities.ELessonType;
 using AlpimiAPI.Entities.ELessonType.Queries;
-using AlpimiAPI.Entities.ESubgroup;
-using AlpimiAPI.Entities.ESubgroup.Queries;
 using AlpimiAPI.Entities.ETeacher;
+using AlpimiAPI.Entities.ETeacher.Queries;
 using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
 using MediatR;
@@ -78,19 +75,23 @@ namespace AlpimiAPI.Entities.ELesson.Queries
                             SELECT 
                             COUNT(*)
                             FROM [Lesson] l
-                            INNER JOIN [Subgroup] sg ON sg.[Id] = l.[SubgroupId]
-                            INNER JOIN [Group] g ON g.[Id] = sg.[GroupId]
-                            WHERE sg.[Id] = @Id OR g.[Id] = @Id;",
+                            INNER JOIN [Teacher] t ON t.[Id] = l.[TeacherId]
+                            LEFT JOIN [LessonSubgroup] lsg ON lsg.[LessonId] = l.[Id]
+                            LEFT JOIN [Subgroup] sg ON sg.[Id] = lsg.[SubgroupId]
+                            LEFT JOIN [Group] g ON g.[Id] = sg.[GroupId]
+                            WHERE sg.[Id] = @Id OR g.[Id] = @Id OR t.[Id] = @Id;",
                         request
                     );
                     lessons = await _dbService.GetAll<Lesson>(
                         $@"
                             SELECT
-                            l.[Id], l.[Name], [CurrentHours], [AmountOfHours], l.[LessonTypeId], l.[SubgroupId]  
+                            l.[Id], l.[Name], [CurrentHours], [AmountOfHours], l.[LessonTypeId], l.[TeacherId]  
                             FROM [Lesson] l
-                            INNER JOIN [Subgroup] sg ON sg.[Id] = l.[SubgroupId]
-                            INNER JOIN [Group] g ON g.[Id] = sg.[GroupId]
-                            WHERE sg.[Id] = @Id OR g.[Id] = @Id
+                            INNER JOIN [Teacher] t ON t.[Id] = l.[TeacherId]
+                            LEFT JOIN [LessonSubgroup] lsg ON lsg.[LessonId] = l.[Id]
+                            LEFT JOIN [Subgroup] sg ON sg.[Id] = lsg.[SubgroupId]
+                            LEFT JOIN [Group] g ON g.[Id] = sg.[GroupId]
+                            WHERE t.[Id] = @Id OR g.[Id] = @Id OR sg.[Id] = @Id
                             ORDER BY
                             {request.Pagination.SortBy}
                             {request.Pagination.SortOrder}
@@ -107,21 +108,25 @@ namespace AlpimiAPI.Entities.ELesson.Queries
                             SELECT 
                             COUNT(*)
                             FROM [Lesson] l
-                            INNER JOIN [Subgroup] sg ON sg.[Id] = l.[SubgroupId]
-                            INNER JOIN [Group] g ON g.[Id] = sg.[GroupId]
-                            INNER JOIN [Schedule] s ON s.[Id] = g.[ScheduleId]
-                            WHERE s.[UserId] = @FilteredId AND (sg.[Id] = @Id OR g.[Id] = @Id);",
+                            INNER JOIN [Teacher] t ON t.[Id] = l.[TeacherId]
+                            INNER JOIN [Schedule] s ON s.[Id] = t.[ScheduleId]
+                            LEFT JOIN [LessonSubgroup] lsg ON lsg.[LessonId] = l.[Id]
+                            LEFT JOIN [Subgroup] sg ON sg.[Id] = lsg.[SubgroupId]
+                            LEFT JOIN [Group] g ON g.[Id] = sg.[GroupId]
+                            WHERE s.[UserId] = @FilteredId AND (t.[Id] = @Id OR g.[Id] = @Id OR sg.[Id] = @Id);",
                         request
                     );
                     lessons = await _dbService.GetAll<Lesson>(
                         $@"
                             SELECT 
-                            l.[Id], l.[Name], [CurrentHours], [AmountOfHours], l.[LessonTypeId], l.[SubgroupId]  
+                            l.[Id], l.[Name], [CurrentHours], [AmountOfHours], l.[LessonTypeId], l.[TeacherId]  
                             FROM [Lesson] l
-                            INNER JOIN [Subgroup] sg ON sg.[Id] = l.[SubgroupId]
-                            INNER JOIN [Group] g ON g.[Id] = sg.[GroupId]
-                            INNER JOIN [Schedule] s ON s.[Id] = g.[ScheduleId]
-                            WHERE s.[UserId] = @FilteredId AND (sg.[Id] = @Id OR g.[Id] = @Id)
+                            INNER JOIN [Teacher] t ON t.[Id] = l.[TeacherId]
+                            INNER JOIN [Schedule] s ON s.[Id] = t.[ScheduleId]
+                            LEFT JOIN [LessonSubgroup] lsg ON lsg.[LessonId] = l.[Id]
+                            LEFT JOIN [Subgroup] sg ON sg.[Id] = lsg.[SubgroupId]
+                            LEFT JOIN [Group] g ON g.[Id] = sg.[GroupId]
+                            WHERE s.[UserId] = @FilteredId AND (t.[Id] = @Id OR g.[Id] = @Id OR sg.[Id] = @Id)
                             ORDER BY
                             {request.Pagination.SortBy}
                             {request.Pagination.SortOrder}
@@ -136,7 +141,7 @@ namespace AlpimiAPI.Entities.ELesson.Queries
 
             if (lessons != null)
             {
-                Dictionary<Guid, Subgroup> subgroupMap = new Dictionary<Guid, Subgroup>();
+                Dictionary<Guid, Teacher> subgroupMap = new Dictionary<Guid, Teacher>();
                 Dictionary<Guid, LessonType> lessonTypeMap = new Dictionary<Guid, LessonType>();
                 foreach (var lesson in lessons)
                 {
@@ -159,22 +164,22 @@ namespace AlpimiAPI.Entities.ELesson.Queries
                     }
                     lesson.LessonType = lessonTypeMap[lesson.LessonTypeId];
 
-                    if (!subgroupMap.ContainsKey(lesson.SubgroupId))
+                    if (!subgroupMap.ContainsKey(lesson.TeacherId))
                     {
-                        GetSubgroupHandler getSubgroupHandler = new GetSubgroupHandler(_dbService);
-                        GetSubgroupQuery getSubgroupQuery = new GetSubgroupQuery(
-                            lesson.SubgroupId,
+                        GetTeacherHandler getTeacherHandler = new GetTeacherHandler(_dbService);
+                        GetTeacherQuery getTeacherQuery = new GetTeacherQuery(
+                            lesson.TeacherId,
                             new Guid(),
                             "Admin"
                         );
-                        ActionResult<Subgroup?> subgroup = await getSubgroupHandler.Handle(
-                            getSubgroupQuery,
+                        ActionResult<Teacher?> subgroup = await getTeacherHandler.Handle(
+                            getTeacherQuery,
                             cancellationToken
                         );
 
-                        subgroupMap.Add(lesson.SubgroupId, subgroup.Value!);
+                        subgroupMap.Add(lesson.TeacherId, subgroup.Value!);
                     }
-                    lesson.Subgroup = subgroupMap[lesson.SubgroupId];
+                    lesson.Teacher = subgroupMap[lesson.TeacherId];
                 }
             }
 

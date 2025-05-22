@@ -21,7 +21,7 @@ namespace AlpimiAPI.Entities.ESubgroup.Commands
                 case "Admin":
                     await _dbService.Delete(
                         @"
-                            DELETE FROM [Lesson]
+                            DELETE FROM [LessonSubgroup]
                             WHERE [SubgroupId] = @Id;",
                         request
                     );
@@ -41,11 +41,11 @@ namespace AlpimiAPI.Entities.ESubgroup.Commands
                 default:
                     await _dbService.Delete(
                         @"
-                            DELETE l
-                            FROM [Lesson] l
-                            INNER JOIN [LessonType] lt on lt.[Id] = l.[LessonTypeId]
+                            DELETE lsg
+                            FROM [LessonSubgroup] lsg
+                            INNER JOIN [LessonType] lt on lt.[Id] = lsg.[LessonTypeId]
                             INNER JOIN [Schedule] s ON s.[Id] = lt.[ScheduleId]
-                            WHERE s.[UserId] = @FilteredId AND l.[Id] = @Id;",
+                            WHERE s.[UserId] = @FilteredId AND lsg.[SubgroupId] = @Id;",
                         request
                     );
                     await _dbService.Delete(
@@ -55,7 +55,7 @@ namespace AlpimiAPI.Entities.ESubgroup.Commands
                             INNER JOIN [Subgroup] sg ON sg.[Id] = ssg.[SubgroupId]
                             INNER JOIN [Group] g ON g.[Id] = sg.[GroupId]
                             INNER JOIN [Schedule] s ON s.[Id] = g.[ScheduleId]
-                            WHERE s.[UserId] = @FilteredId AND ssg.[Id] = @Id;",
+                            WHERE s.[UserId] = @FilteredId AND ssg.[SubgroupId] = @Id;",
                         request
                     );
                     await _dbService.Delete(

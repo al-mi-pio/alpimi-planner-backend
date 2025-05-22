@@ -23,12 +23,6 @@
 - [ThrowsErrorWhenWrongLessonIdIsGiven()](../Entities/ELessonBlock/CreateLessonBlockCommand.unit.cs) - **unit** 
   Check if returns an error when incorrect lesson id is provided
 
-- [ThrowsErrorWhenWrongTeacherIdIsGiven()](../Entities/ELessonBlock/CreateLessonBlockCommand.unit.cs) - **unit** 
-  Check if returns an error when incorrect teacher id is provided
-
-- [ThrowsErrorWhenScheduleIdsFromLessonAndTeacherDontMatch()](../Entities/ELessonBlock/CreateLessonBlockCommand.unit.cs) - **unit** 
-  Check if returns an error when lesson and teacher are from different schedules
-
 - [ThrowsErrorWhenWrongClassroomIdIsGiven()](../Entities/ELessonBlock/CreateLessonBlockCommand.unit.cs) - **unit** 
   Check if returns an error when incorrect classroom id is provided
 
@@ -55,6 +49,8 @@
 
 - [ThrowsErrorWhenWeekIntervalIsLessThan1()](../Entities/ELessonBlock/Commands/CreateLessonBlockCommand.unit.cs) - **unit** 
   Check if returns an error when lesson end is more than the amount of lesson periods
+
+
 
 
 ## `DELETE` `api/LessonBlock/{id}`
@@ -86,12 +82,6 @@
 - [UpdateLessonBlockThrowsNotFoundErrorWhenWrongUserAttemptsUpdate()](../Entities/ELessonBlock/LessonBlockController.test.cs) - **integrity**  
   Check if returns an error when day off is inaccessible for user
 
-- [ThrowsErrorWhenWrongTeacherIdIsGiven()](../Entities/ELessonBlock/UpdateLessonBlockCommand.unit.cs) - **unit** 
-  Check if returns an error when incorrect teacher id is provided
-
-- [ThrowsErrorWhenScheduleIdsFromLessonAndTeacherDontMatch()](../Entities/ELessonBlock/UpdateLessonBlockCommand.unit.cs) - **unit** 
-  Check if returns an error when lesson and teacher are from different schedules
-
 - [ThrowsErrorWhenWrongClassroomIdIsGiven()](../Entities/ELessonBlock/UpdateLessonBlockCommand.unit.cs) - **unit** 
   Check if returns an error when incorrect classroom id is provided
 
@@ -115,6 +105,9 @@
 
 - [ThrowsErrorWhenUpdatedLessonDateWouldOccurAfterSchoolYearEnd()](../Entities/ELessonBlock/Commands/UpdateLessonBlockCommand.unit.cs) - **unit** 
   Check if returns an error when updated lesson date would occur after the end of the school year
+
+- [ThrowsErrorWhenBadWeekDayIsProvided()](../Entities/ELessonBlock/Commands/UpdateLessonBlockCommand.unit.cs) - **unit** 
+  Check if returns an error when weekday isn't between 0 and 6
 
 
 ## `GET` `api/LessonBlock`

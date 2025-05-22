@@ -40,7 +40,7 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
             var createLessonBlockCommand = new CreateLessonBlockCommand(
                 new Guid(),
                 new Guid(),
-                MockData.GetCreateLessonBlockDTODetails(new Guid(), new Guid(), new Guid()),
+                MockData.GetCreateLessonBlockDTODetails(new Guid(), new Guid()),
                 new Guid(),
                 "User"
             );
@@ -70,99 +70,6 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
         }
 
         [Fact]
-        public async Task ThrowsErrorWhenWrongTeacherIdIsGiven()
-        {
-            _dbService
-                .Setup(s => s.Get<Lesson>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(MockData.GetLessonDetails());
-            _dbService
-                .Setup(s => s.Get<LessonType>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(MockData.GetLessonTypeDetails());
-            _dbService
-                .Setup(s => s.Get<Classroom>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(MockData.GetClassroomDetails());
-
-            var createLessonBlockCommand = new CreateLessonBlockCommand(
-                new Guid(),
-                new Guid(),
-                MockData.GetCreateLessonBlockDTODetails(new Guid(), new Guid(), new Guid()),
-                new Guid(),
-                "User"
-            );
-            var createLessonBlockHandler = new CreateLessonBlockHandler(
-                _dbService.Object,
-                _str.Object
-            );
-            var result = await Assert.ThrowsAsync<ApiErrorException>(
-                async () =>
-                    await createLessonBlockHandler.Handle(
-                        createLessonBlockCommand,
-                        new CancellationToken()
-                    )
-            );
-
-            Assert.Equal(
-                JsonConvert.SerializeObject(
-                    new ErrorObject[]
-                    {
-                        new ErrorObject(
-                            "Teacher with id 00000000-0000-0000-0000-000000000000 was not found"
-                        )
-                    }
-                ),
-                JsonConvert.SerializeObject(result.errors)
-            );
-        }
-
-        [Fact]
-        public async Task ThrowsErrorWhenScheduleIdsFromTeacherAndClassroomDontMatch()
-        {
-            var teacher = MockData.GetTeacherDetails();
-            teacher.ScheduleId = Guid.NewGuid();
-            _dbService
-                .Setup(s => s.Get<Lesson>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(MockData.GetLessonDetails());
-            _dbService
-                .Setup(s => s.Get<LessonType>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(MockData.GetLessonTypeDetails());
-            _dbService
-                .Setup(s => s.Get<Teacher>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(teacher);
-            _dbService
-                .Setup(s => s.Get<Classroom>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(MockData.GetClassroomDetails());
-
-            var createLessonBlockCommand = new CreateLessonBlockCommand(
-                new Guid(),
-                new Guid(),
-                MockData.GetCreateLessonBlockDTODetails(new Guid(), new Guid(), new Guid()),
-                new Guid(),
-                "User"
-            );
-            var createLessonBlockHandler = new CreateLessonBlockHandler(
-                _dbService.Object,
-                _str.Object
-            );
-            var result = await Assert.ThrowsAsync<ApiErrorException>(
-                async () =>
-                    await createLessonBlockHandler.Handle(
-                        createLessonBlockCommand,
-                        new CancellationToken()
-                    )
-            );
-
-            Assert.Equal(
-                JsonConvert.SerializeObject(
-                    new ErrorObject[]
-                    {
-                        new ErrorObject("Teacher must be in the same Schedule as Lesson")
-                    }
-                ),
-                JsonConvert.SerializeObject(result.errors)
-            );
-        }
-
-        [Fact]
         public async Task ThrowsErrorWhenWrongClassroomIdIsGiven()
         {
             _dbService
@@ -178,7 +85,7 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
             var createLessonBlockCommand = new CreateLessonBlockCommand(
                 new Guid(),
                 new Guid(),
-                MockData.GetCreateLessonBlockDTODetails(new Guid(), new Guid(), new Guid()),
+                MockData.GetCreateLessonBlockDTODetails(new Guid(), new Guid()),
                 new Guid(),
                 "User"
             );
@@ -228,7 +135,7 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
             var createLessonBlockCommand = new CreateLessonBlockCommand(
                 new Guid(),
                 new Guid(),
-                MockData.GetCreateLessonBlockDTODetails(new Guid(), new Guid(), new Guid()),
+                MockData.GetCreateLessonBlockDTODetails(new Guid(), new Guid()),
                 new Guid(),
                 "User"
             );
@@ -278,7 +185,6 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
                 .ReturnsAsync(5);
 
             var createLessonRequest = MockData.GetCreateLessonBlockDTODetails(
-                new Guid(),
                 new Guid(),
                 new Guid()
             );
@@ -338,7 +244,6 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
 
             var createLessonRequest = MockData.GetCreateLessonBlockDTODetails(
                 new Guid(),
-                new Guid(),
                 new Guid()
             );
             createLessonRequest.LessonStart = 0;
@@ -392,7 +297,6 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
                 .ReturnsAsync(5);
 
             var createLessonRequest = MockData.GetCreateLessonBlockDTODetails(
-                new Guid(),
                 new Guid(),
                 new Guid()
             );
@@ -448,7 +352,6 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
 
             var createLessonRequest = MockData.GetCreateLessonBlockDTODetails(
                 new Guid(),
-                new Guid(),
                 new Guid()
             );
             createLessonRequest.LessonDate = new DateOnly(1950, 1, 2);
@@ -498,7 +401,6 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
 
             var createLessonRequest = MockData.GetCreateLessonBlockDTODetails(
                 new Guid(),
-                new Guid(),
                 new Guid()
             );
             createLessonRequest.LessonDate = new DateOnly(2050, 1, 3);
@@ -547,7 +449,6 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
                 .ReturnsAsync(5);
 
             var createLessonRequest = MockData.GetCreateLessonBlockDTODetails(
-                new Guid(),
                 new Guid(),
                 new Guid()
             );
@@ -602,7 +503,6 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
                 .ReturnsAsync(5);
 
             var createLessonRequest = MockData.GetCreateLessonBlockDTODetails(
-                new Guid(),
                 new Guid(),
                 new Guid()
             );

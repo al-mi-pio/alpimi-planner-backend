@@ -16,12 +16,15 @@ namespace AlpimiAPI.Entities.ETeacher.Commands
 
         public async Task Handle(DeleteTeacherCommand request, CancellationToken cancellationToken)
         {
-            await _dbService.Raw(
-                "ALTER TABLE LessonBlock NOCHECK CONSTRAINT FK_LessonBlock_Teacher_TeacherId"
-            );
             switch (request.Role)
             {
                 case "Admin":
+                    await _dbService.Delete(
+                        @"
+                            DELETE FROM [Lesson] 
+                            WHERE [TeacherId] = @Id;",
+                        request
+                    );
                     await _dbService.Delete(
                         @"
                             DELETE [Teacher] 
@@ -32,6 +35,15 @@ namespace AlpimiAPI.Entities.ETeacher.Commands
                 default:
                     await _dbService.Delete(
                         @"
+                            DELETE l
+                            FROM [Lesson] l
+                            INNER JOIN [LessonType] lt ON lt.[Id] = l.[LessonTypeId]
+                            INNER JOIN [Schedule] s ON s.[Id] = lt.[ScheduleId]
+                            WHERE s.[UserId] = @FilteredId AND l.[TeacherId] = @Id;",
+                        request
+                    );
+                    await _dbService.Delete(
+                        @"
                             DELETE t
                             FROM [Teacher] t
                             INNER JOIN [Schedule] s ON s.[Id] = t.[ScheduleId]
@@ -40,9 +52,6 @@ namespace AlpimiAPI.Entities.ETeacher.Commands
                     );
                     break;
             }
-            await _dbService.Raw(
-                "ALTER TABLE LessonBlock CHECK CONSTRAINT FK_LessonBlock_Teacher_TeacherId"
-            );
         }
     }
 }

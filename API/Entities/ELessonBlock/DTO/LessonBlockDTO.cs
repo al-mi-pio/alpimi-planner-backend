@@ -18,8 +18,6 @@ namespace AlpimiAPI.Entities.ELessonBlock
 
         public ClassroomDTO? Classroom { get; set; }
 
-        public TeacherDTO? Teacher { get; set; }
-
         public required Guid ClusterId { get; set; }
     }
 }

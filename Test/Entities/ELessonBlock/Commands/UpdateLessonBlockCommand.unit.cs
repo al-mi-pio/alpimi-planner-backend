@@ -29,120 +29,6 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
         }
 
         [Fact]
-        public async Task ThrowsErrorWhenWrongTeacherIdIsGiven()
-        {
-            var dto = MockData.GetUpdateLessonBlockDTODetails();
-            dto.TeacherId = new Guid();
-            _dbService
-                .Setup(s => s.Get<LessonBlock>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(MockData.GetLessonBlockDetails());
-            _dbService
-                .Setup(s => s.Get<Lesson>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(MockData.GetLessonDetails());
-            _dbService
-                .Setup(s => s.Get<LessonType>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(MockData.GetLessonTypeDetails());
-            _dbService
-                .Setup(s => s.Get<Classroom>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(MockData.GetClassroomDetails());
-            _dbService
-                .Setup(s => s.Get<ScheduleSettings>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(MockData.GetScheduleSettingsDetails());
-            _dbService
-                .Setup(s => s.Get<int>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(5);
-
-            var updateLessonBlockCommand = new UpdateLessonBlockCommand(
-                new Guid(),
-                dto,
-                new Guid(),
-                "User"
-            );
-            var updateLessonBlockHandler = new UpdateLessonBlockHandler(
-                _dbService.Object,
-                _str.Object
-            );
-            var result = await Assert.ThrowsAsync<ApiErrorException>(
-                async () =>
-                    await updateLessonBlockHandler.Handle(
-                        updateLessonBlockCommand,
-                        new CancellationToken()
-                    )
-            );
-
-            Assert.Equal(
-                JsonConvert.SerializeObject(
-                    new ErrorObject[]
-                    {
-                        new ErrorObject(
-                            "Teacher with id 00000000-0000-0000-0000-000000000000 was not found"
-                        )
-                    }
-                ),
-                JsonConvert.SerializeObject(result.errors)
-            );
-        }
-
-        [Fact]
-        public async Task ThrowsErrorWhenScheduleIdsFromTeacherAndClassroomDontMatch()
-        {
-            var teacher = MockData.GetTeacherDetails();
-            teacher.ScheduleId = Guid.NewGuid();
-            var dto = MockData.GetUpdateLessonBlockDTODetails();
-            dto.ClassroomId = Guid.NewGuid();
-            dto.TeacherId = Guid.NewGuid();
-            _dbService
-                .Setup(s => s.Get<LessonBlock>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(MockData.GetLessonBlockDetails());
-            _dbService
-                .Setup(s => s.Get<Lesson>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(MockData.GetLessonDetails());
-            _dbService
-                .Setup(s => s.Get<LessonType>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(MockData.GetLessonTypeDetails());
-            _dbService
-                .Setup(s => s.Get<Teacher>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(teacher);
-            _dbService
-                .Setup(s => s.Get<Classroom>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(MockData.GetClassroomDetails());
-            _dbService
-                .Setup(s => s.Get<ScheduleSettings>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(MockData.GetScheduleSettingsDetails());
-            _dbService
-                .Setup(s => s.Get<int>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(5);
-
-            var updateLessonBlockCommand = new UpdateLessonBlockCommand(
-                new Guid(),
-                dto,
-                new Guid(),
-                "User"
-            );
-            var updateLessonBlockHandler = new UpdateLessonBlockHandler(
-                _dbService.Object,
-                _str.Object
-            );
-            var result = await Assert.ThrowsAsync<ApiErrorException>(
-                async () =>
-                    await updateLessonBlockHandler.Handle(
-                        updateLessonBlockCommand,
-                        new CancellationToken()
-                    )
-            );
-
-            Assert.Equal(
-                JsonConvert.SerializeObject(
-                    new ErrorObject[]
-                    {
-                        new ErrorObject("Teacher must be in the same Schedule as Lesson")
-                    }
-                ),
-                JsonConvert.SerializeObject(result.errors)
-            );
-        }
-
-        [Fact]
         public async Task ThrowsErrorWhenWrongClassroomIdIsGiven()
         {
             var dto = MockData.GetUpdateLessonBlockDTODetails();
@@ -204,7 +90,6 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
             classroom.ScheduleId = Guid.NewGuid();
             var dto = MockData.GetUpdateLessonBlockDTODetails();
             dto.ClassroomId = Guid.NewGuid();
-            dto.TeacherId = Guid.NewGuid();
             _dbService
                 .Setup(s => s.Get<LessonBlock>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetLessonBlockDetails());
@@ -575,6 +460,57 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
             );
 
             Assert.Contains("Date must be in between", JsonConvert.SerializeObject(result.errors));
+        }
+
+        [Fact]
+        public async Task ThrowsErrorWhenBadWeekDayIsProvided()
+        {
+            _dbService
+                .Setup(s => s.Get<LessonBlock>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetLessonBlockDetails());
+            _dbService
+                .Setup(s => s.Get<Lesson>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetLessonDetails());
+            _dbService
+                .Setup(s => s.Get<LessonType>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetLessonTypeDetails());
+            _dbService
+                .Setup(s => s.Get<Teacher>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetTeacherDetails());
+            _dbService
+                .Setup(s => s.Get<Classroom>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetClassroomDetails());
+            _dbService
+                .Setup(s => s.Get<ScheduleSettings>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetScheduleSettingsDetails());
+            _dbService
+                .Setup(s => s.Get<int>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(5);
+
+            var updateLessonRequest = MockData.GetUpdateLessonBlockDTODetails();
+            updateLessonRequest.WeekDay = -1;
+            var updateLessonBlockCommand = new UpdateLessonBlockCommand(
+                new Guid(),
+                updateLessonRequest,
+                new Guid(),
+                "User"
+            );
+            var updateLessonBlockHandler = new UpdateLessonBlockHandler(
+                _dbService.Object,
+                _str.Object
+            );
+            var result = await Assert.ThrowsAsync<ApiErrorException>(
+                async () =>
+                    await updateLessonBlockHandler.Handle(
+                        updateLessonBlockCommand,
+                        new CancellationToken()
+                    )
+            );
+
+            Assert.Contains(
+                "WeekDay parameter is invalid",
+                JsonConvert.SerializeObject(result.errors)
+            );
         }
     }
 }

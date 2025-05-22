@@ -135,7 +135,6 @@ namespace AlpimiTest.TestUtilities
                 Name = "K03",
                 StudentCount = 16,
                 GroupId = new Guid(),
-                JointSubgroupId = new Guid(),
                 Group = GetGroupDetails()
             };
         }
@@ -189,8 +188,8 @@ namespace AlpimiTest.TestUtilities
                 Name = "Niski poziom",
                 CurrentHours = 0,
                 AmountOfHours = 10,
-                SubgroupId = new Guid(),
-                Subgroup = GetSubgroupDetails(),
+                TeacherId = new Guid(),
+                Teacher = GetTeacherDetails(),
                 LessonTypeId = new Guid(),
                 LessonType = GetLessonTypeDetails()
             };
@@ -205,8 +204,6 @@ namespace AlpimiTest.TestUtilities
                 LessonEnd = 2,
                 LessonId = new Guid(),
                 Lesson = GetLessonDetails(),
-                TeacherId = new Guid(),
-                Teacher = GetTeacherDetails(),
                 ClassroomId = new Guid(),
                 Classroom = GetClassroomDetails(),
                 ClusterId = new Guid()
@@ -507,7 +504,11 @@ namespace AlpimiTest.TestUtilities
             return new UpdateLessonTypeDTO() { Name = "E5", Color = 2 };
         }
 
-        public static CreateLessonDTO GetCreateLessonDTODetails(Guid subgroupId, Guid lessonTypeId)
+        public static CreateLessonDTO GetCreateLessonDTODetails(
+            Guid[] subgroupIds,
+            Guid lessonTypeId,
+            Guid teacherId
+        )
         {
             var lesson = GetLessonDetails();
             return new CreateLessonDTO()
@@ -515,13 +516,15 @@ namespace AlpimiTest.TestUtilities
                 Name = lesson.Name,
                 AmountOfHours = lesson.AmountOfHours,
                 LessonTypeId = lessonTypeId,
-                SubgroupId = subgroupId
+                TeacherId = teacherId,
+                SubgroupIds = subgroupIds,
             };
         }
 
         public static CreateLessonDTO GetCreateSecondLessonDTODetails(
-            Guid subgroupId,
-            Guid lessonTypeId
+            Guid[] subgroupIds,
+            Guid lessonTypeId,
+            Guid teacherId
         )
         {
             return new CreateLessonDTO()
@@ -529,7 +532,8 @@ namespace AlpimiTest.TestUtilities
                 Name = "podstawy testowania",
                 AmountOfHours = 2,
                 LessonTypeId = lessonTypeId,
-                SubgroupId = subgroupId
+                TeacherId = teacherId,
+                SubgroupIds = subgroupIds
             };
         }
 
@@ -540,8 +544,7 @@ namespace AlpimiTest.TestUtilities
 
         public static CreateLessonBlockDTO GetCreateLessonBlockDTODetails(
             Guid lessonId,
-            Guid classroomId,
-            Guid teacherId
+            Guid classroomId
         )
         {
             var lessonBlock = GetLessonBlockDetails();
@@ -552,14 +555,12 @@ namespace AlpimiTest.TestUtilities
                 LessonEnd = lessonBlock.LessonEnd,
                 LessonId = lessonId,
                 ClassroomId = classroomId,
-                TeacherId = teacherId
             };
         }
 
         public static CreateLessonBlockDTO GetCreateSecondLessonBlockDTODetails(
             Guid lessonId,
-            Guid classroomId,
-            Guid teacherId
+            Guid classroomId
         )
         {
             return new CreateLessonBlockDTO()
@@ -569,14 +570,12 @@ namespace AlpimiTest.TestUtilities
                 LessonEnd = 4,
                 LessonId = lessonId,
                 ClassroomId = classroomId,
-                TeacherId = teacherId
             };
         }
 
         public static CreateLessonBlockDTO GetCreateThirdLessonBlockDTODetails(
             Guid lessonId,
-            Guid classroomId,
-            Guid teacherId
+            Guid classroomId
         )
         {
             return new CreateLessonBlockDTO()
@@ -586,7 +585,6 @@ namespace AlpimiTest.TestUtilities
                 LessonEnd = 4,
                 LessonId = lessonId,
                 ClassroomId = classroomId,
-                TeacherId = teacherId,
                 WeekInterval = 10
             };
         }

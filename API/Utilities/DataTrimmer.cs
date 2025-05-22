@@ -101,7 +101,6 @@ namespace AlpimiAPI.Utilities
                 Id = data.Id,
                 Name = data.Name,
                 StudentCount = data.StudentCount,
-                JointSubgroupId = data.JointSubgroupId,
                 Group = Trim(data.Group)
             };
         }
@@ -125,7 +124,7 @@ namespace AlpimiAPI.Utilities
                 CurrentHours = data.CurrentHours,
                 AmountOfHours = data.AmountOfHours,
                 LessonType = Trim(data.LessonType),
-                Subgroup = Trim(data.Subgroup)
+                Teacher = Trim(data.Teacher),
             };
         }
 
@@ -152,7 +151,6 @@ namespace AlpimiAPI.Utilities
                 LessonEnd = data.LessonEnd,
                 Lesson = Trim(data.Lesson),
                 Classroom = data.Classroom == null ? null : Trim(data.Classroom),
-                Teacher = data.Teacher == null ? null : Trim(data.Teacher),
                 ClusterId = data.ClusterId
             };
         }

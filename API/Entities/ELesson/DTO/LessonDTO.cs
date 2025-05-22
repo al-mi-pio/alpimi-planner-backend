@@ -1,5 +1,5 @@
 ﻿using AlpimiAPI.Entities.ELessonType.DTO;
-using AlpimiAPI.Entities.ESubgroup.DTO;
+using AlpimiAPI.Entities.ETeacher.DTO;
 
 namespace AlpimiAPI.Entities.ELesson.DTO
 {
@@ -15,6 +15,6 @@ namespace AlpimiAPI.Entities.ELesson.DTO
 
         public required LessonTypeDTO LessonType { get; set; }
 
-        public required SubgroupDTO Subgroup { get; set; }
+        public required TeacherDTO Teacher { get; set; }
     }
 }

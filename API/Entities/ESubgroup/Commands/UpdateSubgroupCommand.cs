@@ -121,7 +121,6 @@ namespace AlpimiAPI.Entities.ESubgroup.Commands
                     INSERTED.[Id],
                     INSERTED.[Name],
                     INSERTED.[StudentCount],
-                    INSERTED.[JointSubgroupId],
                     INSERTED.[GroupId]
                     WHERE [Id] = '{request.Id}';",
                 request.dto

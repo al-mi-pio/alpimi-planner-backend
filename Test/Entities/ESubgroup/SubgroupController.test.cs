@@ -138,30 +138,6 @@ namespace AlpimiTest.Entities.ESubgroup
         }
 
         [Fact]
-        public async Task SubgroupsLessonsAreDeleted()
-        {
-            var subgroupRequest = MockData.GetCreateSubgroupDTODetails(groupId);
-            var subgroupId = await DbHelper.SetupSubgroup(_client, subgroupRequest);
-            var lessonTypeId = await DbHelper.SetupLessonType(
-                _client,
-                MockData.GetCreateLessonTypeDTODetails(scheduleId)
-            );
-            var lessonRequest = MockData.GetCreateLessonDTODetails(subgroupId, lessonTypeId);
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-                "Bearer",
-                TestAuthorization.GetToken("Admin", "User", new Guid())
-            );
-
-            var response = await _client.DeleteAsync($"/api/Subgroup/{subgroupId}");
-            Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
-
-            var query = $"?id={groupId}";
-            response = await _client.GetAsync($"/api/Lesson");
-            var stringResponse = await response.Content.ReadAsStringAsync();
-            Assert.DoesNotContain(lessonRequest.Name, stringResponse);
-        }
-
-        [Fact]
         public async Task UpdateSubgroupReturnsUpdatedSubgroup()
         {
             var subgroupUpdateRequest = MockData.GetUpdateSubgroupDTODetails();
@@ -230,60 +206,6 @@ namespace AlpimiTest.Entities.ESubgroup
         }
 
         [Fact]
-        public async Task JoinSubgroupReturnsJointSubgroupId()
-        {
-            var subgroupId = await DbHelper.SetupSubgroup(
-                _client,
-                MockData.GetCreateSubgroupDTODetails(groupId)
-            );
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-                "Bearer",
-                TestAuthorization.GetToken("Admin", "User", new Guid())
-            );
-
-            IEnumerable<Guid> ids = [subgroupId];
-            var response = await _client.PatchAsJsonAsync($"/api/Subgroup/join", ids);
-
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        }
-
-        [Fact]
-        public async Task JoinSubgroupThrowsErrorWhenWrongIdIsGiven()
-        {
-            var subgroupId = await DbHelper.SetupSubgroup(
-                _client,
-                MockData.GetCreateSubgroupDTODetails(groupId)
-            );
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-                "Bearer",
-                TestAuthorization.GetToken("Admin", "User", new Guid())
-            );
-
-            IEnumerable<Guid> ids = [new Guid()];
-            var response = await _client.PatchAsJsonAsync($"/api/Subgroup/join", ids);
-
-            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-        }
-
-        [Fact]
-        public async Task JoinSubgroupThrowsErrorWhenWrongUserAttemptsUpdate()
-        {
-            var subgroupId = await DbHelper.SetupSubgroup(
-                _client,
-                MockData.GetCreateSubgroupDTODetails(groupId)
-            );
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-                "Bearer",
-                TestAuthorization.GetToken("User", "User", new Guid())
-            );
-
-            IEnumerable<Guid> ids = [new Guid()];
-            var response = await _client.PatchAsJsonAsync($"/api/Subgroup/join", ids);
-
-            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-        }
-
-        [Fact]
         public async Task GetAllSubgroupsReturnsSubgroupsFromGroupIfGroupIdIsProvided()
         {
             var subgroupRequest1 = MockData.GetCreateSubgroupDTODetails(groupId);
@@ -319,6 +241,41 @@ namespace AlpimiTest.Entities.ESubgroup
             );
 
             var query = $"?id={studentId}";
+            var response = await _client.GetAsync($"/api/Subgroup{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+
+            Assert.Contains(subgroupRequest1.Name, stringResponse);
+            Assert.DoesNotContain(subgroupRequest2.Name, stringResponse);
+        }
+
+        [Fact]
+        public async Task GetAllSubgroupsReturnsSubgroupsFromLessonIfLessonIdIsProvided()
+        {
+            var subgroupRequest1 = MockData.GetCreateSubgroupDTODetails(groupId);
+            var subgroupRequest2 = MockData.GetCreateSecondSubgroupDTODetails(groupId);
+            var subgroupId = await DbHelper.SetupSubgroup(_client, subgroupRequest1);
+            await DbHelper.SetupSubgroup(_client, subgroupRequest2);
+            var teacherId = await DbHelper.SetupTeacher(
+                _client,
+                MockData.GetCreateTeacherDTODetails(scheduleId)
+            );
+            var lessonTypeId = await DbHelper.SetupLessonType(
+                _client,
+                MockData.GetCreateLessonTypeDTODetails(scheduleId)
+            );
+            var lessonRequest = MockData.GetCreateLessonDTODetails(
+                [subgroupId],
+                lessonTypeId,
+                teacherId
+            );
+
+            var lessonId = await DbHelper.SetupLesson(_client, lessonRequest);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", userId)
+            );
+
+            var query = $"?id={lessonId}";
             var response = await _client.GetAsync($"/api/Subgroup{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
 

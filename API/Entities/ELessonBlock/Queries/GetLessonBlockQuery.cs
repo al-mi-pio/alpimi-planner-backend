@@ -3,8 +3,6 @@ using AlpimiAPI.Entities.EClassroom;
 using AlpimiAPI.Entities.EClassroom.Queries;
 using AlpimiAPI.Entities.ELesson;
 using AlpimiAPI.Entities.ELesson.Queries;
-using AlpimiAPI.Entities.ETeacher;
-using AlpimiAPI.Entities.ETeacher.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

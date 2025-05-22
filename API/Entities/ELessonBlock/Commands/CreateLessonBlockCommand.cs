@@ -5,8 +5,6 @@ using AlpimiAPI.Entities.ELesson;
 using AlpimiAPI.Entities.ELesson.Queries;
 using AlpimiAPI.Entities.ELessonBlock.DTO;
 using AlpimiAPI.Entities.EScheduleSettings;
-using AlpimiAPI.Entities.ETeacher;
-using AlpimiAPI.Entities.ETeacher.Queries;
 using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
 using MediatR;

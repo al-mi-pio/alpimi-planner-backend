@@ -276,8 +276,16 @@ namespace AlpimiTest.Entities.EClassroomType
                 _client,
                 MockData.GetCreateLessonTypeDTODetails(scheduleId)
             );
+            var teacherId = await DbHelper.SetupTeacher(
+                _client,
+                MockData.GetCreateTeacherDTODetails(scheduleId)
+            );
 
-            var lessonRequest = MockData.GetCreateLessonDTODetails(subgroupId, lessonTypeId);
+            var lessonRequest = MockData.GetCreateLessonDTODetails(
+                [subgroupId],
+                lessonTypeId,
+                teacherId
+            );
             lessonRequest.ClassroomTypeIds = [classroomTypeId];
             var lessonId = await DbHelper.SetupLesson(_client, lessonRequest);
             var query = $"?id={lessonId}";

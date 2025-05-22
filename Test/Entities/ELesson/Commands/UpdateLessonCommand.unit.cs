@@ -5,6 +5,7 @@ using AlpimiAPI.Entities.ELesson;
 using AlpimiAPI.Entities.ELesson.Commands;
 using AlpimiAPI.Entities.ELessonType;
 using AlpimiAPI.Entities.ESubgroup;
+using AlpimiAPI.Entities.ETeacher;
 using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
 using AlpimiTest.TestSetup;
@@ -67,6 +68,9 @@ namespace AlpimiTest.Entities.ELesson.Commands
             _dbService
                 .Setup(s => s.Get<Group>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetGroupDetails());
+            _dbService
+                .Setup(s => s.Get<Teacher>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetTeacherDetails());
 
             var createLessonCommand = new UpdateLessonCommand(new Guid(), dto, new Guid(), "User");
             var createLessonHandler = new UpdateLessonHandler(_dbService.Object, _str.Object);
@@ -85,11 +89,37 @@ namespace AlpimiTest.Entities.ELesson.Commands
         public async Task ThrowsErrorWhenWrongSubgroupIdIsGiven()
         {
             var dto = MockData.GetUpdateLessonDTODetails();
-            var lessonType = MockData.GetLessonTypeDetails();
-            lessonType.ScheduleId = Guid.NewGuid();
+            dto.SubgroupIds = [new Guid()];
             _dbService
                 .Setup(s => s.Get<LessonType>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(lessonType);
+                .ReturnsAsync(MockData.GetLessonTypeDetails());
+            _dbService
+                .Setup(s => s.Get<Lesson>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetLessonDetails());
+            _dbService
+                .Setup(s => s.Get<Teacher>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetTeacherDetails());
+
+            var createLessonCommand = new UpdateLessonCommand(new Guid(), dto, new Guid(), "User");
+            var createLessonHandler = new UpdateLessonHandler(_dbService.Object, _str.Object);
+            var result = await Assert.ThrowsAsync<ApiErrorException>(
+                async () =>
+                    await createLessonHandler.Handle(createLessonCommand, new CancellationToken())
+            );
+
+            Assert.Equal(
+                "Subgroup with id 00000000-0000-0000-0000-000000000000 was not found",
+                result.errors.First().message
+            );
+        }
+
+        [Fact]
+        public async Task ThrowsErrorWhenWrongTeacherIdIsGiven()
+        {
+            var dto = MockData.GetUpdateLessonDTODetails();
+            _dbService
+                .Setup(s => s.Get<LessonType>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetLessonTypeDetails());
             _dbService
                 .Setup(s => s.Get<Lesson>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetLessonDetails());
@@ -102,7 +132,7 @@ namespace AlpimiTest.Entities.ELesson.Commands
             );
 
             Assert.Equal(
-                "Subgroup with id 00000000-0000-0000-0000-000000000000 was not found",
+                "Teacher with id 00000000-0000-0000-0000-000000000000 was not found",
                 result.errors.First().message
             );
         }
@@ -126,6 +156,9 @@ namespace AlpimiTest.Entities.ELesson.Commands
             _dbService
                 .Setup(s => s.Get<Subgroup>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetSubgroupDetails());
+            _dbService
+                .Setup(s => s.Get<Teacher>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetTeacherDetails());
 
             var updateLessonCommand = new UpdateLessonCommand(new Guid(), dto, new Guid(), "Admin");
             var updateLessonHandler = new UpdateLessonHandler(_dbService.Object, _str.Object);
@@ -168,11 +201,11 @@ namespace AlpimiTest.Entities.ELesson.Commands
                 .Setup(s => s.Get<LessonType>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetLessonTypeDetails());
             _dbService
-                .Setup(s => s.Get<Subgroup>(It.IsAny<string>(), It.IsAny<object>()))
-                .ReturnsAsync(MockData.GetSubgroupDetails());
-            _dbService
                 .Setup(s => s.Get<Group>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetGroupDetails());
+            _dbService
+                .Setup(s => s.Get<Teacher>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetTeacherDetails());
 
             var createLessonCommand = new UpdateLessonCommand(new Guid(), dto, new Guid(), "User");
             var createLessonHandler = new UpdateLessonHandler(_dbService.Object, _str.Object);
@@ -183,6 +216,37 @@ namespace AlpimiTest.Entities.ELesson.Commands
 
             Assert.Equal(
                 "Cannot add multiple ClassroomType with the value 00000000-0000-0000-0000-000000000000",
+                result.errors.First().message
+            );
+        }
+
+        [Fact]
+        public async Task ThrowsErrorWhenDuplicatedSubgroupIdsAreGiven()
+        {
+            var dto = MockData.GetUpdateLessonDTODetails();
+            dto.SubgroupIds = [new Guid(), new Guid()];
+            _dbService
+                .Setup(s => s.Get<Lesson>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetLessonDetails());
+            _dbService
+                .Setup(s => s.Get<LessonType>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetLessonTypeDetails());
+            _dbService
+                .Setup(s => s.Get<Group>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetGroupDetails());
+            _dbService
+                .Setup(s => s.Get<Teacher>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetTeacherDetails());
+
+            var createLessonCommand = new UpdateLessonCommand(new Guid(), dto, new Guid(), "User");
+            var createLessonHandler = new UpdateLessonHandler(_dbService.Object, _str.Object);
+            var result = await Assert.ThrowsAsync<ApiErrorException>(
+                async () =>
+                    await createLessonHandler.Handle(createLessonCommand, new CancellationToken())
+            );
+
+            Assert.Equal(
+                "Cannot add multiple Subgroup with the value 00000000-0000-0000-0000-000000000000",
                 result.errors.First().message
             );
         }
@@ -209,6 +273,9 @@ namespace AlpimiTest.Entities.ELesson.Commands
             _dbService
                 .Setup(s => s.Get<ClassroomType>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(classroomType);
+            _dbService
+                .Setup(s => s.Get<Teacher>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetTeacherDetails());
 
             var createLessonCommand = new UpdateLessonCommand(new Guid(), dto, new Guid(), "User");
             var createLessonHandler = new UpdateLessonHandler(_dbService.Object, _str.Object);
@@ -227,6 +294,42 @@ namespace AlpimiTest.Entities.ELesson.Commands
         public async Task ThrowsErrorWhenScheduleIdsFromLessonTypeAndSubgroupDontMatch()
         {
             var dto = MockData.GetUpdateLessonDTODetails();
+            dto.SubgroupIds = [new Guid()];
+            var group = MockData.GetGroupDetails();
+            group.ScheduleId = Guid.NewGuid();
+            _dbService
+                .Setup(s => s.Get<LessonType>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetLessonTypeDetails());
+            _dbService
+                .Setup(s => s.Get<Subgroup>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetSubgroupDetails());
+            _dbService
+                .Setup(s => s.Get<Group>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(group);
+            _dbService
+                .Setup(s => s.Get<Lesson>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetLessonDetails());
+            _dbService
+                .Setup(s => s.Get<Teacher>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetTeacherDetails());
+
+            var createLessonCommand = new UpdateLessonCommand(new Guid(), dto, new Guid(), "User");
+            var createLessonHandler = new UpdateLessonHandler(_dbService.Object, _str.Object);
+            var result = await Assert.ThrowsAsync<ApiErrorException>(
+                async () =>
+                    await createLessonHandler.Handle(createLessonCommand, new CancellationToken())
+            );
+
+            Assert.Equal(
+                "Subgroup must be in the same Schedule as LessonType",
+                result.errors.First().message
+            );
+        }
+
+        [Fact]
+        public async Task ThrowsErrorWhenScheduleIdsFromLessonTypeAndTeacherDontMatch()
+        {
+            var dto = MockData.GetUpdateLessonDTODetails();
             var lessonType = MockData.GetLessonTypeDetails();
             lessonType.ScheduleId = Guid.NewGuid();
             _dbService
@@ -241,6 +344,9 @@ namespace AlpimiTest.Entities.ELesson.Commands
             _dbService
                 .Setup(s => s.Get<Lesson>(It.IsAny<string>(), It.IsAny<object>()))
                 .ReturnsAsync(MockData.GetLessonDetails());
+            _dbService
+                .Setup(s => s.Get<Teacher>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetTeacherDetails());
 
             var createLessonCommand = new UpdateLessonCommand(new Guid(), dto, new Guid(), "User");
             var createLessonHandler = new UpdateLessonHandler(_dbService.Object, _str.Object);
@@ -250,7 +356,7 @@ namespace AlpimiTest.Entities.ELesson.Commands
             );
 
             Assert.Equal(
-                "Subgroup must be in the same Schedule as LessonType",
+                "Teacher must be in the same Schedule as LessonType",
                 result.errors.First().message
             );
         }

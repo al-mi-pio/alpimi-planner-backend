@@ -174,14 +174,19 @@ namespace AlpimiAPI.Entities.ELesson.Commands
                         );
                     }
                     else if (
-                        lessonType.Value != null
-                        && subgroup.Value.Group.ScheduleId != lessonType.Value.ScheduleId
+                        subgroup.Value.Group.ScheduleId
+                        != originalLesson.Value.LessonType.ScheduleId
                     )
                     {
                         errors.Add(
                             new ErrorObject(_str["wrongSet", "Subgroup", "Schedule", "LessonType"])
                         );
                     }
+                }
+
+                if (errors.Count != 0)
+                {
+                    throw new ApiErrorException(errors);
                 }
 
                 var subgroups = await _dbService.GetAll<Guid>(
@@ -347,7 +352,7 @@ namespace AlpimiAPI.Entities.ELesson.Commands
                 request.dto
             );
 
-            lesson!.LessonType = lessonType.Value!;
+            lesson!.LessonType = lessonType.Value;
             lesson.Teacher = teacher.Value;
 
             return lesson;

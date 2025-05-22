@@ -175,6 +175,11 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                 errors.Add(new ErrorObject(_str["badParameter", "WeekDay"]));
             }
 
+            if (errors.Count != 0)
+            {
+                throw new ApiErrorException(errors);
+            }
+
             if (scheduleSettings!.SchoolDays[request.dto.WeekDay.Value] == '0')
             {
                 errors.Add(

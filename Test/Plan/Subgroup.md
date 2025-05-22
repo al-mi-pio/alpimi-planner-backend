@@ -35,9 +35,6 @@
 - [SubgroupIsDeleted()](../Entities/ESubgroup/SubgroupController.test.cs) - **integrity**  
   Check if subgroup is deleted when a valid token is provided
 
-- [SubgroupsLessonsAreDeleted](../Entities/ESubgroup/SubgroupController.test.cs) - **integrity**  
-  Check if lessons of the subgroup are deleted
-
 
 ## `PATCH` `api/Subgroup/{id}`
 
@@ -62,23 +59,6 @@
 - [ThrowsErrorWhenStudentCountInSubgroupIsMoreThanGroup()](../Entities/ESubgroup/Commands/UpdateSubgroupCommand.unit.cs) - **unit** 
   Check if returns an error when student count is more than student count of a group
 
-## `PATCH` `api/Subgroup/join`
-
-- [JoinSubgroupReturnsJointSubgroupId()](../Entities/ESubgroup/SubgroupController.test.cs) - **integrity**  
-  Check if returns an joint subgroup Id
-
-- [JoinSubgroupThrowsErrorWhenWrongIdIsGiven()](../Entities/ESubgroup/SubgroupController.test.cs) - **integrity**  
-  Check if returns an error when atleast one of the subgroups doesn't exists
-
-- [JoinSubgroupThrowsErrorWhenWrongUserAttemptsUpdate()](../Entities/ESubgroup/SubgroupController.test.cs) - **integrity**  
-  Check if returns an error when atleast one of the subgroups is inaccessible for user
-
-- [ThrowsErrorWhenDuplicatedSubgroupIdsAreGiven()](../Entities/ESubgroup/Commands/JoinSubgroupCommand.unit.cs) - **unit**  
-  Check if returns an error when duplicated subgroup ids are provided
-
-- [ThrowsErrorWhenWrongSubgroupIdIsGiven()](../Entities/ESubgroup/Commands/JoinSubgroupCommand.unit.cs) - **unit** 
-  Check if returns an error when incorrect subgroup id is provided
-
 
 ## `GET` `api/Subgroup`
 
@@ -88,8 +68,8 @@
 - [GetAllSubgroupsReturnsSubgroupsFromGroupIfGroupIdIsProvided()](../Entities/ESubgroup/SubgroupController.test.cs) - **integrity**  
   Check if returns two subgroups when a valid group id provided
 
-- [GetAllSubgroupsReturnsSubgroupsFromJointSubgroupIfJointSubgroupIdIsProvided()](../Entities/ESubgroup/SubgroupController.test.cs) - **integrity**  
-  Check if returns two subgroups when a valid joint subgroup id provided
+- [GetAllSubgroupsReturnsSubgroupsFromLessonIfLessonIdIsProvided()](../Entities/ESubgroup/SubgroupController.test.cs) - **integrity**  
+  Check if returns two subgroups when a valid lesson id provided
 
 - [GetAllSubgroupsReturnsSubgroupsFromPublicSchedules()](../Entities/ESubgroup/SubgroupController.test.cs) - **integrity**   
   Check if returns two classrooms when no token is provided

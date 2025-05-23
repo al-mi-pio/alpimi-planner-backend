@@ -91,10 +91,10 @@ namespace AlpimiAPI.Entities.EAvailability.Commands
                 );
             }
 
-            var scheduleSettings = await _dbService.Get<ScheduleSettings?>(
+            var scheduleSettingsId = await _dbService.Get<Guid?>(
                 @"
                     SELECT DISTINCT
-                    ss.[Id], ss.[SchoolHour], ss.[SchoolYearStart], ss.[SchoolYearEnd], ss.[SchoolDays], ss.[ScheduleId]
+                    ss.[Id]
                     FROM [ScheduleSettings] ss
                     INNER JOIN [Teacher] t ON t.[ScheduleId] = ss.[ScheduleId]  
                     INNER JOIN [Availability] a on a.[TeacherId] = t.[Id]
@@ -103,7 +103,7 @@ namespace AlpimiAPI.Entities.EAvailability.Commands
             );
 
             var lessonPeriodCount = Utilities
-                .LessonPeriodCount.Get(_dbService, scheduleSettings!.Id, cancellationToken)
+                .LessonPeriodCount.Get(_dbService, scheduleSettingsId!.Value, cancellationToken)
                 .Result;
 
             List<ErrorObject> errors = new List<ErrorObject>();

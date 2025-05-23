@@ -1,12 +1,11 @@
 ﻿using AlpimiAPI.Entities.EClassroom.DTO;
 using AlpimiAPI.Entities.ELesson.DTO;
-using AlpimiAPI.Entities.ETeacher.DTO;
 
 namespace AlpimiAPI.Entities.ELessonBlock
 {
     public class LessonBlockDTO
     {
-        public Guid Id { get; set; }
+        public required Guid Id { get; set; }
 
         public required DateOnly LessonDate { get; set; }
 

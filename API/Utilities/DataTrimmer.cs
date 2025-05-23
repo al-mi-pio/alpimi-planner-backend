@@ -1,4 +1,6 @@
-﻿using AlpimiAPI.Entities.EClassroom;
+﻿using AlpimiAPI.Entities.EAvailability;
+using AlpimiAPI.Entities.EAvailability.DTO;
+using AlpimiAPI.Entities.EClassroom;
 using AlpimiAPI.Entities.EClassroom.DTO;
 using AlpimiAPI.Entities.EClassroomType;
 using AlpimiAPI.Entities.EClassroomType.DTO;
@@ -152,6 +154,18 @@ namespace AlpimiAPI.Utilities
                 Lesson = Trim(data.Lesson),
                 Classroom = data.Classroom == null ? null : Trim(data.Classroom),
                 ClusterId = data.ClusterId
+            };
+        }
+
+        public static AvailabilityDTO Trim(Availability data)
+        {
+            return new AvailabilityDTO
+            {
+                Id = data.Id,
+                WeekDay = data.WeekDay,
+                Start = data.Start,
+                End = data.End,
+                Teacher = Trim(data.Teacher),
             };
         }
     }

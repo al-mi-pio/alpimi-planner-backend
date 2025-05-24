@@ -48,7 +48,16 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
             {
                 errors.Add(new ErrorObject(_str["badParameter", "SchoolDays"]));
             }
-
+            if (
+                (request.dto.SchoolYearEnd.Year - request.dto.SchoolYearStart.Year) * 12
+                    + (request.dto.SchoolYearEnd.Month - request.dto.SchoolYearStart.Month)
+                > Configuration.maxSchoolYearDuration
+            )
+            {
+                errors.Add(
+                    new ErrorObject(_str["scheduleDuration", Configuration.maxSchoolYearDuration])
+                );
+            }
             AllowedCharacterTypes[]? allowedCharacterTypesScheduleName =
                 Configuration.GetAllowedCharacterTypesForScheduleName();
 

@@ -57,7 +57,7 @@ namespace AlpimiAPI.Entities.EAvailability.Commands
             var scheduleSettings = await _dbService.Get<ScheduleSettings?>(
                 @"
                     SELECT DISTINCT
-                    ss.[Id], ss.[SchoolHour], ss.[SchoolYearStart], ss.[SchoolYearEnd], ss.[SchoolDays], ss.[ScheduleId]
+                    ss.[Id]
                     FROM [ScheduleSettings] ss
                     INNER JOIN [Teacher] t ON t.[ScheduleId] = ss.[ScheduleId]
                     WHERE t.[Id] = @TeacherId;",

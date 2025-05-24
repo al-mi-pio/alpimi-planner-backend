@@ -117,7 +117,7 @@ namespace AlpimiAPI.Entities.EAvailability
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
         [ProducesResponseType(typeof(ApiErrorResponse), 404)]
-        public async Task<ActionResult<ApiGetResponse<Guid>>> Patch(
+        public async Task<ActionResult<ApiGetResponse<Availability>>> Patch(
             [FromBody] UpdateAvailabilityDTO request,
             [FromRoute] Guid id,
             [FromHeader] string Authorization

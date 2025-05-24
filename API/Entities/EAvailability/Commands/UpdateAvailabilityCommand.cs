@@ -91,7 +91,7 @@ namespace AlpimiAPI.Entities.EAvailability.Commands
                 );
             }
 
-            var scheduleSettingsId = await _dbService.Get<Guid?>(
+            var scheduleSettings = await _dbService.Get<ScheduleSettings?>(
                 @"
                     SELECT DISTINCT
                     ss.[Id]
@@ -103,7 +103,7 @@ namespace AlpimiAPI.Entities.EAvailability.Commands
             );
 
             var lessonPeriodCount = Utilities
-                .LessonPeriodCount.Get(_dbService, scheduleSettingsId!.Value, cancellationToken)
+                .LessonPeriodCount.Get(_dbService, scheduleSettings!.Id, cancellationToken)
                 .Result;
 
             List<ErrorObject> errors = new List<ErrorObject>();

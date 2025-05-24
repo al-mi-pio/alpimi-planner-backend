@@ -71,7 +71,7 @@
   Check if returns an id when provided with correct data
 
 - [UpdateLessonBlockUpdatesLessonBlockCluster()](../Entities/EClassroom/ClassroomController.test.cs) - **integrity**  
-  Check if updates lesson block cluster  when provided with cluster id and update cluster is true
+  Check if updates lesson block cluster  when provided with cluster id
 
 - [UpdateLessonBlockUpdatesLessonsCurrentHours()](../Entities/EClassroom/ClassroomController.test.cs) - **integrity**  
    Check if updating a lesson block updates the current hours of the lesson

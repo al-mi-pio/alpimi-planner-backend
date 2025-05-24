@@ -1,5 +1,7 @@
 ﻿using AlpimiAPI.Entities.EAuth;
 using AlpimiAPI.Entities.EAuth.DTO;
+using AlpimiAPI.Entities.EAvailability;
+using AlpimiAPI.Entities.EAvailability.DTO;
 using AlpimiAPI.Entities.EClassroom;
 using AlpimiAPI.Entities.EClassroom.DTO;
 using AlpimiAPI.Entities.EClassroomType;
@@ -207,6 +209,18 @@ namespace AlpimiTest.TestUtilities
                 ClassroomId = new Guid(),
                 Classroom = GetClassroomDetails(),
                 ClusterId = new Guid()
+            };
+        }
+
+        public static Availability GetAvailabilityDetails()
+        {
+            return new Availability()
+            {
+                WeekDay = 1,
+                End = 1,
+                Start = 1,
+                Teacher = GetTeacherDetails(),
+                TeacherId = new Guid(),
             };
         }
 
@@ -595,8 +609,36 @@ namespace AlpimiTest.TestUtilities
             {
                 LessonStart = 2,
                 LessonEnd = 3,
-                WeekDay = 2,
+                WeekDay = 2
             };
+        }
+
+        public static CreateAvailabilityDTO GetCreateAvailabilityDTODetails(Guid teacherId)
+        {
+            var availability = GetAvailabilityDetails();
+            return new CreateAvailabilityDTO()
+            {
+                WeekDay = availability.WeekDay,
+                Start = availability.Start,
+                End = availability.End,
+                TeacherId = teacherId
+            };
+        }
+
+        public static CreateAvailabilityDTO GetCreateSecondAvailabilityDTODetails(Guid teacherId)
+        {
+            return new CreateAvailabilityDTO()
+            {
+                WeekDay = 4,
+                Start = 1,
+                End = 1,
+                TeacherId = teacherId
+            };
+        }
+
+        public static UpdateAvailabilityDTO GetUpdateAvailabilityDTODetails()
+        {
+            return new UpdateAvailabilityDTO() { WeekDay = 2, };
         }
     }
 }

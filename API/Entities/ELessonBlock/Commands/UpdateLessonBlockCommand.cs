@@ -144,14 +144,9 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                 request
             );
 
-            var lessonPeriodCount = await _dbService.Get<int>(
-                $@"
-                    SELECT 
-                    count(*)
-                    FROM [LessonPeriod] 
-                    WHERE ScheduleSettingsId = '{scheduleSettings!.Id}';",
-                ""
-            );
+            var lessonPeriodCount = Utilities
+                .LessonPeriodCount.Get(_dbService, scheduleSettings!.Id, cancellationToken)
+                .Result;
 
             if (request.dto.LessonStart > request.dto.LessonEnd)
             {

@@ -106,7 +106,7 @@ namespace AlpimiTest.Entities.ELessonBlock
 
             response = await _client.PostAsJsonAsync(
                 "/api/LessonBlock",
-                MockData.GetCreateLessonDTODetails([subgroupId1], lessonTypeId, teacherId1)
+                MockData.GetCreateLessonBlockDTODetails(lessonId1, classroomId1)
             );
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
 
@@ -134,7 +134,7 @@ namespace AlpimiTest.Entities.ELessonBlock
 
             response = await _client.PostAsJsonAsync(
                 "/api/LessonBlock",
-                MockData.GetCreateLessonDTODetails([subgroupId1], lessonTypeId, teacherId1)
+                MockData.GetCreateLessonBlockDTODetails(lessonId1, classroomId1)
             );
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
 

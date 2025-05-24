@@ -96,6 +96,13 @@ namespace AlpimiTest.TestSetup
                 )
             },
             {
+                "scheduleDuration",
+                args => new LocalizedString(
+                    "scheduleDuration",
+                    string.Format("The school year cannot be longer than {0} month(s)", args[0])
+                )
+            },
+            {
                 "dateOutOfRange",
                 args => new LocalizedString(
                     "dateOutofRange",

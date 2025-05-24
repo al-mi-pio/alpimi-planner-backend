@@ -43,6 +43,9 @@
 
 - [ThrowsErrorWhenLessonPeriodsOverlapAfterUpdatingSchoolHour()](../Entities/EScheduleSettings/Commands/UpdateScheduleSettingsCommand.unit.cs) - **unit**  
   Check if returns an error when incorrect school hour is provided
+
+- [ThrowsErrorWhenSchoolYearDurationExceedsMaximumDuration()](../Entities/EScheduleSettings/Commands/UpdateScheduleSettingsCommand.unit.cs) - **unit**  
+  Check if returns an error when the school year will last longer than the maxiumum amount
   
 
 ## `GET` `api/ScheduleSettings/{id}`

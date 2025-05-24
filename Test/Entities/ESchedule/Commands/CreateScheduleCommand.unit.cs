@@ -249,5 +249,40 @@ namespace AlpimiTest.Entities.ESchedule.Commands
                 JsonConvert.SerializeObject(result.errors)
             );
         }
+
+        [Fact]
+        public async Task ThrowsErrorWhenSchoolYearDurationExceedsMaximumDuration()
+        {
+            var dto = MockData.GetCreateScheduleDTODetails();
+            dto.SchoolYearEnd = new DateOnly(2029, 10, 10);
+            var scheduleSettings = MockData.GetScheduleSettingsDetails();
+
+            var createScheduleCommand = new CreateScheduleCommand(
+                scheduleSettings.Schedule.Id,
+                scheduleSettings.Schedule.UserId,
+                scheduleSettings.Id,
+                dto
+            );
+            var createScheduleHandler = new CreateScheduleHandler(_dbService.Object, _str.Object);
+            var result = await Assert.ThrowsAsync<ApiErrorException>(
+                async () =>
+                    await createScheduleHandler.Handle(
+                        createScheduleCommand,
+                        new CancellationToken()
+                    )
+            );
+
+            Assert.Equal(
+                JsonConvert.SerializeObject(
+                    new ErrorObject[]
+                    {
+                        new ErrorObject(
+                            $"The school year cannot be longer than {Configuration.maxSchoolYearDuration} month(s)"
+                        )
+                    }
+                ),
+                JsonConvert.SerializeObject(result.errors)
+            );
+        }
     }
 }

@@ -35,6 +35,9 @@
 - [ThrowsErrorWhenNameContainsIllegalAnSymbol](../Entities/ESchedule/Commands/CreateScheduleCommand.unit.cs) - **unit**  
   Check if returns an error when name contains an illegal symbol
 
+- [ThrowsErrorWhenSchoolYearDurationExceedsMaximumDuration()](../Entities/ESchedule/Commands/CreateScheduleCommand.unit.cs) - **unit**    
+  Check if returns an error when the school year will last longer than the maxiumum amount
+
 
 ## `DELETE` `api/Schedule/{id}`
 

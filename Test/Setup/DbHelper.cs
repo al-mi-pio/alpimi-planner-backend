@@ -1,10 +1,12 @@
 ﻿using System.Net.Http.Headers;
 using AlpimiAPI.Database;
+using AlpimiAPI.Entities.EAvailability.DTO;
 using AlpimiAPI.Entities.EClassroom.DTO;
 using AlpimiAPI.Entities.EClassroomType.DTO;
 using AlpimiAPI.Entities.EDayOff.DTO;
 using AlpimiAPI.Entities.EGroup.DTO;
 using AlpimiAPI.Entities.ELesson.DTO;
+using AlpimiAPI.Entities.ELessonBlock;
 using AlpimiAPI.Entities.ELessonBlock.DTO;
 using AlpimiAPI.Entities.ELessonPeriod.DTO;
 using AlpimiAPI.Entities.ELessonType.DTO;
@@ -258,6 +260,27 @@ namespace AlpimiTest.TestSetup
             >();
 
             return jsonLessonBlockId!.Content;
+        }
+
+        public static async Task<Guid> SetupAvailability(
+            HttpClient _client,
+            CreateAvailabilityDTO availabilityRequest
+        )
+        {
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "Bob", new Guid())
+            );
+
+            var availability = await _client.PostAsJsonAsync(
+                "/api/Availability",
+                availabilityRequest
+            );
+            var jsonAvailabilityId = await availability.Content.ReadFromJsonAsync<
+                ApiGetResponse<Guid>
+            >();
+
+            return jsonAvailabilityId!.Content;
         }
 
         public static async Task PublishSchedule(HttpClient _client, Guid scheduleId)

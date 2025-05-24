@@ -189,4 +189,7 @@
   <data name="cantContain" xml:space="preserve">
     <value>{0} może tylko zawierać następujące: {1}</value>
   </data>
+  <data name="scheduleDuration" xml:space="preserve">
+    <value>Rok szkolny nie może trwać dłużej niż {0} mies.</value>
+  </data>
 </root>

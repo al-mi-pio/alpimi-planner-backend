@@ -31,6 +31,7 @@ namespace AlpimiAPI.Utilities
         private static readonly string? _timeWindow = Environment.GetEnvironmentVariable(
             "TIME_WINDOW"
         );
+        public static int maxSchoolYearDuration { get; set; } = 24;
         public const int perPage = PaginationSettings.perPage;
         public const int page = PaginationSettings.page;
         public const string sortBy = PaginationSettings.sortBy;

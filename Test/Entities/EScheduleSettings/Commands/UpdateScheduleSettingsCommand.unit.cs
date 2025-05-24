@@ -6,6 +6,7 @@ using AlpimiAPI.Entities.EScheduleSettings;
 using AlpimiAPI.Entities.EScheduleSettings.Commands;
 using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
+using AlpimiAPI.Utilities;
 using AlpimiTest.TestSetup;
 using AlpimiTest.TestUtilities;
 using Microsoft.Extensions.Localization;
@@ -319,6 +320,46 @@ namespace AlpimiTest.Entities.EScheduleSettings.Commands
             Assert.Equal(
                 JsonConvert.SerializeObject(
                     new ErrorObject[] { new ErrorObject("LessonPeriods cannot overlap") }
+                ),
+                JsonConvert.SerializeObject(result.errors)
+            );
+        }
+
+        [Fact]
+        public async Task ThrowsErrorWhenSchoolYearDurationExceedsMaximumDuration()
+        {
+            var dto = MockData.GetUpdateScheduleSettingsDTO();
+            dto.SchoolYearEnd = new DateOnly(2029, 10, 10);
+            _dbService
+                .Setup(s => s.Get<ScheduleSettings>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetScheduleSettingsDetails());
+
+            var updateScheduleSettingsCommand = new UpdateScheduleSettingsCommand(
+                new Guid(),
+                dto,
+                new Guid(),
+                "Admin"
+            );
+            var updateScheduleSettingsHandler = new UpdateScheduleSettingsHandler(
+                _dbService.Object,
+                _str.Object
+            );
+            var result = await Assert.ThrowsAsync<ApiErrorException>(
+                async () =>
+                    await updateScheduleSettingsHandler.Handle(
+                        updateScheduleSettingsCommand,
+                        new CancellationToken()
+                    )
+            );
+
+            Assert.Equal(
+                JsonConvert.SerializeObject(
+                    new ErrorObject[]
+                    {
+                        new ErrorObject(
+                            $"The school year cannot be longer than {Configuration.maxSchoolYearDuration} month(s)"
+                        )
+                    }
                 ),
                 JsonConvert.SerializeObject(result.errors)
             );

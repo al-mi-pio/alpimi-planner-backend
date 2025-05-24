@@ -8,6 +8,7 @@ using AlpimiAPI.Entities.EScheduleSettings.DTO;
 using AlpimiAPI.Entities.EScheduleSettings.Queries;
 using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
+using AlpimiAPI.Utilities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
@@ -92,9 +93,28 @@ namespace AlpimiAPI.Entities.EScheduleSettings.Commands
                 request.dto.SchoolDays ?? originalScheduleSettings.Value.SchoolDays;
             request.dto.IsPublic = request.dto.IsPublic ?? originalScheduleSettings.Value.IsPublic;
 
+            if (
+                (request.dto.SchoolYearEnd.Value.Year - request.dto.SchoolYearStart.Value.Year) * 12
+                    + (
+                        request.dto.SchoolYearEnd.Value.Month
+                        - request.dto.SchoolYearStart.Value.Month
+                    )
+                > Configuration.maxSchoolYearDuration
+            )
+            {
+                errors.Add(
+                    new ErrorObject(_str["scheduleDuration", Configuration.maxSchoolYearDuration])
+                );
+            }
+
             if (request.dto.SchoolYearStart > request.dto.SchoolYearEnd)
             {
-                throw new ApiErrorException([new ErrorObject(_str["scheduleDate"])]);
+                errors.Add(new ErrorObject(_str["scheduleDate"]));
+            }
+
+            if (errors.Count != 0)
+            {
+                throw new ApiErrorException(errors);
             }
 
             var daysOffOutOfRange = await _dbService.GetAll<DayOff>(

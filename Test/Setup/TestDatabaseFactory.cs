@@ -14,6 +14,8 @@ namespace AlpimiTest.TestSetup
 
             builder.UseEnvironment("Testing");
 
+            Configuration.maxSchoolYearDuration = 80;
+
             builder.ConfigureServices(
                 (context, services) =>
                 {

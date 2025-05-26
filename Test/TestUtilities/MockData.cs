@@ -6,6 +6,8 @@ using AlpimiAPI.Entities.EClassroom;
 using AlpimiAPI.Entities.EClassroom.DTO;
 using AlpimiAPI.Entities.EClassroomType;
 using AlpimiAPI.Entities.EClassroomType.DTO;
+using AlpimiAPI.Entities.ECollisionType;
+using AlpimiAPI.Entities.ECollisionType.DTO;
 using AlpimiAPI.Entities.EDayOff;
 using AlpimiAPI.Entities.EDayOff.DTO;
 using AlpimiAPI.Entities.EGroup;
@@ -221,6 +223,18 @@ namespace AlpimiTest.TestUtilities
                 Start = 1,
                 Teacher = GetTeacherDetails(),
                 TeacherId = new Guid(),
+            };
+        }
+
+        public static CollisionType GetCollisionTypeDetails()
+        {
+            return new CollisionType()
+            {
+                Name = "Nauczyciel / 2",
+                Description = "Nauczyciel w 2 miejscach",
+                Weight = 1,
+                Schedule = GetScheduleDetails(),
+                ScheduleId = new Guid(),
             };
         }
 
@@ -639,6 +653,34 @@ namespace AlpimiTest.TestUtilities
         public static UpdateAvailabilityDTO GetUpdateAvailabilityDTODetails()
         {
             return new UpdateAvailabilityDTO() { WeekDay = 2, };
+        }
+
+        public static CreateCollisionTypeDTO GetCreateCollisionTypeDTODetails(Guid scheduleId)
+        {
+            var collisionType = GetCollisionTypeDetails();
+            return new CreateCollisionTypeDTO()
+            {
+                Name = collisionType.Name,
+                Description = collisionType.Description,
+                Weight = collisionType.Weight,
+                ScheduleId = scheduleId,
+            };
+        }
+
+        public static CreateCollisionTypeDTO GetCreateSecondCollisionTypeDTODetails(Guid scheduleId)
+        {
+            return new CreateCollisionTypeDTO()
+            {
+                Name = "Sala / 2",
+                Description = "Sala uzywana przez 2 lekcje",
+                Weight = 0.9,
+                ScheduleId = scheduleId,
+            };
+        }
+
+        public static UpdateCollisionTypeDTO GetUpdateCollisionTypeDTODetails()
+        {
+            return new UpdateCollisionTypeDTO() { Weight = 0.1, Name = "Nie" };
         }
     }
 }

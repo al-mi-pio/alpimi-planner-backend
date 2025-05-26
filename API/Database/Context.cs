@@ -2,6 +2,7 @@
 using AlpimiAPI.Entities.EAvailability;
 using AlpimiAPI.Entities.EClassroom;
 using AlpimiAPI.Entities.EClassroomType;
+using AlpimiAPI.Entities.ECollisionType;
 using AlpimiAPI.Entities.EDayOff;
 using AlpimiAPI.Entities.EGroup;
 using AlpimiAPI.Entities.ELesson;
@@ -39,6 +40,7 @@ namespace AlpimiAPI.Database
         public DbSet<Lesson> Lesson { get; set; }
         public DbSet<LessonBlock> LessonBlock { get; set; }
         public DbSet<Availability> Availability { get; set; }
+        public DbSet<CollisionType> CollisionType { get; set; }
         public DbSet<StudentSubgroup> StudentSubgroup { get; set; }
         public DbSet<ClassroomClassroomType> ClassroomClassroomType { get; set; }
         public DbSet<LessonClassroomType> LessonClassroomType { get; set; }

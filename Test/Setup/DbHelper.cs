@@ -3,6 +3,7 @@ using AlpimiAPI.Database;
 using AlpimiAPI.Entities.EAvailability.DTO;
 using AlpimiAPI.Entities.EClassroom.DTO;
 using AlpimiAPI.Entities.EClassroomType.DTO;
+using AlpimiAPI.Entities.ECollisionType.DTO;
 using AlpimiAPI.Entities.EDayOff.DTO;
 using AlpimiAPI.Entities.EGroup.DTO;
 using AlpimiAPI.Entities.ELesson.DTO;
@@ -281,6 +282,27 @@ namespace AlpimiTest.TestSetup
             >();
 
             return jsonAvailabilityId!.Content;
+        }
+
+        public static async Task<Guid> SetupCollisionType(
+            HttpClient _client,
+            CreateCollisionTypeDTO collisionTypeRequest
+        )
+        {
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "Bob", new Guid())
+            );
+
+            var collisionType = await _client.PostAsJsonAsync(
+                "/api/CollisionType",
+                collisionTypeRequest
+            );
+            var jsonCollisionTypeId = await collisionType.Content.ReadFromJsonAsync<
+                ApiGetResponse<Guid>
+            >();
+
+            return jsonCollisionTypeId!.Content;
         }
 
         public static async Task PublishSchedule(HttpClient _client, Guid scheduleId)

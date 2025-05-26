@@ -96,5 +96,5 @@
   Check if returns an error when a schedule is inaccessible for user
 
 - [GetGroupThrowsNotFoundWhenWrongIdIsGiven()](../Entities/EGroup/GroupController.test.cs) - **integrity**  
-  Check if returns no days off when wrong id is provided
+  Check if returns no groups when wrong id is provided
 

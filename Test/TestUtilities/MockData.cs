@@ -234,6 +234,7 @@ namespace AlpimiTest.TestUtilities
                 Description = "Nauczyciel w 2 miejscach",
                 Weight = 1,
                 Schedule = GetScheduleDetails(),
+                Category = "What",
                 ScheduleId = new Guid(),
             };
         }
@@ -663,6 +664,7 @@ namespace AlpimiTest.TestUtilities
                 Name = collisionType.Name,
                 Description = collisionType.Description,
                 Weight = collisionType.Weight,
+                Category = collisionType.Category,
                 ScheduleId = scheduleId,
             };
         }
@@ -674,6 +676,7 @@ namespace AlpimiTest.TestUtilities
                 Name = "Sala / 2",
                 Description = "Sala uzywana przez 2 lekcje",
                 Weight = 0.9,
+                Category = "Where?",
                 ScheduleId = scheduleId,
             };
         }

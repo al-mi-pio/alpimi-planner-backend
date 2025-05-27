@@ -30,7 +30,7 @@ namespace AlpimiAPI.Entities.ECollisionType.Queries
                     collisionType = await _dbService.Get<CollisionType?>(
                         @"
                             SELECT 
-                            [Id], [Name], [Description], [Weight], [Filter], [ScheduleId]
+                            [Id], [Name], [Description], [Weight], [Filter], [Category], [ScheduleId]
                             FROM [CollisionType] 
                             WHERE [Id] = @Id;",
                         request
@@ -40,7 +40,7 @@ namespace AlpimiAPI.Entities.ECollisionType.Queries
                     collisionType = await _dbService.Get<CollisionType?>(
                         @"
                             SELECT 
-                            ct.[Id], ct.[Name], [Description], [Weight], [Filter], ct.[ScheduleId]
+                            ct.[Id], ct.[Name], [Description], [Weight], [Filter], [Category], ct.[ScheduleId]
                             FROM [CollisionType] ct
                             INNER JOIN [Schedule] s ON ct.[ScheduleId] = s.[Id]
                             WHERE ct.[Id] = @Id AND s.[UserId] = @FilteredId;",

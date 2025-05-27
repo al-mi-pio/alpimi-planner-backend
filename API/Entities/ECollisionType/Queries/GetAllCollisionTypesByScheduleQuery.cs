@@ -82,7 +82,7 @@ namespace AlpimiAPI.Entities.ECollisionType.Queries
                     collisionTypes = await _dbService.GetAll<CollisionType>(
                         $@"
                             SELECT
-                            [Id], [Name], [Description], [Weight], [Filter], [ScheduleId]
+                            [Id], [Name], [Description], [Weight], [Filter], [Category], [ScheduleId]
                             FROM [CollisionType]
                             WHERE [ScheduleId] = @ScheduleId 
                             ORDER BY
@@ -109,7 +109,7 @@ namespace AlpimiAPI.Entities.ECollisionType.Queries
                     collisionTypes = await _dbService.GetAll<CollisionType>(
                         $@"
                             SELECT 
-                            ct.[Id], ct.[Name], [Description], [Weight], [Filter], ct.[ScheduleId]
+                            ct.[Id], ct.[Name], [Description], [Weight], [Filter], [Category], ct.[ScheduleId]
                             FROM [CollisionType] ct
                             INNER JOIN [Schedule] s ON s.[Id] = ct.[ScheduleId]
                             INNER JOIN [ScheduleSettings] ss ON ss.[ScheduleId] = s.[Id]

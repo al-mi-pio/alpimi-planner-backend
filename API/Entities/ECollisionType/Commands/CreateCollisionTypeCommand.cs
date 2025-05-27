@@ -75,7 +75,7 @@ namespace AlpimiAPI.Entities.ECollisionType.Commands
             var insertedId = await _dbService.Post<Guid>(
                 $@"
                     INSERT INTO [CollisionType] 
-                    ([Id], [Name], [Description], [Weight], [Filter], [ScheduleId])
+                    ([Id], [Name], [Description], [Weight], [Filter], [Category], [ScheduleId])
                     OUTPUT 
                     INSERTED.Id                    
                     VALUES (
@@ -84,6 +84,7 @@ namespace AlpimiAPI.Entities.ECollisionType.Commands
                     @Description,
                     @Weight,
                     @Filter,
+                    @Category,
                     @ScheduleId);",
                 request.dto
             );

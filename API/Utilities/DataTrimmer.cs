@@ -4,6 +4,8 @@ using AlpimiAPI.Entities.EClassroom;
 using AlpimiAPI.Entities.EClassroom.DTO;
 using AlpimiAPI.Entities.EClassroomType;
 using AlpimiAPI.Entities.EClassroomType.DTO;
+using AlpimiAPI.Entities.ECollision;
+using AlpimiAPI.Entities.ECollision.DTO;
 using AlpimiAPI.Entities.ECollisionType;
 using AlpimiAPI.Entities.ECollisionType.DTO;
 using AlpimiAPI.Entities.EDayOff;
@@ -180,6 +182,19 @@ namespace AlpimiAPI.Utilities
                 Description = data.Description,
                 Weight = data.Weight,
                 Filter = data.Filter,
+                Category = data.Category,
+            };
+        }
+
+        public static CollisionDTO Trim(Collision data)
+        {
+            return new CollisionDTO
+            {
+                Id = data.Id,
+                CollidingObject1 = data.CollidingObject1,
+                CollidingObject2 = data.CollidingObject2,
+                Ignored = data.Ignored,
+                CollisionType = Trim(data.CollisionType),
             };
         }
     }

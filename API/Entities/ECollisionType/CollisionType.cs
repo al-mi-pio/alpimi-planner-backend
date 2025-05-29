@@ -14,6 +14,8 @@ namespace AlpimiAPI.Entities.ECollisionType
 
         public string? Filter { get; set; }
 
+        public required string Category { get; set; }
+
         public required Guid ScheduleId { get; set; }
 
         public required Schedule Schedule { get; set; }

@@ -160,7 +160,6 @@ namespace AlpimiAPI.Entities.ECollisionType
         /// <remarks>
         /// </remarks>
         [HttpGet]
-        [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]

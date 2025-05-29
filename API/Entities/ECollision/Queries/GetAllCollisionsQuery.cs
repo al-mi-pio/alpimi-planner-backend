@@ -1,38 +1,35 @@
 ﻿using AlpimiAPI.Database;
-using AlpimiAPI.Entities.ESchedule;
-using AlpimiAPI.Entities.ESchedule.Queries;
+using AlpimiAPI.Entities.ECollisionType;
+using AlpimiAPI.Entities.ECollisionType.Queries;
 using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 
-namespace AlpimiAPI.Entities.ECollisionType.Queries
+namespace AlpimiAPI.Entities.ECollision.Queries
 {
-    public record GetAllCollisionTypesByScheduleQuery(
-        Guid ScheduleId,
+    public record GetAllCollisionsQuery(
+        Guid Id,
         Guid FilteredId,
         string Role,
         PaginationParams Pagination
-    ) : IRequest<(IEnumerable<CollisionType>?, int)>;
+    ) : IRequest<(IEnumerable<Collision>?, int)>;
 
-    public class GetAllCollisionTypesByScheduleHandler
-        : IRequestHandler<GetAllCollisionTypesByScheduleQuery, (IEnumerable<CollisionType>?, int)>
+    public class GetAllCollisionsHandler
+        : IRequestHandler<GetAllCollisionsQuery, (IEnumerable<Collision>?, int)>
     {
         private readonly IDbService _dbService;
         private readonly IStringLocalizer<Errors> _str;
 
-        public GetAllCollisionTypesByScheduleHandler(
-            IDbService dbService,
-            IStringLocalizer<Errors> str
-        )
+        public GetAllCollisionsHandler(IDbService dbService, IStringLocalizer<Errors> str)
         {
             _dbService = dbService;
             _str = str;
         }
 
-        public async Task<(IEnumerable<CollisionType>?, int)> Handle(
-            GetAllCollisionTypesByScheduleQuery request,
+        public async Task<(IEnumerable<Collision>?, int)> Handle(
+            GetAllCollisionsQuery request,
             CancellationToken cancellationToken
         )
         {
@@ -66,7 +63,7 @@ namespace AlpimiAPI.Entities.ECollisionType.Queries
                 throw new ApiErrorException(errors);
             }
 
-            IEnumerable<CollisionType>? collisionTypes;
+            IEnumerable<Collision>? collisions;
             int count;
             switch (request.Role)
             {
@@ -75,16 +72,18 @@ namespace AlpimiAPI.Entities.ECollisionType.Queries
                         @"
                             SELECT 
                             COUNT(*)
-                            FROM [CollisionType] 
-                            WHERE [ScheduleId] = @ScheduleId;",
+                            FROM [Collision] c
+                            INNER JOIN [CollisionType] ct ON ct.[Id] = c.[CollisionTypeId]
+                            WHERE c.[CollisionTypeId] = @Id OR ct.[ScheduleId] = @Id;",
                         request
                     );
-                    collisionTypes = await _dbService.GetAll<CollisionType>(
+                    collisions = await _dbService.GetAll<Collision>(
                         $@"
                             SELECT
-                            [Id], [Name], [Description], [Weight], [Filter], [Category], [ScheduleId]
-                            FROM [CollisionType]
-                            WHERE [ScheduleId] = @ScheduleId 
+                            c.[Id], [CollidingObject1], [CollidingObject2], [Ignored], c.[CollisionTypeId]
+                            FROM [Collision] c
+                            INNER JOIN [CollisionType] ct ON ct.[Id] = c.[CollisionTypeId]
+                            WHERE c.[CollisionTypeId] = @Id OR ct.[ScheduleId] = @Id
                             ORDER BY
                             {request.Pagination.SortBy}
                             {request.Pagination.SortOrder}
@@ -100,20 +99,22 @@ namespace AlpimiAPI.Entities.ECollisionType.Queries
                         @"
                             SELECT
                             COUNT(*)
-                            FROM [CollisionType] ct
+                            FROM [Collision] c
+                            INNER JOIN [CollisionType] ct ON ct.[Id] = c.[CollisionTypeId]
                             INNER JOIN [Schedule] s ON s.[Id] = ct.[ScheduleId]
                             INNER JOIN [ScheduleSettings] ss ON ss.[ScheduleId] = s.[Id]
-                            WHERE s.[UserId] = @FilteredId AND ct.[ScheduleId] = @ScheduleId;",
+                            WHERE s.[UserId] = @FilteredId AND (c.[CollisionTypeId] = @Id OR ct.[ScheduleId] = @Id);",
                         request
                     );
-                    collisionTypes = await _dbService.GetAll<CollisionType>(
+                    collisions = await _dbService.GetAll<Collision>(
                         $@"
                             SELECT 
-                            ct.[Id], ct.[Name], [Description], [Weight], [Filter], [Category], ct.[ScheduleId]
-                            FROM [CollisionType] ct
+                            c.[Id], [CollidingObject1], [CollidingObject2], [Ignored], c.[CollisionTypeId]
+                            FROM [Collision] c
+                            INNER JOIN [CollisionType] ct ON ct.[Id] = c.[CollisionTypeId]
                             INNER JOIN [Schedule] s ON s.[Id] = ct.[ScheduleId]
                             INNER JOIN [ScheduleSettings] ss ON ss.[ScheduleId] = s.[Id]
-                            WHERE s.[UserId] = @FilteredId AND ct.[ScheduleId] = @ScheduleId 
+                            WHERE s.[UserId] = @FilteredId AND (c.[CollisionTypeId] = @Id OR ct.[ScheduleId] = @Id)
                             ORDER BY
                             {request.Pagination.SortBy}
                             {request.Pagination.SortOrder}
@@ -126,31 +127,34 @@ namespace AlpimiAPI.Entities.ECollisionType.Queries
                     break;
             }
 
-            if (collisionTypes != null)
+            if (collisions != null)
             {
-                Dictionary<Guid, Schedule> scheduleMap = new Dictionary<Guid, Schedule>();
-                foreach (var collisionType in collisionTypes)
+                Dictionary<Guid, CollisionType> collisionTypeMap =
+                    new Dictionary<Guid, CollisionType>();
+                foreach (var collision in collisions)
                 {
-                    if (!scheduleMap.ContainsKey(collisionType.ScheduleId))
+                    if (!collisionTypeMap.ContainsKey(collision.CollisionTypeId))
                     {
-                        GetScheduleHandler getScheduleHandler = new GetScheduleHandler(_dbService);
-                        GetScheduleQuery getScheduleQuery = new GetScheduleQuery(
-                            collisionType.ScheduleId,
+                        GetCollisionTypeHandler getCollisionTypeHandler =
+                            new GetCollisionTypeHandler(_dbService);
+                        GetCollisionTypeQuery getCollisionTypeQuery = new GetCollisionTypeQuery(
+                            collision.CollisionTypeId,
                             new Guid(),
                             "Admin"
                         );
-                        ActionResult<Schedule?> schedule = await getScheduleHandler.Handle(
-                            getScheduleQuery,
-                            cancellationToken
-                        );
+                        ActionResult<CollisionType?> collisionType =
+                            await getCollisionTypeHandler.Handle(
+                                getCollisionTypeQuery,
+                                cancellationToken
+                            );
 
-                        scheduleMap.Add(collisionType.ScheduleId, schedule.Value!);
+                        collisionTypeMap.Add(collision.CollisionTypeId, collisionType.Value!);
                     }
-                    collisionType.Schedule = scheduleMap[collisionType.ScheduleId];
+                    collision.CollisionType = collisionTypeMap[collision.CollisionTypeId];
                 }
             }
 
-            return (collisionTypes, count);
+            return (collisions, count);
         }
     }
 }

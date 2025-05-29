@@ -11,5 +11,7 @@ namespace AlpimiAPI.Entities.ECollisionType.DTO
         public double? Weight { get; set; }
 
         public string? Filter { get; set; }
+
+        public string? Category { get; set; }
     }
 }

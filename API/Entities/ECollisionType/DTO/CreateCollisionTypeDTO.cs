@@ -16,6 +16,9 @@ namespace AlpimiAPI.Entities.ECollisionType.DTO
         public string? Filter { get; set; }
 
         [Required]
+        public required string Category { get; set; }
+
+        [Required]
         public required Guid ScheduleId { get; set; }
     }
 }

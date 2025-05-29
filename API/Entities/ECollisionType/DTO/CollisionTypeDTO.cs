@@ -11,5 +11,7 @@
         public required double Weight { get; set; }
 
         public string? Filter { get; set; }
+
+        public required string Category { get; set; }
     }
 }

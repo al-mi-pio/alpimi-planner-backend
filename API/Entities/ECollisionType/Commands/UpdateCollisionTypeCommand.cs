@@ -62,6 +62,7 @@ namespace AlpimiAPI.Entities.ECollisionType.Commands
                 request.dto.Description ?? originalCollisionType.Value!.Description;
             request.dto.Weight = request.dto.Weight ?? originalCollisionType.Value!.Weight;
             request.dto.Filter = request.dto.Filter ?? originalCollisionType.Value!.Filter;
+            request.dto.Category = request.dto.Category ?? originalCollisionType.Value!.Category;
 
             var collisionTypeName = await _dbService.GetAll<CollisionType>(
                 $@"
@@ -83,13 +84,14 @@ namespace AlpimiAPI.Entities.ECollisionType.Commands
                 $@"
                     UPDATE [CollisionType] 
                     SET
-                    [Name] = @Name, [Description] = @Description, [Weight] = @Weight, [Filter] = @Filter 
+                    [Name] = @Name, [Description] = @Description, [Weight] = @Weight, [Filter] = @Filter, [Category] = @Category
                     OUTPUT
                     INSERTED.[Id],
                     INSERTED.[Name],
                     INSERTED.[Description],
                     INSERTED.[Weight],
                     INSERTED.[Filter],
+                    INSERTED.[Category],
                     INSERTED.[ScheduleId]
                     WHERE [Id] = '{request.Id}';",
                 request.dto

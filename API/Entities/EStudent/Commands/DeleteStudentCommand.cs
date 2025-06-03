@@ -1,5 +1,11 @@
-﻿using AlpimiAPI.Database;
+﻿using System.Text.Json;
+using AlpimiAPI.Database;
+using AlpimiAPI.Entities.EDayOff.Commands;
+using AlpimiAPI.Entities.EHistory.DTO;
+using AlpimiAPI.Entities.EStudent.DTO;
+using AlpimiAPI.Entities.EStudent.Queries;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AlpimiAPI.Entities.EStudent.Commands
 {
@@ -16,6 +22,39 @@ namespace AlpimiAPI.Entities.EStudent.Commands
 
         public async Task Handle(DeleteStudentCommand request, CancellationToken cancellationToken)
         {
+            GetStudentHandler getStudentHandler = new GetStudentHandler(_dbService);
+            GetStudentQuery getStudentQuery = new GetStudentQuery(
+                request.Id,
+                request.FilteredId,
+                request.Role
+            );
+            ActionResult<Student?> student = await getStudentHandler.Handle(
+                getStudentQuery,
+                cancellationToken
+            );
+            if (student.Value != null)
+            {
+                CreateStudentDTO reversaleDTO = new CreateStudentDTO
+                {
+                    AlbumNumber = student.Value.AlbumNumber,
+                    GroupId = student.Value.GroupId,
+                };
+                AddToHistoryHandler addToHistoryHandler = new AddToHistoryHandler(_dbService);
+                AddToHistoryDTO addToHistoryDTO = new AddToHistoryDTO
+                {
+                    Id = Guid.NewGuid(),
+                    Timestamp = DateTime.Now,
+                    AffectedEntityId = request.Id,
+                    AffectedEntity = "Student",
+                    Command = "Delete",
+                    ReversaleDTO = JsonSerializer.Serialize(reversaleDTO),
+                    CollisionChecked = true,
+                    ScheduleId = student.Value.Group.ScheduleId,
+                };
+                AddToHistoryCommand addToHistoryCommand = new AddToHistoryCommand(addToHistoryDTO);
+                await addToHistoryHandler.Handle(addToHistoryCommand, cancellationToken);
+            }
+
             switch (request.Role)
             {
                 case "Admin":

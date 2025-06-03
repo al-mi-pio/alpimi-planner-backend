@@ -1,5 +1,7 @@
-﻿using AlpimiAPI.Database;
+﻿using System.Text.Json;
+using AlpimiAPI.Database;
 using AlpimiAPI.Entities.EDayOff.DTO;
+using AlpimiAPI.Entities.EHistory.DTO;
 using AlpimiAPI.Entities.EScheduleSettings;
 using AlpimiAPI.Entities.EScheduleSettings.Queries;
 using AlpimiAPI.Locales;
@@ -61,6 +63,13 @@ namespace AlpimiAPI.Entities.EDayOff.Commands
                 return null;
             }
 
+            UpdateDayOffDTO reversaleDTODayOff = new UpdateDayOffDTO
+            {
+                Name = originalDayOff.Name,
+                From = originalDayOff.From,
+                To = originalDayOff.To,
+            };
+
             request.dto.Name = request.dto.Name ?? originalDayOff.Name;
             request.dto.From = request.dto.From ?? originalDayOff.From;
             request.dto.To = request.dto.To ?? originalDayOff.To;
@@ -118,6 +127,21 @@ namespace AlpimiAPI.Entities.EDayOff.Commands
             );
 
             dayOff!.ScheduleSettings = scheduleSettings.Value!;
+
+            AddToHistoryHandler addToHistoryHandler = new AddToHistoryHandler(_dbService);
+            AddToHistoryDTO addToHistoryDTO = new AddToHistoryDTO
+            {
+                Id = Guid.NewGuid(),
+                Timestamp = DateTime.Now,
+                AffectedEntityId = request.Id,
+                AffectedEntity = "DayOff",
+                Command = "Patch",
+                ReversaleDTO = JsonSerializer.Serialize(reversaleDTODayOff),
+                CollisionChecked = false,
+                ScheduleId = scheduleSettings.Value.ScheduleId,
+            };
+            AddToHistoryCommand addToHistoryCommand = new AddToHistoryCommand(addToHistoryDTO);
+            await addToHistoryHandler.Handle(addToHistoryCommand, cancellationToken);
 
             return dayOff;
         }

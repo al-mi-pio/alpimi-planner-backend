@@ -1,7 +1,8 @@
-﻿using AlpimiAPI.Database;
+﻿using System.Text.Json;
+using AlpimiAPI.Database;
 using AlpimiAPI.Entities.EAvailability.DTO;
-using AlpimiAPI.Entities.EClassroom;
-using AlpimiAPI.Entities.EClassroom.Queries;
+using AlpimiAPI.Entities.EDayOff.Commands;
+using AlpimiAPI.Entities.EHistory.DTO;
 using AlpimiAPI.Entities.EScheduleSettings;
 using AlpimiAPI.Entities.ETeacher;
 using AlpimiAPI.Entities.ETeacher.Queries;
@@ -68,6 +69,15 @@ namespace AlpimiAPI.Entities.EAvailability.Commands
             {
                 return null;
             }
+
+            UpdateAvailabilityDTO reversaleDTOAvailability = new UpdateAvailabilityDTO
+            {
+                WeekDay = originalAvailability.WeekDay,
+                Start = originalAvailability.Start,
+                End = originalAvailability.End,
+
+                TeacherId = originalAvailability.TeacherId,
+            };
 
             request.dto.WeekDay = request.dto.WeekDay ?? originalAvailability!.WeekDay;
             request.dto.Start = request.dto.Start ?? originalAvailability.Start;
@@ -148,6 +158,21 @@ namespace AlpimiAPI.Entities.EAvailability.Commands
             );
 
             availability!.Teacher = teacher.Value;
+
+            AddToHistoryHandler addToHistoryHandler = new AddToHistoryHandler(_dbService);
+            AddToHistoryDTO addToHistoryDTO = new AddToHistoryDTO
+            {
+                Id = Guid.NewGuid(),
+                Timestamp = DateTime.Now,
+                AffectedEntityId = request.Id,
+                AffectedEntity = "Availability",
+                Command = "Patch",
+                ReversaleDTO = JsonSerializer.Serialize(reversaleDTOAvailability),
+                CollisionChecked = false,
+                ScheduleId = teacher.Value.ScheduleId,
+            };
+            AddToHistoryCommand addToHistoryCommand = new AddToHistoryCommand(addToHistoryDTO);
+            await addToHistoryHandler.Handle(addToHistoryCommand, cancellationToken);
 
             return availability;
         }

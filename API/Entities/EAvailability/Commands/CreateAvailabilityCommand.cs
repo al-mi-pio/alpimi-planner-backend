@@ -1,7 +1,7 @@
 ﻿using AlpimiAPI.Database;
 using AlpimiAPI.Entities.EAvailability.DTO;
-using AlpimiAPI.Entities.EClassroom;
-using AlpimiAPI.Entities.EClassroom.Queries;
+using AlpimiAPI.Entities.EDayOff.Commands;
+using AlpimiAPI.Entities.EHistory.DTO;
 using AlpimiAPI.Entities.EScheduleSettings;
 using AlpimiAPI.Entities.ETeacher;
 using AlpimiAPI.Entities.ETeacher.Queries;
@@ -15,8 +15,7 @@ namespace AlpimiAPI.Entities.EAvailability.Commands
 {
     public record CreateAvailabilityCommand(
         Guid Id,
-        Guid ClusterId,
-        CreateAvailabilityDTO dto,
+        CreateavAvailabilityDTO dto,
         Guid FilteredId,
         string Role
     ) : IRequest<Guid>;
@@ -94,7 +93,7 @@ namespace AlpimiAPI.Entities.EAvailability.Commands
                 throw new ApiErrorException(errors);
             }
 
-            await _dbService.Post<Guid>(
+            var insertedId = await _dbService.Post<Guid>(
                 $@"
                     INSERT INTO [Availability] 
                     ([Id], [WeekDay], [Start], [End], [TeacherId])
@@ -109,7 +108,22 @@ namespace AlpimiAPI.Entities.EAvailability.Commands
                 request.dto
             );
 
-            return request.Id;
+            AddToHistoryHandler addToHistoryHandler = new AddToHistoryHandler(_dbService);
+            AddToHistoryDTO addToHistoryDTO = new AddToHistoryDTO
+            {
+                Id = Guid.NewGuid(),
+                Timestamp = DateTime.Now,
+                AffectedEntityId = insertedId,
+                AffectedEntity = "Availability",
+                Command = "Create",
+                ReversaleDTO = null,
+                CollisionChecked = false,
+                ScheduleId = teacher.Value.ScheduleId
+            };
+            AddToHistoryCommand addToHistoryCommand = new AddToHistoryCommand(addToHistoryDTO);
+            await addToHistoryHandler.Handle(addToHistoryCommand, cancellationToken);
+
+            return insertedId;
         }
     }
 }

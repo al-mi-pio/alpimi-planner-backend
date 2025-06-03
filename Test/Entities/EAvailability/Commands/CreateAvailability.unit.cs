@@ -29,7 +29,6 @@ namespace AlpimiTest.Entities.EAvailability.Commands
         {
             var createAvailabilityCommand = new CreateAvailabilityCommand(
                 new Guid(),
-                new Guid(),
                 MockData.GetCreateAvailabilityDTODetails(new Guid()),
                 new Guid(),
                 "User"
@@ -77,7 +76,6 @@ namespace AlpimiTest.Entities.EAvailability.Commands
             createRequest.Start = 4;
             var createAvailabilityCommand = new CreateAvailabilityCommand(
                 new Guid(),
-                new Guid(),
                 createRequest,
                 new Guid(),
                 "User"
@@ -122,7 +120,6 @@ namespace AlpimiTest.Entities.EAvailability.Commands
             createRequest.Start = 0;
             var createAvailabilityCommand = new CreateAvailabilityCommand(
                 new Guid(),
-                new Guid(),
                 createRequest,
                 new Guid(),
                 "User"
@@ -163,7 +160,6 @@ namespace AlpimiTest.Entities.EAvailability.Commands
             var createRequest = MockData.GetCreateAvailabilityDTODetails(new Guid());
             createRequest.End = 6;
             var createAvailabilityCommand = new CreateAvailabilityCommand(
-                new Guid(),
                 new Guid(),
                 createRequest,
                 new Guid(),

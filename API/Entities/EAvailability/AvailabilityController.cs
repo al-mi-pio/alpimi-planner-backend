@@ -50,7 +50,6 @@ namespace AlpimiAPI.Entities.EAvailability
 
             var command = new CreateAvailabilityCommand(
                 Guid.NewGuid(),
-                Guid.NewGuid(),
                 request,
                 filteredId,
                 privileges

@@ -1,6 +1,9 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Text.Json;
+using System.Text.RegularExpressions;
 using AlpimiAPI.Database;
 using AlpimiAPI.Entities.EDayOff;
+using AlpimiAPI.Entities.EDayOff.Commands;
+using AlpimiAPI.Entities.EHistory.DTO;
 using AlpimiAPI.Entities.ELessonBlock;
 using AlpimiAPI.Entities.ELessonPeriod;
 using AlpimiAPI.Entities.ELessonPeriod.Queries;
@@ -82,6 +85,15 @@ namespace AlpimiAPI.Entities.EScheduleSettings.Commands
             {
                 return null;
             }
+
+            UpdateScheduleSettingsDTO reversaleDTOScheduleSettings = new UpdateScheduleSettingsDTO
+            {
+                SchoolHour = originalScheduleSettings.Value.SchoolHour,
+                SchoolYearStart = originalScheduleSettings.Value.SchoolYearStart,
+                SchoolYearEnd = originalScheduleSettings.Value.SchoolYearEnd,
+                SchoolDays = originalScheduleSettings.Value.SchoolDays,
+                IsPublic = originalScheduleSettings.Value.IsPublic,
+            };
 
             request.dto.SchoolHour =
                 request.dto.SchoolHour ?? originalScheduleSettings.Value.SchoolHour;
@@ -205,6 +217,21 @@ namespace AlpimiAPI.Entities.EScheduleSettings.Commands
             );
 
             scheduleSettings!.Schedule = originalScheduleSettings.Value.Schedule;
+
+            AddToHistoryHandler addToHistoryHandler = new AddToHistoryHandler(_dbService);
+            AddToHistoryDTO addToHistoryDTO = new AddToHistoryDTO
+            {
+                Id = Guid.NewGuid(),
+                Timestamp = DateTime.Now,
+                AffectedEntityId = originalScheduleSettings.Value.Id,
+                AffectedEntity = "ScheduleSettings",
+                Command = "Patch",
+                ReversaleDTO = JsonSerializer.Serialize(reversaleDTOScheduleSettings),
+                CollisionChecked = false,
+                ScheduleId = originalScheduleSettings.Value.ScheduleId,
+            };
+            AddToHistoryCommand addToHistoryCommand = new AddToHistoryCommand(addToHistoryDTO);
+            await addToHistoryHandler.Handle(addToHistoryCommand, cancellationToken);
 
             return scheduleSettings;
         }

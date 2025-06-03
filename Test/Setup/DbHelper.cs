@@ -265,7 +265,7 @@ namespace AlpimiTest.TestSetup
 
         public static async Task<Guid> SetupAvailability(
             HttpClient _client,
-            CreateAvailabilityDTO availabilityRequest
+            CreateavAvailabilityDTO availabilityRequest
         )
         {
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(

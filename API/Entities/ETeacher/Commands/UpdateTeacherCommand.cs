@@ -1,4 +1,7 @@
-﻿using AlpimiAPI.Database;
+﻿using System.Text.Json;
+using AlpimiAPI.Database;
+using AlpimiAPI.Entities.EDayOff.Commands;
+using AlpimiAPI.Entities.EHistory.DTO;
 using AlpimiAPI.Entities.ETeacher.DTO;
 using AlpimiAPI.Entities.ETeacher.Queries;
 using AlpimiAPI.Locales;
@@ -44,6 +47,12 @@ namespace AlpimiAPI.Entities.ETeacher.Commands
                 return null;
             }
 
+            UpdateTeacherDTO reversaleDTOTeacher = new UpdateTeacherDTO
+            {
+                Name = originalTeacher.Value!.Name,
+                Surname = originalTeacher.Value!.Surname,
+            };
+
             request.dto.Name = request.dto.Name ?? originalTeacher.Value!.Name;
             request.dto.Surname = request.dto.Surname ?? originalTeacher.Value!.Surname;
 
@@ -86,6 +95,21 @@ namespace AlpimiAPI.Entities.ETeacher.Commands
             );
 
             teacher!.Schedule = originalTeacher.Value.Schedule;
+
+            AddToHistoryHandler addToHistoryHandler = new AddToHistoryHandler(_dbService);
+            AddToHistoryDTO addToHistoryDTO = new AddToHistoryDTO
+            {
+                Id = Guid.NewGuid(),
+                Timestamp = DateTime.Now,
+                AffectedEntityId = request.Id,
+                AffectedEntity = "Teacher",
+                Command = "Patch",
+                ReversaleDTO = JsonSerializer.Serialize(reversaleDTOTeacher),
+                CollisionChecked = false,
+                ScheduleId = originalTeacher.Value.ScheduleId,
+            };
+            AddToHistoryCommand addToHistoryCommand = new AddToHistoryCommand(addToHistoryDTO);
+            await addToHistoryHandler.Handle(addToHistoryCommand, cancellationToken);
 
             return teacher;
         }

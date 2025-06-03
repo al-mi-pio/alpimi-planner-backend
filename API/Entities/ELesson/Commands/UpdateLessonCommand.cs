@@ -212,6 +212,7 @@ namespace AlpimiAPI.Entities.ELesson.Commands
                 );
 
                 subgroups = subgroups ?? [];
+                reversaleDTOLesson.SubgroupIds = subgroups;
                 foreach (Guid subgroupId in request.dto.SubgroupIds)
                 {
                     if (!subgroups.Contains(subgroupId))
@@ -314,7 +315,7 @@ namespace AlpimiAPI.Entities.ELesson.Commands
                 );
 
                 classroomTypes = classroomTypes ?? [];
-
+                reversaleDTOLesson.ClassroomTypeIds = classroomTypes;
                 foreach (Guid classroomTypeId in request.dto.ClassroomTypeIds)
                 {
                     if (!classroomTypes.Contains(classroomTypeId))

@@ -152,6 +152,7 @@ namespace AlpimiAPI.Entities.EStudent.Commands
                 );
 
                 subgroups = subgroups ?? [];
+                reversaleDTOStudent.SubgroupIds = subgroups;
                 foreach (Guid subgroupId in request.dto.SubgroupIds)
                 {
                     if (!subgroups.Contains(subgroupId))

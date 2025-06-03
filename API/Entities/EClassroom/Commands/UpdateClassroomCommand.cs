@@ -64,7 +64,7 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
                 return null;
             }
 
-            UpdateClassroomDTO reversaleDTO = new UpdateClassroomDTO
+            UpdateClassroomDTO reversaleDTOClassroom = new UpdateClassroomDTO
             {
                 Name = originalClassroom.Value!.Name,
                 Capacity = originalClassroom.Value!.Capacity
@@ -160,6 +160,7 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
                 );
 
                 classroomTypes = classroomTypes ?? [];
+                reversaleDTOClassroom.ClassroomTypeIds = classroomTypes;
                 foreach (Guid classroomTypeId in request.dto.ClassroomTypeIds)
                 {
                     if (!classroomTypes.Contains(classroomTypeId))
@@ -216,7 +217,7 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
                 AffectedEntityId = request.Id,
                 AffectedEntity = "Classroom",
                 Command = "Patch",
-                ReversaleDTO = JsonSerializer.Serialize(reversaleDTO),
+                ReversaleDTO = JsonSerializer.Serialize(reversaleDTOClassroom),
                 CollisionChecked = false,
                 ScheduleId = originalClassroom.Value.ScheduleId,
             };

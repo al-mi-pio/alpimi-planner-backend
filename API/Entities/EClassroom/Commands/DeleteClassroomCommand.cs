@@ -40,7 +40,7 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
             );
             if (classroom.Value != null)
             {
-                CreateClassroomDTO reversaleDTO = new CreateClassroomDTO
+                CreateClassroomDTO reversaleDTOClassroom = new CreateClassroomDTO
                 {
                     Capacity = classroom.Value.Capacity,
                     Name = classroom.Value.Name,
@@ -54,9 +54,9 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
                     AffectedEntityId = request.Id,
                     AffectedEntity = "Classroom",
                     Command = "Delete",
-                    ReversaleDTO = JsonSerializer.Serialize(reversaleDTO),
+                    ReversaleDTO = JsonSerializer.Serialize(reversaleDTOClassroom),
                     CollisionChecked = true,
-                    ScheduleId = reversaleDTO.ScheduleId,
+                    ScheduleId = reversaleDTOClassroom.ScheduleId,
                 };
                 AddToHistoryCommand addToHistoryCommand = new AddToHistoryCommand(addToHistoryDTO);
                 await addToHistoryHandler.Handle(addToHistoryCommand, cancellationToken);

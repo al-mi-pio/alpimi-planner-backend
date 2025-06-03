@@ -1,6 +1,9 @@
-﻿using AlpimiAPI.Database;
+﻿using System.Text.Json;
+using AlpimiAPI.Database;
 using AlpimiAPI.Entities.EClassroomType.DTO;
 using AlpimiAPI.Entities.EClassroomType.Queries;
+using AlpimiAPI.Entities.EDayOff.Commands;
+using AlpimiAPI.Entities.EHistory.DTO;
 using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
 using MediatR;
@@ -49,6 +52,11 @@ namespace AlpimiAPI.Entities.EClassroomType.Commands
                 return null;
             }
 
+            UpdateClassroomTypeDTO reversaleDTOClassroomType = new UpdateClassroomTypeDTO
+            {
+                Name = originalClassroomType.Value!.Name,
+            };
+
             request.dto.Name = request.dto.Name ?? originalClassroomType.Value!.Name;
 
             var classroomTypeName = await _dbService.Get<ClassroomType>(
@@ -81,6 +89,21 @@ namespace AlpimiAPI.Entities.EClassroomType.Commands
             );
 
             classroomType!.Schedule = originalClassroomType.Value.Schedule!;
+
+            AddToHistoryHandler addToHistoryHandler = new AddToHistoryHandler(_dbService);
+            AddToHistoryDTO addToHistoryDTO = new AddToHistoryDTO
+            {
+                Id = Guid.NewGuid(),
+                Timestamp = DateTime.Now,
+                AffectedEntityId = request.Id,
+                AffectedEntity = "ClassroomType",
+                Command = "Patch",
+                ReversaleDTO = JsonSerializer.Serialize(reversaleDTOClassroomType),
+                CollisionChecked = false,
+                ScheduleId = originalClassroomType.Value.ScheduleId,
+            };
+            AddToHistoryCommand addToHistoryCommand = new AddToHistoryCommand(addToHistoryDTO);
+            await addToHistoryHandler.Handle(addToHistoryCommand, cancellationToken);
 
             return classroomType;
         }

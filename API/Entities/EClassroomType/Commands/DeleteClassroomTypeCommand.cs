@@ -1,5 +1,11 @@
-﻿using AlpimiAPI.Database;
+﻿using System.Text.Json;
+using AlpimiAPI.Database;
+using AlpimiAPI.Entities.EClassroomType.DTO;
+using AlpimiAPI.Entities.EClassroomType.Queries;
+using AlpimiAPI.Entities.EDayOff.Commands;
+using AlpimiAPI.Entities.EHistory.DTO;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AlpimiAPI.Entities.EClassroomType.Commands
 {
@@ -19,6 +25,40 @@ namespace AlpimiAPI.Entities.EClassroomType.Commands
             CancellationToken cancellationToken
         )
         {
+            GetClassroomTypeHandler getClassroomTypeHandler = new GetClassroomTypeHandler(
+                _dbService
+            );
+            GetClassroomTypeQuery getClassroomTypeQuery = new GetClassroomTypeQuery(
+                request.Id,
+                request.FilteredId,
+                request.Role
+            );
+            ActionResult<ClassroomType?> classroomtype = await getClassroomTypeHandler.Handle(
+                getClassroomTypeQuery,
+                cancellationToken
+            );
+            if (classroomtype.Value != null)
+            {
+                CreateClassroomTypeDTO reversaleDTO = new CreateClassroomTypeDTO
+                {
+                    Name = classroomtype.Value.Name,
+                    ScheduleId = classroomtype.Value.ScheduleId,
+                };
+                AddToHistoryHandler addToHistoryHandler = new AddToHistoryHandler(_dbService);
+                AddToHistoryDTO addToHistoryDTO = new AddToHistoryDTO
+                {
+                    Id = Guid.NewGuid(),
+                    Timestamp = DateTime.Now,
+                    AffectedEntityId = request.Id,
+                    AffectedEntity = "ClassroomType",
+                    Command = "Delete",
+                    ReversaleDTO = JsonSerializer.Serialize(reversaleDTO),
+                    CollisionChecked = true,
+                    ScheduleId = reversaleDTO.ScheduleId,
+                };
+                AddToHistoryCommand addToHistoryCommand = new AddToHistoryCommand(addToHistoryDTO);
+                await addToHistoryHandler.Handle(addToHistoryCommand, cancellationToken);
+            }
             switch (request.Role)
             {
                 case "Admin":

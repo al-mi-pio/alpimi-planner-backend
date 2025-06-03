@@ -1,4 +1,7 @@
-﻿using AlpimiAPI.Database;
+﻿using System.Text.Json;
+using AlpimiAPI.Database;
+using AlpimiAPI.Entities.EDayOff.Commands;
+using AlpimiAPI.Entities.EHistory.DTO;
 using AlpimiAPI.Entities.ELessonType.DTO;
 using AlpimiAPI.Entities.ELessonType.Queries;
 using AlpimiAPI.Locales;
@@ -56,6 +59,11 @@ namespace AlpimiAPI.Entities.ELessonType.Commands
                 return null;
             }
 
+            UpdateLessonTypeDTO reversaleDTOLessonType = new UpdateLessonTypeDTO
+            {
+                Name = originalLessonType.Value!.Name,
+            };
+
             request.dto.Name = request.dto.Name ?? originalLessonType.Value!.Name;
 
             var lessonTypeName = await _dbService.Get<LessonType>(
@@ -89,6 +97,21 @@ namespace AlpimiAPI.Entities.ELessonType.Commands
             );
 
             lessonType!.Schedule = originalLessonType.Value.Schedule;
+
+            AddToHistoryHandler addToHistoryHandler = new AddToHistoryHandler(_dbService);
+            AddToHistoryDTO addToHistoryDTO = new AddToHistoryDTO
+            {
+                Id = Guid.NewGuid(),
+                Timestamp = DateTime.Now,
+                AffectedEntityId = request.Id,
+                AffectedEntity = "LessonType",
+                Command = "Patch",
+                ReversaleDTO = JsonSerializer.Serialize(reversaleDTOLessonType),
+                CollisionChecked = false,
+                ScheduleId = originalLessonType.Value.ScheduleId,
+            };
+            AddToHistoryCommand addToHistoryCommand = new AddToHistoryCommand(addToHistoryDTO);
+            await addToHistoryHandler.Handle(addToHistoryCommand, cancellationToken);
 
             return lessonType;
         }

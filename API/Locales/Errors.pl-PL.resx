@@ -192,4 +192,10 @@
   <data name="scheduleDuration" xml:space="preserve">
     <value>Rok szkolny nie może trwać dłużej niż {0} mies.</value>
   </data>
+  <data name="cantUndo" xml:space="preserve">
+    <value>Niema nic do cofnięcia</value>
+  </data>
+  <data name="cantRedo" xml:space="preserve">
+    <value>Nie ma nic do ponownego wykonania</value>
+  </data>
 </root>

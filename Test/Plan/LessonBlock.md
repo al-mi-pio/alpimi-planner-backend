@@ -50,7 +50,17 @@
 - [ThrowsErrorWhenWeekIntervalIsLessThan1()](../Entities/ELessonBlock/Commands/CreateLessonBlockCommand.unit.cs) - **unit** 
   Check if returns an error when lesson end is more than the amount of lesson periods
 
+- [CreateLessonBlockIsUndone()](../Entities/ELessonBlock/LessonBlockController.test.cs) - **integrity**  
+  Check if create lesson block is undone
 
+- [CreateLessonBlockIsRedone()](../Entities/ELessonBlock/LessonBlockController.test.cs) - **integrity**  
+  Check if create lesson block is redone
+
+- [CreateLessonBlockClusterIsUndone()](../Entities/ELessonBlock/LessonBlockController.test.cs) - **integrity**  
+  Check if create lesson block cluster is undone
+
+- [CreateLessonBlockClusterIsRedone()](../Entities/ELessonBlock/LessonBlockController.test.cs) - **integrity**  
+  Check if create lesson block cluster is redone
 
 
 ## `DELETE` `api/LessonBlock/{id}`
@@ -63,6 +73,18 @@
 
 - [DeleteLessonBlockUpdatesLessonsCurrentHours()](../Entities/ELessonBlock/LessonBlockController.test.cs) - **integrity**  
   Check if deleting a lesson block updates the current hours of the lesson
+
+- [DeleteLessonBlockIsUndone()](../Entities/ELessonBlock/LessonBlockController.test.cs) - **integrity**  
+  Check if delete lesson block is undone
+
+- [DeleteLessonBlockIsRedone()](../Entities/ELessonBlock/LessonBlockController.test.cs) - **integrity**  
+  Check if delete lesson block is redone
+
+- [DeleteLessonBlockClusterIsUndone()](../Entities/ELessonBlock/LessonBlockController.test.cs) - **integrity**  
+  Check if delete lesson block is undone
+
+- [DeleteLessonBlockClusterIsRedone()](../Entities/ELessonBlock/LessonBlockController.test.cs) - **integrity**  
+  Check if delete lesson block is redone
 
 
 ## `PATCH` `api/LessonBlock/{id}`
@@ -108,6 +130,18 @@
 
 - [ThrowsErrorWhenBadWeekDayIsProvided()](../Entities/ELessonBlock/Commands/UpdateLessonBlockCommand.unit.cs) - **unit** 
   Check if returns an error when weekday isn't between 0 and 6
+
+- [PatchLessonBlockIsUndone()](../Entities/ELessonBlock/LessonBlockController.test.cs) - **integrity**  
+  Check if patch lesson block is undone
+
+- [PatchLessonBlockIsRedone()](../Entities/ELessonBlock/LessonBlockController.test.cs) - **integrity**  
+  Check if patch lesson block is redone
+
+- [PatchLessonBlockClusterIsUndone()](../Entities/ELessonBlock/LessonBlockController.test.cs) - **integrity**  
+  Check if patch lesson block is undone
+
+- [PatchLessonBlockClusterIsRedone()](../Entities/ELessonBlock/LessonBlockController.test.cs) - **integrity**  
+  Check if patch lesson block is redone
 
 
 ## `GET` `api/LessonBlock`

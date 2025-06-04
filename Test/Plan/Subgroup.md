@@ -29,11 +29,23 @@
 - [ThrowsErrorWhenStudentCountInSubgroupIsMoreThanGroup()](../Entities/ESubgroup/Commands/UpdateSubgroupCommand.unit.cs) - **unit** 
   Check if returns an error when student count is more than student count of a group
 
+- [CreateSubgroupIsUndone()](../Entities/ESubgroup/SubgroupController.test.cs) - **integrity**  
+  Check if create subgroup is undone
+
+- [CreateSubgroupIsRedone()](../Entities/ESubgroup/SubgroupController.test.cs) - **integrity**  
+  Check if create subgroup is redone
+
 
 ## `DELETE` `api/Subgroup/{id}`
 
 - [SubgroupIsDeleted()](../Entities/ESubgroup/SubgroupController.test.cs) - **integrity**  
   Check if subgroup is deleted when a valid token is provided
+
+- [DeleteSubgroupIsUndone()](../Entities/ESubgroup/SubgroupController.test.cs) - **integrity**  
+  Check if delete subgroup is undone
+
+- [DeleteSubgroupIsRedone()](../Entities/ESubgroup/SubgroupController.test.cs) - **integrity**  
+  Check if delete subgroup is redone
 
 
 ## `PATCH` `api/Subgroup/{id}`
@@ -58,6 +70,12 @@
 
 - [ThrowsErrorWhenStudentCountInSubgroupIsMoreThanGroup()](../Entities/ESubgroup/Commands/UpdateSubgroupCommand.unit.cs) - **unit** 
   Check if returns an error when student count is more than student count of a group
+
+- [PatchSubgroupIsUndone()](../Entities/ESubgroup/SubgroupController.test.cs) - **integrity**  
+  Check if patch subgroup is undone
+
+- [PatchSubgroupIsRedone()](../Entities/ESubgroup/SubgroupController.test.cs) - **integrity**  
+  Check if patch subgroup is redone
 
 
 ## `GET` `api/Subgroup`

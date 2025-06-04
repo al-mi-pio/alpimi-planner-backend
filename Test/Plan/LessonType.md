@@ -26,11 +26,23 @@
 - [ThrowsErrorWhenColorIsMoreThan359](../Entities/ELessonType/CreateLessonTypeCommand.unit.cs) - **unit** 
   Check if returns an error when incorrect color value is provided
 
+- [CreateLessonTypeIsUndone()](../Entities/ELessonType/LessonTypeController.test.cs) - **integrity**  
+  Check if create lesson type is undone
+
+- [CreateLessonTypeIsRedone()](../Entities/ELessonType/LessonTypeController.test.cs) - **integrity**  
+  Check if create lesson type is redone
+
 
 ## `DELETE` `api/LessonType/{id}`
 
 - [LessonTypeIsDeleted()](../Entities/ELessonType/LessonTypeController.test.cs) - **integrity**  
   Check if schedule is deleted when a valid token is provided
+
+- [DeleteLessonTypeIsUndone()](../Entities/ELessonType/LessonTypeController.test.cs) - **integrity**  
+  Check if delete lesson type is undone
+
+- [DeleteLessonTypeIsRedone()](../Entities/ELessonType/LessonTypeController.test.cs) - **integrity**  
+  Check if delete lesson type is redone
 
 
 ## `PATCH` `api/LessonType/{id}`
@@ -52,6 +64,12 @@
 
 - [ThrowsErrorWhenColorIsMoreThan359](../Entities/ELessonType/CreateLessonTypeCommand.unit.cs) - **unit** 
   Check if returns an error when incorrect color value is provided
+
+- [PatchLessonTypeIsUndone()](../Entities/ELessonType/LessonTypeController.test.cs) - **integrity**  
+  Check if patch lesson type is undone
+
+- [PatchLessonTypeIsRedone()](../Entities/ELessonType/LessonTypeController.test.cs) - **integrity**  
+  Check if patch lesson type is redone
 
 
 ## `GET` `api/LessonType`

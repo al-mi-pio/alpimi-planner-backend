@@ -50,11 +50,23 @@
 - [ThrowsErrorWhenScheduleIdsFromLessonTypeAndTeacherDontMatch()](../Entities/ELesson/CreateLessonCommand.unit.cs) - **unit** 			
   Check if returns an error when lesson type and teacher are from different schedules
 
+- [CreateLessonIsUndone()](../Entities/ELesson/LessonController.test.cs) - **integrity**  
+  Check if create lesson is undone
+
+- [CreateLessonIsRedone()](../Entities/ELesson/LessonController.test.cs) - **integrity**  
+  Check if create lesson is redone
+
 
 ## `DELETE` `api/Lesson/{id}`
 
 - [LessonIsDeleted()](../Entities/ELesson/LessonController.test.cs) - **integrity**  
   Check if lesson is deleted when a valid token is provided
+
+- [DeleteLessonIsUndone()](../Entities/ELesson/LessonController.test.cs) - **integrity**  
+  Check if delete lesson is undone
+
+- [DeleteLessonIsRedone()](../Entities/ELesson/LessonController.test.cs) - **integrity**  
+  Check if delete lesson is redone
 
 
 ## `PATCH` `api/Lesson/{id}`
@@ -103,6 +115,12 @@
 
 - [ThrowsErrorWhenScheduleIdsFromLessonTypeAndTeacherDontMatch()](../Entities/ELesson/UpdateLessonCommand.unit.cs) - **unit** 			
   Check if returns an error when lesson type and teacher are from different schedules
+
+- [PatchLessonIsUndone()](../Entities/ELesson/LessonController.test.cs) - **integrity**  
+  Check if patch lesson is undone
+
+- [PatchLessonIsRedone()](../Entities/ELesson/LessonController.test.cs) - **integrity**  
+  Check if patch lesson is redone
 
 - 
 ## `GET` `api/Lesson`

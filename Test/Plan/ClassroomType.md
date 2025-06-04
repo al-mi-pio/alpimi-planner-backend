@@ -20,11 +20,23 @@
 - [ThrowsErrorWhenNameIsAlreadyTaken()](../Entities/EClassroomType/CreateClassroomTypeCommand.unit.cs) - **unit**  
   Check if returns an error when a taken name  is provided
 
+- [CreateClassroomTypeIsUndone()](../Entities/EClassroomType/ClassroomTypeController.test.cs) - **integrity**  
+  Check if create classroom type is undone
+
+- [CreateClassroomTypeIsRedone()](../Entities/EClassroomType/ClassroomTypeController.test.cs) - **integrity**  
+  Check if create classroom type is redone
+
 
 ## `DELETE` `api/ClassroomType/{id}`
 
 - [ClassroomTypeIsDeleted()](../Entities/EClassroomType/ClassroomTypeController.test.cs) - **integrity**  
   Check if schedule is deleted when a valid token is provided
+
+- [DeleteClassroomTypeIsUndone()](../Entities/EClassroomType/ClassroomTypeController.test.cs) - **integrity**  
+  Check if delete classroom type is undone
+
+- [DeleteClassroomTypeIsRedone()](../Entities/EClassroomType/ClassroomTypeController.test.cs) - **integrity**  
+  Check if delete classroom type is redone
 
 
 ## `PATCH` `api/ClassroomType/{id}`
@@ -40,6 +52,12 @@
 
 - [ThrowsErrorWhenNameAndSurnameAreAlreadyTaken()](../Entities/EClassroomType/Commands/UpdateClassroomTypeCommand.unit.cs) - **unit**  
   Check if returns an error when out of range date is provided
+
+- [PatchClassroomTypeIsUndone()](../Entities/EClassroomType/ClassroomTypeController.test.cs) - **integrity**  
+  Check if patch classroom type is undone
+
+- [PatchClassroomTypeIsRedone()](../Entities/EClassroomType/ClassroomTypeController.test.cs) - **integrity**  
+  Check if patch classroom type is redone
 
 
 ## `GET` `api/ClassroomType`

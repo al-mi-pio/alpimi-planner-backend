@@ -32,11 +32,23 @@
 - [ThrowsErrorWhenAlbumNumberIsAlreadyTaken](../Entities/EStudent/CreateStudentCommand.unit.cs) - **unit**  
   Check if returns an error when a taken album number is provided
 
+- [CreateStudentIsUndone()](../Entities/EStudent/StudentController.test.cs) - **integrity**  
+  Check if create student is undone
+
+- [CreateStudentIsRedone()](../Entities/EStudent/StudentController.test.cs) - **integrity**  
+  Check if create student is redone
+
 
 ## `DELETE` `api/Student/{id}`
 
 - [StudentIsDeleted()](../Entities/EStudent/StudentController.test.cs) - **integrity**  
   Check if schedule is deleted when a valid token is provided
+
+- [DeleteStudentIsUndone()](../Entities/EStudent/StudentController.test.cs) - **integrity**  
+  Check if delete student is undone
+
+- [DeleteStudentIsRedone()](../Entities/EStudent/StudentController.test.cs) - **integrity**  
+  Check if delete student is redone
 
 
 ## `PATCH` `api/Student/{id}`
@@ -64,6 +76,12 @@
 
 - [ThrowsErrorWhenGroupIdsFromStudentAndSubgroupDontMatch()](../Entities/EStudent/UpdateStudentCommand.unit.cs) - **unit**
   Check if returns an error when student and subgroup are from different groups
+
+- [PatchStudentIsUndone()](../Entities/EStudent/StudentController.test.cs) - **integrity**  
+  Check if patch student is undone
+
+- [PatchStudentIsRedone()](../Entities/EStudent/StudentController.test.cs) - **integrity**  
+  Check if patch student is redone
 
 
 ## `GET` `api/Student`

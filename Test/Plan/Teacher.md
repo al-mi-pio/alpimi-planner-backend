@@ -20,11 +20,23 @@
 - [ThrowsErrorWhenNameAndSurnameAreAlreadyTaken()](../Entities/ETeacher/CreateTeacherCommand.unit.cs) - **unit**  
   Check if returns an error when a taken name and surname is provided
 
+- [CreateTeacherIsUndone()](../Entities/ETeacher/TeacherController.test.cs) - **integrity**  
+  Check if create teacher is undone
+
+- [CreateTeacherIsRedone()](../Entities/ETeacher/TeacherController.test.cs) - **integrity**  
+  Check if create teacher is redone
+
 
 ## `DELETE` `api/Teacher/{id}`
 
 - [TeacherIsDeleted()](../Entities/ETeacher/TeacherController.test.cs) - **integrity**  
   Check if schedule is deleted when a valid token is provided
+
+- [DeleteTeacherIsUndone()](../Entities/ETeacher/TeacherController.test.cs) - **integrity**  
+  Check if delete teacher is undone
+
+- [DeleteTeacherIsRedone()](../Entities/ETeacher/TeacherController.test.cs) - **integrity**  
+  Check if delete teacher is redone
 
 
 ## `PATCH` `api/Teacher/{id}`
@@ -40,6 +52,12 @@
 
 - [ThrowsErrorWhenNameAndSurnameAreAlreadyTaken()](../Entities/ETeacher/Commands/UpdateTeacherCommand.unit.cs) - **unit**  
   Check if returns an error when out of range date is provided
+
+- [PatchTeacherIsUndone()](../Entities/ETeacher/TeacherController.test.cs) - **integrity**  
+  Check if patch teacher is undone
+
+- [PatchTeacherIsRedone()](../Entities/ETeacher/TeacherController.test.cs) - **integrity**  
+  Check if patch teacher is redone
 
 
 ## `GET` `api/Teacher`

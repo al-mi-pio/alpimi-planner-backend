@@ -23,11 +23,23 @@
 - [ThrowsErrorWhenDateStartIsAfterDateEnd()](../Entities/EDayOff/CreateDayOffCommand.unit.cs) - **unit** 
   Check if returns an error when start date is after end date
 
+- [CreateDayOffIsUndone()](../Entities/EDayOff/DayOffController.test.cs) - **integrity**  
+  Check if create day off is undone
+
+- [CreateDayOffIsRedone()](../Entities/EDayOff/DayOffController.test.cs) - **integrity**  
+  Check if create day off is redone
+
 
 ## `DELETE` `api/DayOff/{id}`
 
 - [DayOffIsDeleted()](../Entities/EDayOff/DayOffController.test.cs) - **integrity**  
   Check if schedule is deleted when a valid token is provided
+
+- [DeleteDayOffIsUndone()](../Entities/EDayOff/DayOffController.test.cs) - **integrity**  
+  Check if delete day off is undone
+
+- [DeleteDayOffIsRedone()](../Entities/EDayOff/DayOffController.test.cs) - **integrity**  
+  Check if delete day off is redone
 
 
 ## `PATCH` `api/DayOff/{id}`
@@ -46,6 +58,12 @@
 
 - [ThrowsErrorWhenDateStartIsAfterDateEnd()](../Entities/EDayOff/Commands/UpdateDayOffCommand.unit.cs) - **unit** 
   Check if returns an error when date start is after date end  
+
+- [PatchDayOffIsUndone()](../Entities/EDayOff/DayOffController.test.cs) - **integrity**  
+  Check if patch day off is undone
+
+- [PatchDayOffIsRedone()](../Entities/EDayOff/DayOffController.test.cs) - **integrity**  
+  Check if patch day off is redone
 
 
 ## `GET` `api/DayOff`

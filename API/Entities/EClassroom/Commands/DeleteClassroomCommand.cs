@@ -40,11 +40,23 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
             );
             if (classroom.Value != null)
             {
+                var classroomTypes = await _dbService.GetAll<Guid>(
+                    @"
+                        SELECT
+                        ct.[Id]    
+                        FROM [ClassroomType] ct
+                        LEFT JOIN [ClassroomClassroomType] cct on cct.[ClassroomTypeId] = ct.[Id]
+                        LEFT JOIN [Classroom] c on c.[Id] = cct.[ClassroomId]
+                        WHERE c.[Id] = @Id;
+                    ",
+                    request
+                );
                 CreateClassroomDTO reversaleDTOClassroom = new CreateClassroomDTO
                 {
                     Capacity = classroom.Value.Capacity,
                     Name = classroom.Value.Name,
                     ScheduleId = classroom.Value.ScheduleId,
+                    ClassroomTypeIds = classroomTypes
                 };
                 AddToHistoryHandler addToHistoryHandler = new AddToHistoryHandler(_dbService);
                 AddToHistoryDTO addToHistoryDTO = new AddToHistoryDTO

@@ -34,13 +34,36 @@ namespace AlpimiAPI.Entities.ELesson.Commands
             );
             if (lesson.Value != null)
             {
+                var subgroups = await _dbService.GetAll<Guid>(
+                    @"
+                        SELECT
+                        sg.[Id]    
+                        FROM [Subgroup] sg
+                        LEFT JOIN [LessonSubgroup] lsg on lsg.[SubgroupId] = sg.[Id]
+                        LEFT JOIN [Lesson] l on l.[Id] = lsg.[LessonId]
+                        WHERE l.[Id] = @Id;
+                    ",
+                    request
+                );
+                var classroomTypes = await _dbService.GetAll<Guid>(
+                    @"
+                        SELECT
+                        ct.[Id]    
+                        FROM [ClassroomType] ct
+                        LEFT JOIN [LessonClassroomType] lct on lct.[ClassroomTypeId] = ct.[Id]
+                        LEFT JOIN [Lesson] l on l.[Id] = lct.[LessonId]
+                        WHERE l.[Id] = @Id;
+                    ",
+                    request
+                );
                 CreateLessonDTO reversaleDTO = new CreateLessonDTO
                 {
                     Name = lesson.Value.Name,
                     AmountOfHours = lesson.Value.AmountOfHours,
                     LessonTypeId = lesson.Value.LessonTypeId,
                     TeacherId = lesson.Value.TeacherId,
-                    SubgroupIds = []
+                    SubgroupIds = subgroups ?? [],
+                    ClassroomTypeIds = classroomTypes
                 };
                 AddToHistoryHandler addToHistoryHandler = new AddToHistoryHandler(_dbService);
                 AddToHistoryDTO addToHistoryDTO = new AddToHistoryDTO

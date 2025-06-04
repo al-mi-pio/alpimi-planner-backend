@@ -34,10 +34,22 @@ namespace AlpimiAPI.Entities.EStudent.Commands
             );
             if (student.Value != null)
             {
+                var subgroups = await _dbService.GetAll<Guid>(
+                    @"
+                        SELECT
+                        sg.[Id]    
+                        FROM [Subgroup] sg
+                        LEFT JOIN [StudentSubgroup] ssg on ssg.[StudentId] = sg.[Id]
+                        LEFT JOIN [Student] s on s.[Id] = ssg.[StudentId]
+                        WHERE s.[Id] = @Id;
+                    ",
+                    request
+                );
                 CreateStudentDTO reversaleDTO = new CreateStudentDTO
                 {
                     AlbumNumber = student.Value.AlbumNumber,
                     GroupId = student.Value.GroupId,
+                    SubgroupIds = subgroups
                 };
                 AddToHistoryHandler addToHistoryHandler = new AddToHistoryHandler(_dbService);
                 AddToHistoryDTO addToHistoryDTO = new AddToHistoryDTO

@@ -223,7 +223,7 @@ namespace AlpimiAPI.Entities.EScheduleSettings.Commands
             {
                 Id = Guid.NewGuid(),
                 Timestamp = DateTime.Now,
-                AffectedEntityId = originalScheduleSettings.Value.Id,
+                AffectedEntityId = originalScheduleSettings.Value.ScheduleId,
                 AffectedEntity = "ScheduleSettings",
                 Command = "Patch",
                 ReversaleDTO = JsonSerializer.Serialize(reversaleDTOScheduleSettings),

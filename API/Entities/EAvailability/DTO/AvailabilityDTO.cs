@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using AlpimiAPI.Entities.ETeacher.DTO;
+﻿using AlpimiAPI.Entities.ETeacher.DTO;
 
 namespace AlpimiAPI.Entities.EAvailability.DTO
 {
@@ -7,7 +6,7 @@ namespace AlpimiAPI.Entities.EAvailability.DTO
     {
         public required Guid Id { get; set; }
 
-        public required int? WeekDay { get; set; } //ex. 0 means Sunday
+        public required int WeekDay { get; set; } //ex. 0 means Sunday
 
         public required int Start { get; set; }
 

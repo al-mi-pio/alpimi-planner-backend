@@ -34,7 +34,7 @@ namespace AlpimiAPI.Entities.EAvailability.Commands
                     availability = await _dbService.Get<Availability?>(
                         @" 
                             SELECT
-                            a.[Id], [WeekDay], [Start], [End], [TeacherId]
+                            [Id], [WeekDay], [Start], [End], [TeacherId]
                             FROM [Availability]                          
                             WHERE [Id] = @Id;",
                         request

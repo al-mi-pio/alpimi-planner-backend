@@ -62,9 +62,11 @@ namespace AlpimiAPI.Entities.ELessonType.Commands
             UpdateLessonTypeDTO reversaleDTOLessonType = new UpdateLessonTypeDTO
             {
                 Name = originalLessonType.Value!.Name,
+                Color = originalLessonType.Value.Color
             };
 
             request.dto.Name = request.dto.Name ?? originalLessonType.Value!.Name;
+            request.dto.Color = request.dto.Color ?? originalLessonType.Value.Color;
 
             var lessonTypeName = await _dbService.Get<LessonType>(
                 $@"

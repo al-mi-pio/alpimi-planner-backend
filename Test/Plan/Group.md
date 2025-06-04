@@ -2,7 +2,7 @@
 
 ## `ALL` `api/Group/*`
 
-- [GroupSettingsControllerThrowsUnauthorized()](../Entities/EGroup/GroupController.test.cs) - **integrity**  
+- [GroupControllerThrowsUnauthorized()](../Entities/EGroup/GroupController.test.cs) - **integrity**  
   Check if returns an error when token is not provided
 
 - [GroupControllerThrowsTooManyRequests()](../Entities/EGroup/GroupController.test.cs) - **integrity**  

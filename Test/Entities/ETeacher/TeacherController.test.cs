@@ -118,6 +118,43 @@ namespace AlpimiTest.Entities.ETeacher
         }
 
         [Fact]
+        public async Task CreateTeacherIsUndone()
+        {
+            var teacherRequest = MockData.GetCreateTeacherDTODetails(scheduleId);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", userId)
+            );
+
+            await _client.PostAsJsonAsync("/api/Teacher", teacherRequest);
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+
+            var query = $"?scheduleId={scheduleId}";
+            var response = await _client.GetAsync($"/api/Teacher{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            Assert.DoesNotContain(teacherRequest.Name, stringResponse);
+        }
+
+        [Fact]
+        public async Task CreateTeacherIsRedone()
+        {
+            var teacherRequest = MockData.GetCreateTeacherDTODetails(scheduleId);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", userId)
+            );
+
+            await _client.PostAsJsonAsync("/api/Teacher", teacherRequest);
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+            await _client.PatchAsJsonAsync($"/api/History/redo/{scheduleId}", "");
+
+            var query = $"?scheduleId={scheduleId}";
+            var response = await _client.GetAsync($"/api/Teacher{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            Assert.Contains(teacherRequest.Name, stringResponse);
+        }
+
+        [Fact]
         public async Task TeacherIsDeleted()
         {
             var teacherRequest = MockData.GetCreateTeacherDTODetails(scheduleId);
@@ -131,7 +168,46 @@ namespace AlpimiTest.Entities.ETeacher
             Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
 
             var query = $"?scheduleId={scheduleId}";
-            response = await _client.GetAsync($"/api/Teacher");
+            response = await _client.GetAsync($"/api/Teacher{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            Assert.DoesNotContain(teacherRequest.Name, stringResponse);
+        }
+
+        [Fact]
+        public async Task DeleteTeacherIsUndone()
+        {
+            var teacherRequest = MockData.GetCreateTeacherDTODetails(scheduleId);
+            var teacherId = await DbHelper.SetupTeacher(_client, teacherRequest);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", new Guid())
+            );
+
+            await _client.DeleteAsync($"/api/Teacher/{teacherId}");
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+
+            var query = $"?scheduleId={scheduleId}";
+            var response = await _client.GetAsync($"/api/Teacher{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            Assert.Contains(teacherRequest.Name, stringResponse);
+        }
+
+        [Fact]
+        public async Task DeleteTeacherIsRedone()
+        {
+            var teacherRequest = MockData.GetCreateTeacherDTODetails(scheduleId);
+            var teacherId = await DbHelper.SetupTeacher(_client, teacherRequest);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", new Guid())
+            );
+
+            await _client.DeleteAsync($"/api/Teacher/{teacherId}");
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+            await _client.PatchAsJsonAsync($"/api/History/redo/{scheduleId}", "");
+
+            var query = $"?scheduleId={scheduleId}";
+            var response = await _client.GetAsync($"/api/Teacher{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.DoesNotContain(teacherRequest.Name, stringResponse);
         }
@@ -201,6 +277,53 @@ namespace AlpimiTest.Entities.ETeacher
             );
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task UpdateTeacherIsUndone()
+        {
+            var teacherUpdateRequest = MockData.GetUpdateTeacherDTODetails();
+            var dto = MockData.GetCreateTeacherDTODetails(scheduleId);
+            var teacherId = await DbHelper.SetupTeacher(_client, dto);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "Bob", userId)
+            );
+
+            await _client.PatchAsJsonAsync($"/api/Teacher/{teacherId}", teacherUpdateRequest);
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+
+            var response = await _client.GetAsync($"/api/Teacher/{teacherId}");
+            var jsonResponse = await response.Content.ReadFromJsonAsync<
+                ApiGetResponse<TeacherDTO>
+            >();
+            Assert.Equal(dto.Name, jsonResponse!.Content.Name);
+            Assert.Equal(dto.Surname, jsonResponse!.Content.Surname);
+        }
+
+        [Fact]
+        public async Task UpdateTeacherIsRedone()
+        {
+            var teacherUpdateRequest = MockData.GetUpdateTeacherDTODetails();
+            var teacherId = await DbHelper.SetupTeacher(
+                _client,
+                MockData.GetCreateTeacherDTODetails(scheduleId)
+            );
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "Bob", userId)
+            );
+
+            await _client.PatchAsJsonAsync($"/api/Teacher/{teacherId}", teacherUpdateRequest);
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+            await _client.PatchAsJsonAsync($"/api/History/redo/{scheduleId}", "");
+
+            var response = await _client.GetAsync($"/api/Teacher/{teacherId}");
+            var jsonResponse = await response.Content.ReadFromJsonAsync<
+                ApiGetResponse<TeacherDTO>
+            >();
+            Assert.Equal(teacherUpdateRequest.Name, jsonResponse!.Content.Name);
+            Assert.Equal(teacherUpdateRequest.Surname, jsonResponse!.Content.Surname);
         }
 
         [Fact]

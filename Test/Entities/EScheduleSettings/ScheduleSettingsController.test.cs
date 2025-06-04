@@ -128,6 +128,64 @@ namespace AlpimiTest.Entities.EScheduleSettings
         }
 
         [Fact]
+        public async Task UpdateScheduleSettingsIsUndone()
+        {
+            var updateScheduleSettings = MockData.GetUpdateScheduleSettingsDTO();
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", new Guid())
+            );
+
+            await _client.PatchAsJsonAsync(
+                $"/api/ScheduleSettings/{scheduleId}",
+                updateScheduleSettings
+            );
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+
+            var response = await _client.GetAsync($"/api/ScheduleSettings/{scheduleId}");
+            var jsonResponse = await response.Content.ReadFromJsonAsync<
+                ApiGetResponse<ScheduleSettingsDTO>
+            >();
+            Assert.NotEqual(
+                jsonResponse!.Content.SchoolYearStart,
+                updateScheduleSettings.SchoolYearStart
+            );
+            Assert.NotEqual(
+                jsonResponse.Content.SchoolYearEnd,
+                updateScheduleSettings.SchoolYearEnd
+            );
+            Assert.NotEqual(jsonResponse.Content.SchoolHour, updateScheduleSettings.SchoolHour);
+        }
+
+        [Fact]
+        public async Task UpdateScheduleSettingsIsRedone()
+        {
+            var updateScheduleSettings = MockData.GetUpdateScheduleSettingsDTO();
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", new Guid())
+            );
+
+            await _client.PatchAsJsonAsync(
+                $"/api/ScheduleSettings/{scheduleId}",
+                updateScheduleSettings
+            );
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+            await _client.PatchAsJsonAsync($"/api/History/redo/{scheduleId}", "");
+
+            var response = await _client.GetAsync($"/api/ScheduleSettings/{scheduleId}");
+            var jsonResponse = await response.Content.ReadFromJsonAsync<
+                ApiGetResponse<ScheduleSettingsDTO>
+            >();
+            Assert.Equal(
+                jsonResponse!.Content.SchoolYearStart,
+                updateScheduleSettings.SchoolYearStart
+            );
+            Assert.Equal(jsonResponse.Content.SchoolYearEnd, updateScheduleSettings.SchoolYearEnd);
+            Assert.Equal(jsonResponse.Content.SchoolHour, updateScheduleSettings.SchoolHour);
+        }
+
+        [Fact]
         public async Task GetScheduleSettingsReturnsScheduleSettingsIfAValidScheduleIdIsProvided()
         {
             var scheduleSettings = MockData.GetCreateScheduleDTODetails();
@@ -172,7 +230,7 @@ namespace AlpimiTest.Entities.EScheduleSettings
         }
 
         [Fact]
-        public async Task GetAllScheduleSettingssReturnsScheduleSettingssFromPublicSchedules()
+        public async Task GetScheduleSettingssReturnsScheduleSettingssFromPublicSchedules()
         {
             await DbHelper.PublishSchedule(_client, scheduleId);
             var scheduleSettings = MockData.GetScheduleSettingsDetails();

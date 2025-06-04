@@ -145,8 +145,53 @@ namespace AlpimiTest.Entities.ELesson
             var response = await _client.PostAsJsonAsync("/api/Lesson", lessonRequest);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-            var query = $"?id={groupId}";
+            var query = $"?id={teacherId1}";
             response = await _client.GetAsync($"/api/Lesson{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            Assert.Contains(lessonRequest.Name, stringResponse);
+        }
+
+        [Fact]
+        public async Task CreateLessonIsUndone()
+        {
+            var lessonRequest = MockData.GetCreateLessonDTODetails(
+                [subgroupId1],
+                lessonTypeId,
+                teacherId1
+            );
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", userId)
+            );
+
+            await _client.PostAsJsonAsync("/api/Lesson", lessonRequest);
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+
+            var query = $"?id={teacherId1}";
+            var response = await _client.GetAsync($"/api/Lesson{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            Assert.DoesNotContain(lessonRequest.Name, stringResponse);
+        }
+
+        [Fact]
+        public async Task CreateLessonIsRedone()
+        {
+            var lessonRequest = MockData.GetCreateLessonDTODetails(
+                [subgroupId1],
+                lessonTypeId,
+                teacherId1
+            );
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", userId)
+            );
+
+            await _client.PostAsJsonAsync("/api/Lesson", lessonRequest);
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+            await _client.PatchAsJsonAsync($"/api/History/redo/{scheduleId}", "");
+
+            var query = $"?id={teacherId1}";
+            var response = await _client.GetAsync($"/api/Lesson{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.Contains(lessonRequest.Name, stringResponse);
         }
@@ -194,8 +239,55 @@ namespace AlpimiTest.Entities.ELesson
             var response = await _client.DeleteAsync($"/api/Lesson/{lessonId}");
             Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
 
-            var query = $"?id={groupId}";
-            response = await _client.GetAsync($"/api/Lesson");
+            var query = $"?id={teacherId1}";
+            response = await _client.GetAsync($"/api/Lesson{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            Assert.DoesNotContain(lessonRequest.Name, stringResponse);
+        }
+
+        [Fact]
+        public async Task DeleteLessonIsUndone()
+        {
+            var lessonRequest = MockData.GetCreateLessonDTODetails(
+                [subgroupId1],
+                lessonTypeId,
+                teacherId1
+            );
+            var lessonId = await DbHelper.SetupLesson(_client, lessonRequest);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", new Guid())
+            );
+
+            await _client.DeleteAsync($"/api/Lesson/{lessonId}");
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+
+            var query = $"?id={teacherId1}";
+            var response = await _client.GetAsync($"/api/Lesson{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            Assert.Contains(lessonRequest.Name, stringResponse);
+        }
+
+        [Fact]
+        public async Task DeleteLessonIsRedone()
+        {
+            var lessonRequest = MockData.GetCreateLessonDTODetails(
+                [subgroupId1],
+                lessonTypeId,
+                teacherId1
+            );
+            var lessonId = await DbHelper.SetupLesson(_client, lessonRequest);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", new Guid())
+            );
+
+            await _client.DeleteAsync($"/api/Lesson/{lessonId}");
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+            await _client.PatchAsJsonAsync($"/api/History/redo/{scheduleId}", "");
+
+            var query = $"?id={teacherId1}";
+            var response = await _client.GetAsync($"/api/Lesson{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.DoesNotContain(lessonRequest.Name, stringResponse);
         }
@@ -289,6 +381,51 @@ namespace AlpimiTest.Entities.ELesson
             );
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task UpdateLessonIsUndone()
+        {
+            var lessonUpdateRequest = MockData.GetUpdateLessonDTODetails();
+            var dto = MockData.GetCreateLessonDTODetails([subgroupId1], lessonTypeId, teacherId1);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "Bob", userId)
+            );
+            var lessonId = await DbHelper.SetupLesson(_client, dto);
+
+            await _client.PatchAsJsonAsync($"/api/Lesson/{lessonId}", lessonUpdateRequest);
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+
+            var response = await _client.GetAsync($"/api/Lesson/{lessonId}");
+            var jsonResponse = await response.Content.ReadFromJsonAsync<
+                ApiGetResponse<LessonDTO>
+            >();
+            Assert.Equal(dto.Name, jsonResponse!.Content.Name);
+        }
+
+        [Fact]
+        public async Task UpdateLessonIsRedone()
+        {
+            var lessonUpdateRequest = MockData.GetUpdateLessonDTODetails();
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "Bob", userId)
+            );
+            var lessonId = await DbHelper.SetupLesson(
+                _client,
+                MockData.GetCreateLessonDTODetails([subgroupId1], lessonTypeId, teacherId1)
+            );
+
+            await _client.PatchAsJsonAsync($"/api/Lesson/{lessonId}", lessonUpdateRequest);
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+            await _client.PatchAsJsonAsync($"/api/History/redo/{scheduleId}", "");
+
+            var response = await _client.GetAsync($"/api/Lesson/{lessonId}");
+            var jsonResponse = await response.Content.ReadFromJsonAsync<
+                ApiGetResponse<LessonDTO>
+            >();
+            Assert.Equal(lessonUpdateRequest.Name, jsonResponse!.Content.Name);
         }
 
         [Fact]

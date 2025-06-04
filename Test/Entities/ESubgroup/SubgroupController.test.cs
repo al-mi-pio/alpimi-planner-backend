@@ -119,6 +119,43 @@ namespace AlpimiTest.Entities.ESubgroup
         }
 
         [Fact]
+        public async Task CreateSubgroupIsUndone()
+        {
+            var subgroupRequest = MockData.GetCreateSubgroupDTODetails(groupId);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", userId)
+            );
+
+            await _client.PostAsJsonAsync("/api/Subgroup", subgroupRequest);
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+
+            var query = $"?id={groupId}";
+            var response = await _client.GetAsync($"/api/Subgroup{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            Assert.DoesNotContain(subgroupRequest.Name, stringResponse);
+        }
+
+        [Fact]
+        public async Task CreateSubgroupIsRedone()
+        {
+            var subgroupRequest = MockData.GetCreateSubgroupDTODetails(groupId);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", userId)
+            );
+
+            await _client.PostAsJsonAsync("/api/Subgroup", subgroupRequest);
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+            await _client.PatchAsJsonAsync($"/api/History/redo/{scheduleId}", "");
+
+            var query = $"?id={groupId}";
+            var response = await _client.GetAsync($"/api/Subgroup{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            Assert.Contains(subgroupRequest.Name, stringResponse);
+        }
+
+        [Fact]
         public async Task SubgroupIsDeleted()
         {
             var subgroupRequest = MockData.GetCreateSubgroupDTODetails(groupId);
@@ -132,7 +169,46 @@ namespace AlpimiTest.Entities.ESubgroup
             Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
 
             var query = $"?id={groupId}";
-            response = await _client.GetAsync($"/api/Subgroup");
+            response = await _client.GetAsync($"/api/Subgroup{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            Assert.DoesNotContain(subgroupRequest.Name, stringResponse);
+        }
+
+        [Fact]
+        public async Task DeleteSubgroupIsUndone()
+        {
+            var subgroupRequest = MockData.GetCreateSubgroupDTODetails(groupId);
+            var subgroupId = await DbHelper.SetupSubgroup(_client, subgroupRequest);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", new Guid())
+            );
+
+            await _client.DeleteAsync($"/api/Subgroup/{subgroupId}");
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+
+            var query = $"?id={groupId}";
+            var response = await _client.GetAsync($"/api/Subgroup{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            Assert.Contains(subgroupRequest.Name, stringResponse);
+        }
+
+        [Fact]
+        public async Task DeleteSubgroupIsRedone()
+        {
+            var subgroupRequest = MockData.GetCreateSubgroupDTODetails(groupId);
+            var subgroupId = await DbHelper.SetupSubgroup(_client, subgroupRequest);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", new Guid())
+            );
+
+            await _client.DeleteAsync($"/api/Subgroup/{subgroupId}");
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+            await _client.PatchAsJsonAsync($"/api/History/redo/{scheduleId}", "");
+
+            var query = $"?id={groupId}";
+            var response = await _client.GetAsync($"/api/Subgroup{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.DoesNotContain(subgroupRequest.Name, stringResponse);
         }
@@ -203,6 +279,53 @@ namespace AlpimiTest.Entities.ESubgroup
             );
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task UpdateSubgroupIsUndone()
+        {
+            var subgroupUpdateRequest = MockData.GetUpdateSubgroupDTODetails();
+            var dto = MockData.GetCreateSubgroupDTODetails(groupId);
+            var subgroupId = await DbHelper.SetupSubgroup(_client, dto);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "Bob", userId)
+            );
+
+            await _client.PatchAsJsonAsync($"/api/Subgroup/{subgroupId}", subgroupUpdateRequest);
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+
+            var response = await _client.GetAsync($"/api/Subgroup/{subgroupId}");
+            var jsonResponse = await response.Content.ReadFromJsonAsync<
+                ApiGetResponse<SubgroupDTO>
+            >();
+            Assert.Equal(dto.Name, jsonResponse!.Content.Name);
+            Assert.Equal(dto.StudentCount, jsonResponse!.Content.StudentCount);
+        }
+
+        [Fact]
+        public async Task UpdateSubgroupIsRedone()
+        {
+            var subgroupUpdateRequest = MockData.GetUpdateSubgroupDTODetails();
+            var subgroupId = await DbHelper.SetupSubgroup(
+                _client,
+                MockData.GetCreateSubgroupDTODetails(groupId)
+            );
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "Bob", userId)
+            );
+
+            await _client.PatchAsJsonAsync($"/api/Subgroup/{subgroupId}", subgroupUpdateRequest);
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+            await _client.PatchAsJsonAsync($"/api/History/redo/{scheduleId}", "");
+
+            var response = await _client.GetAsync($"/api/Subgroup/{subgroupId}");
+            var jsonResponse = await response.Content.ReadFromJsonAsync<
+                ApiGetResponse<SubgroupDTO>
+            >();
+            Assert.Equal(subgroupUpdateRequest.Name, jsonResponse!.Content.Name);
+            Assert.Equal(subgroupUpdateRequest.StudentCount, jsonResponse!.Content.StudentCount);
         }
 
         [Fact]

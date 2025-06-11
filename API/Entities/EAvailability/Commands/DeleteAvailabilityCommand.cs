@@ -82,7 +82,7 @@ namespace AlpimiAPI.Entities.EAvailability.Commands
                 );
                 availability.Teacher = schedule.Value!;
 
-                CreateavAvailabilityDTO reversaleDTO = new CreateavAvailabilityDTO
+                CreateAvailabilityDTO reversaleDTO = new CreateAvailabilityDTO
                 {
                     WeekDay = availability.WeekDay,
                     Start = availability.Start,

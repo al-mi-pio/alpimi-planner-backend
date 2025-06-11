@@ -2,7 +2,7 @@
 
 namespace AlpimiAPI.Entities.EAvailability.DTO
 {
-    public class CreateavAvailabilityDTO
+    public class CreateAvailabilityDTO
     {
         [Required]
         public required int WeekDay { get; set; } //ex. 0 means Sunday

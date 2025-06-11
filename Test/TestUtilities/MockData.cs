@@ -628,10 +628,10 @@ namespace AlpimiTest.TestUtilities
             };
         }
 
-        public static CreateavAvailabilityDTO GetCreateAvailabilityDTODetails(Guid teacherId)
+        public static CreateAvailabilityDTO GetCreateAvailabilityDTODetails(Guid teacherId)
         {
             var availability = GetAvailabilityDetails();
-            return new CreateavAvailabilityDTO()
+            return new CreateAvailabilityDTO()
             {
                 WeekDay = availability.WeekDay,
                 Start = availability.Start,
@@ -640,9 +640,9 @@ namespace AlpimiTest.TestUtilities
             };
         }
 
-        public static CreateavAvailabilityDTO GetCreateSecondAvailabilityDTODetails(Guid teacherId)
+        public static CreateAvailabilityDTO GetCreateSecondAvailabilityDTODetails(Guid teacherId)
         {
-            return new CreateavAvailabilityDTO()
+            return new CreateAvailabilityDTO()
             {
                 WeekDay = 4,
                 Start = 1,

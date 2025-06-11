@@ -41,7 +41,7 @@ namespace AlpimiAPI.Entities.EAvailability
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
         public async Task<ActionResult<ApiGetResponse<Guid>>> Post(
-            [FromBody] CreateavAvailabilityDTO request,
+            [FromBody] CreateAvailabilityDTO request,
             [FromHeader] string Authorization
         )
         {

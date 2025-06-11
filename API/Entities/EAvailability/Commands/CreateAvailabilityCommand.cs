@@ -15,7 +15,7 @@ namespace AlpimiAPI.Entities.EAvailability.Commands
 {
     public record CreateAvailabilityCommand(
         Guid Id,
-        CreateavAvailabilityDTO dto,
+        CreateAvailabilityDTO dto,
         Guid FilteredId,
         string Role
     ) : IRequest<Guid>;

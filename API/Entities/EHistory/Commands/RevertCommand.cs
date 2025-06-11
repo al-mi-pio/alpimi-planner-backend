@@ -764,7 +764,7 @@ namespace AlpimiAPI.Entities.EHistory.Commands
                             CreateAvailabilityCommand createAvailabilityCommand =
                                 new CreateAvailabilityCommand(
                                     insertedId,
-                                    JsonSerializer.Deserialize<CreateavAvailabilityDTO>(
+                                    JsonSerializer.Deserialize<CreateAvailabilityDTO>(
                                         latestHistory.ReversaleDTO!
                                     )!,
                                     request.FilteredId,

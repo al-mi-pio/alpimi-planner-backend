@@ -23,11 +23,23 @@
 - [ThrowsErrorWhenWeightIsLessThan0OrMoreThan1()](../Entities/ECollisionType/Commands/CreateCollisionTypeCommand.unit.cs) - **unit** 
   Check if returns an error when weight is not between 0 and 1
 
+- [CreateCollisionTypeIsUndone()](../Entities/ECollisionType/CollisionTypeController.test.cs) - **integrity**  
+  Check if create collision type is undone
+
+- [CreateCollisionTypeIsRedone()](../Entities/ECollisionType/CollisionTypeController.test.cs) - **integrity**  
+  Check if create collision type is redone
+
 
 ## `DELETE` `api/CollisionType/{id}`
 
 - [CollisionTypeIsDeleted()](../Entities/ECollisionType/CollisionTypeController.test.cs) - **integrity**  
   Check if schedule is deleted when a valid token is provided
+
+- [DeleteCollisionTypeIsUndone()](../Entities/ECollisionType/CollisionTypeController.test.cs) - **integrity**  
+  Check if delete collision type is undone
+
+- [DeleteCollisionTypeIsRedone()](../Entities/ECollisionType/CollisionTypeController.test.cs) - **integrity**  
+  Check if delete collision type is redone
 
 
 ## `PATCH` `api/CollisionType/{id}`
@@ -46,6 +58,12 @@
 
 - [ThrowsErrorWhenWeightIsLessThan0OrMoreThan1()](../Entities/ECollisionType/Commands/UpdateCollisionTypeCommand.unit.cs) - **unit** 
   Check if returns an error when weight is not between 0 and 1
+
+- [PatchCollisionTypeIsUndone()](../Entities/ECollisionType/CollisionTypeController.test.cs) - **integrity**  
+  Check if patch collision type is undone
+
+- [PatchCollisionTypeIsRedone()](../Entities/ECollisionType/CollisionTypeController.test.cs) - **integrity**  
+  Check if patch collision type is redone
 
 ## `GET` `api/CollisionType`
 

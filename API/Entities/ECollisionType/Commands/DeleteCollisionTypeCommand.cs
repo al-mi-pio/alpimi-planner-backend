@@ -1,5 +1,11 @@
-﻿using AlpimiAPI.Database;
+﻿using System.Text.Json;
+using AlpimiAPI.Database;
+using AlpimiAPI.Entities.ECollisionType.DTO;
+using AlpimiAPI.Entities.ECollisionType.Queries;
+using AlpimiAPI.Entities.EDayOff.Commands;
+using AlpimiAPI.Entities.EHistory.DTO;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AlpimiAPI.Entities.ECollisionType.Commands
 {
@@ -19,6 +25,44 @@ namespace AlpimiAPI.Entities.ECollisionType.Commands
             CancellationToken cancellationToken
         )
         {
+            GetCollisionTypeHandler getCollisionTypeHandler = new GetCollisionTypeHandler(
+                _dbService
+            );
+            GetCollisionTypeQuery getCollisionTypeQuery = new GetCollisionTypeQuery(
+                request.Id,
+                request.FilteredId,
+                request.Role
+            );
+            ActionResult<CollisionType?> collisiontype = await getCollisionTypeHandler.Handle(
+                getCollisionTypeQuery,
+                cancellationToken
+            );
+            if (collisiontype.Value != null)
+            {
+                CreateCollisionTypeDTO reversaleDTO = new CreateCollisionTypeDTO
+                {
+                    Name = collisiontype.Value.Name,
+                    Description = collisiontype.Value.Description,
+                    Weight = collisiontype.Value.Weight,
+                    Filter = collisiontype.Value.Filter,
+                    Category = collisiontype.Value.Category,
+                    ScheduleId = collisiontype.Value.ScheduleId,
+                };
+                AddToHistoryHandler addToHistoryHandler = new AddToHistoryHandler(_dbService);
+                AddToHistoryDTO addToHistoryDTO = new AddToHistoryDTO
+                {
+                    Id = Guid.NewGuid(),
+                    Timestamp = DateTime.Now,
+                    AffectedEntityId = request.Id,
+                    AffectedEntity = "CollisionType",
+                    Command = "Delete",
+                    ReversaleDTO = JsonSerializer.Serialize(reversaleDTO),
+                    CollisionChecked = true,
+                    ScheduleId = reversaleDTO.ScheduleId,
+                };
+                AddToHistoryCommand addToHistoryCommand = new AddToHistoryCommand(addToHistoryDTO);
+                await addToHistoryHandler.Handle(addToHistoryCommand, cancellationToken);
+            }
             switch (request.Role)
             {
                 case "Admin":

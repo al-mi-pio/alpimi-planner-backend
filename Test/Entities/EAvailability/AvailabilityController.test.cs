@@ -124,6 +124,43 @@ namespace AlpimiTest.Entities.EAvailability
         }
 
         [Fact]
+        public async Task CreateAvailabilityIsUndone()
+        {
+            var availabilityRequest = MockData.GetCreateAvailabilityDTODetails(teacherId1);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", userId)
+            );
+
+            await _client.PostAsJsonAsync("/api/Availability", availabilityRequest);
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+
+            var query = $"?id={teacherId1}";
+            var response = await _client.GetAsync($"/api/Availability{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            Assert.DoesNotContain(teacherId1.ToString(), stringResponse);
+        }
+
+        [Fact]
+        public async Task CreateAvailabilityIsRedone()
+        {
+            var availabilityRequest = MockData.GetCreateAvailabilityDTODetails(teacherId1);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", userId)
+            );
+
+            await _client.PostAsJsonAsync("/api/Availability", availabilityRequest);
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+            await _client.PatchAsJsonAsync($"/api/History/redo/{scheduleId}", "");
+
+            var query = $"?id={teacherId1}";
+            var response = await _client.GetAsync($"/api/Availability{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            Assert.Contains(teacherId1.ToString(), stringResponse);
+        }
+
+        [Fact]
         public async Task AvailabilityIsDeleted()
         {
             var availabilityRequest = MockData.GetCreateAvailabilityDTODetails(teacherId1);
@@ -138,6 +175,45 @@ namespace AlpimiTest.Entities.EAvailability
 
             var query = $"?id={teacherId1}";
             response = await _client.GetAsync($"/api/Availability{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            Assert.DoesNotContain(Convert.ToString(availabilityRequest.TeacherId)!, stringResponse);
+        }
+
+        [Fact]
+        public async Task DeleteAvailabilityIsUndone()
+        {
+            var availabilityRequest = MockData.GetCreateAvailabilityDTODetails(teacherId1);
+            var availabilityId = await DbHelper.SetupAvailability(_client, availabilityRequest);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", new Guid())
+            );
+
+            await _client.DeleteAsync($"/api/Availability/{availabilityId}");
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+
+            var query = $"?id={teacherId1}";
+            var response = await _client.GetAsync($"/api/Availability{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            Assert.Contains(Convert.ToString(availabilityRequest.TeacherId)!, stringResponse);
+        }
+
+        [Fact]
+        public async Task DeleteAvailabilityIsRedone()
+        {
+            var availabilityRequest = MockData.GetCreateAvailabilityDTODetails(teacherId1);
+            var availabilityId = await DbHelper.SetupAvailability(_client, availabilityRequest);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", new Guid())
+            );
+
+            await _client.DeleteAsync($"/api/Availability/{availabilityId}");
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+            await _client.PatchAsJsonAsync($"/api/History/redo/{scheduleId}", "");
+
+            var query = $"?id={teacherId1}";
+            var response = await _client.GetAsync($"/api/Availability{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.DoesNotContain(Convert.ToString(availabilityRequest.TeacherId)!, stringResponse);
         }
@@ -207,6 +283,65 @@ namespace AlpimiTest.Entities.EAvailability
             );
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task UpdateAvailabilityIsUndone()
+        {
+            var availabilityUpdateRequest = MockData.GetUpdateAvailabilityDTODetails();
+            var dto = MockData.GetCreateAvailabilityDTODetails(teacherId1);
+
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "Bob", userId)
+            );
+            var availabilityId = await DbHelper.SetupAvailability(_client, dto);
+
+            await _client.PatchAsJsonAsync(
+                $"/api/Availability/{availabilityId}",
+                availabilityUpdateRequest
+            );
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+
+            var query = $"?id={teacherId1}";
+            var response = await _client.GetAsync($"/api/Availability{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+
+            Assert.Contains("\"weekDay\":" + dto.WeekDay.ToString(), stringResponse);
+            Assert.DoesNotContain(
+                "\"weekDay\":" + availabilityUpdateRequest.WeekDay.ToString()!,
+                stringResponse
+            );
+        }
+
+        [Fact]
+        public async Task UpdateAvailabilityIsRedone()
+        {
+            var availabilityUpdateRequest = MockData.GetUpdateAvailabilityDTODetails();
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "Bob", userId)
+            );
+            var availabilityId = await DbHelper.SetupAvailability(
+                _client,
+                MockData.GetCreateAvailabilityDTODetails(teacherId1)
+            );
+
+            await _client.PatchAsJsonAsync(
+                $"/api/Availability/{availabilityId}",
+                availabilityUpdateRequest
+            );
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+            await _client.PatchAsJsonAsync($"/api/History/redo/{scheduleId}", "");
+
+            var query = $"?id={teacherId1}";
+            var response = await _client.GetAsync($"/api/Availability{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+
+            Assert.Contains(
+                "\"weekDay\":" + availabilityUpdateRequest.WeekDay.ToString()!,
+                stringResponse
+            );
         }
 
         [Fact]

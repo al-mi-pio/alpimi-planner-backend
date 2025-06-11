@@ -18,7 +18,13 @@
   Check if returns an error when incorrect id is provided
 
 - [ThrowsErrorWhenLessonPeriodsOverlap()](../Entities/ELessonPeriod/CreateLessonPeriodCommand.unit.cs) - **unit**  
-  Check if returns an error when lesson periods overlap
+  Check if returns an error when lesson periods overla
+
+- [CreateLessonPeriodIsUndone()](../Entities/ELessonPeriod/LessonPeriodController.test.cs) - **integrity**  
+  Check if create lesson period is undone
+
+- [CreateLessonPeriodIsRedone()](../Entities/ELessonPeriod/LessonPeriodController.test.cs) - **integrity**  
+  Check if create lesson period is redone
 
 
 ## `DELETE` `api/LessonPeriod/{id}`
@@ -26,7 +32,13 @@
 - [LessonPeriodIsDeleted()](../Entities/ELessonPeriod/LessonPeriodController.test.cs) - **integrity**  
   Check if schedule is deleted when a valid token is provided
 
-- 
+- [DeleteLessonPeriodIsUndone()](../Entities/ELessonPeriod/LessonPeriodController.test.cs) - **integrity**  
+  Check if delete lesson period is undone
+
+- [DeleteLessonPeriodIsRedone()](../Entities/ELessonPeriod/LessonPeriodController.test.cs) - **integrity**  
+  Check if delete lesson period is redone
+
+
 ## `PATCH` `api/LessonPeriod/{id}`
 
 - [UpdateLessonPeriodReturnsUpdatedLessonPeriod()](../Entities/ELessonPeriod/LessonPeriodController.test.cs) - **integrity**  
@@ -40,6 +52,12 @@
 
 - [ThrowsErrorWhenLessonPeriodsOverlap()](../Entities/ELessonPeriod/Commands/UpdateLessonPeriodCommand.unit.cs) - **unit**  
   Check if returns an error when lesson periods overlap
+
+- [PatchLessonPeriodIsUndone()](../Entities/ELessonPeriod/LessonPeriodController.test.cs) - **integrity**  
+  Check if patch lesson period is undone
+
+- [PatchLessonPeriodIsRedone()](../Entities/ELessonPeriod/LessonPeriodController.test.cs) - **integrity**  
+  Check if patch lesson period is redone
 
 
 ## `GET` `api/LessonPeriod`

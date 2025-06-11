@@ -35,11 +35,23 @@
 - [ThrowsErrorWhenScheduleIdsFromClassroomAndClassroomTypeDontMatch()](../Entities/EClassroom/CreateClassroomCommand.unit.cs) - **unit**
   Check if returns an error when classroom and classroom type are from different groups
 
+- [CreateClassroomIsUndone()](../Entities/EClassroom/ClassroomController.test.cs) - **integrity**  
+  Check if create classroom is undone
+
+- [CreateClassroomIsRedone()](../Entities/EClassroom/ClassroomController.test.cs) - **integrity**  
+  Check if create classroom is redon
+
 
 ## `DELETE` `api/Classroom/{id}`
 
 - [ClassroomIsDeleted()](../Entities/EClassroom/ClassroomController.test.cs) - **integrity**  
   Check if schedule is deleted when a valid token is provided
+
+- [DeleteClassroomIsUndone()](../Entities/EClassroom/ClassroomController.test.cs) - **integrity**  
+  Check if delete classroom is undone
+
+- [DeleteClassroomIsRedone()](../Entities/EClassroom/ClassroomController.test.cs) - **integrity**  
+  Check if delete classroom is redon
 
 
 ## `PATCH` `api/Classroom/{id}`
@@ -70,6 +82,12 @@
 
 - [ThrowsErrorWhenScheduleIdsFromClassroomAndClassroomTypeDontMatch()](../Entities/EClassroom/UpdateClassroomCommand.unit.cs) - **unit**
   Check if returns an error when classroom and classroom type are from different groups
+
+- [PatchClassroomIsUndone()](../Entities/EClassroom/ClassroomController.test.cs) - **integrity**  
+  Check if patch classroom is undone
+
+- [PatchClassroomIsRedone()](../Entities/EClassroom/ClassroomController.test.cs) - **integrity**  
+  Check if patch classroom is redone
 
 
 ## `GET` `api/Classroom`

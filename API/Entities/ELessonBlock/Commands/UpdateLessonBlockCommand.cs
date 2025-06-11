@@ -1,6 +1,9 @@
-﻿using AlpimiAPI.Database;
+﻿using System.Text.Json;
+using AlpimiAPI.Database;
 using AlpimiAPI.Entities.EClassroom;
 using AlpimiAPI.Entities.EClassroom.Queries;
+using AlpimiAPI.Entities.EDayOff.Commands;
+using AlpimiAPI.Entities.EHistory.DTO;
 using AlpimiAPI.Entities.ELessonBlock.DTO;
 using AlpimiAPI.Entities.ELessonBlock.Queries;
 using AlpimiAPI.Entities.EScheduleSettings;
@@ -126,6 +129,14 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                 }
             }
 
+            UpdateLessonBlockDTO reversaleDTOLessonBlock = new UpdateLessonBlockDTO
+            {
+                LessonEnd = oneLessonBlock.LessonEnd,
+                LessonStart = oneLessonBlock.LessonStart,
+                ClassroomId = oneLessonBlock.ClassroomId,
+                WeekDay = (int)oneLessonBlock.LessonDate.DayOfWeek,
+            };
+
             request.dto.LessonEnd = request.dto.LessonEnd ?? oneLessonBlock.LessonEnd;
             request.dto.LessonStart = request.dto.LessonStart ?? oneLessonBlock.LessonStart;
             request.dto.ClassroomId = request.dto.ClassroomId ?? oneLessonBlock.ClassroomId;
@@ -225,6 +236,21 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                 oneLessonBlock.LessonId,
                 cancellationToken
             );
+
+            AddToHistoryHandler addToHistoryHandler = new AddToHistoryHandler(_dbService);
+            AddToHistoryDTO addToHistoryDTO = new AddToHistoryDTO
+            {
+                Id = Guid.NewGuid(),
+                Timestamp = DateTime.Now,
+                AffectedEntityId = request.Id,
+                AffectedEntity = "LessonBlock",
+                Command = "Patch",
+                ReversaleDTO = JsonSerializer.Serialize(reversaleDTOLessonBlock),
+                CollisionChecked = false,
+                ScheduleId = oneLessonBlock.Lesson.LessonType.ScheduleId,
+            };
+            AddToHistoryCommand addToHistoryCommand = new AddToHistoryCommand(addToHistoryDTO);
+            await addToHistoryHandler.Handle(addToHistoryCommand, cancellationToken);
 
             return request.Id;
         }

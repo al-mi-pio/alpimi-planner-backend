@@ -26,10 +26,23 @@
 - [ThrowsErrorWhenEndIsMoreThanTheAmountOfPeriods()](../Entities/EAvailability/Commands/CreateAvailabilityCommand.unit.cs) - **unit** 
   Check if returns an error when end is more than the amount of  periods
 
+- [CreateAvailabilityIsUndone()](../Entities/EAvailability/AvailabilityController.test.cs) - **integrity**  
+  Check if create availability is undone
+
+- [CreateAvailabilityIsRedone()](../Entities/EAvailability/AvailabilityController.test.cs) - **integrity**  
+  Check if create availability is redon
+
 ## `DELETE` `api/Availability/{id}`
 
 - [AvailabilityIsDeleted()](../Entities/EAvailability/AvailabilityController.test.cs) - **integrity**  
   Check if availability is deleted when a valid token is provided
+
+- [DeleteAvailabilityIsUndone()](../Entities/EAvailability/AvailabilityController.test.cs) - **integrity**  
+  Check if delete availability is undone
+
+- [DeleteAvailabilityIsRedone()](../Entities/EAvailability/AvailabilityController.test.cs) - **integrity**  
+  Check if delete availability is redone
+
 
 ## `PATCH` `api/Availability/{id}`
 
@@ -53,6 +66,12 @@
 
 - [ThrowsErrorWhenEndIsMoreThanTheAmountOfPeriods()](../Entities/EAvailability/Commands/UpdateAvailabilityCommand.unit.cs) - **unit** 
   Check if returns an error when end is more than the amount of periods
+
+- [PatchAvailabilityIsUndone()](../Entities/EAvailability/AvailabilityController.test.cs) - **integrity**  
+  Check if patch availability is undone
+
+- [PatchAvailabilityIsRedone()](../Entities/EAvailability/AvailabilityController.test.cs) - **integrity**  
+  Check if patch availability is redone
 
 ## `GET` `api/Availability`
 

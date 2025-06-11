@@ -46,6 +46,12 @@
 
 - [ThrowsErrorWhenSchoolYearDurationExceedsMaximumDuration()](../Entities/EScheduleSettings/Commands/UpdateScheduleSettingsCommand.unit.cs) - **unit**  
   Check if returns an error when the school year will last longer than the maxiumum amount
+
+- [PatchScheduleSettingsIsUndone()](../Entities/EScheduleSettings/ScheduleSettingsController.test.cs) - **integrity**  
+  Check if patch schedule settings is undone
+
+- [PatchScheduleSettingsIsRedone()](../Entities/EScheduleSettings/ScheduleSettingsController.test.cs) - **integrity**  
+  Check if patch schedule settings is redone
   
 
 ## `GET` `api/ScheduleSettings/{id}`

@@ -192,4 +192,10 @@
   <data name="scheduleDuration" xml:space="preserve">
     <value>The school year cannot be longer than {0} month(s)</value>
   </data>
+  <data name="cantUndo" xml:space="preserve">
+    <value>There is nothing to undo</value>
+  </data>
+  <data name="cantRedo" xml:space="preserve">
+    <value>There is nothing to redo</value>
+  </data>
 </root>

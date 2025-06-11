@@ -19,7 +19,9 @@ namespace AlpimiTest.TestSetup
             {
                 "tooManyStudents",
                 "Student count in a subgroup cannot be greater than the student count in a group"
-            }
+            },
+            { "cantUndo", "There is nothing to undo" },
+            { "cantRedo", "There is nothing to redo" }
         };
         private static readonly Dictionary<
             string,

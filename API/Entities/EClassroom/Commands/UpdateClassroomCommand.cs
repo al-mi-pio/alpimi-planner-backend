@@ -1,8 +1,12 @@
-﻿using AlpimiAPI.Database;
+﻿using System.Text.Json;
+using AlpimiAPI.Database;
 using AlpimiAPI.Entities.EClassroom.DTO;
 using AlpimiAPI.Entities.EClassroom.Queries;
 using AlpimiAPI.Entities.EClassroomType;
 using AlpimiAPI.Entities.EClassroomType.Queries;
+using AlpimiAPI.Entities.EDayOff.Commands;
+using AlpimiAPI.Entities.EHistory.DTO;
+using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
 using MediatR;
@@ -60,7 +64,14 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
                 return null;
             }
 
+            UpdateClassroomDTO reversaleDTOClassroom = new UpdateClassroomDTO
+            {
+                Name = originalClassroom.Value!.Name,
+                Capacity = originalClassroom.Value!.Capacity
+            };
+
             request.dto.Name = request.dto.Name ?? originalClassroom.Value!.Name;
+            request.dto.Capacity = request.dto.Capacity ?? originalClassroom.Value!.Capacity;
 
             var classroomName = await _dbService.GetAll<Classroom>(
                 $@"
@@ -149,6 +160,7 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
                 );
 
                 classroomTypes = classroomTypes ?? [];
+                reversaleDTOClassroom.ClassroomTypeIds = classroomTypes;
                 foreach (Guid classroomTypeId in request.dto.ClassroomTypeIds)
                 {
                     if (!classroomTypes.Contains(classroomTypeId))
@@ -196,6 +208,21 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
             );
 
             classroom!.Schedule = originalClassroom.Value.Schedule!;
+
+            AddToHistoryHandler addToHistoryHandler = new AddToHistoryHandler(_dbService);
+            AddToHistoryDTO addToHistoryDTO = new AddToHistoryDTO
+            {
+                Id = Guid.NewGuid(),
+                Timestamp = DateTime.Now,
+                AffectedEntityId = request.Id,
+                AffectedEntity = "Classroom",
+                Command = "Patch",
+                ReversaleDTO = JsonSerializer.Serialize(reversaleDTOClassroom),
+                CollisionChecked = false,
+                ScheduleId = originalClassroom.Value.ScheduleId,
+            };
+            AddToHistoryCommand addToHistoryCommand = new AddToHistoryCommand(addToHistoryDTO);
+            await addToHistoryHandler.Handle(addToHistoryCommand, cancellationToken);
 
             return classroom;
         }

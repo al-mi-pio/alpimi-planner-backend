@@ -1,5 +1,7 @@
 ﻿using AlpimiAPI.Database;
+using AlpimiAPI.Entities.EDayOff.Commands;
 using AlpimiAPI.Entities.EGroup.DTO;
+using AlpimiAPI.Entities.EHistory.DTO;
 using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Entities.ESchedule.Queries;
 using AlpimiAPI.Entities.ESubgroup;
@@ -101,6 +103,21 @@ namespace AlpimiAPI.Entities.EGroup.Commands
                     @ScheduleId);",
                 request.dto
             );
+
+            AddToHistoryHandler addToHistoryHandler = new AddToHistoryHandler(_dbService);
+            AddToHistoryDTO addToHistoryDTO = new AddToHistoryDTO
+            {
+                Id = Guid.NewGuid(),
+                Timestamp = DateTime.Now,
+                AffectedEntityId = insertedId,
+                AffectedEntity = "Group",
+                Command = "Create",
+                ReversaleDTO = null,
+                CollisionChecked = false,
+                ScheduleId = schedule.Value.Id
+            };
+            AddToHistoryCommand addToHistoryCommand = new AddToHistoryCommand(addToHistoryDTO);
+            await addToHistoryHandler.Handle(addToHistoryCommand, cancellationToken);
 
             return insertedId;
         }

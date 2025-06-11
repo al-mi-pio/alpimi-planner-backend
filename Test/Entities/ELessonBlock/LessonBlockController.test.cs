@@ -219,6 +219,96 @@ namespace AlpimiTest.Entities.ELessonBlock
         }
 
         [Fact]
+        public async Task CreateLessonBlockIsUndone()
+        {
+            var lessonBlockRequest = MockData.GetCreateLessonBlockDTODetails(
+                lessonId1,
+                classroomId1
+            );
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", userId)
+            );
+
+            await _client.PostAsJsonAsync("/api/LessonBlock", lessonBlockRequest);
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+
+            var query = $"?id={groupId}";
+            var response = await _client.GetAsync($"/api/LessonBlock{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            Assert.DoesNotContain(classroomId1.ToString(), stringResponse);
+        }
+
+        [Fact]
+        public async Task CreateLessonBlockIsRedone()
+        {
+            var lessonBlockRequest = MockData.GetCreateLessonBlockDTODetails(
+                lessonId1,
+                classroomId1
+            );
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", userId)
+            );
+
+            await _client.PostAsJsonAsync("/api/LessonBlock", lessonBlockRequest);
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+            await _client.PatchAsJsonAsync($"/api/History/redo/{scheduleId}", "");
+
+            var query = $"?id={groupId}";
+            var response = await _client.GetAsync($"/api/LessonBlock{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            Assert.Contains(classroomId1.ToString(), stringResponse);
+        }
+
+        [Fact]
+        public async Task CreateLessonBlockClusterIsUndone()
+        {
+            var lessonBlockRequest = MockData.GetCreateThirdLessonBlockDTODetails(
+                lessonId1,
+                classroomId1
+            );
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", new Guid())
+            );
+
+            await _client.PostAsJsonAsync("/api/LessonBlock", lessonBlockRequest);
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+
+            var query = $"?id={groupId}";
+            var secondResponse = await _client.GetAsync($"/api/LessonBlock{query}");
+            var jsonResponse = await secondResponse.Content.ReadFromJsonAsync<
+                ApiGetAllResponse<IEnumerable<LessonBlockDTO>>
+            >();
+            Assert.Equal(0, jsonResponse!.Pagination.TotalItems);
+        }
+
+        [Fact]
+        public async Task CreateLessonBlockClusterIsRedone()
+        {
+            var lessonBlockRequest = MockData.GetCreateThirdLessonBlockDTODetails(
+                lessonId1,
+                classroomId1
+            );
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", new Guid())
+            );
+
+            await _client.PostAsJsonAsync("/api/LessonBlock", lessonBlockRequest);
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+            await _client.PatchAsJsonAsync($"/api/History/redo/{scheduleId}", "");
+
+            var query = $"?id={groupId}";
+            var secondResponse = await _client.GetAsync($"/api/LessonBlock{query}");
+            var jsonResponse = await secondResponse.Content.ReadFromJsonAsync<
+                ApiGetAllResponse<IEnumerable<LessonBlockDTO>>
+            >();
+            Assert.NotEqual(0, jsonResponse!.Pagination.TotalItems);
+        }
+
+        [Fact]
         public async Task LessonBlockIsDeleted()
         {
             var lessonBlockRequest = MockData.GetCreateLessonBlockDTODetails(
@@ -285,6 +375,100 @@ namespace AlpimiTest.Entities.ELessonBlock
                 ApiGetResponse<LessonDTO>
             >();
             Assert.Equal(0, jsonResponse!.Content.CurrentHours);
+        }
+
+        [Fact]
+        public async Task DeleteLessonBlockIsUndone()
+        {
+            var lessonBlockRequest = MockData.GetCreateLessonBlockDTODetails(
+                lessonId1,
+                classroomId1
+            );
+            var lessonBlockId = await DbHelper.SetupLessonBlock(_client, lessonBlockRequest);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", new Guid())
+            );
+
+            await _client.DeleteAsync($"/api/LessonBlock/{lessonBlockId}");
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+
+            var query = $"?id={groupId}";
+            var response = await _client.GetAsync($"/api/LessonBlock{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            Assert.Contains(Convert.ToString(lessonBlockRequest.LessonId)!, stringResponse);
+        }
+
+        [Fact]
+        public async Task DeleteLessonBlockIsRedone()
+        {
+            var lessonBlockRequest = MockData.GetCreateLessonBlockDTODetails(
+                lessonId1,
+                classroomId1
+            );
+            var lessonBlockId = await DbHelper.SetupLessonBlock(_client, lessonBlockRequest);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", new Guid())
+            );
+
+            await _client.DeleteAsync($"/api/LessonBlock/{lessonBlockId}");
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+            await _client.PatchAsJsonAsync($"/api/History/redo/{scheduleId}", "");
+
+            var query = $"?id={groupId}";
+            var response = await _client.GetAsync($"/api/LessonBlock{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            Assert.DoesNotContain(Convert.ToString(lessonBlockRequest.LessonDate)!, stringResponse);
+        }
+
+        [Fact]
+        public async Task DeleteLessonBlockClusterIsUndone()
+        {
+            var lessonBlockRequest = MockData.GetCreateThirdLessonBlockDTODetails(
+                lessonId1,
+                classroomId1
+            );
+            var clusterId = await DbHelper.SetupLessonBlock(_client, lessonBlockRequest);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", new Guid())
+            );
+
+            await _client.DeleteAsync($"/api/LessonBlock/{clusterId}");
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+
+            var query = $"?id={groupId}";
+            var secondResponse = await _client.GetAsync($"/api/LessonBlock{query}");
+            var jsonResponse = await secondResponse.Content.ReadFromJsonAsync<
+                ApiGetAllResponse<IEnumerable<LessonBlockDTO>>
+            >();
+            Assert.NotEqual(0, jsonResponse!.Pagination.TotalItems);
+        }
+
+        [Fact]
+        public async Task DeleteLessonBlockClusterIsRedone()
+        {
+            var lessonBlockRequest = MockData.GetCreateThirdLessonBlockDTODetails(
+                lessonId1,
+                classroomId1
+            );
+            var clusterId = await DbHelper.SetupLessonBlock(_client, lessonBlockRequest);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", new Guid())
+            );
+
+            await _client.DeleteAsync($"/api/LessonBlock/{clusterId}");
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+            await _client.PatchAsJsonAsync($"/api/History/redo/{scheduleId}", "");
+
+            var query = $"?id={groupId}";
+            var secondResponse = await _client.GetAsync($"/api/LessonBlock{query}");
+            var jsonResponse = await secondResponse.Content.ReadFromJsonAsync<
+                ApiGetAllResponse<IEnumerable<LessonBlockDTO>>
+            >();
+            Assert.Equal(0, jsonResponse!.Pagination.TotalItems);
         }
 
         [Fact]
@@ -397,6 +581,116 @@ namespace AlpimiTest.Entities.ELessonBlock
             );
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task UpdateLessonBlockIsUndone()
+        {
+            var lessonBlockUpdateRequest = MockData.GetUpdateLessonBlockDTODetails();
+            var dto = MockData.GetCreateLessonBlockDTODetails(lessonId1, classroomId1);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "Bob", userId)
+            );
+            var lessonBlockId = await DbHelper.SetupLessonBlock(_client, dto);
+
+            await _client.PatchAsJsonAsync(
+                $"/api/LessonBlock/{lessonBlockId}",
+                lessonBlockUpdateRequest
+            );
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+
+            var response = await _client.GetAsync($"/api/LessonBlock/{lessonBlockId}");
+            var jsonResponse = await response.Content.ReadFromJsonAsync<
+                ApiGetResponse<LessonBlockDTO>
+            >();
+            Assert.Equal(dto.LessonStart, jsonResponse!.Content.LessonStart);
+            Assert.Equal(dto.LessonEnd, jsonResponse!.Content.LessonEnd);
+        }
+
+        [Fact]
+        public async Task UpdateLessonBlockIsRedone()
+        {
+            var lessonBlockUpdateRequest = MockData.GetUpdateLessonBlockDTODetails();
+
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "Bob", userId)
+            );
+            var lessonBlockId = await DbHelper.SetupLessonBlock(
+                _client,
+                MockData.GetCreateLessonBlockDTODetails(lessonId1, classroomId1)
+            );
+
+            await _client.PatchAsJsonAsync(
+                $"/api/LessonBlock/{lessonBlockId}",
+                lessonBlockUpdateRequest
+            );
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+            await _client.PatchAsJsonAsync($"/api/History/redo/{scheduleId}", "");
+
+            var response = await _client.GetAsync($"/api/LessonBlock/{lessonBlockId}");
+            var jsonResponse = await response.Content.ReadFromJsonAsync<
+                ApiGetResponse<LessonBlockDTO>
+            >();
+            Assert.Equal(lessonBlockUpdateRequest.LessonStart, jsonResponse!.Content.LessonStart);
+            Assert.Equal(lessonBlockUpdateRequest.LessonEnd, jsonResponse!.Content.LessonEnd);
+        }
+
+        [Fact]
+        public async Task UpdateLessonBlockClusterIsUndone()
+        {
+            var lessonBlockUpdateRequest = MockData.GetUpdateLessonBlockDTODetails();
+            var dto = MockData.GetCreateThirdLessonBlockDTODetails(lessonId1, classroomId1);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "Bob", userId)
+            );
+            var clusterId = await DbHelper.SetupLessonBlock(_client, dto);
+
+            await _client.PatchAsJsonAsync(
+                $"/api/LessonBlock/{clusterId}",
+                lessonBlockUpdateRequest
+            );
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+
+            var query = $"?id={scheduleId}";
+            var response = await _client.GetAsync($"/api/LessonBlock{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            Assert.Contains("\"lessonStart\":" + dto.LessonStart, stringResponse);
+            Assert.Contains("\"lessonEnd\":" + dto.LessonEnd, stringResponse);
+        }
+
+        [Fact]
+        public async Task UpdateLessonBlockClusterIsRedone()
+        {
+            var lessonBlockUpdateRequest = MockData.GetUpdateLessonBlockDTODetails();
+
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "Bob", userId)
+            );
+            var clusterId = await DbHelper.SetupLessonBlock(
+                _client,
+                MockData.GetCreateThirdLessonBlockDTODetails(lessonId1, classroomId1)
+            );
+
+            await _client.PatchAsJsonAsync(
+                $"/api/LessonBlock/{clusterId}",
+                lessonBlockUpdateRequest
+            );
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+            await _client.PatchAsJsonAsync($"/api/History/redo/{scheduleId}", "");
+
+            var query = $"?id={scheduleId}";
+            var response = await _client.GetAsync($"/api/LessonBlock{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+
+            Assert.Contains(
+                "\"lessonStart\":" + lessonBlockUpdateRequest.LessonStart,
+                stringResponse
+            );
+            Assert.Contains("\"lessonEnd\":" + lessonBlockUpdateRequest.LessonEnd, stringResponse);
         }
 
         [Fact]

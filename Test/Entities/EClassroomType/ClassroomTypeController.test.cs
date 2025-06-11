@@ -121,6 +121,43 @@ namespace AlpimiTest.Entities.EClassroomType
         }
 
         [Fact]
+        public async Task CreateClassroomTypeIsUndone()
+        {
+            var classroomTypeRequest = MockData.GetCreateClassroomTypeDTODetails(scheduleId);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", userId)
+            );
+
+            await _client.PostAsJsonAsync("/api/ClassroomType", classroomTypeRequest);
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+
+            var query = $"?id={scheduleId}";
+            var response = await _client.GetAsync($"/api/ClassroomType{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            Assert.DoesNotContain(classroomTypeRequest.Name, stringResponse);
+        }
+
+        [Fact]
+        public async Task CreateClassroomTypeIsRedone()
+        {
+            var classroomTypeRequest = MockData.GetCreateClassroomTypeDTODetails(scheduleId);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", userId)
+            );
+
+            await _client.PostAsJsonAsync("/api/ClassroomType", classroomTypeRequest);
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+            await _client.PatchAsJsonAsync($"/api/History/redo/{scheduleId}", "");
+
+            var query = $"?id={scheduleId}";
+            var response = await _client.GetAsync($"/api/ClassroomType{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            Assert.Contains(classroomTypeRequest.Name, stringResponse);
+        }
+
+        [Fact]
         public async Task ClassroomTypeIsDeleted()
         {
             var classroomTypeRequest = MockData.GetCreateClassroomTypeDTODetails(scheduleId);
@@ -133,8 +170,47 @@ namespace AlpimiTest.Entities.EClassroomType
             var response = await _client.DeleteAsync($"/api/ClassroomType/{classroomTypeId}");
             Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
 
-            var query = $"id={scheduleId}";
-            response = await _client.GetAsync($"/api/ClassroomType");
+            var query = $"?id={scheduleId}";
+            response = await _client.GetAsync($"/api/ClassroomType{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            Assert.DoesNotContain(classroomTypeRequest.Name, stringResponse);
+        }
+
+        [Fact]
+        public async Task DeleteClassroomTypeIsUndone()
+        {
+            var classroomTypeRequest = MockData.GetCreateClassroomTypeDTODetails(scheduleId);
+            var classroomTypeId = await DbHelper.SetupClassroomType(_client, classroomTypeRequest);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", new Guid())
+            );
+
+            await _client.DeleteAsync($"/api/ClassroomType/{classroomTypeId}");
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+
+            var query = $"?id={scheduleId}";
+            var response = await _client.GetAsync($"/api/ClassroomType{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            Assert.Contains(classroomTypeRequest.Name, stringResponse);
+        }
+
+        [Fact]
+        public async Task DeleteClassroomTypeIsRedone()
+        {
+            var classroomTypeRequest = MockData.GetCreateClassroomTypeDTODetails(scheduleId);
+            var classroomTypeId = await DbHelper.SetupClassroomType(_client, classroomTypeRequest);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", new Guid())
+            );
+
+            await _client.DeleteAsync($"/api/ClassroomType/{classroomTypeId}");
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+            await _client.PatchAsJsonAsync($"/api/History/redo/{scheduleId}", "");
+
+            var query = $"?id={scheduleId}";
+            var response = await _client.GetAsync($"/api/ClassroomType{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.DoesNotContain(classroomTypeRequest.Name, stringResponse);
         }
@@ -203,6 +279,58 @@ namespace AlpimiTest.Entities.EClassroomType
             );
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task UpdateClassroomTypeIsUndone()
+        {
+            var classroomTypeUpdateRequest = MockData.GetUpdateClassroomTypeDTODetails();
+            var dto = MockData.GetCreateClassroomTypeDTODetails(scheduleId);
+            var classroomTypeId = await DbHelper.SetupClassroomType(_client, dto);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "Bob", userId)
+            );
+
+            await _client.PatchAsJsonAsync(
+                $"/api/ClassroomType/{classroomTypeId}",
+                classroomTypeUpdateRequest
+            );
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+
+            var response = await _client.GetAsync($"/api/ClassroomType/{classroomTypeId}");
+            var jsonResponse = await response.Content.ReadFromJsonAsync<
+                ApiGetResponse<ClassroomTypeDTO>
+            >();
+            Assert.Equal(dto.Name, jsonResponse!.Content.Name);
+        }
+
+        [Fact]
+        public async Task UpdateClassroomTypeIsRedone()
+        {
+            var classroomTypeUpdateRequest = MockData.GetUpdateClassroomTypeDTODetails();
+
+            var classroomTypeId = await DbHelper.SetupClassroomType(
+                _client,
+                MockData.GetCreateClassroomTypeDTODetails(scheduleId)
+            );
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "Bob", userId)
+            );
+
+            await _client.PatchAsJsonAsync(
+                $"/api/ClassroomType/{classroomTypeId}",
+                classroomTypeUpdateRequest
+            );
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+            await _client.PatchAsJsonAsync($"/api/History/redo/{scheduleId}", "");
+
+            var response = await _client.GetAsync($"/api/ClassroomType/{classroomTypeId}");
+            var jsonResponse = await response.Content.ReadFromJsonAsync<
+                ApiGetResponse<ClassroomTypeDTO>
+            >();
+            Assert.Equal(classroomTypeUpdateRequest.Name, jsonResponse!.Content.Name);
         }
 
         [Fact]

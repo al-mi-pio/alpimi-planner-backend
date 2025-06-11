@@ -1,6 +1,9 @@
-﻿using AlpimiAPI.Database;
+﻿using System.Text.Json;
+using AlpimiAPI.Database;
+using AlpimiAPI.Entities.EDayOff.Commands;
 using AlpimiAPI.Entities.EGroup.DTO;
 using AlpimiAPI.Entities.EGroup.Queries;
+using AlpimiAPI.Entities.EHistory.DTO;
 using AlpimiAPI.Entities.ESubgroup;
 using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
@@ -54,6 +57,12 @@ namespace AlpimiAPI.Entities.EGroup.Commands
             {
                 return null;
             }
+
+            UpdateGroupDTO reversaleDTOGroup = new UpdateGroupDTO
+            {
+                Name = originalGroup.Value!.Name,
+                StudentCount = originalGroup.Value!.StudentCount,
+            };
 
             request.dto.Name = request.dto.Name ?? originalGroup.Value!.Name;
             request.dto.StudentCount =
@@ -121,6 +130,21 @@ namespace AlpimiAPI.Entities.EGroup.Commands
             );
 
             group!.Schedule = originalGroup.Value.Schedule;
+
+            AddToHistoryHandler addToHistoryHandler = new AddToHistoryHandler(_dbService);
+            AddToHistoryDTO addToHistoryDTO = new AddToHistoryDTO
+            {
+                Id = Guid.NewGuid(),
+                Timestamp = DateTime.Now,
+                AffectedEntityId = request.Id,
+                AffectedEntity = "Group",
+                Command = "Patch",
+                ReversaleDTO = JsonSerializer.Serialize(reversaleDTOGroup),
+                CollisionChecked = false,
+                ScheduleId = originalGroup.Value.ScheduleId,
+            };
+            AddToHistoryCommand addToHistoryCommand = new AddToHistoryCommand(addToHistoryDTO);
+            await addToHistoryHandler.Handle(addToHistoryCommand, cancellationToken);
 
             return group;
         }

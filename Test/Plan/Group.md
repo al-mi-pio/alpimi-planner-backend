@@ -2,7 +2,7 @@
 
 ## `ALL` `api/Group/*`
 
-- [GroupSettingsControllerThrowsUnauthorized()](../Entities/EGroup/GroupController.test.cs) - **integrity**  
+- [GroupControllerThrowsUnauthorized()](../Entities/EGroup/GroupController.test.cs) - **integrity**  
   Check if returns an error when token is not provided
 
 - [GroupControllerThrowsTooManyRequests()](../Entities/EGroup/GroupController.test.cs) - **integrity**  
@@ -26,11 +26,24 @@
 - [ThrowsErrorWhenStudentCountIsLessThan1()](../Entities/EGroup/Commands/CreateGroupCommand.unit.cs) - **unit** 
   Check if returns an error when student count is less than 1
 
+- [CreateGroupIsUndone()](../Entities/EGroup/GroupController.test.cs) - **integrity**  
+  Check if create group is undone
+
+- [CreateGroupIsRedone()](../Entities/EGroup/GroupController.test.cs) - **integrity**  
+  Check if create group is redone
+
 
 ## `DELETE` `api/Group/{id}`
 
 - [GroupIsDeleted()](../Entities/EGroup/GroupController.test.cs) - **integrity**  
   Check if schedule is deleted when a valid token is provided
+
+- [DeleteGroupIsUndone()](../Entities/EGroup/GroupController.test.cs) - **integrity**  
+  Check if delete group is undone
+
+- [DeleteGroupIsRedone()](../Entities/EGroup/GroupController.test.cs) - **integrity**  
+  Check if delete group is redone
+
 
 
 ## `PATCH` `api/Group/{id}`
@@ -55,6 +68,12 @@
 
 - [ThrowsErrorWhenStudentCountInGroupIsLessThanSubgroup()](../Entities/EGroup/Commands/UpdateGroupCommand.unit.cs) - **unit** 
   Check if returns an error when updated student count is less student count of a subgroup
+
+- [PatchGroupIsUndone()](../Entities/EGroup/GroupController.test.cs) - **integrity**  
+  Check if patch group is undone
+
+- [PatchGroupIsRedone()](../Entities/EGroup/GroupController.test.cs) - **integrity**  
+  Check if patch group is redone
 
 
 ## `GET` `api/Group`

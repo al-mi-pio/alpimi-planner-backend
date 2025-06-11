@@ -117,6 +117,43 @@ namespace AlpimiTest.Entities.ECollisionType
         }
 
         [Fact]
+        public async Task CreateCollisionTypeIsUndone()
+        {
+            var collisionTypeRequest = MockData.GetCreateCollisionTypeDTODetails(scheduleId);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", userId)
+            );
+
+            await _client.PostAsJsonAsync("/api/CollisionType", collisionTypeRequest);
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+
+            var query = $"?scheduleId={scheduleId}";
+            var response = await _client.GetAsync($"/api/CollisionType{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            Assert.DoesNotContain(collisionTypeRequest.Name, stringResponse);
+        }
+
+        [Fact]
+        public async Task CreateCollisionTypeIsRedone()
+        {
+            var collisionTypeRequest = MockData.GetCreateCollisionTypeDTODetails(scheduleId);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", userId)
+            );
+
+            await _client.PostAsJsonAsync("/api/CollisionType", collisionTypeRequest);
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+            await _client.PatchAsJsonAsync($"/api/History/redo/{scheduleId}", "");
+
+            var query = $"?scheduleId={scheduleId}";
+            var response = await _client.GetAsync($"/api/CollisionType{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            Assert.Contains(collisionTypeRequest.Name, stringResponse);
+        }
+
+        [Fact]
         public async Task CollisionTypeIsDeleted()
         {
             var collisionTypeRequest = MockData.GetCreateCollisionTypeDTODetails(scheduleId);
@@ -130,7 +167,46 @@ namespace AlpimiTest.Entities.ECollisionType
             Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
 
             var query = $"?scheduleId={scheduleId}";
-            response = await _client.GetAsync($"/api/CollisionType");
+            response = await _client.GetAsync($"/api/CollisionType{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            Assert.DoesNotContain(collisionTypeRequest.Name, stringResponse);
+        }
+
+        [Fact]
+        public async Task DeleteCollisionTypeIsUndone()
+        {
+            var collisionTypeRequest = MockData.GetCreateCollisionTypeDTODetails(scheduleId);
+            var collisionTypeId = await DbHelper.SetupCollisionType(_client, collisionTypeRequest);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", new Guid())
+            );
+
+            await _client.DeleteAsync($"/api/CollisionType/{collisionTypeId}");
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+
+            var query = $"?scheduleId={scheduleId}";
+            var response = await _client.GetAsync($"/api/CollisionType{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            Assert.Contains(collisionTypeRequest.Name, stringResponse);
+        }
+
+        [Fact]
+        public async Task DeleteCollisionTypeIsRedone()
+        {
+            var collisionTypeRequest = MockData.GetCreateCollisionTypeDTODetails(scheduleId);
+            var collisionTypeId = await DbHelper.SetupCollisionType(_client, collisionTypeRequest);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", new Guid())
+            );
+
+            await _client.DeleteAsync($"/api/CollisionType/{collisionTypeId}");
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+            await _client.PatchAsJsonAsync($"/api/History/redo/{scheduleId}", "");
+
+            var query = $"?scheduleId={scheduleId}";
+            var response = await _client.GetAsync($"/api/CollisionType{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.DoesNotContain(collisionTypeRequest.Name, stringResponse);
         }
@@ -200,6 +276,59 @@ namespace AlpimiTest.Entities.ECollisionType
             );
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task UpdateCollisionTypeIsUndone()
+        {
+            var collisionTypeUpdateRequest = MockData.GetUpdateCollisionTypeDTODetails();
+            var dto = MockData.GetCreateCollisionTypeDTODetails(scheduleId);
+            var collisionTypeId = await DbHelper.SetupCollisionType(_client, dto);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "Bob", userId)
+            );
+
+            await _client.PatchAsJsonAsync(
+                $"/api/CollisionType/{collisionTypeId}",
+                collisionTypeUpdateRequest
+            );
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+
+            var response = await _client.GetAsync($"/api/CollisionType/{collisionTypeId}");
+            var jsonResponse = await response.Content.ReadFromJsonAsync<
+                ApiGetResponse<CollisionTypeDTO>
+            >();
+            Assert.Equal(dto.Name, jsonResponse!.Content.Name);
+            Assert.Equal(dto.Weight, jsonResponse!.Content.Weight);
+        }
+
+        [Fact]
+        public async Task UpdateCollisionTypeIsRedone()
+        {
+            var collisionTypeUpdateRequest = MockData.GetUpdateCollisionTypeDTODetails();
+            var collisionTypeId = await DbHelper.SetupCollisionType(
+                _client,
+                MockData.GetCreateCollisionTypeDTODetails(scheduleId)
+            );
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "Bob", userId)
+            );
+
+            await _client.PatchAsJsonAsync(
+                $"/api/CollisionType/{collisionTypeId}",
+                collisionTypeUpdateRequest
+            );
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+            await _client.PatchAsJsonAsync($"/api/History/redo/{scheduleId}", "");
+
+            var response = await _client.GetAsync($"/api/CollisionType/{collisionTypeId}");
+            var jsonResponse = await response.Content.ReadFromJsonAsync<
+                ApiGetResponse<CollisionTypeDTO>
+            >();
+            Assert.Equal(collisionTypeUpdateRequest.Name, jsonResponse!.Content.Name);
+            Assert.Equal(collisionTypeUpdateRequest.Weight, jsonResponse!.Content.Weight);
         }
 
         [Fact]
@@ -282,7 +411,7 @@ namespace AlpimiTest.Entities.ECollisionType
         }
 
         [Fact]
-        public async Task GetScheduleThrowsNotFoundErrorWhenWrongUserTokenIsGiven()
+        public async Task GetCollisionTypeThrowsNotFoundErrorWhenWrongUserTokenIsGiven()
         {
             var collisionTypeRequest = MockData.GetCreateCollisionTypeDTODetails(scheduleId);
             var collisionTypeId = await DbHelper.SetupCollisionType(_client, collisionTypeRequest);
@@ -297,7 +426,7 @@ namespace AlpimiTest.Entities.ECollisionType
         }
 
         [Fact]
-        public async Task GetScheduleThrowsNotFoundWhenWrongIdIsGiven()
+        public async Task GetCollisionTypeThrowsNotFoundWhenWrongIdIsGiven()
         {
             var collisionTypeRequest = MockData.GetCreateCollisionTypeDTODetails(scheduleId);
             await DbHelper.SetupCollisionType(_client, collisionTypeRequest);

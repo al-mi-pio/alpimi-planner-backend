@@ -1,6 +1,9 @@
-﻿using AlpimiAPI.Database;
+﻿using System.Text.Json;
+using AlpimiAPI.Database;
 using AlpimiAPI.Entities.ECollisionType.DTO;
 using AlpimiAPI.Entities.ECollisionType.Queries;
+using AlpimiAPI.Entities.EDayOff.Commands;
+using AlpimiAPI.Entities.EHistory.DTO;
 using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
 using MediatR;
@@ -57,6 +60,15 @@ namespace AlpimiAPI.Entities.ECollisionType.Commands
                 return null;
             }
 
+            UpdateCollisionTypeDTO reversaleDTOCollisionType = new UpdateCollisionTypeDTO
+            {
+                Name = originalCollisionType.Value!.Name,
+                Description = originalCollisionType.Value!.Description,
+                Weight = originalCollisionType.Value!.Weight,
+                Filter = originalCollisionType.Value!.Filter,
+                Category = originalCollisionType.Value!.Category,
+            };
+
             request.dto.Name = request.dto.Name ?? originalCollisionType.Value!.Name;
             request.dto.Description =
                 request.dto.Description ?? originalCollisionType.Value!.Description;
@@ -98,6 +110,21 @@ namespace AlpimiAPI.Entities.ECollisionType.Commands
             );
 
             collisionType!.Schedule = originalCollisionType.Value.Schedule;
+
+            AddToHistoryHandler addToHistoryHandler = new AddToHistoryHandler(_dbService);
+            AddToHistoryDTO addToHistoryDTO = new AddToHistoryDTO
+            {
+                Id = Guid.NewGuid(),
+                Timestamp = DateTime.Now,
+                AffectedEntityId = request.Id,
+                AffectedEntity = "CollisionType",
+                Command = "Patch",
+                ReversaleDTO = JsonSerializer.Serialize(reversaleDTOCollisionType),
+                CollisionChecked = false,
+                ScheduleId = originalCollisionType.Value.ScheduleId,
+            };
+            AddToHistoryCommand addToHistoryCommand = new AddToHistoryCommand(addToHistoryDTO);
+            await addToHistoryHandler.Handle(addToHistoryCommand, cancellationToken);
 
             return collisionType;
         }

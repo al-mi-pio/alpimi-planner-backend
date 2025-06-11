@@ -133,6 +133,43 @@ namespace AlpimiTest.Entities.EStudent
         }
 
         [Fact]
+        public async Task CreateStudentIsUndone()
+        {
+            var studentRequest = MockData.GetCreateStudentDTODetails(groupId1);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", userId)
+            );
+
+            await _client.PostAsJsonAsync("/api/Student", studentRequest);
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+
+            var query = $"?id={groupId1}";
+            var response = await _client.GetAsync($"/api/Student{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            Assert.DoesNotContain(studentRequest.AlbumNumber, stringResponse);
+        }
+
+        [Fact]
+        public async Task CreateStudentIsRedone()
+        {
+            var studentRequest = MockData.GetCreateStudentDTODetails(groupId1);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", userId)
+            );
+
+            await _client.PostAsJsonAsync("/api/Student", studentRequest);
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+            await _client.PatchAsJsonAsync($"/api/History/redo/{scheduleId}", "");
+
+            var query = $"?id={groupId1}";
+            var response = await _client.GetAsync($"/api/Student{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            Assert.Contains(studentRequest.AlbumNumber, stringResponse);
+        }
+
+        [Fact]
         public async Task StudentIsCreatedWithSubgroups()
         {
             var studentRequest = MockData.GetCreateStudentDTODetails(groupId1);
@@ -164,8 +201,47 @@ namespace AlpimiTest.Entities.EStudent
             var response = await _client.DeleteAsync($"/api/Student/{studentId}");
             Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
 
-            var query = $"?groupId1={groupId1}";
-            response = await _client.GetAsync($"/api/Student");
+            var query = $"?id={groupId1}";
+            response = await _client.GetAsync($"/api/Student{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            Assert.DoesNotContain(studentRequest.AlbumNumber, stringResponse);
+        }
+
+        [Fact]
+        public async Task DeleteStudentIsUndone()
+        {
+            var studentRequest = MockData.GetCreateStudentDTODetails(groupId1);
+            var studentId = await DbHelper.SetupStudent(_client, studentRequest);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", new Guid())
+            );
+
+            await _client.DeleteAsync($"/api/Student/{studentId}");
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+
+            var query = $"?id={groupId1}";
+            var response = await _client.GetAsync($"/api/Student{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            Assert.Contains(studentRequest.AlbumNumber, stringResponse);
+        }
+
+        [Fact]
+        public async Task DeleteStudentIsRedone()
+        {
+            var studentRequest = MockData.GetCreateStudentDTODetails(groupId1);
+            var studentId = await DbHelper.SetupStudent(_client, studentRequest);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", new Guid())
+            );
+
+            await _client.DeleteAsync($"/api/Student/{studentId}");
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+            await _client.PatchAsJsonAsync($"/api/History/redo/{scheduleId}", "");
+
+            var query = $"?id={groupId1}";
+            var response = await _client.GetAsync($"/api/Student{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.DoesNotContain(studentRequest.AlbumNumber, stringResponse);
         }
@@ -259,6 +335,51 @@ namespace AlpimiTest.Entities.EStudent
         }
 
         [Fact]
+        public async Task UpdateStudentIsUndone()
+        {
+            var studentUpdateRequest = MockData.GetUpdateStudentDTODetails();
+            var dto = MockData.GetCreateStudentDTODetails(groupId1);
+            var studentId = await DbHelper.SetupStudent(_client, dto);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "Bob", userId)
+            );
+
+            await _client.PatchAsJsonAsync($"/api/Student/{studentId}", studentUpdateRequest);
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+
+            var response = await _client.GetAsync($"/api/Student/{studentId}");
+            var jsonResponse = await response.Content.ReadFromJsonAsync<
+                ApiGetResponse<StudentDTO>
+            >();
+            Assert.Equal(dto.AlbumNumber, jsonResponse!.Content.AlbumNumber);
+        }
+
+        [Fact]
+        public async Task UpdateStudentIsRedone()
+        {
+            var studentUpdateRequest = MockData.GetUpdateStudentDTODetails();
+            var studentId = await DbHelper.SetupStudent(
+                _client,
+                MockData.GetCreateStudentDTODetails(groupId1)
+            );
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "Bob", userId)
+            );
+
+            await _client.PatchAsJsonAsync($"/api/Student/{studentId}", studentUpdateRequest);
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+            await _client.PatchAsJsonAsync($"/api/History/redo/{scheduleId}", "");
+
+            var response = await _client.GetAsync($"/api/Student/{studentId}");
+            var jsonResponse = await response.Content.ReadFromJsonAsync<
+                ApiGetResponse<StudentDTO>
+            >();
+            Assert.Equal(studentUpdateRequest.AlbumNumber, jsonResponse!.Content.AlbumNumber);
+        }
+
+        [Fact]
         public async Task GetAllStudentsReturnsStudentsFromGroupIfGroupIdIsProvided()
         {
             var studentRequest1 = MockData.GetCreateStudentDTODetails(groupId1);
@@ -331,7 +452,7 @@ namespace AlpimiTest.Entities.EStudent
                 TestAuthorization.GetToken("User", "User", new Guid())
             );
 
-            var query = $"?Id={groupId1}";
+            var query = $"?id={groupId1}";
             var response = await _client.GetAsync($"/api/Student{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
 
@@ -351,7 +472,7 @@ namespace AlpimiTest.Entities.EStudent
                 TestAuthorization.GetToken("Admin", "User", userId)
             );
 
-            var query = $"?Id={new Guid()}";
+            var query = $"?id={new Guid()}";
             var response = await _client.GetAsync($"/api/Student{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
 

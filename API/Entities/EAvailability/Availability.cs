@@ -7,6 +7,7 @@ namespace AlpimiAPI.Entities.EAvailability
         public Guid Id { get; set; }
 
         public required int WeekDay { get; set; } //ex. 0 means Sunday
+
         public required int Start { get; set; }
 
         public required int End { get; set; }

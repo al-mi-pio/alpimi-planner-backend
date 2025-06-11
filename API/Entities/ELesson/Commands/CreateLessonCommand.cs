@@ -1,9 +1,12 @@
 ﻿using AlpimiAPI.Database;
 using AlpimiAPI.Entities.EClassroomType;
 using AlpimiAPI.Entities.EClassroomType.Queries;
+using AlpimiAPI.Entities.EDayOff.Commands;
+using AlpimiAPI.Entities.EHistory.DTO;
 using AlpimiAPI.Entities.ELesson.DTO;
 using AlpimiAPI.Entities.ELessonType;
 using AlpimiAPI.Entities.ELessonType.Queries;
+using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Entities.ESubgroup;
 using AlpimiAPI.Entities.ESubgroup.Queries;
 using AlpimiAPI.Entities.ETeacher;
@@ -258,6 +261,21 @@ namespace AlpimiAPI.Entities.ELesson.Commands
                     ""
                 );
             }
+
+            AddToHistoryHandler addToHistoryHandler = new AddToHistoryHandler(_dbService);
+            AddToHistoryDTO addToHistoryDTO = new AddToHistoryDTO
+            {
+                Id = Guid.NewGuid(),
+                Timestamp = DateTime.Now,
+                AffectedEntityId = insertedId,
+                AffectedEntity = "Lesson",
+                Command = "Create",
+                ReversaleDTO = null,
+                CollisionChecked = false,
+                ScheduleId = lessonType.Value.ScheduleId,
+            };
+            AddToHistoryCommand addToHistoryCommand = new AddToHistoryCommand(addToHistoryDTO);
+            await addToHistoryHandler.Handle(addToHistoryCommand, cancellationToken);
 
             return insertedId;
         }

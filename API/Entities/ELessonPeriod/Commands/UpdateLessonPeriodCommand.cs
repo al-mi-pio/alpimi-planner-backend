@@ -1,4 +1,7 @@
-﻿using AlpimiAPI.Database;
+﻿using System.Text.Json;
+using AlpimiAPI.Database;
+using AlpimiAPI.Entities.EDayOff.Commands;
+using AlpimiAPI.Entities.EHistory.DTO;
 using AlpimiAPI.Entities.ELessonPeriod.DTO;
 using AlpimiAPI.Entities.ELessonPeriod.Queries;
 using AlpimiAPI.Entities.EScheduleSettings;
@@ -67,6 +70,11 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Commands
                 return null;
             }
 
+            UpdateLessonPeriodDTO reversaleDTOLessonPeriod = new UpdateLessonPeriodDTO
+            {
+                Start = originalLessonPeriod.Start,
+            };
+
             request.dto.Start = request.dto.Start ?? originalLessonPeriod.Start;
 
             GetScheduleSettingsHandler getScheduleSettingsHandler = new GetScheduleSettingsHandler(
@@ -131,6 +139,21 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Commands
             );
 
             lessonPeriod!.ScheduleSettings = scheduleSettings.Value;
+
+            AddToHistoryHandler addToHistoryHandler = new AddToHistoryHandler(_dbService);
+            AddToHistoryDTO addToHistoryDTO = new AddToHistoryDTO
+            {
+                Id = Guid.NewGuid(),
+                Timestamp = DateTime.Now,
+                AffectedEntityId = request.Id,
+                AffectedEntity = "LessonPeriod",
+                Command = "Patch",
+                ReversaleDTO = JsonSerializer.Serialize(reversaleDTOLessonPeriod),
+                CollisionChecked = false,
+                ScheduleId = scheduleSettings.Value.ScheduleId,
+            };
+            AddToHistoryCommand addToHistoryCommand = new AddToHistoryCommand(addToHistoryDTO);
+            await addToHistoryHandler.Handle(addToHistoryCommand, cancellationToken);
 
             return lessonPeriod;
         }

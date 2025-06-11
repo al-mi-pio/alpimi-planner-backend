@@ -114,6 +114,43 @@ namespace AlpimiTest.Entities.EGroup
         }
 
         [Fact]
+        public async Task CreateGroupIsUndone()
+        {
+            var groupRequest = MockData.GetCreateGroupDTODetails(scheduleId);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", userId)
+            );
+
+            await _client.PostAsJsonAsync("/api/Group", groupRequest);
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+
+            var query = $"?scheduleId={scheduleId}";
+            var response = await _client.GetAsync($"/api/Group{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            Assert.DoesNotContain(groupRequest.Name, stringResponse);
+        }
+
+        [Fact]
+        public async Task CreateGroupIsRedone()
+        {
+            var groupRequest = MockData.GetCreateGroupDTODetails(scheduleId);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", userId)
+            );
+
+            await _client.PostAsJsonAsync("/api/Group", groupRequest);
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+            await _client.PatchAsJsonAsync($"/api/History/redo/{scheduleId}", "");
+
+            var query = $"?scheduleId={scheduleId}";
+            var response = await _client.GetAsync($"/api/Group{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            Assert.Contains(groupRequest.Name, stringResponse);
+        }
+
+        [Fact]
         public async Task GroupIsDeleted()
         {
             var groupRequest = MockData.GetCreateGroupDTODetails(scheduleId);
@@ -127,7 +164,46 @@ namespace AlpimiTest.Entities.EGroup
             Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
 
             var query = $"?scheduleId={scheduleId}";
-            response = await _client.GetAsync($"/api/Group");
+            response = await _client.GetAsync($"/api/Group{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            Assert.DoesNotContain(groupRequest.Name, stringResponse);
+        }
+
+        [Fact]
+        public async Task DeleteGroupIsUndone()
+        {
+            var groupRequest = MockData.GetCreateGroupDTODetails(scheduleId);
+            var groupId = await DbHelper.SetupGroup(_client, groupRequest);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", new Guid())
+            );
+
+            await _client.DeleteAsync($"/api/Group/{groupId}");
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+
+            var query = $"?scheduleId={scheduleId}";
+            var response = await _client.GetAsync($"/api/Group{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            Assert.Contains(groupRequest.Name, stringResponse);
+        }
+
+        [Fact]
+        public async Task DeleteGroupIsRedone()
+        {
+            var groupRequest = MockData.GetCreateGroupDTODetails(scheduleId);
+            var groupId = await DbHelper.SetupGroup(_client, groupRequest);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", new Guid())
+            );
+
+            await _client.DeleteAsync($"/api/Group/{groupId}");
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+            await _client.PatchAsJsonAsync($"/api/History/redo/{scheduleId}", "");
+
+            var query = $"?scheduleId={scheduleId}";
+            var response = await _client.GetAsync($"/api/Group{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.DoesNotContain(groupRequest.Name, stringResponse);
         }
@@ -195,6 +271,49 @@ namespace AlpimiTest.Entities.EGroup
             );
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task UpdateGroupIsUndone()
+        {
+            var groupUpdateRequest = MockData.GetUpdateGroupDTODetails();
+            var dto = MockData.GetCreateGroupDTODetails(scheduleId);
+            var groupId = await DbHelper.SetupGroup(_client, dto);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "Bob", userId)
+            );
+
+            await _client.PatchAsJsonAsync($"/api/Group/{groupId}", groupUpdateRequest);
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+
+            var response = await _client.GetAsync($"/api/Group/{groupId}");
+            var jsonResponse = await response.Content.ReadFromJsonAsync<ApiGetResponse<GroupDTO>>();
+            Assert.Equal(dto.Name, jsonResponse!.Content.Name);
+            Assert.Equal(dto.StudentCount, jsonResponse!.Content.StudentCount);
+        }
+
+        [Fact]
+        public async Task UpdateGroupIsRedone()
+        {
+            var groupUpdateRequest = MockData.GetUpdateGroupDTODetails();
+            var groupId = await DbHelper.SetupGroup(
+                _client,
+                MockData.GetCreateGroupDTODetails(scheduleId)
+            );
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "Bob", userId)
+            );
+
+            await _client.PatchAsJsonAsync($"/api/Group/{groupId}", groupUpdateRequest);
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+            await _client.PatchAsJsonAsync($"/api/History/redo/{scheduleId}", "");
+
+            var response = await _client.GetAsync($"/api/Group/{groupId}");
+            var jsonResponse = await response.Content.ReadFromJsonAsync<ApiGetResponse<GroupDTO>>();
+            Assert.Equal(groupUpdateRequest.Name, jsonResponse!.Content.Name);
+            Assert.Equal(groupUpdateRequest.StudentCount, jsonResponse!.Content.StudentCount);
         }
 
         [Fact]
@@ -293,7 +412,7 @@ namespace AlpimiTest.Entities.EGroup
         }
 
         [Fact]
-        public async Task GetScheduleThrowsNotFoundErrorWhenWrongUserTokenIsGiven()
+        public async Task GetGroupThrowsNotFoundErrorWhenWrongUserTokenIsGiven()
         {
             var groupRequest = MockData.GetCreateGroupDTODetails(scheduleId);
             var groupId = await DbHelper.SetupGroup(_client, groupRequest);
@@ -308,7 +427,7 @@ namespace AlpimiTest.Entities.EGroup
         }
 
         [Fact]
-        public async Task GetScheduleThrowsNotFoundWhenWrongIdIsGiven()
+        public async Task GetGroupThrowsNotFoundWhenWrongIdIsGiven()
         {
             var groupRequest = MockData.GetCreateGroupDTODetails(scheduleId);
             await DbHelper.SetupGroup(_client, groupRequest);

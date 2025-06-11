@@ -227,6 +227,45 @@ namespace alpimi_planner_backend.Migrations
                     b.ToTable("Group");
                 });
 
+            modelBuilder.Entity("AlpimiAPI.Entities.EHistory.History", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AffectedEntity")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("AffectedEntityId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("CollisionChecked")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Command")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsUndone")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ReversaleDTO")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ScheduleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ScheduleId");
+
+                    b.ToTable("History");
+                });
+
             modelBuilder.Entity("AlpimiAPI.Entities.ELesson.Lesson", b =>
                 {
                     b.Property<Guid>("Id")
@@ -624,6 +663,17 @@ namespace alpimi_planner_backend.Migrations
                 });
 
             modelBuilder.Entity("AlpimiAPI.Entities.EGroup.Group", b =>
+                {
+                    b.HasOne("AlpimiAPI.Entities.ESchedule.Schedule", "Schedule")
+                        .WithMany()
+                        .HasForeignKey("ScheduleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Schedule");
+                });
+
+            modelBuilder.Entity("AlpimiAPI.Entities.EHistory.History", b =>
                 {
                     b.HasOne("AlpimiAPI.Entities.ESchedule.Schedule", "Schedule")
                         .WithMany()

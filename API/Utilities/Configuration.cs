@@ -31,6 +31,9 @@ namespace AlpimiAPI.Utilities
         private static readonly string? _timeWindow = Environment.GetEnvironmentVariable(
             "TIME_WINDOW"
         );
+        private static readonly string? _historyLimit = Environment.GetEnvironmentVariable(
+            "HISTORY_LIMIT"
+        );
         public static int maxSchoolYearDuration { get; set; } = 24;
         public const int perPage = PaginationSettings.perPage;
         public const int page = PaginationSettings.page;
@@ -99,6 +102,15 @@ namespace AlpimiAPI.Utilities
                 return new HashAlgorithmName(AuthSettings.HashAlgorithm);
             }
             return new HashAlgorithmName(_hashAlgorithm);
+        }
+
+        public static int GetHistoryLimit()
+        {
+            if (_historyLimit == null)
+            {
+                return 10;
+            }
+            return Convert.ToInt32(_historyLimit);
         }
 
         public static RequiredCharacterTypes[]? GetRequiredCharacterTypesForPassword()

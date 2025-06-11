@@ -108,6 +108,43 @@ namespace AlpimiTest.Entities.EDayOff
         }
 
         [Fact]
+        public async Task CreateDayOffIsUndone()
+        {
+            var dayOffRequest = MockData.GetCreateDayOffDTODetails(scheduleId);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", userId)
+            );
+
+            await _client.PostAsJsonAsync("/api/DayOff", dayOffRequest);
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+
+            var query = $"?scheduleId={scheduleId}";
+            var response = await _client.GetAsync($"/api/DayOff{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            Assert.DoesNotContain(dayOffRequest.Name, stringResponse);
+        }
+
+        [Fact]
+        public async Task CreateDayOffIsRedone()
+        {
+            var dayOffRequest = MockData.GetCreateDayOffDTODetails(scheduleId);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", userId)
+            );
+
+            await _client.PostAsJsonAsync("/api/DayOff", dayOffRequest);
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+            await _client.PatchAsJsonAsync($"/api/History/redo/{scheduleId}", "");
+
+            var query = $"?scheduleId={scheduleId}";
+            var response = await _client.GetAsync($"/api/DayOff{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            Assert.Contains(dayOffRequest.Name, stringResponse);
+        }
+
+        [Fact]
         public async Task DayOffIsDeleted()
         {
             var dayOffRequest = MockData.GetCreateDayOffDTODetails(scheduleId);
@@ -192,6 +229,51 @@ namespace AlpimiTest.Entities.EDayOff
             );
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task UpdateDayOffIsUndone()
+        {
+            var dayOffUpdateRequest = MockData.GetUpdateDayOffDTODetails();
+            var dayOffId = await DbHelper.SetupDayOff(
+                _client,
+                MockData.GetCreateDayOffDTODetails(scheduleId)
+            );
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "Bob", userId)
+            );
+
+            await _client.PatchAsJsonAsync($"/api/DayOff/{dayOffId}", dayOffUpdateRequest);
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+
+            var query = $"?scheduleId={scheduleId}";
+            var response = await _client.GetAsync($"/api/DayOff{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            Assert.DoesNotContain(dayOffUpdateRequest.Name!, stringResponse);
+        }
+
+        [Fact]
+        public async Task UpdateDayOffIsRedone()
+        {
+            var dayOffUpdateRequest = MockData.GetUpdateDayOffDTODetails();
+            var dayOffId = await DbHelper.SetupDayOff(
+                _client,
+                MockData.GetCreateDayOffDTODetails(scheduleId)
+            );
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "Bob", userId)
+            );
+
+            await _client.PatchAsJsonAsync($"/api/DayOff/{dayOffId}", dayOffUpdateRequest);
+            await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
+            await _client.PatchAsJsonAsync($"/api/History/redo/{scheduleId}", "");
+
+            var query = $"?scheduleId={scheduleId}";
+            var response = await _client.GetAsync($"/api/DayOff{query}");
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            Assert.Contains(dayOffUpdateRequest.Name!, stringResponse);
         }
 
         [Fact]

@@ -55,7 +55,10 @@ namespace AlpimiAPI.Entities.ECollisionType.Queries
             if (
                 request.Pagination.SortBy != "Id"
                 && request.Pagination.SortBy != "Name"
-                && request.Pagination.SortBy != "StudentCount"
+                && request.Pagination.SortBy != "Description"
+                && request.Pagination.SortBy != "Weight"
+                && request.Pagination.SortBy != "Filter"
+                && request.Pagination.SortBy != "Category"
             )
             {
                 errors.Add(new ErrorObject(_str["badParameter", "SortBy"]));

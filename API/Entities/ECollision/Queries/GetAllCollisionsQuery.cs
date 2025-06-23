@@ -49,11 +49,7 @@ namespace AlpimiAPI.Entities.ECollision.Queries
             {
                 errors.Add(new ErrorObject(_str["badParameter", "SortOrder"]));
             }
-            if (
-                request.Pagination.SortBy != "Id"
-                && request.Pagination.SortBy != "Name"
-                && request.Pagination.SortBy != "StudentCount"
-            )
+            if (request.Pagination.SortBy != "Id" && request.Pagination.SortBy != "Ignored")
             {
                 errors.Add(new ErrorObject(_str["badParameter", "SortBy"]));
             }

@@ -52,7 +52,7 @@ namespace AlpimiAPI.Entities.ELessonType.Queries
             if (
                 request.Pagination.SortBy != "Id"
                 && request.Pagination.SortBy != "Name"
-                && request.Pagination.SortBy != "Capacity"
+                && request.Pagination.SortBy != "Color"
             )
             {
                 errors.Add(new ErrorObject(_str["badParameter", "SortBy"]));

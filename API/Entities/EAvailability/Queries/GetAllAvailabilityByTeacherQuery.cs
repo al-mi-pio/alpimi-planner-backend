@@ -54,9 +54,9 @@ namespace AlpimiAPI.Entities.EAvailability.Queries
             }
             if (
                 request.Pagination.SortBy != "Id"
-                && request.Pagination.SortBy != "Name"
-                && request.Pagination.SortBy != "From"
-                && request.Pagination.SortBy != "To"
+                && request.Pagination.SortBy != "WeekDay"
+                && request.Pagination.SortBy != "Start"
+                && request.Pagination.SortBy != "End"
             )
             {
                 errors.Add(new ErrorObject(_str["badParameter", "SortBy"]));

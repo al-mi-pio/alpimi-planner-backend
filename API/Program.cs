@@ -187,6 +187,16 @@ try
         };
     });
 
+    builder.Services.AddCors(options =>
+    {
+        options.AddDefaultPolicy(policy =>
+        {
+            policy.AllowAnyOrigin();
+            policy.AllowAnyHeader();
+            policy.WithMethods("GET", "POST", "DELETE", "PATCH", "OPTIONS");
+        });
+    });
+
     var app = builder.Build();
 
     if (!app.Environment.IsEnvironment("Testing"))
@@ -213,6 +223,8 @@ try
     });
 
     app.UseHttpsRedirection();
+
+    app.UseCors();
 
     app.UseAuthorization();
 

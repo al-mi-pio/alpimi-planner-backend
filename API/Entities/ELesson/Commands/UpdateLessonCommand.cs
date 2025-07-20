@@ -27,11 +27,17 @@ namespace AlpimiAPI.Entities.ELesson.Commands
     {
         private readonly IDbService _dbService;
         private readonly IStringLocalizer<Errors> _str;
+        private readonly IStringLocalizer<Fields> _strFields;
 
-        public UpdateLessonHandler(IDbService dbService, IStringLocalizer<Errors> str)
+        public UpdateLessonHandler(
+            IDbService dbService,
+            IStringLocalizer<Errors> str,
+            IStringLocalizer<Fields> strFields
+        )
         {
             _dbService = dbService;
             _str = str;
+            _strFields = strFields;
         }
 
         public async Task<Lesson?> Handle(
@@ -44,7 +50,12 @@ namespace AlpimiAPI.Entities.ELesson.Commands
                 if (request.dto.AmountOfHours < 1)
                 {
                     throw new ApiErrorException(
-                        [new ErrorObject(_str["badParameter", "AmountOfHours"])]
+                        [
+                            new FieldErrorObject(
+                                "AmountOfHours",
+                                _str["badParameter", _strFields["AmountOfHours"]]
+                            )
+                        ]
                     );
                 }
             }

@@ -25,11 +25,17 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
     {
         private readonly IDbService _dbService;
         private readonly IStringLocalizer<Errors> _str;
+        private readonly IStringLocalizer<Fields> _strFields;
 
-        public CreateClassroomHandler(IDbService dbService, IStringLocalizer<Errors> str)
+        public CreateClassroomHandler(
+            IDbService dbService,
+            IStringLocalizer<Errors> str,
+            IStringLocalizer<Fields> strFields
+        )
         {
             _dbService = dbService;
             _str = str;
+            _strFields = strFields;
         }
 
         public async Task<Guid> Handle(
@@ -39,7 +45,9 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
         {
             if (request.dto.Capacity < 1)
             {
-                throw new ApiErrorException([new ErrorObject(_str["badParameter", "Capacity"])]);
+                throw new ApiErrorException(
+                    [new FieldErrorObject("Capacity", _str["badParameter", _strFields["Capacity"]])]
+                );
             }
 
             GetScheduleHandler getScheduleHandler = new GetScheduleHandler(_dbService);
@@ -72,7 +80,7 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
             if (classroomName != null)
             {
                 throw new ApiErrorException(
-                    [new ErrorObject(_str["alreadyExists", "Classroom", request.dto.Name])]
+                    [new ErrorObject(_str["alreadyExists", "Classroom", request.dto.Name!])]
                 );
             }
 

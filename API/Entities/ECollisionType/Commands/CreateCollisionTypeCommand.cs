@@ -23,11 +23,17 @@ namespace AlpimiAPI.Entities.ECollisionType.Commands
     {
         private readonly IDbService _dbService;
         private readonly IStringLocalizer<Errors> _str;
+        private readonly IStringLocalizer<Fields> _strFields;
 
-        public CreateCollisionTypeHandler(IDbService dbService, IStringLocalizer<Errors> str)
+        public CreateCollisionTypeHandler(
+            IDbService dbService,
+            IStringLocalizer<Errors> str,
+            IStringLocalizer<Fields> strFields
+        )
         {
             _dbService = dbService;
             _str = str;
+            _strFields = strFields;
         }
 
         public async Task<Guid> Handle(
@@ -37,7 +43,9 @@ namespace AlpimiAPI.Entities.ECollisionType.Commands
         {
             if (request.dto.Weight > 1 || request.dto.Weight < 0)
             {
-                throw new ApiErrorException([new ErrorObject(_str["badParameter", "Weight"])]);
+                throw new ApiErrorException(
+                    [new FieldErrorObject("Weight", _str["badParameter", _strFields["Weight"]])]
+                );
             }
 
             GetScheduleHandler getScheduleHandler = new GetScheduleHandler(_dbService);
@@ -70,7 +78,7 @@ namespace AlpimiAPI.Entities.ECollisionType.Commands
             if (collisionTypeName != null)
             {
                 throw new ApiErrorException(
-                    [new ErrorObject(_str["alreadyExists", "CollisionType", request.dto.Name])]
+                    [new ErrorObject(_str["alreadyExists", "CollisionType", request.dto.Name!])]
                 );
             }
 

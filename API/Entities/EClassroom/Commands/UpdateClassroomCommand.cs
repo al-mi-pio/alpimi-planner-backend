@@ -6,7 +6,6 @@ using AlpimiAPI.Entities.EClassroomType;
 using AlpimiAPI.Entities.EClassroomType.Queries;
 using AlpimiAPI.Entities.EDayOff.Commands;
 using AlpimiAPI.Entities.EHistory.DTO;
-using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
 using MediatR;
@@ -26,11 +25,17 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
     {
         private readonly IDbService _dbService;
         private readonly IStringLocalizer<Errors> _str;
+        private readonly IStringLocalizer<Fields> _strFields;
 
-        public UpdateClassroomHandler(IDbService dbService, IStringLocalizer<Errors> str)
+        public UpdateClassroomHandler(
+            IDbService dbService,
+            IStringLocalizer<Errors> str,
+            IStringLocalizer<Fields> strFields
+        )
         {
             _dbService = dbService;
             _str = str;
+            _strFields = strFields;
         }
 
         public async Task<Classroom?> Handle(
@@ -43,7 +48,12 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
                 if (request.dto.Capacity < 1)
                 {
                     throw new ApiErrorException(
-                        [new ErrorObject(_str["badParameter", "Capacity"])]
+                        [
+                            new FieldErrorObject(
+                                "Capacity",
+                                _str["badParameter", _strFields["Capacity"]]
+                            )
+                        ]
                     );
                 }
             }

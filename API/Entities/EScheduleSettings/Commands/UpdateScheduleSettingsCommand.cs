@@ -30,11 +30,17 @@ namespace AlpimiAPI.Entities.EScheduleSettings.Commands
     {
         private readonly IDbService _dbService;
         private readonly IStringLocalizer<Errors> _str;
+        private readonly IStringLocalizer<Fields> _strFields;
 
-        public UpdateScheduleSettingsHandler(IDbService dbService, IStringLocalizer<Errors> str)
+        public UpdateScheduleSettingsHandler(
+            IDbService dbService,
+            IStringLocalizer<Errors> str,
+            IStringLocalizer<Fields> strFields
+        )
         {
             _dbService = dbService;
             _str = str;
+            _strFields = strFields;
         }
 
         public async Task<ScheduleSettings?> Handle(
@@ -47,7 +53,12 @@ namespace AlpimiAPI.Entities.EScheduleSettings.Commands
             {
                 if (request.dto.SchoolHour < 1 || request.dto.SchoolHour > 1440)
                 {
-                    errors.Add(new ErrorObject(_str["badParameter", "SchoolHour"]));
+                    errors.Add(
+                        new FieldErrorObject(
+                            "SchoolHour",
+                            _str["badParameter", _strFields["SchoolHour"]]
+                        )
+                    );
                 }
             }
 
@@ -58,7 +69,12 @@ namespace AlpimiAPI.Entities.EScheduleSettings.Commands
                     || request.dto.SchoolDays.Length != 7
                 )
                 {
-                    errors.Add(new ErrorObject(_str["badParameter", "SchoolDays"]));
+                    errors.Add(
+                        new FieldErrorObject(
+                            "SchoolDays",
+                            _str["badParameter", _strFields["SchoolDays"]]
+                        )
+                    );
                 }
             }
 
@@ -163,7 +179,7 @@ namespace AlpimiAPI.Entities.EScheduleSettings.Commands
             }
 
             GetAllLessonPeriodByScheduleHandler getAllLessonPeriodByScheduleHandler =
-                new GetAllLessonPeriodByScheduleHandler(_dbService, _str);
+                new GetAllLessonPeriodByScheduleHandler(_dbService, _str, _strFields);
             GetAllLessonPeriodByScheduleQuery getAllLessonPeriodByScheduleQuery =
                 new GetAllLessonPeriodByScheduleQuery(
                     originalScheduleSettings.Value.ScheduleId,

@@ -42,11 +42,17 @@ namespace AlpimiAPI.Entities.EHistory.Commands
     {
         private readonly IDbService _dbService;
         private readonly IStringLocalizer<Errors> _str;
+        private readonly IStringLocalizer<Fields> _strFields;
 
-        public RevertCommandHandler(IDbService dbService, IStringLocalizer<Errors> str)
+        public RevertCommandHandler(
+            IDbService dbService,
+            IStringLocalizer<Errors> str,
+            IStringLocalizer<Fields> strFields
+        )
         {
             _dbService = dbService;
             _str = str;
+            _strFields = strFields;
         }
 
         public async Task<Guid> Handle(RevertCommand request, CancellationToken cancellationToken)
@@ -303,7 +309,7 @@ namespace AlpimiAPI.Entities.EHistory.Commands
                     {
                         case "CollisionType":
                             UpdateCollisionTypeHandler updateCollisionTypeHandler =
-                                new UpdateCollisionTypeHandler(_dbService, _str);
+                                new UpdateCollisionTypeHandler(_dbService, _str, _strFields);
                             UpdateCollisionTypeCommand updateCollisionTypeCommand =
                                 new UpdateCollisionTypeCommand(
                                     latestHistory.AffectedEntityId,
@@ -321,7 +327,7 @@ namespace AlpimiAPI.Entities.EHistory.Commands
 
                         case "Classroom":
                             UpdateClassroomHandler updateClassroomHandler =
-                                new UpdateClassroomHandler(_dbService, _str);
+                                new UpdateClassroomHandler(_dbService, _str, _strFields);
                             UpdateClassroomCommand updateClassroomCommand =
                                 new UpdateClassroomCommand(
                                     latestHistory.AffectedEntityId,
@@ -357,7 +363,7 @@ namespace AlpimiAPI.Entities.EHistory.Commands
 
                         case "LessonType":
                             UpdateLessonTypeHandler updateLessonTypeHandler =
-                                new UpdateLessonTypeHandler(_dbService, _str);
+                                new UpdateLessonTypeHandler(_dbService, _str, _strFields);
                             UpdateLessonTypeCommand updateLessonTypeCommand =
                                 new UpdateLessonTypeCommand(
                                     latestHistory.AffectedEntityId,
@@ -395,7 +401,8 @@ namespace AlpimiAPI.Entities.EHistory.Commands
                         case "Group":
                             UpdateGroupHandler updateGroupHandler = new UpdateGroupHandler(
                                 _dbService,
-                                _str
+                                _str,
+                                _strFields
                             );
                             UpdateGroupCommand updateGroupCommand = new UpdateGroupCommand(
                                 latestHistory.AffectedEntityId,
@@ -411,7 +418,8 @@ namespace AlpimiAPI.Entities.EHistory.Commands
                         case "Subgroup":
                             UpdateSubgroupHandler updateSubgroupHandler = new UpdateSubgroupHandler(
                                 _dbService,
-                                _str
+                                _str,
+                                _strFields
                             );
                             UpdateSubgroupCommand updateSubgroupCommand = new UpdateSubgroupCommand(
                                 latestHistory.AffectedEntityId,
@@ -449,7 +457,8 @@ namespace AlpimiAPI.Entities.EHistory.Commands
                         case "Lesson":
                             UpdateLessonHandler updateLessonHandler = new UpdateLessonHandler(
                                 _dbService,
-                                _str
+                                _str,
+                                _strFields
                             );
                             UpdateLessonCommand updateLessonCommand = new UpdateLessonCommand(
                                 latestHistory.AffectedEntityId,
@@ -467,7 +476,7 @@ namespace AlpimiAPI.Entities.EHistory.Commands
 
                         case "LessonBlock":
                             UpdateLessonBlockHandler updateLessonBlockHandler =
-                                new UpdateLessonBlockHandler(_dbService, _str);
+                                new UpdateLessonBlockHandler(_dbService, _str, _strFields);
                             UpdateLessonBlockCommand updateLessonBlockCommand =
                                 new UpdateLessonBlockCommand(
                                     latestHistory.AffectedEntityId,
@@ -485,7 +494,7 @@ namespace AlpimiAPI.Entities.EHistory.Commands
 
                         case "Availability":
                             UpdateAvailabilityHandler updateAvailabilityHandler =
-                                new UpdateAvailabilityHandler(_dbService, _str);
+                                new UpdateAvailabilityHandler(_dbService, _str, _strFields);
                             UpdateAvailabilityCommand updateAvailabilityCommand =
                                 new UpdateAvailabilityCommand(
                                     latestHistory.AffectedEntityId,
@@ -522,7 +531,7 @@ namespace AlpimiAPI.Entities.EHistory.Commands
 
                         case "LessonPeriod":
                             UpdateLessonPeriodHandler updateLessonPeriodHandler =
-                                new UpdateLessonPeriodHandler(_dbService, _str);
+                                new UpdateLessonPeriodHandler(_dbService, _str, _strFields);
                             UpdateLessonPeriodCommand updateLessonPeriodCommand =
                                 new UpdateLessonPeriodCommand(
                                     latestHistory.AffectedEntityId,
@@ -540,7 +549,7 @@ namespace AlpimiAPI.Entities.EHistory.Commands
 
                         case "ScheduleSettings":
                             UpdateScheduleSettingsHandler updateScheduleSettingsHandler =
-                                new UpdateScheduleSettingsHandler(_dbService, _str);
+                                new UpdateScheduleSettingsHandler(_dbService, _str, _strFields);
                             UpdateScheduleSettingsCommand updateScheduleSettingsCommand =
                                 new UpdateScheduleSettingsCommand(
                                     latestHistory.AffectedEntityId,
@@ -571,7 +580,7 @@ namespace AlpimiAPI.Entities.EHistory.Commands
                     {
                         case "CollisionType":
                             CreateCollisionTypeHandler createCollisionTypeHandler =
-                                new CreateCollisionTypeHandler(_dbService, _str);
+                                new CreateCollisionTypeHandler(_dbService, _str, _strFields);
                             CreateCollisionTypeCommand createCollisionTypeCommand =
                                 new CreateCollisionTypeCommand(
                                     insertedId,
@@ -589,7 +598,7 @@ namespace AlpimiAPI.Entities.EHistory.Commands
 
                         case "Classroom":
                             CreateClassroomHandler createClassroomHandler =
-                                new CreateClassroomHandler(_dbService, _str);
+                                new CreateClassroomHandler(_dbService, _str, _strFields);
                             CreateClassroomCommand createClassroomCommand =
                                 new CreateClassroomCommand(
                                     insertedId,
@@ -625,7 +634,7 @@ namespace AlpimiAPI.Entities.EHistory.Commands
 
                         case "LessonType":
                             CreateLessonTypeHandler createLessonTypeHandler =
-                                new CreateLessonTypeHandler(_dbService, _str);
+                                new CreateLessonTypeHandler(_dbService, _str, _strFields);
                             CreateLessonTypeCommand createLessonTypeCommand =
                                 new CreateLessonTypeCommand(
                                     insertedId,
@@ -663,7 +672,8 @@ namespace AlpimiAPI.Entities.EHistory.Commands
                         case "Group":
                             CreateGroupHandler createGroupHandler = new CreateGroupHandler(
                                 _dbService,
-                                _str
+                                _str,
+                                _strFields
                             );
                             CreateGroupCommand createGroupCommand = new CreateGroupCommand(
                                 insertedId,
@@ -679,7 +689,8 @@ namespace AlpimiAPI.Entities.EHistory.Commands
                         case "Subgroup":
                             CreateSubgroupHandler createSubgroupHandler = new CreateSubgroupHandler(
                                 _dbService,
-                                _str
+                                _str,
+                                _strFields
                             );
                             CreateSubgroupCommand createSubgroupCommand = new CreateSubgroupCommand(
                                 insertedId,
@@ -717,7 +728,8 @@ namespace AlpimiAPI.Entities.EHistory.Commands
                         case "Lesson":
                             CreateLessonHandler createLessonHandler = new CreateLessonHandler(
                                 _dbService,
-                                _str
+                                _str,
+                                _strFields
                             );
                             CreateLessonCommand createLessonCommand = new CreateLessonCommand(
                                 insertedId,
@@ -739,7 +751,7 @@ namespace AlpimiAPI.Entities.EHistory.Commands
                                     latestHistory.ReversaleDTO!
                                 )!;
                             CreateLessonBlockHandler createLessonBlockHandler =
-                                new CreateLessonBlockHandler(_dbService, _str);
+                                new CreateLessonBlockHandler(_dbService, _str, _strFields);
                             CreateLessonBlockCommand createLessonBlockCommand =
                                 new CreateLessonBlockCommand(
                                     createLessonBlockDTO.WeekInterval == null
@@ -760,7 +772,7 @@ namespace AlpimiAPI.Entities.EHistory.Commands
 
                         case "Availability":
                             CreateAvailabilityHandler createAvailabilityHandler =
-                                new CreateAvailabilityHandler(_dbService, _str);
+                                new CreateAvailabilityHandler(_dbService, _str, _strFields);
                             CreateAvailabilityCommand createAvailabilityCommand =
                                 new CreateAvailabilityCommand(
                                     insertedId,
@@ -797,7 +809,7 @@ namespace AlpimiAPI.Entities.EHistory.Commands
 
                         case "LessonPeriod":
                             CreateLessonPeriodHandler createLessonPeriodHandler =
-                                new CreateLessonPeriodHandler(_dbService, _str);
+                                new CreateLessonPeriodHandler(_dbService, _str, _strFields);
                             CreateLessonPeriodCommand createLessonPeriodCommand =
                                 new CreateLessonPeriodCommand(
                                     insertedId,

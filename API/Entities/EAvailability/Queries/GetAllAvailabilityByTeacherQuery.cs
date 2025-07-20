@@ -21,14 +21,17 @@ namespace AlpimiAPI.Entities.EAvailability.Queries
     {
         private readonly IDbService _dbService;
         private readonly IStringLocalizer<Errors> _str;
+        private readonly IStringLocalizer<Fields> _strFields;
 
         public GetAllAvailabilityByTeacherHandler(
             IDbService dbService,
-            IStringLocalizer<Errors> str
+            IStringLocalizer<Errors> str,
+            IStringLocalizer<Fields> strFields
         )
         {
             _dbService = dbService;
             _str = str;
+            _strFields = strFields;
         }
 
         public async Task<(IEnumerable<Availability>?, int)> Handle(
@@ -39,18 +42,22 @@ namespace AlpimiAPI.Entities.EAvailability.Queries
             List<ErrorObject> errors = new List<ErrorObject>();
             if (request.Pagination.PerPage < 0)
             {
-                errors.Add(new ErrorObject(_str["badParameter", "PerPage"]));
+                errors.Add(
+                    new FieldErrorObject("PerPage", _str["badParameter", _strFields["PerPage"]])
+                );
             }
             if (request.Pagination.Offset < 0)
             {
-                errors.Add(new ErrorObject(_str["badParameter", "Page"]));
+                errors.Add(new FieldErrorObject("Page", _str["badParameter", "Page"]));
             }
             if (
                 request.Pagination.SortOrder.ToLower() != "asc"
                 && request.Pagination.SortOrder.ToLower() != "desc"
             )
             {
-                errors.Add(new ErrorObject(_str["badParameter", "SortOrder"]));
+                errors.Add(
+                    new FieldErrorObject("SortOrder", _str["badParameter", _strFields["SortOrder"]])
+                );
             }
             if (
                 request.Pagination.SortBy != "Id"
@@ -59,7 +66,9 @@ namespace AlpimiAPI.Entities.EAvailability.Queries
                 && request.Pagination.SortBy != "End"
             )
             {
-                errors.Add(new ErrorObject(_str["badParameter", "SortBy"]));
+                errors.Add(
+                    new FieldErrorObject("SortBy", _str["badParamete", _strFields["SortBy"]])
+                );
             }
 
             if (errors.Count != 0)

@@ -25,11 +25,17 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Commands
     {
         private readonly IDbService _dbService;
         private readonly IStringLocalizer<Errors> _str;
+        private readonly IStringLocalizer<Fields> _strFields;
 
-        public CreateLessonPeriodHandler(IDbService dbService, IStringLocalizer<Errors> str)
+        public CreateLessonPeriodHandler(
+            IDbService dbService,
+            IStringLocalizer<Errors> str,
+            IStringLocalizer<Fields> strFields
+        )
         {
             _dbService = dbService;
             _str = str;
+            _strFields = strFields;
         }
 
         public async Task<Guid> Handle(
@@ -63,7 +69,7 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Commands
             }
 
             GetAllLessonPeriodByScheduleHandler getAllLessonPeriodByScheduleHandler =
-                new GetAllLessonPeriodByScheduleHandler(_dbService, _str);
+                new GetAllLessonPeriodByScheduleHandler(_dbService, _str, _strFields);
             GetAllLessonPeriodByScheduleQuery getAllLessonPeriodByScheduleQuery =
                 new GetAllLessonPeriodByScheduleQuery(
                     request.dto.ScheduleId!.Value,

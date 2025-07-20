@@ -26,11 +26,17 @@ namespace AlpimiAPI.Entities.EAvailability.Commands
     {
         private readonly IDbService _dbService;
         private readonly IStringLocalizer<Errors> _str;
+        private readonly IStringLocalizer<Fields> _strFields;
 
-        public UpdateAvailabilityHandler(IDbService dbService, IStringLocalizer<Errors> str)
+        public UpdateAvailabilityHandler(
+            IDbService dbService,
+            IStringLocalizer<Errors> str,
+            IStringLocalizer<Fields> strFields
+        )
         {
             _dbService = dbService;
             _str = str;
+            _strFields = strFields;
         }
 
         public async Task<Availability?> Handle(
@@ -124,17 +130,21 @@ namespace AlpimiAPI.Entities.EAvailability.Commands
 
             if (request.dto.Start < 1)
             {
-                errors.Add(new ErrorObject(_str["badParameter", "Start"]));
+                errors.Add(
+                    new FieldErrorObject("Start", _str["badParameter", _strFields["Start"]])
+                );
             }
 
             if (request.dto.End > lessonPeriodCount)
             {
-                errors.Add(new ErrorObject(_str["badParameter", "End"]));
+                errors.Add(new FieldErrorObject("End", _str["badParameter", _strFields["End"]]));
             }
 
             if (request.dto.WeekDay < 0 || request.dto.WeekDay > 6)
             {
-                errors.Add(new ErrorObject(_str["badParameter", "WeekDay"]));
+                errors.Add(
+                    new FieldErrorObject("WeekDay", _str["badParameter", _strFields["WeekDay"]])
+                );
             }
 
             if (errors.Count != 0)

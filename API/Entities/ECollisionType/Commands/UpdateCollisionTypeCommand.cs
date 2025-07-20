@@ -24,11 +24,17 @@ namespace AlpimiAPI.Entities.ECollisionType.Commands
     {
         private readonly IDbService _dbService;
         private readonly IStringLocalizer<Errors> _str;
+        private readonly IStringLocalizer<Fields> _strFields;
 
-        public UpdateCollisionTypeHandler(IDbService dbService, IStringLocalizer<Errors> str)
+        public UpdateCollisionTypeHandler(
+            IDbService dbService,
+            IStringLocalizer<Errors> str,
+            IStringLocalizer<Fields> strFields
+        )
         {
             _dbService = dbService;
             _str = str;
+            _strFields = strFields;
         }
 
         public async Task<CollisionType?> Handle(
@@ -40,7 +46,9 @@ namespace AlpimiAPI.Entities.ECollisionType.Commands
             {
                 if (request.dto.Weight > 1 || request.dto.Weight < 0)
                 {
-                    throw new ApiErrorException([new ErrorObject(_str["badParameter", "Weight"])]);
+                    throw new ApiErrorException(
+                        [new FieldErrorObject("Weight", _str["badParameter", _strFields["Weight"]])]
+                    );
                 }
             }
 

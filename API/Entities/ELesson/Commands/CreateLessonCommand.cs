@@ -26,11 +26,17 @@ namespace AlpimiAPI.Entities.ELesson.Commands
     {
         private readonly IDbService _dbService;
         private readonly IStringLocalizer<Errors> _str;
+        private readonly IStringLocalizer<Fields> _strFields;
 
-        public CreateLessonHandler(IDbService dbService, IStringLocalizer<Errors> str)
+        public CreateLessonHandler(
+            IDbService dbService,
+            IStringLocalizer<Errors> str,
+            IStringLocalizer<Fields> strFields
+        )
         {
             _dbService = dbService;
             _str = str;
+            _strFields = strFields;
         }
 
         public async Task<Guid> Handle(
@@ -41,7 +47,12 @@ namespace AlpimiAPI.Entities.ELesson.Commands
             List<ErrorObject> errors = new List<ErrorObject>();
             if (request.dto.AmountOfHours < 1)
             {
-                errors.Add(new ErrorObject(_str["badParameter", "AmountOfHours"]));
+                errors.Add(
+                    new FieldErrorObject(
+                        "AmountOfHours",
+                        _str["badParameter", _strFields["AmountOfHours"]]
+                    )
+                );
             }
 
             GetLessonTypeHandler getLessonTypeHandler = new GetLessonTypeHandler(_dbService);
@@ -99,7 +110,7 @@ namespace AlpimiAPI.Entities.ELesson.Commands
                 throw new ApiErrorException(duplicateErrors);
             }
 
-            foreach (var subgroupId in request.dto.SubgroupIds)
+            foreach (var subgroupId in request.dto.SubgroupIds!)
             {
                 GetSubgroupHandler getSubgroupHandler = new GetSubgroupHandler(_dbService);
                 GetSubgroupQuery getSubgroupQuery = new GetSubgroupQuery(
@@ -151,7 +162,7 @@ namespace AlpimiAPI.Entities.ELesson.Commands
             if (lessonName!.Any())
             {
                 throw new ApiErrorException(
-                    [new ErrorObject(_str["alreadyExists", "Lesson", request.dto.Name])]
+                    [new ErrorObject(_str["alreadyExists", "Lesson", request.dto.Name!])]
                 );
             }
 

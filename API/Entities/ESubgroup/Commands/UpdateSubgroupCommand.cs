@@ -25,11 +25,17 @@ namespace AlpimiAPI.Entities.ESubgroup.Commands
     {
         private readonly IDbService _dbService;
         private readonly IStringLocalizer<Errors> _str;
+        private readonly IStringLocalizer<Fields> _strFields;
 
-        public UpdateSubgroupHandler(IDbService dbService, IStringLocalizer<Errors> str)
+        public UpdateSubgroupHandler(
+            IDbService dbService,
+            IStringLocalizer<Errors> str,
+            IStringLocalizer<Fields> strFields
+        )
         {
             _dbService = dbService;
             _str = str;
+            _strFields = strFields;
         }
 
         public async Task<Subgroup?> Handle(
@@ -42,7 +48,12 @@ namespace AlpimiAPI.Entities.ESubgroup.Commands
                 if (request.dto.StudentCount < 1)
                 {
                     throw new ApiErrorException(
-                        [new ErrorObject(_str["badParameter", "StudentCount"])]
+                        [
+                            new FieldErrorObject(
+                                "StudentCount",
+                                _str["badParameter", _strFields["StudentCount"]]
+                            )
+                        ]
                     );
                 }
             }

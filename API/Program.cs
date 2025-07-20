@@ -36,11 +36,11 @@ try
 
     builder.Services.Configure<RequestLocalizationOptions>(options =>
     {
-        var supportedCultures = new List<CultureInfo>
-        {
-            new CultureInfo("en-US"),
-            new CultureInfo("pl-PL")
-        };
+        var supportedCultures = new[] { "en-US", "pl" };
+        options
+            .SetDefaultCulture(supportedCultures[0])
+            .AddSupportedCultures(supportedCultures)
+            .AddSupportedUICultures(supportedCultures);
     });
 
     builder.Services.AddEndpointsApiExplorer();

@@ -45,7 +45,7 @@ namespace AlpimiTest.Entities.EAvailability
             for (int i = 0; i != 5; i++)
             {
                 var dto = MockData.GetCreateLessonPeriodDTODetails(scheduleId);
-                dto.Start = dto.Start.AddMinutes(60 * i);
+                dto.Start = dto.Start!.Value.AddMinutes(60 * i);
                 await DbHelper.SetupLessonPeriod(_client, dto);
             }
         }

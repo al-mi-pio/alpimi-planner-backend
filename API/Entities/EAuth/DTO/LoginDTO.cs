@@ -1,13 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace AlpimiAPI.Entities.EAuth.DTO
+﻿namespace AlpimiAPI.Entities.EAuth.DTO
 {
     public record LoginDTO
     {
-        [Required]
-        public required string Login { get; set; }
+        [LocalizedRequired]
+        public required string? Login { get; set; }
 
-        [Required]
-        public required string Password { get; set; }
+        [LocalizedRequired]
+        public required string? Password { get; set; }
     }
 }

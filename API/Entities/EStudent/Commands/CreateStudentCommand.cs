@@ -36,7 +36,7 @@ namespace AlpimiAPI.Entities.EStudent.Commands
         {
             GetGroupHandler getGroupHandler = new GetGroupHandler(_dbService);
             GetGroupQuery getGroupQuery = new GetGroupQuery(
-                request.dto.GroupId,
+                request.dto.GroupId!.Value,
                 request.FilteredId,
                 request.Role
             );

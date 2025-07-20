@@ -38,7 +38,7 @@ namespace AlpimiAPI.Entities.EAvailability.Commands
         {
             GetTeacherHandler getTeacherHandler = new GetTeacherHandler(_dbService);
             GetTeacherQuery getTeacherQuery = new GetTeacherQuery(
-                request.dto.TeacherId,
+                request.dto.TeacherId!.Value,
                 request.FilteredId,
                 request.Role
             );

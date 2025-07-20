@@ -46,7 +46,7 @@ namespace AlpimiAPI.Entities.ELesson.Commands
 
             GetLessonTypeHandler getLessonTypeHandler = new GetLessonTypeHandler(_dbService);
             GetLessonTypeQuery getLessonTypeQuery = new GetLessonTypeQuery(
-                request.dto.LessonTypeId,
+                request.dto.LessonTypeId!.Value,
                 request.FilteredId,
                 request.Role
             );
@@ -66,7 +66,7 @@ namespace AlpimiAPI.Entities.ELesson.Commands
 
             GetTeacherHandler getTeacherHandler = new GetTeacherHandler(_dbService);
             GetTeacherQuery getTeacherQuery = new GetTeacherQuery(
-                request.dto.TeacherId,
+                request.dto.TeacherId!.Value,
                 request.FilteredId,
                 request.Role
             );
@@ -83,7 +83,7 @@ namespace AlpimiAPI.Entities.ELesson.Commands
             }
 
             var duplicates = request
-                .dto.SubgroupIds.GroupBy(g => g)
+                .dto.SubgroupIds!.GroupBy(g => g)
                 .Where(g => g.Count() > 1)
                 .Select(g => g.Key);
 

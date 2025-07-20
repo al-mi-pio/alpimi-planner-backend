@@ -140,9 +140,11 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                 );
             }
 
-            if (scheduleSettings!.SchoolDays[(int)request.dto.LessonDate.DayOfWeek] == '0')
+            if (scheduleSettings!.SchoolDays[(int)request.dto.LessonDate!.Value.DayOfWeek] == '0')
             {
-                errors.Add(new ErrorObject(_str["badWeekDay", request.dto.LessonDate.DayOfWeek]));
+                errors.Add(
+                    new ErrorObject(_str["badWeekDay", request.dto.LessonDate!.Value.DayOfWeek])
+                );
             }
 
             int amountOfLessonsToInsert = 1;
@@ -158,7 +160,7 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                         Math.Floor(
                             (
                                 scheduleSettings.SchoolYearEnd.DayNumber
-                                - request.dto.LessonDate.DayNumber
+                                - request.dto.LessonDate!.Value.DayNumber
                             ) / (7.0 * request.dto.WeekInterval!.Value)
                         ) + 1
                     );
@@ -191,7 +193,8 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                 if (request.dto.WeekInterval != null)
                 {
                     request.dto.LessonDate = DateOnly.FromDayNumber(
-                        request.dto.LessonDate.DayNumber + 7 * request.dto.WeekInterval!.Value
+                        request.dto.LessonDate!.Value.DayNumber
+                            + 7 * request.dto.WeekInterval!.Value
                     );
                     request = request with
                     {

@@ -44,7 +44,7 @@ namespace AlpimiAPI.Entities.EDayOff.Commands
                 _dbService
             );
             GetScheduleSettingsQuery getScheduleSettingsQuery = new GetScheduleSettingsQuery(
-                request.dto.ScheduleId,
+                request.dto.ScheduleId!.Value,
                 request.FilteredId,
                 request.Role
             );

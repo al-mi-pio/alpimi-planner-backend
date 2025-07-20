@@ -1,13 +1,11 @@
 ﻿using System.Text.RegularExpressions;
 using AlpimiAPI.Database;
 using AlpimiAPI.Entities.ESchedule.DTO;
-using AlpimiAPI.Entities.ESchedule.Queries;
 using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
 using AlpimiAPI.Settings;
 using AlpimiAPI.Utilities;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 
 namespace AlpimiAPI.Entities.ESchedule.Commands
@@ -49,8 +47,12 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
                 errors.Add(new ErrorObject(_str["badParameter", "SchoolDays"]));
             }
             if (
-                (request.dto.SchoolYearEnd.Year - request.dto.SchoolYearStart.Year) * 12
-                    + (request.dto.SchoolYearEnd.Month - request.dto.SchoolYearStart.Month)
+                (request.dto.SchoolYearEnd!.Value.Year - request.dto.SchoolYearStart!.Value.Year)
+                    * 12
+                    + (
+                        request.dto.SchoolYearEnd!.Value.Month
+                        - request.dto.SchoolYearStart!.Value.Month
+                    )
                 > Configuration.maxSchoolYearDuration
             )
             {

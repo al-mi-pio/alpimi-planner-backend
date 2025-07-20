@@ -41,7 +41,7 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Commands
                 _dbService
             );
             GetScheduleSettingsQuery getScheduleSettingsQuery = new GetScheduleSettingsQuery(
-                request.dto.ScheduleId,
+                request.dto.ScheduleId!.Value,
                 request.FilteredId,
                 request.Role
             );
@@ -66,7 +66,7 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Commands
                 new GetAllLessonPeriodByScheduleHandler(_dbService, _str);
             GetAllLessonPeriodByScheduleQuery getAllLessonPeriodByScheduleQuery =
                 new GetAllLessonPeriodByScheduleQuery(
-                    request.dto.ScheduleId,
+                    request.dto.ScheduleId!.Value,
                     request.FilteredId,
                     request.Role,
                     new PaginationParams(1440, 0, "Start", "ASC")

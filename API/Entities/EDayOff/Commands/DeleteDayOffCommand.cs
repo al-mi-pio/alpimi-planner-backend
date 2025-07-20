@@ -97,7 +97,7 @@ namespace AlpimiAPI.Entities.EDayOff.Commands
                     Command = "Delete",
                     ReversaleDTO = JsonSerializer.Serialize(reversaleDTO),
                     CollisionChecked = true,
-                    ScheduleId = reversaleDTO.ScheduleId,
+                    ScheduleId = reversaleDTO.ScheduleId!.Value,
                 };
                 AddToHistoryCommand addToHistoryCommand = new AddToHistoryCommand(addToHistoryDTO);
                 await addToHistoryHandler.Handle(addToHistoryCommand, cancellationToken);

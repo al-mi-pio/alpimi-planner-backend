@@ -18,11 +18,17 @@ namespace AlpimiAPI.Entities.EUser.Commands
     {
         private readonly IDbService _dbService;
         private readonly IStringLocalizer<Errors> _str;
+        private readonly IStringLocalizer<Fields> _strFields;
 
-        public CreateUserHandler(IDbService dbService, IStringLocalizer<Errors> str)
+        public CreateUserHandler(
+            IDbService dbService,
+            IStringLocalizer<Errors> str,
+            IStringLocalizer<Fields> strFields
+        )
         {
             _dbService = dbService;
             _str = str;
+            _strFields = strFields;
         }
 
         public async Task<Guid> Handle(
@@ -32,7 +38,7 @@ namespace AlpimiAPI.Entities.EUser.Commands
         {
             GetUserByLoginHandler getUserByLoginHandler = new GetUserByLoginHandler(_dbService);
             GetUserByLoginQuery getUserByLoginQuery = new GetUserByLoginQuery(
-                request.dto.Login,
+                request.dto.Login!,
                 new Guid(),
                 "Admin"
             );
@@ -44,7 +50,12 @@ namespace AlpimiAPI.Entities.EUser.Commands
             List<ErrorObject> errors = new List<ErrorObject>();
             if (user.Value != null)
             {
-                errors.Add(new ErrorObject(_str["alreadyExists", "User", request.dto.Login]));
+                errors.Add(
+                    new FieldErrorObject(
+                        "name",
+                        _str["alreadyExists", _strFields["User"], request.dto.Login!]
+                    )
+                );
             }
 
             var userURL = await _dbService.Get<string>(
@@ -58,10 +69,15 @@ namespace AlpimiAPI.Entities.EUser.Commands
 
             if (userURL != null)
             {
-                errors.Add(new ErrorObject(_str["alreadyExists", "URL", request.dto.CustomURL]));
+                errors.Add(
+                    new FieldErrorObject(
+                        "name",
+                        _str["alreadyExists", _strFields["CustomUrl"], request.dto.CustomURL!]
+                    )
+                );
             }
 
-            if (request.dto.Password.Length < AuthSettings.MinimumPasswordLength)
+            if (request.dto.Password!.Length < AuthSettings.MinimumPasswordLength)
             {
                 errors.Add(
                     new ErrorObject(_str["shortPassword", AuthSettings.MinimumPasswordLength])
@@ -106,7 +122,7 @@ namespace AlpimiAPI.Entities.EUser.Commands
             AllowedCharacterTypes[]? allowedCharacterTypesForLogin =
                 Configuration.GetAllowedCharacterTypesForLogin();
 
-            if (!CharacterFilter.Allowed(request.dto.Login, allowedCharacterTypesForLogin))
+            if (!CharacterFilter.Allowed(request.dto.Login!, allowedCharacterTypesForLogin))
             {
                 errors.Add(
                     new ErrorObject(
@@ -122,7 +138,7 @@ namespace AlpimiAPI.Entities.EUser.Commands
             AllowedCharacterTypes[]? allowedCharacterTypesForCustomURL =
                 Configuration.GetAllowedCharacterTypesForCustomURL();
 
-            if (!CharacterFilter.Allowed(request.dto.CustomURL, allowedCharacterTypesForCustomURL))
+            if (!CharacterFilter.Allowed(request.dto.CustomURL!, allowedCharacterTypesForCustomURL))
             {
                 errors.Add(
                     new ErrorObject(

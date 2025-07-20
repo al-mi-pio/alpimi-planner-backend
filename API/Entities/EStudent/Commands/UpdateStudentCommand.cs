@@ -23,11 +23,17 @@ namespace AlpimiAPI.Entities.EStudent.Commands
     {
         private readonly IDbService _dbService;
         private readonly IStringLocalizer<Errors> _str;
+        private readonly IStringLocalizer<Fields> _strFields;
 
-        public UpdateStudentHandler(IDbService dbService, IStringLocalizer<Errors> str)
+        public UpdateStudentHandler(
+            IDbService dbService,
+            IStringLocalizer<Errors> str,
+            IStringLocalizer<Fields> strFields
+        )
         {
             _dbService = dbService;
             _str = str;
+            _strFields = strFields;
         }
 
         public async Task<Student?> Handle(
@@ -83,7 +89,12 @@ namespace AlpimiAPI.Entities.EStudent.Commands
             if (studentAlbum!.Any())
             {
                 throw new ApiErrorException(
-                    [new ErrorObject(_str["alreadyExists", "Student", request.dto.AlbumNumber])]
+                    [
+                        new FieldErrorObject(
+                            "name",
+                            _str["alreadyExists", _strFields["Student"], request.dto.AlbumNumber]
+                        )
+                    ]
                 );
             }
 

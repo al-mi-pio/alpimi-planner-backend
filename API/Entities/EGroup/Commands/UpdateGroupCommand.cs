@@ -91,7 +91,12 @@ namespace AlpimiAPI.Entities.EGroup.Commands
             if (groupName!.Any())
             {
                 throw new ApiErrorException(
-                    [new ErrorObject(_str["alreadyExists", "Group", request.dto.Name])]
+                    [
+                        new FieldErrorObject(
+                            "name",
+                            _str["alreadyExists", _strFields["Group"], request.dto.Name]
+                        )
+                    ]
                 );
             }
 
@@ -108,7 +113,12 @@ namespace AlpimiAPI.Entities.EGroup.Commands
             if (subgroupName!.Any())
             {
                 throw new ApiErrorException(
-                    [new ErrorObject(_str["alreadyExists", "Subgroup", request.dto.Name])]
+                    [
+                        new FieldErrorObject(
+                            "name",
+                            _str["alreadyExists", _strFields["Subgroup"], request.dto.Name]
+                        )
+                    ]
                 );
             }
 

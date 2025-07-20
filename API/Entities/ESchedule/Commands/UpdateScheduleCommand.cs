@@ -22,11 +22,17 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
     {
         private readonly IDbService _dbService;
         private readonly IStringLocalizer<Errors> _str;
+        private readonly IStringLocalizer<Fields> _strFields;
 
-        public UpdateScheduleHandler(IDbService dbService, IStringLocalizer<Errors> str)
+        public UpdateScheduleHandler(
+            IDbService dbService,
+            IStringLocalizer<Errors> str,
+            IStringLocalizer<Fields> strFields
+        )
         {
             _dbService = dbService;
             _str = str;
+            _strFields = strFields;
         }
 
         public async Task<Schedule?> Handle(
@@ -82,7 +88,12 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
                 if (scheduleName != null)
                 {
                     throw new ApiErrorException(
-                        [new ErrorObject(_str["alreadyExists", "Schedule", request.dto.Name])]
+                        [
+                            new FieldErrorObject(
+                                "name",
+                                _str["alreadyExists", _strFields["Schedule"], request.dto.Name]
+                            )
+                        ]
                     );
                 }
             }

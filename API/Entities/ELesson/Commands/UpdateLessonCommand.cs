@@ -154,7 +154,12 @@ namespace AlpimiAPI.Entities.ELesson.Commands
             if (lessonName!.Any())
             {
                 throw new ApiErrorException(
-                    [new ErrorObject(_str["alreadyExists", "Lesson", request.dto.Name])]
+                    [
+                        new FieldErrorObject(
+                            "name",
+                            _str["alreadyExists", _strFields["Lesson"], request.dto.Name]
+                        )
+                    ]
                 );
             }
             if (request.dto.SubgroupIds != null)

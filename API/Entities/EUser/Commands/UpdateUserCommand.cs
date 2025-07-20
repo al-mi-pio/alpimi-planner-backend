@@ -8,7 +8,6 @@ using AlpimiAPI.Utilities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace AlpimiAPI.Entities.EUser.Commands
 {
@@ -19,11 +18,17 @@ namespace AlpimiAPI.Entities.EUser.Commands
     {
         private readonly IDbService _dbService;
         private readonly IStringLocalizer<Errors> _str;
+        private readonly IStringLocalizer<Fields> _strFields;
 
-        public UpdateUserHandler(IDbService dbService, IStringLocalizer<Errors> str)
+        public UpdateUserHandler(
+            IDbService dbService,
+            IStringLocalizer<Errors> str,
+            IStringLocalizer<Fields> strFields
+        )
         {
             _dbService = dbService;
             _str = str;
+            _strFields = strFields;
         }
 
         public async Task<User?> Handle(
@@ -83,7 +88,16 @@ namespace AlpimiAPI.Entities.EUser.Commands
                 if (userURL != null)
                 {
                     throw new ApiErrorException(
-                        [new ErrorObject(_str["alreadyExists", "URL", request.dto.CustomURL])]
+                        [
+                            new FieldErrorObject(
+                                "name",
+                                _str[
+                                    "alreadyExists",
+                                    _strFields["CustomUrl"],
+                                    request.dto.CustomURL
+                                ]
+                            )
+                        ]
                     );
                 }
             }
@@ -119,7 +133,12 @@ namespace AlpimiAPI.Entities.EUser.Commands
                 if (userLogin!.Any())
                 {
                     throw new ApiErrorException(
-                        [new ErrorObject(_str["alreadyExists", "Login", request.dto.Login])]
+                        [
+                            new FieldErrorObject(
+                                "name",
+                                _str["alreadyExists", _strFields["Login"], request.dto.Login]
+                            )
+                        ]
                     );
                 }
             }

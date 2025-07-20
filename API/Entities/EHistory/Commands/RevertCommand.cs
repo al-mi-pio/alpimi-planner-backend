@@ -345,7 +345,7 @@ namespace AlpimiAPI.Entities.EHistory.Commands
 
                         case "ClassroomType":
                             UpdateClassroomTypeHandler updateClassroomTypeHandler =
-                                new UpdateClassroomTypeHandler(_dbService, _str);
+                                new UpdateClassroomTypeHandler(_dbService, _str, _strFields);
                             UpdateClassroomTypeCommand updateClassroomTypeCommand =
                                 new UpdateClassroomTypeCommand(
                                     latestHistory.AffectedEntityId,
@@ -438,7 +438,8 @@ namespace AlpimiAPI.Entities.EHistory.Commands
                         case "Student":
                             UpdateStudentHandler updateStudentHandler = new UpdateStudentHandler(
                                 _dbService,
-                                _str
+                                _str,
+                                _strFields
                             );
                             UpdateStudentCommand updateStudentCommand = new UpdateStudentCommand(
                                 latestHistory.AffectedEntityId,
@@ -616,7 +617,7 @@ namespace AlpimiAPI.Entities.EHistory.Commands
 
                         case "ClassroomType":
                             CreateClassroomTypeHandler createClassroomTypeHandler =
-                                new CreateClassroomTypeHandler(_dbService, _str);
+                                new CreateClassroomTypeHandler(_dbService, _str, _strFields);
                             CreateClassroomTypeCommand createClassroomTypeCommand =
                                 new CreateClassroomTypeCommand(
                                     insertedId,
@@ -709,7 +710,8 @@ namespace AlpimiAPI.Entities.EHistory.Commands
                         case "Student":
                             CreateStudentHandler createStudentHandler = new CreateStudentHandler(
                                 _dbService,
-                                _str
+                                _str,
+                                _strFields
                             );
                             CreateStudentCommand createStudentCommand = new CreateStudentCommand(
                                 insertedId,

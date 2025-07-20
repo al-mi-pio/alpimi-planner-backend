@@ -80,7 +80,12 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
             if (classroomName != null)
             {
                 throw new ApiErrorException(
-                    [new ErrorObject(_str["alreadyExists", "Classroom", request.dto.Name!])]
+                    [
+                        new FieldErrorObject(
+                            "name",
+                            _str["alreadyExists", _strFields["Classroom"], request.dto.Name!]
+                        )
+                    ]
                 );
             }
 

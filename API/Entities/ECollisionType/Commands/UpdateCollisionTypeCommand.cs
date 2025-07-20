@@ -96,7 +96,12 @@ namespace AlpimiAPI.Entities.ECollisionType.Commands
             if (collisionTypeName!.Any())
             {
                 throw new ApiErrorException(
-                    [new ErrorObject(_str["alreadyExists", "CollisionType", request.dto.Name])]
+                    [
+                        new FieldErrorObject(
+                            "name",
+                            _str["alreadyExists", _strFields["CollisionType"], request.dto.Name]
+                        )
+                    ]
                 );
             }
 

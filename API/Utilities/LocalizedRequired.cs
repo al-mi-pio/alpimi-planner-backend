@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using AlpimiAPI.Locales;
+using AlpimiAPI.Utilities;
 using Microsoft.Extensions.Localization;
 
 public class LocalizedRequiredAttribute : RequiredAttribute
@@ -13,7 +14,9 @@ public class LocalizedRequiredAttribute : RequiredAttribute
 
         if (value == null || (value is string str && string.IsNullOrWhiteSpace(str)))
         {
-            return new ValidationResult(errorMessage);
+            return new ValidationResult(
+                $"[FieldErrorObject]<{TextUtils.FirstLetterToLower(validationContext.DisplayName)}>{errorMessage}"
+            );
         }
 
         return ValidationResult.Success!;

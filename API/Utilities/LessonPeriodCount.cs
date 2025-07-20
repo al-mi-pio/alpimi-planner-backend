@@ -1,7 +1,4 @@
 ﻿using AlpimiAPI.Database;
-using AlpimiAPI.Entities.EScheduleSettings;
-using AlpimiAPI.Responses;
-using Azure.Core;
 
 namespace AlpimiAPI.Utilities
 {

@@ -159,7 +159,20 @@ try
 
                 foreach (var error in errors)
                 {
-                    errorObjects.Add(new ErrorObject(error));
+                    if (error.StartsWith("[FieldErrorObject]"))
+                    {
+                        int start = error.IndexOf('<');
+                        int end = error.IndexOf('>');
+
+                        var field = error.Substring(start + 1, end - start - 1);
+                        var message = error.Substring(end + 1).TrimStart();
+
+                        errorObjects.Add(new FieldErrorObject(field, message));
+                    }
+                    else
+                    {
+                        errorObjects.Add(new ErrorObject(error));
+                    }
                 }
 
                 return new BadRequestObjectResult(new ApiErrorResponse(400, errorObjects));

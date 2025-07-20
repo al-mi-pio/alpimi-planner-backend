@@ -46,7 +46,7 @@ namespace AlpimiAPI.Entities.ELessonType.Commands
                 if (request.dto.Color < 0 || request.dto.Color > 359)
                 {
                     throw new ApiErrorException(
-                        [new FieldErrorObject("Color", _str["badParameter", _strFields["Color"]])]
+                        [new FieldErrorObject("color", _str["badParameter", _strFields["Color"]])]
                     );
                 }
             }

@@ -183,14 +183,14 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
             if (request.dto.LessonEnd > lessonPeriodCount)
             {
                 errors.Add(
-                    new FieldErrorObject("LessonEnd", _str["badParameter", _strFields["LessonEnd"]])
+                    new FieldErrorObject("lessonEnd", _str["badParameter", _strFields["LessonEnd"]])
                 );
             }
 
             if (request.dto.WeekDay < 0 || request.dto.WeekDay > 6)
             {
                 errors.Add(
-                    new FieldErrorObject("WeekDay", _str["badParameter", _strFields["WeekDay"]])
+                    new FieldErrorObject("weekDay", _str["badParameter", _strFields["WeekDay"]])
                 );
             }
 

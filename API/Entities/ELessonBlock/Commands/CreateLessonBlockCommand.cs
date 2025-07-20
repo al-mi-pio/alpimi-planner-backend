@@ -133,7 +133,7 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
             if (request.dto.LessonEnd > lessonPeriodCount)
             {
                 errors.Add(
-                    new FieldErrorObject("LessonEnd", _str["badParameter", _strFields["LessonEnd"]])
+                    new FieldErrorObject("lessonEnd", _str["badParameter", _strFields["LessonEnd"]])
                 );
             }
 

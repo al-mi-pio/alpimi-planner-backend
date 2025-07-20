@@ -46,7 +46,7 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
             if (request.dto.Capacity < 1)
             {
                 throw new ApiErrorException(
-                    [new FieldErrorObject("Capacity", _str["badParameter", _strFields["Capacity"]])]
+                    [new FieldErrorObject("capacity", _str["badParameter", _strFields["Capacity"]])]
                 );
             }
 

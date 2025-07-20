@@ -44,7 +44,7 @@ namespace AlpimiAPI.Entities.ECollisionType.Commands
             if (request.dto.Weight > 1 || request.dto.Weight < 0)
             {
                 throw new ApiErrorException(
-                    [new FieldErrorObject("Weight", _str["badParameter", _strFields["Weight"]])]
+                    [new FieldErrorObject("weight", _str["badParameter", _strFields["Weight"]])]
                 );
             }
 

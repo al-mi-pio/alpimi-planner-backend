@@ -82,19 +82,19 @@ namespace AlpimiAPI.Entities.EAvailability.Commands
             if (request.dto.Start < 1)
             {
                 errors.Add(
-                    new FieldErrorObject("Start", _str["badParameter", _strFields["Start"]])
+                    new FieldErrorObject("start", _str["badParameter", _strFields["Start"]])
                 );
             }
 
             if (request.dto.End > lessonPeriodCount)
             {
-                errors.Add(new FieldErrorObject("End", _str["badParameter", _strFields["End"]]));
+                errors.Add(new FieldErrorObject("end", _str["badParameter", _strFields["End"]]));
             }
 
             if (request.dto.WeekDay < 0 || request.dto.WeekDay > 6)
             {
                 errors.Add(
-                    new FieldErrorObject("WeekDay", _str["badParameter", _strFields["WeekDay"]])
+                    new FieldErrorObject("weekDay", _str["badParameter", _strFields["WeekDay"]])
                 );
             }
 

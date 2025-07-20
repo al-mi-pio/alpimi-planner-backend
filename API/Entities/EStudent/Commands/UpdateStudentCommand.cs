@@ -111,7 +111,10 @@ namespace AlpimiAPI.Entities.EStudent.Commands
                     foreach (var duplicate in duplicates)
                     {
                         duplicateErrors.Add(
-                            new ErrorObject(_str["duplicateData", "Subgroup", duplicate])
+                            new FieldErrorObject(
+                                "subgroup",
+                                _str["duplicateData", _strFields["Subgroup"], duplicate]
+                            )
                         );
                     }
                     throw new ApiErrorException(duplicateErrors);

@@ -175,7 +175,10 @@ namespace AlpimiAPI.Entities.ELesson.Commands
                     foreach (var duplicate in duplicates)
                     {
                         duplicateErrors.Add(
-                            new ErrorObject(_str["duplicateData", "Subgroup", duplicate])
+                            new FieldErrorObject(
+                                "subgroup",
+                                _str["duplicateData", _strFields["Subgroup"], duplicate]
+                            )
                         );
                     }
                     throw new ApiErrorException(duplicateErrors);
@@ -274,7 +277,10 @@ namespace AlpimiAPI.Entities.ELesson.Commands
                     foreach (var duplicate in duplicates)
                     {
                         duplicateErrors.Add(
-                            new ErrorObject(_str["duplicateData", "ClassroomType", duplicate])
+                            new FieldErrorObject(
+                                "classroomType",
+                                _str["duplicateData", _strFields["ClassroomType"], duplicate]
+                            )
                         );
                     }
                     throw new ApiErrorException(duplicateErrors);

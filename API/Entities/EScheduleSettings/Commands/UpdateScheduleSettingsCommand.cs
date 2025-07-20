@@ -205,7 +205,12 @@ namespace AlpimiAPI.Entities.EScheduleSettings.Commands
                     )
                     {
                         throw new ApiErrorException(
-                            [new ErrorObject(_str["timeOverlap", "LessonPeriod"])]
+                            [
+                                new FieldErrorObject(
+                                    "schoolHour",
+                                    _str["timeOverlap", _strFields["LessonPeriod"]]
+                                )
+                            ]
                         );
                     }
                 }

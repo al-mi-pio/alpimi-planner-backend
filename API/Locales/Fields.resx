@@ -216,4 +216,7 @@
   <data name="ClassroomType" xml:space="preserve">
     <value>ClassroomType</value>
   </data>
+  <data name="LessonPeriod" xml:space="preserve">
+    <value>LessonPeriod</value>
+  </data>
 </root>

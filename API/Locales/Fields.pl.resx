@@ -117,35 +117,35 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-<data name="name" xml:space="preserve"><value>Nazwa</value></data>
-<data name="description" xml:space="preserve"><value>Opis</value></data>
-<data name="login" xml:space="preserve"><value>Login</value></data>
-<data name="password" xml:space="preserve"><value>Hasło</value></data>
-<data name="customUrl" xml:space="preserve"><value>Własny URL</value></data>
-<data name="timestamp" xml:space="preserve"><value>Znacznik Czasu</value></data>
-<data name="affectedEntity" xml:space="preserve"><value>Dotknięta Encja</value></data>
-<data name="command" xml:space="preserve"><value>Polecenie</value></data>
-<data name="reversalId" xml:space="preserve"><value>Id Odwrócenia</value></data>
-<data name="isUndone" xml:space="preserve"><value>Czy Cofnięte</value></data>
-<data name="isUndoneChecked" xml:space="preserve"><value>Czy Cofnięcie Sprawdzone</value></data>
-<data name="schoolHour" xml:space="preserve"><value>Godzina Szkolna</value></data>
-<data name="schoolYearStart" xml:space="preserve"><value>Początek Roku Szkolnego</value></data>
-<data name="schoolYearEnd" xml:space="preserve"><value>Koniec Roku Szkolnego</value></data>
-<data name="from" xml:space="preserve"><value>Od</value></data>
-<data name="to" xml:space="preserve"><value>Do</value></data>
-<data name="startTime" xml:space="preserve"><value>Godzina Rozpoczęcia</value></data>
-<data name="weight" xml:space="preserve"><value>Waga</value></data>
-<data name="filter" xml:space="preserve"><value>Filtr</value></data>
-<data name="category" xml:space="preserve"><value>Kategoria</value></data>
-<data name="capacity" xml:space="preserve"><value>Pojemność</value></data>
-<data name="color" xml:space="preserve"><value>Kolor</value></data>
-<data name="weekday" xml:space="preserve"><value>Dzień Tygodnia</value></data>
-<data name="start" xml:space="preserve"><value>Start</value></data>
-<data name="end" xml:space="preserve"><value>Koniec</value></data>
-<data name="surname" xml:space="preserve"><value>Nazwisko</value></data>
-<data name="studentCount" xml:space="preserve"><value>Liczba Studentów</value></data>
-<data name="albumNumber" xml:space="preserve"><value>Numer Albumu</value></data>
-<data name="collidingObject1" xml:space="preserve"><value>Obiekt Kolizji 1</value></data>
-<data name="collidingObject2" xml:space="preserve"><value>Obiekt Kolizji 2</value></data>
-<data name="ignored" xml:space="preserve"><value>Ignorowane</value></data>
+<data name="Name" xml:space="preserve"><value>Nazwa</value></data>
+<data name="Description" xml:space="preserve"><value>Opis</value></data>
+<data name="Login" xml:space="preserve"><value>Login</value></data>
+<data name="Password" xml:space="preserve"><value>Hasło</value></data>
+<data name="CustomUrl" xml:space="preserve"><value>Własny URL</value></data>
+<data name="Timestamp" xml:space="preserve"><value>Znacznik Czasu</value></data>
+<data name="AffectedEntity" xml:space="preserve"><value>Dotknięta Encja</value></data>
+<data name="Command" xml:space="preserve"><value>Polecenie</value></data>
+<data name="ReversalId" xml:space="preserve"><value>Id Odwrócenia</value></data>
+<data name="IsUndone" xml:space="preserve"><value>Czy Cofnięte</value></data>
+<data name="IsUndoneChecked" xml:space="preserve"><value>Czy Cofnięcie Sprawdzone</value></data>
+<data name="SchoolHour" xml:space="preserve"><value>Godzina Szkolna</value></data>
+<data name="SchoolYearStart" xml:space="preserve"><value>Początek Roku Szkolnego</value></data>
+<data name="SchoolYearEnd" xml:space="preserve"><value>Koniec Roku Szkolnego</value></data>
+<data name="From" xml:space="preserve"><value>Od</value></data>
+<data name="To" xml:space="preserve"><value>Do</value></data>
+<data name="StartTime" xml:space="preserve"><value>Godzina Rozpoczęcia</value></data>
+<data name="Weight" xml:space="preserve"><value>Waga</value></data>
+<data name="Filter" xml:space="preserve"><value>Filtr</value></data>
+<data name="Category" xml:space="preserve"><value>Kategoria</value></data>
+<data name="Capacity" xml:space="preserve"><value>Pojemność</value></data>
+<data name="Color" xml:space="preserve"><value>Kolor</value></data>
+<data name="Weekday" xml:space="preserve"><value>Dzień Tygodnia</value></data>
+<data name="Start" xml:space="preserve"><value>Start</value></data>
+<data name="End" xml:space="preserve"><value>Koniec</value></data>
+<data name="Surname" xml:space="preserve"><value>Nazwisko</value></data>
+<data name="StudentCount" xml:space="preserve"><value>Liczba Studentów</value></data>
+<data name="AlbumNumber" xml:space="preserve"><value>Numer Albumu</value></data>
+<data name="CollidingObject1" xml:space="preserve"><value>Obiekt Kolizji 1</value></data>
+<data name="CollidingObject2" xml:space="preserve"><value>Obiekt Kolizji 2</value></data>
+<data name="Ignored" xml:space="preserve"><value>Ignorowane</value></data>
 </root>

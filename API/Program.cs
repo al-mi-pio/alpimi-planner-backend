@@ -155,9 +155,14 @@ try
                     .Select(e => e.ErrorMessage)
                     .ToArray();
 
-                return new BadRequestObjectResult(
-                    new ApiErrorResponse(400, [new ErrorObject(errors[0])!])
-                );
+                List<ErrorObject> errorObjects = new List<ErrorObject>();
+
+                foreach (var error in errors)
+                {
+                    errorObjects.Add(new ErrorObject(error));
+                }
+
+                return new BadRequestObjectResult(new ApiErrorResponse(400, errorObjects));
             };
         });
 

@@ -198,4 +198,7 @@
   <data name="cantRedo" xml:space="preserve">
     <value>There is nothing to redo</value>
   </data>
+  <data name="requiredField" xml:space="preserve">
+    <value>The {0} field is required.</value>
+  </data>
 </root>

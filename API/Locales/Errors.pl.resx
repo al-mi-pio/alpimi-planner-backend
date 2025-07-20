@@ -198,4 +198,7 @@
   <data name="cantRedo" xml:space="preserve">
     <value>Nie ma nic do ponownego wykonania</value>
   </data>
+  <data name="requiredField" xml:space="preserve">
+    <value>Pole {0} jest wymagane</value>
+  </data>
 </root>

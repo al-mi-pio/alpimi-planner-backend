@@ -23,11 +23,17 @@ namespace AlpimiAPI.Entities.EDayOff
     {
         private readonly IMediator _mediator;
         private readonly IStringLocalizer<Errors> _str;
+        private readonly IStringLocalizer<Fields> _strFields;
 
-        public DayOffController(IMediator mediator, IStringLocalizer<Errors> str)
+        public DayOffController(
+            IMediator mediator,
+            IStringLocalizer<Errors> str,
+            IStringLocalizer<Fields> strFields
+        )
         {
             _mediator = mediator;
             _str = str;
+            _strFields = strFields;
         }
 
         /// <summary>

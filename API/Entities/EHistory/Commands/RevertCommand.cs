@@ -654,7 +654,8 @@ namespace AlpimiAPI.Entities.EHistory.Commands
                         case "Teacher":
                             CreateTeacherHandler createTeacherHandler = new CreateTeacherHandler(
                                 _dbService,
-                                _str
+                                _str,
+                                _strFields
                             );
                             CreateTeacherCommand createTeacherCommand = new CreateTeacherCommand(
                                 insertedId,

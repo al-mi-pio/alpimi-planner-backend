@@ -22,13 +22,18 @@ namespace AlpimiAPI.Entities.EUser
     public class UserController : ControllerBase
     {
         private readonly IMediator _mediator;
-
         private readonly IStringLocalizer<Errors> _str;
+        private readonly IStringLocalizer<Fields> _strFields;
 
-        public UserController(IMediator mediator, IStringLocalizer<Errors> str)
+        public UserController(
+            IMediator mediator,
+            IStringLocalizer<Errors> str,
+            IStringLocalizer<Fields> strFields
+        )
         {
             _mediator = mediator;
             _str = str;
+            _strFields = strFields;
         }
 
         /// <summary>
@@ -123,7 +128,10 @@ namespace AlpimiAPI.Entities.EUser
                 if (result == null)
                 {
                     return NotFound(
-                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound"_strFields["User"]])])
+                        new ApiErrorResponse(
+                            404,
+                            [new ErrorObject(_str["notFound", _strFields["User"]])]
+                        )
                     );
                 }
 
@@ -169,7 +177,10 @@ namespace AlpimiAPI.Entities.EUser
                 if (result == null)
                 {
                     return NotFound(
-                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound"_strFields["User"]])])
+                        new ApiErrorResponse(
+                            404,
+                            [new ErrorObject(_str["notFound", _strFields["User"]])]
+                        )
                     );
                 }
 
@@ -210,7 +221,10 @@ namespace AlpimiAPI.Entities.EUser
                 if (result == null)
                 {
                     return NotFound(
-                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound"_strFields["User"]])])
+                        new ApiErrorResponse(
+                            404,
+                            [new ErrorObject(_str["notFound", _strFields["User"]])]
+                        )
                     );
                 }
 

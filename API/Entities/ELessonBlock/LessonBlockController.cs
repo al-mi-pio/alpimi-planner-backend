@@ -23,11 +23,17 @@ namespace AlpimiAPI.Entities.ELessonBlock
     {
         private readonly IMediator _mediator;
         private readonly IStringLocalizer<Errors> _str;
+        private readonly IStringLocalizer<Fields> _strFields;
 
-        public LessonBlockController(IMediator mediator, IStringLocalizer<Errors> str)
+        public LessonBlockController(
+            IMediator mediator,
+            IStringLocalizer<Errors> str,
+            IStringLocalizer<Fields> strFields
+        )
         {
             _mediator = mediator;
             _str = str;
+            _strFields = strFields;
         }
 
         /// <summary>

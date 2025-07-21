@@ -134,7 +134,7 @@ namespace AlpimiAPI.Entities.EAvailability
                     return NotFound(
                         new ApiErrorResponse(
                             404,
-                            [new ErrorObject(_str["notFound", "Availability"])]
+                            [new ErrorObject(_str["notFound", _strFields["Availability"]])]
                         )
                     );
                 }

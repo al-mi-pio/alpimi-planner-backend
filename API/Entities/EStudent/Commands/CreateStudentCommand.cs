@@ -54,7 +54,11 @@ namespace AlpimiAPI.Entities.EStudent.Commands
             if (group.Value == null)
             {
                 throw new ApiErrorException(
-                    [new ErrorObject(_str["resourceNotFound", "Group", request.dto.GroupId])]
+                    [
+                        new ErrorObject(
+                            _str["resourceNotFound", _strFields["Group"], request.dto.GroupId]
+                        )
+                    ]
                 );
             }
 
@@ -119,13 +123,22 @@ namespace AlpimiAPI.Entities.EStudent.Commands
                     if (subgroup.Value == null)
                     {
                         errors.Add(
-                            new ErrorObject(_str["resourceNotFound", "Subgroup", subgroupId])
+                            new ErrorObject(
+                                _str["resourceNotFound", _strFields["Subgroup"], subgroupId]
+                            )
                         );
                     }
                     else if (subgroup.Value.GroupId != request.dto.GroupId)
                     {
                         errors.Add(
-                            new ErrorObject(_str["wrongSet", "Subgroup", "Group", "Student"])
+                            new ErrorObject(
+                                _str[
+                                    "wrongSet",
+                                    _strFields["Subgroup"],
+                                    _strFields["Group"],
+                                    _strFields["Student"]
+                                ]
+                            )
                         );
                     }
                 }

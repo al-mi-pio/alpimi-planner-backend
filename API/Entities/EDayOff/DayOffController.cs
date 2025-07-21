@@ -127,7 +127,10 @@ namespace AlpimiAPI.Entities.EDayOff
                 if (result == null)
                 {
                     return NotFound(
-                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "DayOff"])])
+                        new ApiErrorResponse(
+                            404,
+                            [new ErrorObject(_str["notFound", _strFields["DayOff"]])]
+                        )
                     );
                 }
 

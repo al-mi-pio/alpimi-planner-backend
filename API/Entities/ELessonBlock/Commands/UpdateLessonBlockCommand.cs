@@ -123,14 +123,25 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                 {
                     errors.Add(
                         new ErrorObject(
-                            _str["resourceNotFound", "Classroom", request.dto.ClassroomId]
+                            _str[
+                                "resourceNotFound",
+                                _strFields["Classroom"],
+                                request.dto.ClassroomId
+                            ]
                         )
                     );
                 }
                 else if (oneLessonBlock.Lesson.LessonType.ScheduleId != classroom.Value.ScheduleId)
                 {
                     errors.Add(
-                        new ErrorObject(_str["wrongSet", "Classroom", "Schedule", "Lesson"])
+                        new ErrorObject(
+                            _str[
+                                "wrongSet",
+                                _strFields["Classroom"],
+                                _strFields["Schedule"],
+                                _strFields["Lesson"]
+                            ]
+                        )
                     );
                 }
             }

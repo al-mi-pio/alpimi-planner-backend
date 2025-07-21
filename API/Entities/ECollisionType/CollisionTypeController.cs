@@ -134,7 +134,7 @@ namespace AlpimiAPI.Entities.ECollisionType
                     return NotFound(
                         new ApiErrorResponse(
                             404,
-                            [new ErrorObject(_str["notFound", "CollisionType"])]
+                            [new ErrorObject(_str["notFound", _strFields["CollisionType"]])]
                         )
                     );
                 }
@@ -231,7 +231,7 @@ namespace AlpimiAPI.Entities.ECollisionType
                     return NotFound(
                         new ApiErrorResponse(
                             404,
-                            [new ErrorObject(_str["notFound", "CollisionType"])]
+                            [new ErrorObject(_str["notFound", _strFields["CollisionType"]])]
                         )
                     );
                 }

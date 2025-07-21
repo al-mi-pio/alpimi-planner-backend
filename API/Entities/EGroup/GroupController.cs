@@ -127,7 +127,10 @@ namespace AlpimiAPI.Entities.EGroup
                 if (result == null)
                 {
                     return NotFound(
-                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "Group"])])
+                        new ApiErrorResponse(
+                            404,
+                            [new ErrorObject(_str["notFound", _strFields["Group"]])]
+                        )
                     );
                 }
 
@@ -222,7 +225,10 @@ namespace AlpimiAPI.Entities.EGroup
                 if (result == null)
                 {
                     return NotFound(
-                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "Group"])])
+                        new ApiErrorResponse(
+                            404,
+                            [new ErrorObject(_str["notFound", _strFields["Group"]])]
+                        )
                     );
                 }
 

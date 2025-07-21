@@ -45,7 +45,11 @@ namespace AlpimiAPI.Entities.ETeacher.Commands
             if (schedule.Value == null)
             {
                 throw new ApiErrorException(
-                    [new ErrorObject(_str["resourceNotFound", "Schedule", request.dto.ScheduleId])]
+                    [
+                        new ErrorObject(
+                            _str["resourceNotFound", _strFields["Schedule"], request.dto.ScheduleId]
+                        )
+                    ]
                 );
             }
 

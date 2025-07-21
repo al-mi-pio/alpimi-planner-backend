@@ -107,7 +107,7 @@ namespace AlpimiAPI.Entities.ELesson.Commands
             {
                 errors.Add(
                     new ErrorObject(
-                        _str["resourceNotFound", "LessonType", request.dto.LessonTypeId]
+                        _str["resourceNotFound", _strFields["LessonType"], request.dto.LessonTypeId]
                     )
                 );
             }
@@ -126,7 +126,9 @@ namespace AlpimiAPI.Entities.ELesson.Commands
             if (teacher.Value == null)
             {
                 errors.Add(
-                    new ErrorObject(_str["resourceNotFound", "Teacher", request.dto.TeacherId])
+                    new ErrorObject(
+                        _str["resourceNotFound", _strFields["Teacher"], request.dto.TeacherId]
+                    )
                 );
             }
 
@@ -138,7 +140,16 @@ namespace AlpimiAPI.Entities.ELesson.Commands
             if (teacher.Value!.ScheduleId != lessonType.Value!.ScheduleId)
             {
                 throw new ApiErrorException(
-                    [new ErrorObject(_str["wrongSet", "Teacher", "Schedule", "LessonType"])]
+                    [
+                        new ErrorObject(
+                            _str[
+                                "wrongSet",
+                                _strFields["Teacher"],
+                                _strFields["Schedule"],
+                                _strFields["LessonType"]
+                            ]
+                        )
+                    ]
                 );
             }
 
@@ -200,7 +211,9 @@ namespace AlpimiAPI.Entities.ELesson.Commands
                     if (subgroup.Value == null)
                     {
                         errors.Add(
-                            new ErrorObject(_str["resourceNotFound", "Subgroup", subgroupId])
+                            new ErrorObject(
+                                _str["resourceNotFound", _strFields["Subgroup"], subgroupId]
+                            )
                         );
                     }
                     else if (
@@ -209,7 +222,14 @@ namespace AlpimiAPI.Entities.ELesson.Commands
                     )
                     {
                         errors.Add(
-                            new ErrorObject(_str["wrongSet", "Subgroup", "Schedule", "LessonType"])
+                            new ErrorObject(
+                                _str[
+                                    "wrongSet",
+                                    _strFields["Subgroup"],
+                                    _strFields["Schedule"],
+                                    _strFields["LessonType"]
+                                ]
+                            )
                         );
                     }
                 }
@@ -306,7 +326,11 @@ namespace AlpimiAPI.Entities.ELesson.Commands
                     {
                         errors.Add(
                             new ErrorObject(
-                                _str["resourceNotFound", "ClassroomType", classroomTypeId]
+                                _str[
+                                    "resourceNotFound",
+                                    _strFields["ClassroomType"],
+                                    classroomTypeId
+                                ]
                             )
                         );
                     }
@@ -315,7 +339,14 @@ namespace AlpimiAPI.Entities.ELesson.Commands
                     )
                     {
                         errors.Add(
-                            new ErrorObject(_str["wrongSet", "ClassroomType", "Schedule", "Lesson"])
+                            new ErrorObject(
+                                _str[
+                                    "wrongSet",
+                                    _strFields["ClassroomType"],
+                                    _strFields["Schedule"],
+                                    _strFields["Lesson"]
+                                ]
+                            )
                         );
                     }
                 }

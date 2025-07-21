@@ -134,7 +134,7 @@ namespace AlpimiAPI.Entities.EClassroomType
                     return NotFound(
                         new ApiErrorResponse(
                             404,
-                            [new ErrorObject(_str["notFound", "ClassroomType"])]
+                            [new ErrorObject(_str["notFound", _strFields["ClassroomType"]])]
                         )
                     );
                 }
@@ -232,7 +232,7 @@ namespace AlpimiAPI.Entities.EClassroomType
                     return NotFound(
                         new ApiErrorResponse(
                             404,
-                            [new ErrorObject(_str["notFound", "ClassroomType"])]
+                            [new ErrorObject(_str["notFound", _strFields["ClassroomType"]])]
                         )
                     );
                 }

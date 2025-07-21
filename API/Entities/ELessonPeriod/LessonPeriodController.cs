@@ -135,7 +135,7 @@ namespace AlpimiAPI.Entities.ELessonPeriod
                     return NotFound(
                         new ApiErrorResponse(
                             404,
-                            [new ErrorObject(_str["notFound", "LessonPeriod"])]
+                            [new ErrorObject(_str["notFound", _strFields["LessonPeriod"]])]
                         )
                     );
                 }

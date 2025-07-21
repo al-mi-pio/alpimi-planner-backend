@@ -132,7 +132,10 @@ namespace AlpimiAPI.Entities.ELessonType
                 if (result == null)
                 {
                     return NotFound(
-                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "LessonType"])])
+                        new ApiErrorResponse(
+                            404,
+                            [new ErrorObject(_str["notFound", _strFields["LessonType"]])]
+                        )
                     );
                 }
 
@@ -227,7 +230,10 @@ namespace AlpimiAPI.Entities.ELessonType
                 if (result == null)
                 {
                     return NotFound(
-                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "LessonType"])])
+                        new ApiErrorResponse(
+                            404,
+                            [new ErrorObject(_str["notFound", _strFields["LessonType"]])]
+                        )
                     );
                 }
 

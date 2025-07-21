@@ -103,7 +103,11 @@ namespace AlpimiAPI.Entities.EAvailability.Commands
             if (teacher.Value == null)
             {
                 throw new ApiErrorException(
-                    [new ErrorObject(_str["resourceNotFound", "Teacher", request.dto.TeacherId])]
+                    [
+                        new ErrorObject(
+                            _str["resourceNotFound", _strFields["Teacher"], request.dto.TeacherId]
+                        )
+                    ]
                 );
             }
 

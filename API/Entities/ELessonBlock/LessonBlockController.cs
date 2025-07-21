@@ -140,7 +140,7 @@ namespace AlpimiAPI.Entities.ELessonBlock
                     return NotFound(
                         new ApiErrorResponse(
                             404,
-                            [new ErrorObject(_str["notFound", "LessonBlock"])]
+                            [new ErrorObject(_str["notFound", _strFields["LessonBlock"]])]
                         )
                     );
                 }
@@ -244,7 +244,7 @@ namespace AlpimiAPI.Entities.ELessonBlock
                     return NotFound(
                         new ApiErrorResponse(
                             404,
-                            [new ErrorObject(_str["notFound", "LessonBlock"])]
+                            [new ErrorObject(_str["notFound", _strFields["LessonBlock"]])]
                         )
                     );
                 }

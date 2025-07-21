@@ -158,7 +158,9 @@ namespace AlpimiAPI.Entities.EScheduleSettings.Commands
 
             if (daysOffOutOfRange!.Any())
             {
-                throw new ApiErrorException([new ErrorObject(_str["outOfRange", "DayOff"])]);
+                throw new ApiErrorException(
+                    [new ErrorObject(_str["outOfRange", _strFields["DayOff"]])]
+                );
             }
 
             var lessonBlocksOutOfRange = await _dbService.GetAll<LessonBlock>(
@@ -175,7 +177,9 @@ namespace AlpimiAPI.Entities.EScheduleSettings.Commands
 
             if (lessonBlocksOutOfRange!.Any())
             {
-                throw new ApiErrorException([new ErrorObject(_str["outOfRange", "LessonBlock"])]);
+                throw new ApiErrorException(
+                    [new ErrorObject(_str["outOfRange", _strFields["LessonBlock"]])]
+                );
             }
 
             GetAllLessonPeriodByScheduleHandler getAllLessonPeriodByScheduleHandler =

@@ -123,7 +123,7 @@ namespace AlpimiAPI.Entities.EUser
                 if (result == null)
                 {
                     return NotFound(
-                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "User"])])
+                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound"_strFields["User"]])])
                     );
                 }
 
@@ -169,7 +169,7 @@ namespace AlpimiAPI.Entities.EUser
                 if (result == null)
                 {
                     return NotFound(
-                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "User"])])
+                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound"_strFields["User"]])])
                     );
                 }
 
@@ -210,7 +210,7 @@ namespace AlpimiAPI.Entities.EUser
                 if (result == null)
                 {
                     return NotFound(
-                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "User"])])
+                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound"_strFields["User"]])])
                     );
                 }
 

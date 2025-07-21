@@ -68,7 +68,11 @@ namespace AlpimiAPI.Entities.ESubgroup.Commands
             if (group.Value == null)
             {
                 throw new ApiErrorException(
-                    [new ErrorObject(_str["resourceNotFound", "Group", request.dto.GroupId])]
+                    [
+                        new ErrorObject(
+                            _str["resourceNotFound", _strFields["Group"], request.dto.GroupId]
+                        )
+                    ]
                 );
             }
 

@@ -127,7 +127,10 @@ namespace AlpimiAPI.Entities.EStudent
                 if (result == null)
                 {
                     return NotFound(
-                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "Student"])])
+                        new ApiErrorResponse(
+                            404,
+                            [new ErrorObject(_str["notFound", _strFields["Student"]])]
+                        )
                     );
                 }
 
@@ -222,7 +225,10 @@ namespace AlpimiAPI.Entities.EStudent
                 if (result == null)
                 {
                     return NotFound(
-                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "Student"])])
+                        new ApiErrorResponse(
+                            404,
+                            [new ErrorObject(_str["notFound", _strFields["Student"]])]
+                        )
                     );
                 }
 

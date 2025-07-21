@@ -60,7 +60,9 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
             if (lesson.Value == null)
             {
                 errors.Add(
-                    new ErrorObject(_str["resourceNotFound", "Lesson", request.dto.LessonId])
+                    new ErrorObject(
+                        _str["resourceNotFound", _strFields["Lesson"], request.dto.LessonId]
+                    )
                 );
             }
 
@@ -80,7 +82,11 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                 {
                     errors.Add(
                         new ErrorObject(
-                            _str["resourceNotFound", "Classroom", request.dto.ClassroomId]
+                            _str[
+                                "resourceNotFound",
+                                _strFields["Classroom"],
+                                request.dto.ClassroomId
+                            ]
                         )
                     );
                 }
@@ -89,7 +95,14 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                     if (lesson.Value.LessonType.ScheduleId != classroom.Value.ScheduleId)
                     {
                         errors.Add(
-                            new ErrorObject(_str["wrongSet", "Classroom", "Schedule", "Lesson"])
+                            new ErrorObject(
+                                _str[
+                                    "wrongSet",
+                                    _strFields["Classroom"],
+                                    _strFields["Schedule"],
+                                    _strFields["Lesson"]
+                                ]
+                            )
                         );
                     }
                 }

@@ -132,7 +132,10 @@ namespace AlpimiAPI.Entities.ESubgroup
                 if (result == null)
                 {
                     return NotFound(
-                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "Subgroup"])])
+                        new ApiErrorResponse(
+                            404,
+                            [new ErrorObject(_str["notFound", _strFields["Subgroup"]])]
+                        )
                     );
                 }
 
@@ -227,7 +230,10 @@ namespace AlpimiAPI.Entities.ESubgroup
                 if (result == null)
                 {
                     return NotFound(
-                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "Subgroup"])])
+                        new ApiErrorResponse(
+                            404,
+                            [new ErrorObject(_str["notFound", _strFields["Subgroup"]])]
+                        )
                     );
                 }
 

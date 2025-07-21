@@ -131,7 +131,10 @@ namespace AlpimiAPI.Entities.ESchedule
                 if (result == null)
                 {
                     return NotFound(
-                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "Schedule"])])
+                        new ApiErrorResponse(
+                            404,
+                            [new ErrorObject(_str["notFound", _strFields["Schedule"]])]
+                        )
                     );
                 }
 
@@ -224,7 +227,10 @@ namespace AlpimiAPI.Entities.ESchedule
                 if (result == null)
                 {
                     return NotFound(
-                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "Schedule"])])
+                        new ApiErrorResponse(
+                            404,
+                            [new ErrorObject(_str["notFound", _strFields["Schedule"]])]
+                        )
                     );
                 }
 

@@ -147,7 +147,11 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
                     {
                         errors.Add(
                             new ErrorObject(
-                                _str["resourceNotFound", "ClassroomType", classroomTypeId]
+                                _str[
+                                    "resourceNotFound",
+                                    _strFields["ClassroomType"],
+                                    classroomTypeId
+                                ]
                             )
                         );
                     }
@@ -155,7 +159,12 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
                     {
                         errors.Add(
                             new ErrorObject(
-                                _str["wrongSet", "ClassroomType", "Schedule", "Classroom"]
+                                _str[
+                                    "wrongSet",
+                                    _strFields["ClassroomType"],
+                                    _strFields["Schedule"],
+                                    _strFields["Classroom"]
+                                ]
                             )
                         );
                     }

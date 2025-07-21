@@ -132,7 +132,10 @@ namespace AlpimiAPI.Entities.EClassroom
                 if (result == null)
                 {
                     return NotFound(
-                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "Classroom"])])
+                        new ApiErrorResponse(
+                            404,
+                            [new ErrorObject(_str["notFound", _strFields["Classroom"]])]
+                        )
                     );
                 }
 
@@ -227,7 +230,10 @@ namespace AlpimiAPI.Entities.EClassroom
                 if (result == null)
                 {
                     return NotFound(
-                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "Classroom"])])
+                        new ApiErrorResponse(
+                            404,
+                            [new ErrorObject(_str["notFound", _strFields["Classroom"]])]
+                        )
                     );
                 }
 

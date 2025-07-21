@@ -67,7 +67,7 @@ namespace AlpimiAPI.Entities.EAvailability.Queries
             )
             {
                 errors.Add(
-                    new FieldErrorObject("sortBy", _str["badParamete", _strFields["SortBy"]])
+                    new FieldErrorObject("sortBy", _str["badParameter", _strFields["SortBy"]])
                 );
             }
 

@@ -44,7 +44,7 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
             {
                 errors.Add(
                     new FieldErrorObject(
-                        "SchoolHour",
+                        "schoolHour",
                         _str["badParameter", _strFields["SchoolHour"]]
                     )
                 );
@@ -57,7 +57,7 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
             {
                 errors.Add(
                     new FieldErrorObject(
-                        "SchoolDays",
+                        "schoolDays",
                         _str["badParameter", _strFields["SchoolDays"]]
                     )
                 );

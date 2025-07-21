@@ -91,7 +91,7 @@ namespace AlpimiAPI.Entities.EStudent.Commands
                 throw new ApiErrorException(
                     [
                         new FieldErrorObject(
-                            "name",
+                            "albumNumber",
                             _str["alreadyExists", _strFields["Student"], request.dto.AlbumNumber]
                         )
                     ]

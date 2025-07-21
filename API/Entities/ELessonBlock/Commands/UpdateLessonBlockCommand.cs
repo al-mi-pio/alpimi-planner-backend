@@ -185,7 +185,7 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
             {
                 errors.Add(
                     new FieldErrorObject(
-                        "LessonStart",
+                        "lessonStart",
                         _str["badParameter", _strFields["LessonStart"]]
                     )
                 );

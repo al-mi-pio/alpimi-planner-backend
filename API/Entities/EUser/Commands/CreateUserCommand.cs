@@ -52,7 +52,7 @@ namespace AlpimiAPI.Entities.EUser.Commands
             {
                 errors.Add(
                     new FieldErrorObject(
-                        "name",
+                        "login",
                         _str["alreadyExists", _strFields["User"], request.dto.Login!]
                     )
                 );
@@ -71,7 +71,7 @@ namespace AlpimiAPI.Entities.EUser.Commands
             {
                 errors.Add(
                     new FieldErrorObject(
-                        "name",
+                        "customUrl",
                         _str["alreadyExists", _strFields["CustomUrl"], request.dto.CustomURL!]
                     )
                 );

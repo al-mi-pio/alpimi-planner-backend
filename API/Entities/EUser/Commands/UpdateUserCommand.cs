@@ -90,7 +90,7 @@ namespace AlpimiAPI.Entities.EUser.Commands
                     throw new ApiErrorException(
                         [
                             new FieldErrorObject(
-                                "name",
+                                "customUrl",
                                 _str[
                                     "alreadyExists",
                                     _strFields["CustomUrl"],
@@ -135,7 +135,7 @@ namespace AlpimiAPI.Entities.EUser.Commands
                     throw new ApiErrorException(
                         [
                             new FieldErrorObject(
-                                "name",
+                                "login",
                                 _str["alreadyExists", _strFields["Login"], request.dto.Login]
                             )
                         ]

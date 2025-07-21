@@ -137,7 +137,7 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
             {
                 errors.Add(
                     new FieldErrorObject(
-                        "LessonStart",
+                        "lessonStart",
                         _str["badParameter", _strFields["LessonStart"]]
                     )
                 );
@@ -180,7 +180,7 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                 {
                     errors.Add(
                         new FieldErrorObject(
-                            "WeekInterval",
+                            "weekInterval",
                             _str["badParameter", _strFields["WeekInterval"]]
                         )
                     );

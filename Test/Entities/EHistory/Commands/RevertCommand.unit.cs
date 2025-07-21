@@ -15,17 +15,23 @@ namespace AlpimiTest.Entities.EHistory.Commands
     {
         private readonly Mock<IDbService> _dbService = new();
         private readonly Mock<IStringLocalizer<Errors>> _str;
+        private readonly Mock<IStringLocalizer<Fields>> _strFields;
 
         public CreateHistoryCommandUnit()
         {
             _str = ResourceSetup.Setup();
+            _strFields = ResourceSetup.FieldSetup();
         }
 
         [Fact]
         public async Task ThrowsErrorWhenThereAreNoChangesToUndo()
         {
             var revertCommand = new RevertCommand(new Guid(), false, new Guid(), "User");
-            var revertHandler = new RevertCommandHandler(_dbService.Object, _str.Object);
+            var revertHandler = new RevertCommandHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () => await revertHandler.Handle(revertCommand, new CancellationToken())
             );
@@ -42,7 +48,11 @@ namespace AlpimiTest.Entities.EHistory.Commands
         public async Task ThrowsErrorWhenThereAreNoChangesToRedo()
         {
             var revertCommand = new RevertCommand(new Guid(), true, new Guid(), "User");
-            var revertHandler = new RevertCommandHandler(_dbService.Object, _str.Object);
+            var revertHandler = new RevertCommandHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () => await revertHandler.Handle(revertCommand, new CancellationToken())
             );

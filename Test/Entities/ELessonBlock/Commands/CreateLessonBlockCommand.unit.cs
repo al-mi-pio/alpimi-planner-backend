@@ -21,10 +21,12 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
     {
         private readonly Mock<IDbService> _dbService = new();
         private readonly Mock<IStringLocalizer<Errors>> _str;
+        private readonly Mock<IStringLocalizer<Fields>> _strFields;
 
         public CreateLessonBlockCommandUnit()
         {
             _str = ResourceSetup.Setup();
+            _strFields = ResourceSetup.FieldSetup();
         }
 
         [Fact]
@@ -46,7 +48,8 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
             );
             var createLessonBlockHandler = new CreateLessonBlockHandler(
                 _dbService.Object,
-                _str.Object
+                _str.Object,
+                _strFields.Object
             );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
@@ -91,7 +94,8 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
             );
             var createLessonBlockHandler = new CreateLessonBlockHandler(
                 _dbService.Object,
-                _str.Object
+                _str.Object,
+                _strFields.Object
             );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
@@ -141,7 +145,8 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
             );
             var createLessonBlockHandler = new CreateLessonBlockHandler(
                 _dbService.Object,
-                _str.Object
+                _str.Object,
+                _strFields.Object
             );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
@@ -199,7 +204,8 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
             );
             var createLessonBlockHandler = new CreateLessonBlockHandler(
                 _dbService.Object,
-                _str.Object
+                _str.Object,
+                _strFields.Object
             );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
@@ -256,7 +262,8 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
             );
             var createLessonBlockHandler = new CreateLessonBlockHandler(
                 _dbService.Object,
-                _str.Object
+                _str.Object,
+                _strFields.Object
             );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
@@ -268,7 +275,10 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
 
             Assert.Equal(
                 JsonConvert.SerializeObject(
-                    new ErrorObject[] { new ErrorObject("LessonStart parameter is invalid") }
+                    new ErrorObject[]
+                    {
+                        new FieldErrorObject("lessonStart", "Lesson Start parameter is invalid")
+                    }
                 ),
                 JsonConvert.SerializeObject(result.errors)
             );
@@ -310,7 +320,8 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
             );
             var createLessonBlockHandler = new CreateLessonBlockHandler(
                 _dbService.Object,
-                _str.Object
+                _str.Object,
+                _strFields.Object
             );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
@@ -322,7 +333,10 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
 
             Assert.Equal(
                 JsonConvert.SerializeObject(
-                    new ErrorObject[] { new ErrorObject("LessonEnd parameter is invalid") }
+                    new ErrorObject[]
+                    {
+                        new FieldErrorObject("lessonEnd", "Lesson End parameter is invalid")
+                    }
                 ),
                 JsonConvert.SerializeObject(result.errors)
             );
@@ -364,7 +378,8 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
             );
             var createLessonBlockHandler = new CreateLessonBlockHandler(
                 _dbService.Object,
-                _str.Object
+                _str.Object,
+                _strFields.Object
             );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
@@ -413,7 +428,8 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
             );
             var createLessonBlockHandler = new CreateLessonBlockHandler(
                 _dbService.Object,
-                _str.Object
+                _str.Object,
+                _strFields.Object
             );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
@@ -462,7 +478,8 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
             );
             var createLessonBlockHandler = new CreateLessonBlockHandler(
                 _dbService.Object,
-                _str.Object
+                _str.Object,
+                _strFields.Object
             );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
@@ -516,7 +533,8 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
             );
             var createLessonBlockHandler = new CreateLessonBlockHandler(
                 _dbService.Object,
-                _str.Object
+                _str.Object,
+                _strFields.Object
             );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
@@ -528,7 +546,10 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
 
             Assert.Equal(
                 JsonConvert.SerializeObject(
-                    new ErrorObject[] { new ErrorObject("WeekInterval parameter is invalid") }
+                    new ErrorObject[]
+                    {
+                        new FieldErrorObject("weekInterval", "Week Interval parameter is invalid")
+                    }
                 ),
                 JsonConvert.SerializeObject(result.errors)
             );

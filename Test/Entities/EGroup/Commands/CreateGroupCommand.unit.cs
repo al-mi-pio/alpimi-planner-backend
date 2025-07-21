@@ -19,10 +19,12 @@ namespace AlpimiTest.Entities.EGroup.Commands
     {
         private readonly Mock<IDbService> _dbService = new();
         private readonly Mock<IStringLocalizer<Errors>> _str;
+        private readonly Mock<IStringLocalizer<Fields>> _strFields;
 
         public CreateGroupCommandUnit()
         {
             _str = ResourceSetup.Setup();
+            _strFields = ResourceSetup.FieldSetup();
         }
 
         [Fact]
@@ -34,7 +36,11 @@ namespace AlpimiTest.Entities.EGroup.Commands
                 new Guid(),
                 "User"
             );
-            var createGroupHandler = new CreateGroupHandler(_dbService.Object, _str.Object);
+            var createGroupHandler = new CreateGroupHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createGroupHandler.Handle(createGroupCommand, new CancellationToken())
@@ -65,7 +71,11 @@ namespace AlpimiTest.Entities.EGroup.Commands
                 .ReturnsAsync(MockData.GetGroupDetails());
 
             var createGroupCommand = new CreateGroupCommand(new Guid(), dto, new Guid(), "User");
-            var createGroupHandler = new CreateGroupHandler(_dbService.Object, _str.Object);
+            var createGroupHandler = new CreateGroupHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createGroupHandler.Handle(createGroupCommand, new CancellationToken())
@@ -89,7 +99,11 @@ namespace AlpimiTest.Entities.EGroup.Commands
                 .ReturnsAsync(MockData.GetSubgroupDetails());
 
             var createGroupCommand = new CreateGroupCommand(new Guid(), dto, new Guid(), "User");
-            var createGroupHandler = new CreateGroupHandler(_dbService.Object, _str.Object);
+            var createGroupHandler = new CreateGroupHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createGroupHandler.Handle(createGroupCommand, new CancellationToken())
@@ -108,13 +122,17 @@ namespace AlpimiTest.Entities.EGroup.Commands
             dto.StudentCount = -1;
 
             var createGroupCommand = new CreateGroupCommand(new Guid(), dto, new Guid(), "User");
-            var createGroupHandler = new CreateGroupHandler(_dbService.Object, _str.Object);
+            var createGroupHandler = new CreateGroupHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createGroupHandler.Handle(createGroupCommand, new CancellationToken())
             );
 
-            Assert.Equal("StudentCount parameter is invalid", result.errors.First().message);
+            Assert.Equal("Student Count parameter is invalid", result.errors.First().message);
         }
     }
 }

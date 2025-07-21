@@ -17,10 +17,12 @@ namespace AlpimiTest.Entities.EGroup.Commands
     {
         private readonly Mock<IDbService> _dbService = new();
         private readonly Mock<IStringLocalizer<Errors>> _str;
+        private readonly Mock<IStringLocalizer<Fields>> _strFields;
 
         public UpdateGroupCommandUnit()
         {
             _str = ResourceSetup.Setup();
+            _strFields = ResourceSetup.FieldSetup();
         }
 
         [Fact]
@@ -35,7 +37,11 @@ namespace AlpimiTest.Entities.EGroup.Commands
                 .ReturnsAsync(new List<Group> { MockData.GetGroupDetails() });
 
             var updateGroupCommand = new UpdateGroupCommand(new Guid(), dto, new Guid(), "Admin");
-            var updateGroupHandler = new UpdateGroupHandler(_dbService.Object, _str.Object);
+            var updateGroupHandler = new UpdateGroupHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateGroupHandler.Handle(updateGroupCommand, new CancellationToken())
@@ -59,7 +65,11 @@ namespace AlpimiTest.Entities.EGroup.Commands
                 .ReturnsAsync(new List<Subgroup> { MockData.GetSubgroupDetails() });
 
             var updateGroupCommand = new UpdateGroupCommand(new Guid(), dto, new Guid(), "Admin");
-            var updateGroupHandler = new UpdateGroupHandler(_dbService.Object, _str.Object);
+            var updateGroupHandler = new UpdateGroupHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateGroupHandler.Handle(updateGroupCommand, new CancellationToken())
@@ -78,13 +88,17 @@ namespace AlpimiTest.Entities.EGroup.Commands
             dto.StudentCount = -1;
 
             var updateGroupCommand = new UpdateGroupCommand(new Guid(), dto, new Guid(), "Admin");
-            var updateGroupHandler = new UpdateGroupHandler(_dbService.Object, _str.Object);
+            var updateGroupHandler = new UpdateGroupHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateGroupHandler.Handle(updateGroupCommand, new CancellationToken())
             );
 
-            Assert.Equal("StudentCount parameter is invalid", result.errors.First().message);
+            Assert.Equal("Student Count parameter is invalid", result.errors.First().message);
         }
 
         [Fact]
@@ -100,7 +114,11 @@ namespace AlpimiTest.Entities.EGroup.Commands
                 .ReturnsAsync(new List<Guid> { new Guid() });
 
             var updateGroupCommand = new UpdateGroupCommand(new Guid(), dto, new Guid(), "Admin");
-            var updateGroupHandler = new UpdateGroupHandler(_dbService.Object, _str.Object);
+            var updateGroupHandler = new UpdateGroupHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateGroupHandler.Handle(updateGroupCommand, new CancellationToken())

@@ -21,10 +21,12 @@ namespace AlpimiTest.Entities.EScheduleSettings.Commands
     {
         private readonly Mock<IDbService> _dbService = new();
         private readonly Mock<IStringLocalizer<Errors>> _str;
+        private readonly Mock<IStringLocalizer<Fields>> _strFields;
 
         public UpdateScheduleSettingsCommandUnit()
         {
             _str = ResourceSetup.Setup();
+            _strFields = ResourceSetup.FieldSetup();
         }
 
         [Fact]
@@ -46,7 +48,8 @@ namespace AlpimiTest.Entities.EScheduleSettings.Commands
             );
             var updateScheduleSettingsHandler = new UpdateScheduleSettingsHandler(
                 _dbService.Object,
-                _str.Object
+                _str.Object,
+                _strFields.Object
             );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
@@ -88,7 +91,8 @@ namespace AlpimiTest.Entities.EScheduleSettings.Commands
             );
             var updateScheduleSettingsHandler = new UpdateScheduleSettingsHandler(
                 _dbService.Object,
-                _str.Object
+                _str.Object,
+                _strFields.Object
             );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
@@ -103,7 +107,7 @@ namespace AlpimiTest.Entities.EScheduleSettings.Commands
                     new ErrorObject[]
                     {
                         new ErrorObject(
-                            "There are DayOff outside of provided range. Please change them first"
+                            "There are Day Off outside of provided range. Please change them first"
                         )
                     }
                 ),
@@ -132,7 +136,8 @@ namespace AlpimiTest.Entities.EScheduleSettings.Commands
             );
             var updateScheduleSettingsHandler = new UpdateScheduleSettingsHandler(
                 _dbService.Object,
-                _str.Object
+                _str.Object,
+                _strFields.Object
             );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
@@ -147,7 +152,7 @@ namespace AlpimiTest.Entities.EScheduleSettings.Commands
                     new ErrorObject[]
                     {
                         new ErrorObject(
-                            "There are LessonBlock outside of provided range. Please change them first"
+                            "There are Lesson Block outside of provided range. Please change them first"
                         )
                     }
                 ),
@@ -169,7 +174,8 @@ namespace AlpimiTest.Entities.EScheduleSettings.Commands
             );
             var updateScheduleSettingsHandler = new UpdateScheduleSettingsHandler(
                 _dbService.Object,
-                _str.Object
+                _str.Object,
+                _strFields.Object
             );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
@@ -181,7 +187,10 @@ namespace AlpimiTest.Entities.EScheduleSettings.Commands
 
             Assert.Equal(
                 JsonConvert.SerializeObject(
-                    new ErrorObject[] { new ErrorObject("SchoolHour parameter is invalid") }
+                    new ErrorObject[]
+                    {
+                        new FieldErrorObject("schoolHour", "School Hour parameter is invalid")
+                    }
                 ),
                 JsonConvert.SerializeObject(result.errors)
             );
@@ -201,7 +210,8 @@ namespace AlpimiTest.Entities.EScheduleSettings.Commands
             );
             var updateScheduleSettingsHandler = new UpdateScheduleSettingsHandler(
                 _dbService.Object,
-                _str.Object
+                _str.Object,
+                _strFields.Object
             );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
@@ -213,7 +223,10 @@ namespace AlpimiTest.Entities.EScheduleSettings.Commands
 
             Assert.Equal(
                 JsonConvert.SerializeObject(
-                    new ErrorObject[] { new ErrorObject("SchoolHour parameter is invalid") }
+                    new ErrorObject[]
+                    {
+                        new FieldErrorObject("schoolHour", "School Hour parameter is invalid")
+                    }
                 ),
                 JsonConvert.SerializeObject(result.errors)
             );
@@ -233,7 +246,8 @@ namespace AlpimiTest.Entities.EScheduleSettings.Commands
             );
             var updateScheduleSettingsHandler = new UpdateScheduleSettingsHandler(
                 _dbService.Object,
-                _str.Object
+                _str.Object,
+                _strFields.Object
             );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
@@ -245,7 +259,10 @@ namespace AlpimiTest.Entities.EScheduleSettings.Commands
 
             Assert.Equal(
                 JsonConvert.SerializeObject(
-                    new ErrorObject[] { new ErrorObject("SchoolDays parameter is invalid") }
+                    new ErrorObject[]
+                    {
+                        new FieldErrorObject("schoolDays", "School Days parameter is invalid")
+                    }
                 ),
                 JsonConvert.SerializeObject(result.errors)
             );
@@ -265,7 +282,8 @@ namespace AlpimiTest.Entities.EScheduleSettings.Commands
             );
             var updateScheduleSettingsHandler = new UpdateScheduleSettingsHandler(
                 _dbService.Object,
-                _str.Object
+                _str.Object,
+                _strFields.Object
             );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
@@ -277,7 +295,10 @@ namespace AlpimiTest.Entities.EScheduleSettings.Commands
 
             Assert.Equal(
                 JsonConvert.SerializeObject(
-                    new ErrorObject[] { new ErrorObject("SchoolDays parameter is invalid") }
+                    new ErrorObject[]
+                    {
+                        new FieldErrorObject("schoolDays", "School Days parameter is invalid")
+                    }
                 ),
                 JsonConvert.SerializeObject(result.errors)
             );
@@ -307,7 +328,8 @@ namespace AlpimiTest.Entities.EScheduleSettings.Commands
             );
             var updateScheduleSettingsHandler = new UpdateScheduleSettingsHandler(
                 _dbService.Object,
-                _str.Object
+                _str.Object,
+                _strFields.Object
             );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
@@ -319,7 +341,10 @@ namespace AlpimiTest.Entities.EScheduleSettings.Commands
 
             Assert.Equal(
                 JsonConvert.SerializeObject(
-                    new ErrorObject[] { new ErrorObject("LessonPeriods cannot overlap") }
+                    new ErrorObject[]
+                    {
+                        new FieldErrorObject("schoolHour", "Lesson Periods cannot overlap")
+                    }
                 ),
                 JsonConvert.SerializeObject(result.errors)
             );
@@ -342,7 +367,8 @@ namespace AlpimiTest.Entities.EScheduleSettings.Commands
             );
             var updateScheduleSettingsHandler = new UpdateScheduleSettingsHandler(
                 _dbService.Object,
-                _str.Object
+                _str.Object,
+                _strFields.Object
             );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>

@@ -16,10 +16,12 @@ namespace AlpimiTest.Entities.ELessonType.Commands
     {
         private readonly Mock<IDbService> _dbService = new();
         private readonly Mock<IStringLocalizer<Errors>> _str;
+        private readonly Mock<IStringLocalizer<Fields>> _strFields;
 
         public UpdateLessonTypeCommandUnit()
         {
             _str = ResourceSetup.Setup();
+            _strFields = ResourceSetup.FieldSetup();
         }
 
         [Fact]
@@ -41,7 +43,8 @@ namespace AlpimiTest.Entities.ELessonType.Commands
             );
             var updateLessonTypeHandler = new UpdateLessonTypeHandler(
                 _dbService.Object,
-                _str.Object
+                _str.Object,
+                _strFields.Object
             );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
@@ -52,7 +55,7 @@ namespace AlpimiTest.Entities.ELessonType.Commands
             );
 
             Assert.Equal(
-                "There is already a LessonType with the name E5",
+                "There is already a Lesson Type with the name E5",
                 result.errors.First().message
             );
         }
@@ -71,7 +74,8 @@ namespace AlpimiTest.Entities.ELessonType.Commands
             );
             var updateLessonTypeHandler = new UpdateLessonTypeHandler(
                 _dbService.Object,
-                _str.Object
+                _str.Object,
+                _strFields.Object
             );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
@@ -98,7 +102,8 @@ namespace AlpimiTest.Entities.ELessonType.Commands
             );
             var updateLessonTypeHandler = new UpdateLessonTypeHandler(
                 _dbService.Object,
-                _str.Object
+                _str.Object,
+                _strFields.Object
             );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>

@@ -18,10 +18,12 @@ namespace AlpimiTest.Entities.EStudent.Commands
     {
         private readonly Mock<IDbService> _dbService = new();
         private readonly Mock<IStringLocalizer<Errors>> _str;
+        private readonly Mock<IStringLocalizer<Fields>> _strFields;
 
         public UpdateStudentCommandUnit()
         {
             _str = ResourceSetup.Setup();
+            _strFields = ResourceSetup.FieldSetup();
         }
 
         [Fact]
@@ -44,7 +46,11 @@ namespace AlpimiTest.Entities.EStudent.Commands
                 new Guid(),
                 "Admin"
             );
-            var updateStudentHandler = new UpdateStudentHandler(_dbService.Object, _str.Object);
+            var updateStudentHandler = new UpdateStudentHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateStudentHandler.Handle(updateStudentCommand, new CancellationToken())
@@ -76,7 +82,11 @@ namespace AlpimiTest.Entities.EStudent.Commands
                 "User"
             );
 
-            var createStudentHandler = new UpdateStudentHandler(_dbService.Object, _str.Object);
+            var createStudentHandler = new UpdateStudentHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
 
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
@@ -112,7 +122,11 @@ namespace AlpimiTest.Entities.EStudent.Commands
                 "User"
             );
 
-            var createStudentHandler = new UpdateStudentHandler(_dbService.Object, _str.Object);
+            var createStudentHandler = new UpdateStudentHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
 
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
@@ -150,7 +164,11 @@ namespace AlpimiTest.Entities.EStudent.Commands
                 "User"
             );
 
-            var createStudentHandler = new UpdateStudentHandler(_dbService.Object, _str.Object);
+            var createStudentHandler = new UpdateStudentHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
 
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>

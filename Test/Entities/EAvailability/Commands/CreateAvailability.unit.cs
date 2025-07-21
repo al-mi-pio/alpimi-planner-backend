@@ -18,10 +18,12 @@ namespace AlpimiTest.Entities.EAvailability.Commands
     {
         private readonly Mock<IDbService> _dbService = new();
         private readonly Mock<IStringLocalizer<Errors>> _str;
+        private readonly Mock<IStringLocalizer<Fields>> _strFields;
 
         public CreateAvailabilityCommandUnit()
         {
             _str = ResourceSetup.Setup();
+            _strFields = ResourceSetup.FieldSetup();
         }
 
         [Fact]
@@ -35,7 +37,8 @@ namespace AlpimiTest.Entities.EAvailability.Commands
             );
             var createAvailabilityHandler = new CreateAvailabilityHandler(
                 _dbService.Object,
-                _str.Object
+                _str.Object,
+                _strFields.Object
             );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
@@ -82,7 +85,8 @@ namespace AlpimiTest.Entities.EAvailability.Commands
             );
             var createAvailabilityHandler = new CreateAvailabilityHandler(
                 _dbService.Object,
-                _str.Object
+                _str.Object,
+                _strFields.Object
             );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
@@ -126,7 +130,8 @@ namespace AlpimiTest.Entities.EAvailability.Commands
             );
             var createAvailabilityHandler = new CreateAvailabilityHandler(
                 _dbService.Object,
-                _str.Object
+                _str.Object,
+                _strFields.Object
             );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
@@ -138,7 +143,10 @@ namespace AlpimiTest.Entities.EAvailability.Commands
 
             Assert.Equal(
                 JsonConvert.SerializeObject(
-                    new ErrorObject[] { new ErrorObject("Start parameter is invalid") }
+                    new FieldErrorObject[]
+                    {
+                        new FieldErrorObject("start", "Start parameter is invalid")
+                    }
                 ),
                 JsonConvert.SerializeObject(result.errors)
             );
@@ -167,7 +175,8 @@ namespace AlpimiTest.Entities.EAvailability.Commands
             );
             var createAvailabilityHandler = new CreateAvailabilityHandler(
                 _dbService.Object,
-                _str.Object
+                _str.Object,
+                _strFields.Object
             );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
@@ -179,7 +188,10 @@ namespace AlpimiTest.Entities.EAvailability.Commands
 
             Assert.Equal(
                 JsonConvert.SerializeObject(
-                    new ErrorObject[] { new ErrorObject("End parameter is invalid") }
+                    new FieldErrorObject[]
+                    {
+                        new FieldErrorObject("end", "End parameter is invalid")
+                    }
                 ),
                 JsonConvert.SerializeObject(result.errors)
             );

@@ -16,10 +16,12 @@ namespace AlpimiTest.Entities.ECollisionType.Commands
     {
         private readonly Mock<IDbService> _dbService = new();
         private readonly Mock<IStringLocalizer<Errors>> _str;
+        private readonly Mock<IStringLocalizer<Fields>> _strFields;
 
         public UpdateCollisionTypeCommandUnit()
         {
             _str = ResourceSetup.Setup();
+            _strFields = ResourceSetup.FieldSetup();
         }
 
         [Fact]
@@ -41,7 +43,8 @@ namespace AlpimiTest.Entities.ECollisionType.Commands
             );
             var updateCollisionTypeHandler = new UpdateCollisionTypeHandler(
                 _dbService.Object,
-                _str.Object
+                _str.Object,
+                _strFields.Object
             );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
@@ -52,7 +55,7 @@ namespace AlpimiTest.Entities.ECollisionType.Commands
             );
 
             Assert.Equal(
-                "There is already a CollisionType with the name Nie",
+                "There is already a Collision Type with the name Nie",
                 result.errors.First().message
             );
         }
@@ -71,7 +74,8 @@ namespace AlpimiTest.Entities.ECollisionType.Commands
             );
             var updateCollisionTypeHandler = new UpdateCollisionTypeHandler(
                 _dbService.Object,
-                _str.Object
+                _str.Object,
+                _strFields.Object
             );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>

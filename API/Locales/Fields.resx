@@ -183,8 +183,8 @@
   <data name="Color" xml:space="preserve">
     <value>Color</value>
   </data>
-  <data name="Weekday" xml:space="preserve">
-    <value>Weekday</value>
+  <data name="WeekDay" xml:space="preserve">
+    <value>Week Day</value>
   </data>
   <data name="Start" xml:space="preserve">
     <value>Start</value>
@@ -214,28 +214,87 @@
     <value>Subgroup</value>
   </data>
   <data name="ClassroomType" xml:space="preserve">
-    <value>ClassroomType</value>
+    <value>Classroom Type</value>
   </data>
   <data name="LessonPeriod" xml:space="preserve">
-    <value>LessonPeriod</value>
+    <value>Lesson Period</value>
   </data>
-<data name="Auth" xml:space="preserve"><value>Auth</value></data>
-<data name="User" xml:space="preserve"><value>User</value></data>
-<data name="Schedule" xml:space="preserve"><value>Schedule</value></data>
-<data name="History" xml:space="preserve"><value>History</value></data>
-<data name="ScheduleSettings" xml:space="preserve"><value>ScheduleSettings</value></data>
-<data name="DayOff" xml:space="preserve"><value>Day Off</value></data>
-<data name="LessonPeriod" xml:space="preserve"><value>Lesson Period</value></data>
-<data name="CollisionType" xml:space="preserve"><value>Collision Type</value></data>
-<data name="Collision" xml:space="preserve"><value>Collision</value></data>
-<data name="Classroom" xml:space="preserve"><value>Classroom</value></data>
-<data name="ClassroomType" xml:space="preserve"><value>Classroom Type</value></data>
-<data name="LessonType" xml:space="preserve"><value>Lesson Type</value></data>
-<data name="Lesson" xml:space="preserve"><value>Lesson</value></data>
-<data name="Teacher" xml:space="preserve"><value>Teacher</value></data>
-<data name="Availability" xml:space="preserve"><value>Availability</value></data>
-<data name="Group" xml:space="preserve"><value>Group</value></data>
-<data name="Subgroup" xml:space="preserve"><value>Subgroup</value></data>
-<data name="Student" xml:space="preserve"><value>Student</value></data>
-<data name="LessonBlock" xml:space="preserve"><value>Lesson Block</value></data>
+  <data name="Auth" xml:space="preserve">
+    <value>Auth</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>User</value>
+  </data>
+  <data name="Schedule" xml:space="preserve">
+    <value>Schedule</value>
+  </data>
+  <data name="History" xml:space="preserve">
+    <value>History</value>
+  </data>
+  <data name="ScheduleSettings" xml:space="preserve">
+    <value>ScheduleSettings</value>
+  </data>
+  <data name="DayOff" xml:space="preserve">
+    <value>Day Off</value>
+  </data>
+  <data name="CollisionType" xml:space="preserve">
+    <value>Collision Type</value>
+  </data>
+  <data name="Collision" xml:space="preserve">
+    <value>Collision</value>
+  </data>
+  <data name="Classroom" xml:space="preserve">
+    <value>Classroom</value>
+  </data>
+  <data name="LessonType" xml:space="preserve">
+    <value>Lesson Type</value>
+  </data>
+  <data name="Lesson" xml:space="preserve">
+    <value>Lesson</value>
+  </data>
+  <data name="Teacher" xml:space="preserve">
+    <value>Teacher</value>
+  </data>
+  <data name="Availability" xml:space="preserve">
+    <value>Availability</value>
+  </data>
+  <data name="Group" xml:space="preserve">
+    <value>Group</value>
+  </data>
+  <data name="Student" xml:space="preserve">
+    <value>Student</value>
+  </data>
+  <data name="LessonBlock" xml:space="preserve">
+    <value>Lesson Block</value>
+  </data>
+  <data name="Page" xml:space="preserve">
+    <value>Page</value>
+  </data>
+  <data name="PerPage" xml:space="preserve">
+    <value>Per Page</value>
+  </data>
+  <data name="SortBy" xml:space="preserve">
+    <value>Sort By</value>
+  </data>
+  <data name="OrderBy" xml:space="preserve">
+    <value>Order By</value>
+  </data>
+  <data name="SortOrder" xml:space="preserve">
+    <value>Sort Order</value>
+  </data>
+  <data name="AmountOfHours" xml:space="preserve">
+    <value>AmountOfHours</value>
+  </data>
+  <data name="LessonStart" xml:space="preserve">
+    <value>Lesson Start</value>
+  </data>
+  <data name="LessonEnd" xml:space="preserve">
+    <value>Lesson End</value>
+  </data>
+  <data name="WeekInterval" xml:space="preserve">
+    <value>Week Interval</value>
+  </data>
+  <data name="SchoolDays" xml:space="preserve">
+    <value>School Days</value>
+  </data>
 </root>

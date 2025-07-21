@@ -219,4 +219,23 @@
   <data name="LessonPeriod" xml:space="preserve">
     <value>LessonPeriod</value>
   </data>
+<data name="Auth" xml:space="preserve"><value>Auth</value></data>
+<data name="User" xml:space="preserve"><value>User</value></data>
+<data name="Schedule" xml:space="preserve"><value>Schedule</value></data>
+<data name="History" xml:space="preserve"><value>History</value></data>
+<data name="ScheduleSettings" xml:space="preserve"><value>ScheduleSettings</value></data>
+<data name="DayOff" xml:space="preserve"><value>Day Off</value></data>
+<data name="LessonPeriod" xml:space="preserve"><value>Lesson Period</value></data>
+<data name="CollisionType" xml:space="preserve"><value>Collision Type</value></data>
+<data name="Collision" xml:space="preserve"><value>Collision</value></data>
+<data name="Classroom" xml:space="preserve"><value>Classroom</value></data>
+<data name="ClassroomType" xml:space="preserve"><value>Classroom Type</value></data>
+<data name="LessonType" xml:space="preserve"><value>Lesson Type</value></data>
+<data name="Lesson" xml:space="preserve"><value>Lesson</value></data>
+<data name="Teacher" xml:space="preserve"><value>Teacher</value></data>
+<data name="Availability" xml:space="preserve"><value>Availability</value></data>
+<data name="Group" xml:space="preserve"><value>Group</value></data>
+<data name="Subgroup" xml:space="preserve"><value>Subgroup</value></data>
+<data name="Student" xml:space="preserve"><value>Student</value></data>
+<data name="LessonBlock" xml:space="preserve"><value>Lesson Block</value></data>
 </root>

@@ -9,8 +9,10 @@ public class LocalizedRequiredAttribute : RequiredAttribute
     {
         var _str = (IStringLocalizer)
             validationContext.GetService(typeof(IStringLocalizer<Errors>))!;
+        var _strFields = (IStringLocalizer)
+            validationContext.GetService(typeof(IStringLocalizer<Fields>))!;
 
-        string errorMessage = _str["requiredField", validationContext.DisplayName];
+        string errorMessage = _str["requiredField", _strFields[validationContext.DisplayName]];
 
         if (value == null || (value is string str && string.IsNullOrWhiteSpace(str)))
         {

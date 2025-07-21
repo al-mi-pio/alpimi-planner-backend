@@ -219,4 +219,23 @@
   <data name="LessonPeriod" xml:space="preserve">
     <value>Okres Lekcyjny</value>
   </data>
+<data name="Auth" xml:space="preserve"><value>Uwierzytelnianie</value></data>
+<data name="User" xml:space="preserve"><value>Użytkownik</value></data>
+<data name="Schedule" xml:space="preserve"><value>Harmonogram</value></data>
+<data name="History" xml:space="preserve"><value>Historia</value></data>
+<data name="ScheduleSettings" xml:space="preserve"><value>Ustawienia Harmonogramu</value></data>
+<data name="DayOff" xml:space="preserve"><value>Dzień Wolny</value></data>
+<data name="LessonPeriod" xml:space="preserve"><value>Okres Lekcyjny</value></data>
+<data name="CollisionType" xml:space="preserve"><value>Typ Kolizji</value></data>
+<data name="Collision" xml:space="preserve"><value>Kolizja</value></data>
+<data name="Classroom" xml:space="preserve"><value>Sala</value></data>
+<data name="ClassroomType" xml:space="preserve"><value>Typ Sali</value></data>
+<data name="LessonType" xml:space="preserve"><value>Typ Lekcji</value></data>
+<data name="Lesson" xml:space="preserve"><value>Lekcja</value></data>
+<data name="Teacher" xml:space="preserve"><value>Nauczyciel</value></data>
+<data name="Availability" xml:space="preserve"><value>Dostępność</value></data>
+<data name="Group" xml:space="preserve"><value>Grupa</value></data>
+<data name="Subgroup" xml:space="preserve"><value>Podgrupa</value></data>
+<data name="Student" xml:space="preserve"><value>Student</value></data>
+<data name="LessonBlock" xml:space="preserve"><value>Blok Lekcyjny</value></data>
 </root>

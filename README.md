@@ -25,6 +25,16 @@
 
 ```sh
 CONNECTION_STRING="paste_your_connection_string_here"
+JWT_ISSUER="https://alpimi.pl/"
+JWT_EXPIRE=60
+HASH_ITERATIONS=10000
+HASH_ALGORITHM="SHA256"
+TEST_CONNECTION_STRING="paste_your_test_connection_string_here"
+PERMIT_LIMIT=10
+TIME_WINDOW=2
+HISTORY_LIMIT=100
+JWT_KEY="ee3f34fbce163926832799463f316ba996fcbd7481f44aefb7eb48a4bd9e7f16"
+KEY_SIZE=256
 ```
 
 - Install Entity Framework tool globally

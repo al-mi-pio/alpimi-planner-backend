@@ -23,11 +23,17 @@ namespace AlpimiAPI.Entities.EClassroomType.Commands
     {
         private readonly IDbService _dbService;
         private readonly IStringLocalizer<Errors> _str;
+        private readonly IStringLocalizer<Fields> _strFields;
 
-        public CreateClassroomTypeHandler(IDbService dbService, IStringLocalizer<Errors> str)
+        public CreateClassroomTypeHandler(
+            IDbService dbService,
+            IStringLocalizer<Errors> str,
+            IStringLocalizer<Fields> strFields
+        )
         {
             _dbService = dbService;
             _str = str;
+            _strFields = strFields;
         }
 
         public async Task<Guid> Handle(
@@ -37,7 +43,7 @@ namespace AlpimiAPI.Entities.EClassroomType.Commands
         {
             GetScheduleHandler getScheduleHandler = new GetScheduleHandler(_dbService);
             GetScheduleQuery getScheduleQuery = new GetScheduleQuery(
-                request.dto.ScheduleId,
+                request.dto.ScheduleId!.Value,
                 request.FilteredId,
                 request.Role
             );
@@ -49,7 +55,11 @@ namespace AlpimiAPI.Entities.EClassroomType.Commands
             if (schedule.Value == null)
             {
                 throw new ApiErrorException(
-                    [new ErrorObject(_str["resourceNotFound", "Schedule", request.dto.ScheduleId])]
+                    [
+                        new ErrorObject(
+                            _str["resourceNotFound", _strFields["Schedule"], request.dto.ScheduleId]
+                        )
+                    ]
                 );
             }
 
@@ -65,7 +75,12 @@ namespace AlpimiAPI.Entities.EClassroomType.Commands
             if (classroomTypeName != null)
             {
                 throw new ApiErrorException(
-                    [new ErrorObject(_str["alreadyExists", "ClassroomType", request.dto.Name])]
+                    [
+                        new FieldErrorObject(
+                            "name",
+                            _str["alreadyExists", _strFields["ClassroomType"], request.dto.Name!]
+                        )
+                    ]
                 );
             }
 

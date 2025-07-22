@@ -23,11 +23,17 @@ namespace AlpimiAPI.Entities.ELessonType.Commands
     {
         private readonly IDbService _dbService;
         private readonly IStringLocalizer<Errors> _str;
+        private readonly IStringLocalizer<Fields> _strFields;
 
-        public CreateLessonTypeHandler(IDbService dbService, IStringLocalizer<Errors> str)
+        public CreateLessonTypeHandler(
+            IDbService dbService,
+            IStringLocalizer<Errors> str,
+            IStringLocalizer<Fields> strFields
+        )
         {
             _dbService = dbService;
             _str = str;
+            _strFields = strFields;
         }
 
         public async Task<Guid> Handle(
@@ -37,12 +43,14 @@ namespace AlpimiAPI.Entities.ELessonType.Commands
         {
             if (request.dto.Color < 0 || request.dto.Color > 359)
             {
-                throw new ApiErrorException([new ErrorObject(_str["badParameter", "Color"])]);
+                throw new ApiErrorException(
+                    [new FieldErrorObject("color", _str["badParameter", _strFields["Color"]])]
+                );
             }
 
             GetScheduleHandler getScheduleHandler = new GetScheduleHandler(_dbService);
             GetScheduleQuery getScheduleQuery = new GetScheduleQuery(
-                request.dto.ScheduleId,
+                request.dto.ScheduleId!.Value,
                 request.FilteredId,
                 request.Role
             );
@@ -54,7 +62,11 @@ namespace AlpimiAPI.Entities.ELessonType.Commands
             if (schedule.Value == null)
             {
                 throw new ApiErrorException(
-                    [new ErrorObject(_str["resourceNotFound", "Schedule", request.dto.ScheduleId])]
+                    [
+                        new ErrorObject(
+                            _str["resourceNotFound", _strFields["Schedule"], request.dto.ScheduleId]
+                        )
+                    ]
                 );
             }
 
@@ -70,7 +82,12 @@ namespace AlpimiAPI.Entities.ELessonType.Commands
             if (lessonTypeName != null)
             {
                 throw new ApiErrorException(
-                    [new ErrorObject(_str["alreadyExists", "LessonType", request.dto.Name])]
+                    [
+                        new FieldErrorObject(
+                            "name",
+                            _str["alreadyExists", _strFields["LessonType"], request.dto.Name!]
+                        )
+                    ]
                 );
             }
 

@@ -30,11 +30,17 @@ namespace AlpimiAPI.Entities.EScheduleSettings.Commands
     {
         private readonly IDbService _dbService;
         private readonly IStringLocalizer<Errors> _str;
+        private readonly IStringLocalizer<Fields> _strFields;
 
-        public UpdateScheduleSettingsHandler(IDbService dbService, IStringLocalizer<Errors> str)
+        public UpdateScheduleSettingsHandler(
+            IDbService dbService,
+            IStringLocalizer<Errors> str,
+            IStringLocalizer<Fields> strFields
+        )
         {
             _dbService = dbService;
             _str = str;
+            _strFields = strFields;
         }
 
         public async Task<ScheduleSettings?> Handle(
@@ -47,7 +53,12 @@ namespace AlpimiAPI.Entities.EScheduleSettings.Commands
             {
                 if (request.dto.SchoolHour < 1 || request.dto.SchoolHour > 1440)
                 {
-                    errors.Add(new ErrorObject(_str["badParameter", "SchoolHour"]));
+                    errors.Add(
+                        new FieldErrorObject(
+                            "schoolHour",
+                            _str["badParameter", _strFields["SchoolHour"]]
+                        )
+                    );
                 }
             }
 
@@ -58,7 +69,12 @@ namespace AlpimiAPI.Entities.EScheduleSettings.Commands
                     || request.dto.SchoolDays.Length != 7
                 )
                 {
-                    errors.Add(new ErrorObject(_str["badParameter", "SchoolDays"]));
+                    errors.Add(
+                        new FieldErrorObject(
+                            "schoolDays",
+                            _str["badParameter", _strFields["SchoolDays"]]
+                        )
+                    );
                 }
             }
 
@@ -142,7 +158,9 @@ namespace AlpimiAPI.Entities.EScheduleSettings.Commands
 
             if (daysOffOutOfRange!.Any())
             {
-                throw new ApiErrorException([new ErrorObject(_str["outOfRange", "DayOff"])]);
+                throw new ApiErrorException(
+                    [new ErrorObject(_str["outOfRange", _strFields["DayOff"]])]
+                );
             }
 
             var lessonBlocksOutOfRange = await _dbService.GetAll<LessonBlock>(
@@ -159,11 +177,13 @@ namespace AlpimiAPI.Entities.EScheduleSettings.Commands
 
             if (lessonBlocksOutOfRange!.Any())
             {
-                throw new ApiErrorException([new ErrorObject(_str["outOfRange", "LessonBlock"])]);
+                throw new ApiErrorException(
+                    [new ErrorObject(_str["outOfRange", _strFields["LessonBlock"]])]
+                );
             }
 
             GetAllLessonPeriodByScheduleHandler getAllLessonPeriodByScheduleHandler =
-                new GetAllLessonPeriodByScheduleHandler(_dbService, _str);
+                new GetAllLessonPeriodByScheduleHandler(_dbService, _str, _strFields);
             GetAllLessonPeriodByScheduleQuery getAllLessonPeriodByScheduleQuery =
                 new GetAllLessonPeriodByScheduleQuery(
                     originalScheduleSettings.Value.ScheduleId,
@@ -189,7 +209,12 @@ namespace AlpimiAPI.Entities.EScheduleSettings.Commands
                     )
                     {
                         throw new ApiErrorException(
-                            [new ErrorObject(_str["timeOverlap", "LessonPeriod"])]
+                            [
+                                new FieldErrorObject(
+                                    "schoolHour",
+                                    _str["timeOverlap", _strFields["LessonPeriod"]]
+                                )
+                            ]
                         );
                     }
                 }

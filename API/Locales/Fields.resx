@@ -117,88 +117,184 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="alreadyExists" xml:space="preserve">
-    <value>There is already a {0} with the name {1}</value>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
   </data>
-  <data name="badParameter" xml:space="preserve">
-    <value>{0} parameter is invalid</value>
+  <data name="Description" xml:space="preserve">
+    <value>Description</value>
   </data>
-  <data name="invalidLoginOrPassword" xml:space="preserve">
-    <value>Invalid login or password</value>
+  <data name="Login" xml:space="preserve">
+    <value>Login</value>
   </data>
-  <data name="invalidPassword" xml:space="preserve">
-    <value>Invalid password</value>
+  <data name="Password" xml:space="preserve">
+    <value>Password</value>
   </data>
-  <data name="longPassword" xml:space="preserve">
-    <value>Password cannot be longer than {0} characters</value>
+  <data name="CustomUrl" xml:space="preserve">
+    <value>Custom URL</value>
   </data>
-  <data name="notFound" xml:space="preserve">
-    <value>Entity was not found</value>
+  <data name="Timestamp" xml:space="preserve">
+    <value>Timestamp</value>
   </data>
-  <data name="passwordMustContain" xml:space="preserve">
-    <value>Password must contain at least one of the following: {0}</value>
+  <data name="AffectedEntity" xml:space="preserve">
+    <value>Affected Entity</value>
   </data>
-  <data name="shortPassword" xml:space="preserve">
-    <value>Password cannot be shorter than {0} characters</value>
+  <data name="Command" xml:space="preserve">
+    <value>Command</value>
   </data>
-  <data name="unknownError" xml:space="preserve">
-    <value>An error occured: {0}</value>
+  <data name="ReversalId" xml:space="preserve">
+    <value>Reversal ID</value>
   </data>
-  <data name="connectionError" xml:space="preserve">
-    <value>There was a problem connecting with the database. Check your connection string and internet access</value>
+  <data name="IsUndone" xml:space="preserve">
+    <value>Is Undone</value>
   </data>
-  <data name="tooManyRequests" xml:space="preserve">
-    <value>Too many requests. Try again later</value>
+  <data name="IsUndoneChecked" xml:space="preserve">
+    <value>Is Undone Checked</value>
   </data>
-  <data name="notAuthenticated" xml:space="preserve">
-    <value>You are not authenticated</value>
+  <data name="SchoolHour" xml:space="preserve">
+    <value>School Hour</value>
   </data>
-  <data name="notAuthorized" xml:space="preserve">
-    <value>You have no permission to access this resource</value>
+  <data name="SchoolYearStart" xml:space="preserve">
+    <value>School Year Start</value>
   </data>
-  <data name="scheduleDate" xml:space="preserve">
-    <value>The end date cannot happen before the start date</value>
+  <data name="SchoolYearEnd" xml:space="preserve">
+    <value>School Year End</value>
   </data>
-  <data name="dateOutOfRange" xml:space="preserve">
-    <value>Date must be in between {0} and {1}</value>
+  <data name="From" xml:space="preserve">
+    <value>From</value>
   </data>
-  <data name="scheduleTime" xml:space="preserve">
-    <value>The end time cannot happen before the start time</value>
+  <data name="To" xml:space="preserve">
+    <value>To</value>
   </data>
-  <data name="timeOverlap" xml:space="preserve">
-    <value>{0}s cannot overlap</value>
+  <data name="StartTime" xml:space="preserve">
+    <value>Start Time</value>
   </data>
-  <data name="outOfRange" xml:space="preserve">
-    <value>There are {0} outside of provided range. Please change them first</value>
+  <data name="Weight" xml:space="preserve">
+    <value>Weight</value>
   </data>
-  <data name="tooManyStudents" xml:space="preserve">
-    <value>Student count in a subgroup cannot be greater than the student count in a group</value>
+  <data name="Filter" xml:space="preserve">
+    <value>Filter</value>
   </data>
-  <data name="duplicateData" xml:space="preserve">
-    <value>Cannot add multiple {0} with the value {1}</value>
+  <data name="Category" xml:space="preserve">
+    <value>Category</value>
   </data>
-  <data name="resourceNotFound" xml:space="preserve">
-    <value>{0} with id {1} was not found</value>
+  <data name="Capacity" xml:space="preserve">
+    <value>Capacity</value>
   </data>
-  <data name="wrongSet" xml:space="preserve">
-    <value>{0} must be in the same {1} as {2}</value>
+  <data name="Color" xml:space="preserve">
+    <value>Color</value>
   </data>
-  <data name="badWeekDay" xml:space="preserve">
-    <value>Lessons cannot occur on {0}</value>
+  <data name="WeekDay" xml:space="preserve">
+    <value>Week Day</value>
   </data>
-  <data name="cantContain" xml:space="preserve">
-    <value>{0} can only contain the following: {1}</value>
+  <data name="Start" xml:space="preserve">
+    <value>Start</value>
   </data>
-  <data name="scheduleDuration" xml:space="preserve">
-    <value>The school year cannot be longer than {0} month(s)</value>
+  <data name="End" xml:space="preserve">
+    <value>End</value>
   </data>
-  <data name="cantUndo" xml:space="preserve">
-    <value>There is nothing to undo</value>
+  <data name="Surname" xml:space="preserve">
+    <value>Surname</value>
   </data>
-  <data name="cantRedo" xml:space="preserve">
-    <value>There is nothing to redo</value>
+  <data name="StudentCount" xml:space="preserve">
+    <value>Student Count</value>
   </data>
-  <data name="requiredField" xml:space="preserve">
-    <value>The {0} field is required.</value>
+  <data name="AlbumNumber" xml:space="preserve">
+    <value>Album Number</value>
+  </data>
+  <data name="CollidingObject1" xml:space="preserve">
+    <value>Colliding Object 1</value>
+  </data>
+  <data name="CollidingObject2" xml:space="preserve">
+    <value>Colliding Object 2</value>
+  </data>
+  <data name="Ignored" xml:space="preserve">
+    <value>Ignored</value>
+  </data>
+  <data name="Subgroup" xml:space="preserve">
+    <value>Subgroup</value>
+  </data>
+  <data name="ClassroomType" xml:space="preserve">
+    <value>Classroom Type</value>
+  </data>
+  <data name="LessonPeriod" xml:space="preserve">
+    <value>Lesson Period</value>
+  </data>
+  <data name="Auth" xml:space="preserve">
+    <value>Auth</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>User</value>
+  </data>
+  <data name="Schedule" xml:space="preserve">
+    <value>Schedule</value>
+  </data>
+  <data name="History" xml:space="preserve">
+    <value>History</value>
+  </data>
+  <data name="ScheduleSettings" xml:space="preserve">
+    <value>ScheduleSettings</value>
+  </data>
+  <data name="DayOff" xml:space="preserve">
+    <value>Day Off</value>
+  </data>
+  <data name="CollisionType" xml:space="preserve">
+    <value>Collision Type</value>
+  </data>
+  <data name="Collision" xml:space="preserve">
+    <value>Collision</value>
+  </data>
+  <data name="Classroom" xml:space="preserve">
+    <value>Classroom</value>
+  </data>
+  <data name="LessonType" xml:space="preserve">
+    <value>Lesson Type</value>
+  </data>
+  <data name="Lesson" xml:space="preserve">
+    <value>Lesson</value>
+  </data>
+  <data name="Teacher" xml:space="preserve">
+    <value>Teacher</value>
+  </data>
+  <data name="Availability" xml:space="preserve">
+    <value>Availability</value>
+  </data>
+  <data name="Group" xml:space="preserve">
+    <value>Group</value>
+  </data>
+  <data name="Student" xml:space="preserve">
+    <value>Student</value>
+  </data>
+  <data name="LessonBlock" xml:space="preserve">
+    <value>Lesson Block</value>
+  </data>
+  <data name="Page" xml:space="preserve">
+    <value>Page</value>
+  </data>
+  <data name="PerPage" xml:space="preserve">
+    <value>Per Page</value>
+  </data>
+  <data name="SortBy" xml:space="preserve">
+    <value>Sort By</value>
+  </data>
+  <data name="OrderBy" xml:space="preserve">
+    <value>Order By</value>
+  </data>
+  <data name="SortOrder" xml:space="preserve">
+    <value>Sort Order</value>
+  </data>
+  <data name="AmountOfHours" xml:space="preserve">
+    <value>AmountOfHours</value>
+  </data>
+  <data name="LessonStart" xml:space="preserve">
+    <value>Lesson Start</value>
+  </data>
+  <data name="LessonEnd" xml:space="preserve">
+    <value>Lesson End</value>
+  </data>
+  <data name="WeekInterval" xml:space="preserve">
+    <value>Week Interval</value>
+  </data>
+  <data name="SchoolDays" xml:space="preserve">
+    <value>School Days</value>
   </data>
 </root>

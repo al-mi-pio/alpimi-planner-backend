@@ -17,10 +17,12 @@ namespace AlpimiTest.Entities.ELessonBlock.Queries
     {
         private readonly Mock<IDbService> _dbService = new();
         private readonly Mock<IStringLocalizer<Errors>> _str;
+        private readonly Mock<IStringLocalizer<Fields>> _strFields;
 
         public GetAllLessonBlocksQueryUnit()
         {
             _str = ResourceSetup.Setup();
+            _strFields = ResourceSetup.FieldSetup();
         }
 
         [Fact]
@@ -36,7 +38,8 @@ namespace AlpimiTest.Entities.ELessonBlock.Queries
             );
             var getAllLessonBlockHandler = new GetAllLessonBlocksHandler(
                 _dbService.Object,
-                _str.Object
+                _str.Object,
+                _strFields.Object
             );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
@@ -48,7 +51,10 @@ namespace AlpimiTest.Entities.ELessonBlock.Queries
 
             Assert.Equal(
                 JsonConvert.SerializeObject(
-                    new ErrorObject[] { new ErrorObject("PerPage parameter is invalid") }
+                    new ErrorObject[]
+                    {
+                        new FieldErrorObject("perPage", "Per Page parameter is invalid")
+                    }
                 ),
                 JsonConvert.SerializeObject(result.errors)
             );
@@ -67,7 +73,8 @@ namespace AlpimiTest.Entities.ELessonBlock.Queries
             );
             var getAllLessonBlockHandler = new GetAllLessonBlocksHandler(
                 _dbService.Object,
-                _str.Object
+                _str.Object,
+                _strFields.Object
             );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
@@ -79,7 +86,7 @@ namespace AlpimiTest.Entities.ELessonBlock.Queries
 
             Assert.Equal(
                 JsonConvert.SerializeObject(
-                    new ErrorObject[] { new ErrorObject("Page parameter is invalid") }
+                    new ErrorObject[] { new FieldErrorObject("page", "Page parameter is invalid") }
                 ),
                 JsonConvert.SerializeObject(result.errors)
             );
@@ -98,7 +105,8 @@ namespace AlpimiTest.Entities.ELessonBlock.Queries
             );
             var getAllLessonBlockHandler = new GetAllLessonBlocksHandler(
                 _dbService.Object,
-                _str.Object
+                _str.Object,
+                _strFields.Object
             );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
@@ -110,7 +118,10 @@ namespace AlpimiTest.Entities.ELessonBlock.Queries
 
             Assert.Equal(
                 JsonConvert.SerializeObject(
-                    new ErrorObject[] { new ErrorObject("SortBy parameter is invalid") }
+                    new ErrorObject[]
+                    {
+                        new FieldErrorObject("sortBy", "Sort By parameter is invalid")
+                    }
                 ),
                 JsonConvert.SerializeObject(result.errors)
             );
@@ -129,7 +140,8 @@ namespace AlpimiTest.Entities.ELessonBlock.Queries
             );
             var getAllLessonBlockHandler = new GetAllLessonBlocksHandler(
                 _dbService.Object,
-                _str.Object
+                _str.Object,
+                _strFields.Object
             );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
@@ -141,7 +153,10 @@ namespace AlpimiTest.Entities.ELessonBlock.Queries
 
             Assert.Equal(
                 JsonConvert.SerializeObject(
-                    new ErrorObject[] { new ErrorObject("SortOrder parameter is invalid") }
+                    new ErrorObject[]
+                    {
+                        new FieldErrorObject("sortOrder", "Sort Order parameter is invalid")
+                    }
                 ),
                 JsonConvert.SerializeObject(result.errors)
             );
@@ -160,7 +175,8 @@ namespace AlpimiTest.Entities.ELessonBlock.Queries
             );
             var getAllLessonBlockHandler = new GetAllLessonBlocksHandler(
                 _dbService.Object,
-                _str.Object
+                _str.Object,
+                _strFields.Object
             );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
@@ -174,8 +190,8 @@ namespace AlpimiTest.Entities.ELessonBlock.Queries
                 JsonConvert.SerializeObject(
                     new ErrorObject[]
                     {
-                        new ErrorObject("SortOrder parameter is invalid"),
-                        new ErrorObject("SortBy parameter is invalid")
+                        new FieldErrorObject("sortOrder", "Sort Order parameter is invalid"),
+                        new FieldErrorObject("sortBy", "Sort By parameter is invalid")
                     }
                 ),
                 JsonConvert.SerializeObject(result.errors)
@@ -199,7 +215,8 @@ namespace AlpimiTest.Entities.ELessonBlock.Queries
             );
             var getAllLessonBlockHandler = new GetAllLessonBlocksHandler(
                 _dbService.Object,
-                _str.Object
+                _str.Object,
+                _strFields.Object
             );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>

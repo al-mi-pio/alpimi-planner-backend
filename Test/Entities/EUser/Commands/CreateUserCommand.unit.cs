@@ -19,10 +19,12 @@ namespace AlpimiTest.Entities.EUser.Commands
     {
         private readonly Mock<IDbService> _dbService = new();
         private readonly Mock<IStringLocalizer<Errors>> _str;
+        private readonly Mock<IStringLocalizer<Fields>> _strFields;
 
         public CreateUserCommandUnit()
         {
             _str = ResourceSetup.Setup();
+            _strFields = ResourceSetup.FieldSetup();
         }
 
         [Fact]
@@ -33,7 +35,11 @@ namespace AlpimiTest.Entities.EUser.Commands
             var user = MockData.GetUserDetails();
 
             var createUserCommand = new CreateUserCommand(user.Id, new Guid(), dto);
-            var createUserHandler = new CreateUserHandler(_dbService.Object, _str.Object);
+            var createUserHandler = new CreateUserHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())
@@ -63,7 +69,11 @@ namespace AlpimiTest.Entities.EUser.Commands
             var user = MockData.GetUserDetails();
 
             var createUserCommand = new CreateUserCommand(user.Id, new Guid(), dto);
-            var createUserHandler = new CreateUserHandler(_dbService.Object, _str.Object);
+            var createUserHandler = new CreateUserHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())
@@ -92,7 +102,11 @@ namespace AlpimiTest.Entities.EUser.Commands
             var user = MockData.GetUserDetails();
 
             var createUserCommand = new CreateUserCommand(user.Id, new Guid(), dto);
-            var createUserHandler = new CreateUserHandler(_dbService.Object, _str.Object);
+            var createUserHandler = new CreateUserHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())
@@ -121,7 +135,11 @@ namespace AlpimiTest.Entities.EUser.Commands
             var user = MockData.GetUserDetails();
 
             var createUserCommand = new CreateUserCommand(user.Id, new Guid(), dto);
-            var createUserHandler = new CreateUserHandler(_dbService.Object, _str.Object);
+            var createUserHandler = new CreateUserHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())
@@ -150,7 +168,11 @@ namespace AlpimiTest.Entities.EUser.Commands
             var user = MockData.GetUserDetails();
 
             var createUserCommand = new CreateUserCommand(user.Id, new Guid(), dto);
-            var createUserHandler = new CreateUserHandler(_dbService.Object, _str.Object);
+            var createUserHandler = new CreateUserHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())
@@ -179,7 +201,11 @@ namespace AlpimiTest.Entities.EUser.Commands
             var user = MockData.GetUserDetails();
 
             var createUserCommand = new CreateUserCommand(user.Id, new Guid(), dto);
-            var createUserHandler = new CreateUserHandler(_dbService.Object, _str.Object);
+            var createUserHandler = new CreateUserHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())
@@ -210,7 +236,11 @@ namespace AlpimiTest.Entities.EUser.Commands
                 .ReturnsAsync(user);
 
             var createUserCommand = new CreateUserCommand(user.Id, new Guid(), dto);
-            var createUserHandler = new CreateUserHandler(_dbService.Object, _str.Object);
+            var createUserHandler = new CreateUserHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())
@@ -220,7 +250,7 @@ namespace AlpimiTest.Entities.EUser.Commands
                 JsonConvert.SerializeObject(
                     new ErrorObject[]
                     {
-                        new ErrorObject("There is already a User with the name Marek")
+                        new FieldErrorObject("login", "There is already a User with the name Marek")
                     }
                 ),
                 JsonConvert.SerializeObject(result.errors)
@@ -237,7 +267,11 @@ namespace AlpimiTest.Entities.EUser.Commands
                 .ReturnsAsync(user.CustomURL);
 
             var createUserCommand = new CreateUserCommand(user.Id, new Guid(), dto);
-            var createUserHandler = new CreateUserHandler(_dbService.Object, _str.Object);
+            var createUserHandler = new CreateUserHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())
@@ -247,7 +281,10 @@ namespace AlpimiTest.Entities.EUser.Commands
                 JsonConvert.SerializeObject(
                     new ErrorObject[]
                     {
-                        new ErrorObject("There is already a URL with the name 44f")
+                        new FieldErrorObject(
+                            "customUrl",
+                            "There is already a Custom URL with the name 44f"
+                        )
                     }
                 ),
                 JsonConvert.SerializeObject(result.errors)
@@ -261,7 +298,11 @@ namespace AlpimiTest.Entities.EUser.Commands
             dto.Password = "sssSSS1!る";
 
             var createUserCommand = new CreateUserCommand(new Guid(), new Guid(), dto);
-            var createUserHandler = new CreateUserHandler(_dbService.Object, _str.Object);
+            var createUserHandler = new CreateUserHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())
@@ -289,7 +330,11 @@ namespace AlpimiTest.Entities.EUser.Commands
             dto.Login = "る";
 
             var createUserCommand = new CreateUserCommand(new Guid(), new Guid(), dto);
-            var createUserHandler = new CreateUserHandler(_dbService.Object, _str.Object);
+            var createUserHandler = new CreateUserHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())
@@ -317,7 +362,11 @@ namespace AlpimiTest.Entities.EUser.Commands
             dto.CustomURL = "る";
 
             var createUserCommand = new CreateUserCommand(new Guid(), new Guid(), dto);
-            var createUserHandler = new CreateUserHandler(_dbService.Object, _str.Object);
+            var createUserHandler = new CreateUserHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())
@@ -346,7 +395,11 @@ namespace AlpimiTest.Entities.EUser.Commands
             var user = MockData.GetUserDetails();
 
             var createUserCommand = new CreateUserCommand(user.Id, new Guid(), dto);
-            var createUserHandler = new CreateUserHandler(_dbService.Object, _str.Object);
+            var createUserHandler = new CreateUserHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createUserHandler.Handle(createUserCommand, new CancellationToken())

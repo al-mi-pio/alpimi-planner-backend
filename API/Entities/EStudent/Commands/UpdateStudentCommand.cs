@@ -23,11 +23,17 @@ namespace AlpimiAPI.Entities.EStudent.Commands
     {
         private readonly IDbService _dbService;
         private readonly IStringLocalizer<Errors> _str;
+        private readonly IStringLocalizer<Fields> _strFields;
 
-        public UpdateStudentHandler(IDbService dbService, IStringLocalizer<Errors> str)
+        public UpdateStudentHandler(
+            IDbService dbService,
+            IStringLocalizer<Errors> str,
+            IStringLocalizer<Fields> strFields
+        )
         {
             _dbService = dbService;
             _str = str;
+            _strFields = strFields;
         }
 
         public async Task<Student?> Handle(
@@ -83,7 +89,12 @@ namespace AlpimiAPI.Entities.EStudent.Commands
             if (studentAlbum!.Any())
             {
                 throw new ApiErrorException(
-                    [new ErrorObject(_str["alreadyExists", "Student", request.dto.AlbumNumber])]
+                    [
+                        new FieldErrorObject(
+                            "albumNumber",
+                            _str["alreadyExists", _strFields["Student"], request.dto.AlbumNumber]
+                        )
+                    ]
                 );
             }
 
@@ -100,7 +111,10 @@ namespace AlpimiAPI.Entities.EStudent.Commands
                     foreach (var duplicate in duplicates)
                     {
                         duplicateErrors.Add(
-                            new ErrorObject(_str["duplicateData", "Subgroup", duplicate])
+                            new FieldErrorObject(
+                                "subgroup",
+                                _str["duplicateData", _strFields["Subgroup"], duplicate]
+                            )
                         );
                     }
                     throw new ApiErrorException(duplicateErrors);
@@ -124,13 +138,22 @@ namespace AlpimiAPI.Entities.EStudent.Commands
                     if (subgroup.Value == null)
                     {
                         errors.Add(
-                            new ErrorObject(_str["resourceNotFound", "Subgroup", subgroupId])
+                            new ErrorObject(
+                                _str["resourceNotFound", _strFields["Subgroup"], subgroupId]
+                            )
                         );
                     }
                     else if (subgroup.Value.GroupId != group.Value.Id)
                     {
                         errors.Add(
-                            new ErrorObject(_str["wrongSet", "Subgroup", "Group", "Student"])
+                            new ErrorObject(
+                                _str[
+                                    "wrongSet",
+                                    _strFields["Subgroup"],
+                                    _strFields["Group"],
+                                    _strFields["Student"]
+                                ]
+                            )
                         );
                     }
                 }

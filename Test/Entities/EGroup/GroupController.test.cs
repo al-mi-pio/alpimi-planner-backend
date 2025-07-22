@@ -110,7 +110,7 @@ namespace AlpimiTest.Entities.EGroup
             var query = $"?scheduleId={scheduleId}";
             response = await _client.GetAsync($"/api/Group{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
-            Assert.Contains(groupRequest.Name, stringResponse);
+            Assert.Contains(groupRequest.Name!, stringResponse);
         }
 
         [Fact]
@@ -128,7 +128,7 @@ namespace AlpimiTest.Entities.EGroup
             var query = $"?scheduleId={scheduleId}";
             var response = await _client.GetAsync($"/api/Group{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
-            Assert.DoesNotContain(groupRequest.Name, stringResponse);
+            Assert.DoesNotContain(groupRequest.Name!, stringResponse);
         }
 
         [Fact]
@@ -147,7 +147,7 @@ namespace AlpimiTest.Entities.EGroup
             var query = $"?scheduleId={scheduleId}";
             var response = await _client.GetAsync($"/api/Group{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
-            Assert.Contains(groupRequest.Name, stringResponse);
+            Assert.Contains(groupRequest.Name!, stringResponse);
         }
 
         [Fact]
@@ -166,7 +166,7 @@ namespace AlpimiTest.Entities.EGroup
             var query = $"?scheduleId={scheduleId}";
             response = await _client.GetAsync($"/api/Group{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
-            Assert.DoesNotContain(groupRequest.Name, stringResponse);
+            Assert.DoesNotContain(groupRequest.Name!, stringResponse);
         }
 
         [Fact]
@@ -185,7 +185,7 @@ namespace AlpimiTest.Entities.EGroup
             var query = $"?scheduleId={scheduleId}";
             var response = await _client.GetAsync($"/api/Group{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
-            Assert.Contains(groupRequest.Name, stringResponse);
+            Assert.Contains(groupRequest.Name!, stringResponse);
         }
 
         [Fact]
@@ -205,7 +205,7 @@ namespace AlpimiTest.Entities.EGroup
             var query = $"?scheduleId={scheduleId}";
             var response = await _client.GetAsync($"/api/Group{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
-            Assert.DoesNotContain(groupRequest.Name, stringResponse);
+            Assert.DoesNotContain(groupRequest.Name!, stringResponse);
         }
 
         [Fact]
@@ -332,8 +332,8 @@ namespace AlpimiTest.Entities.EGroup
             var response = await _client.GetAsync($"/api/Group{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
 
-            Assert.Contains(groupRequest1.Name, stringResponse);
-            Assert.Contains(groupRequest2.Name, stringResponse);
+            Assert.Contains(groupRequest1.Name!, stringResponse);
+            Assert.Contains(groupRequest2.Name!, stringResponse);
         }
 
         [Fact]
@@ -350,8 +350,8 @@ namespace AlpimiTest.Entities.EGroup
             var response = await _client.GetAsync($"/api/Group{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
 
-            Assert.Contains(groupRequest1.Name, stringResponse);
-            Assert.Contains(groupRequest2.Name, stringResponse);
+            Assert.Contains(groupRequest1.Name!, stringResponse);
+            Assert.Contains(groupRequest2.Name!, stringResponse);
         }
 
         [Fact]
@@ -370,8 +370,8 @@ namespace AlpimiTest.Entities.EGroup
             var response = await _client.GetAsync($"/api/Group{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
 
-            Assert.DoesNotContain(groupRequest1.Name, stringResponse);
-            Assert.DoesNotContain(groupRequest2.Name, stringResponse);
+            Assert.DoesNotContain(groupRequest1.Name!, stringResponse);
+            Assert.DoesNotContain(groupRequest2.Name!, stringResponse);
         }
 
         [Fact]
@@ -390,8 +390,8 @@ namespace AlpimiTest.Entities.EGroup
             var response = await _client.GetAsync($"/api/Group{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
 
-            Assert.DoesNotContain(groupRequest1.Name, stringResponse);
-            Assert.DoesNotContain(groupRequest2.Name, stringResponse);
+            Assert.DoesNotContain(groupRequest1.Name!, stringResponse);
+            Assert.DoesNotContain(groupRequest2.Name!, stringResponse);
         }
 
         [Fact]
@@ -407,7 +407,7 @@ namespace AlpimiTest.Entities.EGroup
             var response = await _client.GetAsync($"/api/Group/{groupId}");
             var jsonResponse = await response.Content.ReadFromJsonAsync<ApiGetResponse<GroupDTO>>();
 
-            Assert.Equal(groupRequest.Name, jsonResponse!.Content.Name);
+            Assert.Equal(groupRequest.Name!, jsonResponse!.Content.Name);
             Assert.Equal(groupRequest.StudentCount, jsonResponse!.Content.StudentCount);
         }
 

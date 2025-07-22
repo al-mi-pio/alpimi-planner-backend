@@ -23,11 +23,17 @@ namespace AlpimiAPI.Entities.ESubgroup
     {
         private readonly IMediator _mediator;
         private readonly IStringLocalizer<Errors> _str;
+        private readonly IStringLocalizer<Fields> _strFields;
 
-        public SubgroupController(IMediator mediator, IStringLocalizer<Errors> str)
+        public SubgroupController(
+            IMediator mediator,
+            IStringLocalizer<Errors> str,
+            IStringLocalizer<Fields> strFields
+        )
         {
             _mediator = mediator;
             _str = str;
+            _strFields = strFields;
         }
 
         /// <summary>
@@ -132,7 +138,10 @@ namespace AlpimiAPI.Entities.ESubgroup
                 if (result == null)
                 {
                     return NotFound(
-                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "Subgroup"])])
+                        new ApiErrorResponse(
+                            404,
+                            [new ErrorObject(_str["notFound", _strFields["Subgroup"]])]
+                        )
                     );
                 }
 
@@ -227,7 +236,10 @@ namespace AlpimiAPI.Entities.ESubgroup
                 if (result == null)
                 {
                     return NotFound(
-                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "Subgroup"])])
+                        new ApiErrorResponse(
+                            404,
+                            [new ErrorObject(_str["notFound", _strFields["Subgroup"]])]
+                        )
                     );
                 }
 

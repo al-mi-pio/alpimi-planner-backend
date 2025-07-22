@@ -3,7 +3,6 @@ using AlpimiAPI.Entities.EDayOff.Commands;
 using AlpimiAPI.Entities.EHistory.DTO;
 using AlpimiAPI.Entities.ELessonPeriod.DTO;
 using AlpimiAPI.Entities.ELessonPeriod.Queries;
-using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Entities.EScheduleSettings;
 using AlpimiAPI.Entities.EScheduleSettings.Queries;
 using AlpimiAPI.Locales;
@@ -25,11 +24,17 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Commands
     {
         private readonly IDbService _dbService;
         private readonly IStringLocalizer<Errors> _str;
+        private readonly IStringLocalizer<Fields> _strFields;
 
-        public CreateLessonPeriodHandler(IDbService dbService, IStringLocalizer<Errors> str)
+        public CreateLessonPeriodHandler(
+            IDbService dbService,
+            IStringLocalizer<Errors> str,
+            IStringLocalizer<Fields> strFields
+        )
         {
             _dbService = dbService;
             _str = str;
+            _strFields = strFields;
         }
 
         public async Task<Guid> Handle(
@@ -41,7 +46,7 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Commands
                 _dbService
             );
             GetScheduleSettingsQuery getScheduleSettingsQuery = new GetScheduleSettingsQuery(
-                request.dto.ScheduleId,
+                request.dto.ScheduleId!.Value,
                 request.FilteredId,
                 request.Role
             );
@@ -63,10 +68,10 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Commands
             }
 
             GetAllLessonPeriodByScheduleHandler getAllLessonPeriodByScheduleHandler =
-                new GetAllLessonPeriodByScheduleHandler(_dbService, _str);
+                new GetAllLessonPeriodByScheduleHandler(_dbService, _str, _strFields);
             GetAllLessonPeriodByScheduleQuery getAllLessonPeriodByScheduleQuery =
                 new GetAllLessonPeriodByScheduleQuery(
-                    request.dto.ScheduleId,
+                    request.dto.ScheduleId!.Value,
                     request.FilteredId,
                     request.Role,
                     new PaginationParams(1440, 0, "Start", "ASC")
@@ -89,7 +94,12 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Commands
                     )
                     {
                         throw new ApiErrorException(
-                            [new ErrorObject(_str["timeOverlap", "LessonPeriod"])]
+                            [
+                                new FieldErrorObject(
+                                    "start",
+                                    _str["timeOverlap", _strFields["LessonPeriod"]]
+                                )
+                            ]
                         );
                     }
                 }

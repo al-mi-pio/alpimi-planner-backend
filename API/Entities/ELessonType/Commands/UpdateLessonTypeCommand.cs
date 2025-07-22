@@ -23,11 +23,17 @@ namespace AlpimiAPI.Entities.ELessonType.Commands
     {
         private readonly IDbService _dbService;
         private readonly IStringLocalizer<Errors> _str;
+        private readonly IStringLocalizer<Fields> _strFields;
 
-        public UpdateLessonTypeHandler(IDbService dbService, IStringLocalizer<Errors> str)
+        public UpdateLessonTypeHandler(
+            IDbService dbService,
+            IStringLocalizer<Errors> str,
+            IStringLocalizer<Fields> strFields
+        )
         {
             _dbService = dbService;
             _str = str;
+            _strFields = strFields;
         }
 
         public async Task<LessonType?> Handle(
@@ -39,7 +45,9 @@ namespace AlpimiAPI.Entities.ELessonType.Commands
             {
                 if (request.dto.Color < 0 || request.dto.Color > 359)
                 {
-                    throw new ApiErrorException([new ErrorObject(_str["badParameter", "Color"])]);
+                    throw new ApiErrorException(
+                        [new FieldErrorObject("color", _str["badParameter", _strFields["Color"]])]
+                    );
                 }
             }
 
@@ -80,7 +88,12 @@ namespace AlpimiAPI.Entities.ELessonType.Commands
             if (lessonTypeName != null)
             {
                 throw new ApiErrorException(
-                    [new ErrorObject(_str["alreadyExists", "LessonType", request.dto.Name])]
+                    [
+                        new FieldErrorObject(
+                            "name",
+                            _str["alreadyExists", _strFields["LessonType"], request.dto.Name]
+                        )
+                    ]
                 );
             }
 

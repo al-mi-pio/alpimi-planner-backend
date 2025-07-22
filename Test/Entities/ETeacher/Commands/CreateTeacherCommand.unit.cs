@@ -18,10 +18,12 @@ namespace AlpimiTest.Entities.ETeacher.Commands
     {
         private readonly Mock<IDbService> _dbService = new();
         private readonly Mock<IStringLocalizer<Errors>> _str;
+        private readonly Mock<IStringLocalizer<Fields>> _strFields;
 
         public CreateTeacherCommandUnit()
         {
             _str = ResourceSetup.Setup();
+            _strFields = ResourceSetup.FieldSetup();
         }
 
         [Fact]
@@ -34,7 +36,11 @@ namespace AlpimiTest.Entities.ETeacher.Commands
                 "User"
             );
 
-            var createTeacherHandler = new CreateTeacherHandler(_dbService.Object, _str.Object);
+            var createTeacherHandler = new CreateTeacherHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
 
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
@@ -72,7 +78,11 @@ namespace AlpimiTest.Entities.ETeacher.Commands
                 new Guid(),
                 "User"
             );
-            var createTeacherHandler = new CreateTeacherHandler(_dbService.Object, _str.Object);
+            var createTeacherHandler = new CreateTeacherHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createTeacherHandler.Handle(createTeacherCommand, new CancellationToken())

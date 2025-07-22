@@ -19,11 +19,17 @@ namespace AlpimiAPI.Entities.ETeacher.Commands
     {
         private readonly IDbService _dbService;
         private readonly IStringLocalizer<Errors> _str;
+        private readonly IStringLocalizer<Fields> _strFields;
 
-        public CreateTeacherHandler(IDbService dbService, IStringLocalizer<Errors> str)
+        public CreateTeacherHandler(
+            IDbService dbService,
+            IStringLocalizer<Errors> str,
+            IStringLocalizer<Fields> strFields
+        )
         {
             _dbService = dbService;
             _str = str;
+            _strFields = strFields;
         }
 
         public async Task<Guid> Handle(
@@ -33,7 +39,7 @@ namespace AlpimiAPI.Entities.ETeacher.Commands
         {
             GetScheduleHandler getScheduleHandler = new GetScheduleHandler(_dbService);
             GetScheduleQuery getScheduleQuery = new GetScheduleQuery(
-                request.dto.ScheduleId,
+                request.dto.ScheduleId!.Value,
                 request.FilteredId,
                 request.Role
             );
@@ -45,7 +51,11 @@ namespace AlpimiAPI.Entities.ETeacher.Commands
             if (schedule.Value == null)
             {
                 throw new ApiErrorException(
-                    [new ErrorObject(_str["resourceNotFound", "Schedule", request.dto.ScheduleId])]
+                    [
+                        new ErrorObject(
+                            _str["resourceNotFound", _strFields["Schedule"], request.dto.ScheduleId]
+                        )
+                    ]
                 );
             }
 

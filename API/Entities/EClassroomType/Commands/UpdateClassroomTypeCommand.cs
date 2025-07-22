@@ -24,11 +24,17 @@ namespace AlpimiAPI.Entities.EClassroomType.Commands
     {
         private readonly IDbService _dbService;
         private readonly IStringLocalizer<Errors> _str;
+        private readonly IStringLocalizer<Fields> _strFields;
 
-        public UpdateClassroomTypeHandler(IDbService dbService, IStringLocalizer<Errors> str)
+        public UpdateClassroomTypeHandler(
+            IDbService dbService,
+            IStringLocalizer<Errors> str,
+            IStringLocalizer<Fields> strFields
+        )
         {
             _dbService = dbService;
             _str = str;
+            _strFields = strFields;
         }
 
         public async Task<ClassroomType?> Handle(
@@ -71,7 +77,12 @@ namespace AlpimiAPI.Entities.EClassroomType.Commands
             if (classroomTypeName != null)
             {
                 throw new ApiErrorException(
-                    [new ErrorObject(_str["alreadyExists", "ClassroomType", request.dto.Name])]
+                    [
+                        new FieldErrorObject(
+                            "name",
+                            _str["alreadyExists", _strFields["ClassroomType"], request.dto.Name]
+                        )
+                    ]
                 );
             }
 

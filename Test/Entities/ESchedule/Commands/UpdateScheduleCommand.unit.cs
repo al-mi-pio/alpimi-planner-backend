@@ -18,10 +18,12 @@ namespace AlpimiTest.Entities.ESchedule.Commands
     {
         private readonly Mock<IDbService> _dbService = new();
         private readonly Mock<IStringLocalizer<Errors>> _str;
+        private readonly Mock<IStringLocalizer<Fields>> _strFields;
 
         public UpdateScheduleCommandUnit()
         {
             _str = ResourceSetup.Setup();
+            _strFields = ResourceSetup.FieldSetup();
         }
 
         [Fact]
@@ -38,7 +40,11 @@ namespace AlpimiTest.Entities.ESchedule.Commands
                 new Guid(),
                 "Admin"
             );
-            var updateScheduleHandler = new UpdateScheduleHandler(_dbService.Object, _str.Object);
+            var updateScheduleHandler = new UpdateScheduleHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateScheduleHandler.Handle(
@@ -51,7 +57,10 @@ namespace AlpimiTest.Entities.ESchedule.Commands
                 JsonConvert.SerializeObject(
                     new ErrorObject[]
                     {
-                        new ErrorObject("There is already a Schedule with the name UpdatedPlan")
+                        new FieldErrorObject(
+                            "name",
+                            "There is already a Schedule with the name UpdatedPlan"
+                        )
                     }
                 ),
                 JsonConvert.SerializeObject(result.errors)
@@ -73,7 +82,11 @@ namespace AlpimiTest.Entities.ESchedule.Commands
                 new Guid(),
                 "Admin"
             );
-            var updateScheduleHandler = new UpdateScheduleHandler(_dbService.Object, _str.Object);
+            var updateScheduleHandler = new UpdateScheduleHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateScheduleHandler.Handle(

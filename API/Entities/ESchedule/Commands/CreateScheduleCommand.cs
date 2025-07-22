@@ -1,13 +1,11 @@
 ﻿using System.Text.RegularExpressions;
 using AlpimiAPI.Database;
 using AlpimiAPI.Entities.ESchedule.DTO;
-using AlpimiAPI.Entities.ESchedule.Queries;
 using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
 using AlpimiAPI.Settings;
 using AlpimiAPI.Utilities;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 
 namespace AlpimiAPI.Entities.ESchedule.Commands
@@ -23,11 +21,17 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
     {
         private readonly IDbService _dbService;
         private readonly IStringLocalizer<Errors> _str;
+        private readonly IStringLocalizer<Fields> _strFields;
 
-        public CreateScheduleHandler(IDbService dbService, IStringLocalizer<Errors> str)
+        public CreateScheduleHandler(
+            IDbService dbService,
+            IStringLocalizer<Errors> str,
+            IStringLocalizer<Fields> strFields
+        )
         {
             _dbService = dbService;
             _str = str;
+            _strFields = strFields;
         }
 
         public async Task<Guid> Handle(
@@ -38,19 +42,33 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
             List<ErrorObject> errors = new List<ErrorObject>();
             if (request.dto.SchoolHour < 1 || request.dto.SchoolHour > 1440)
             {
-                errors.Add(new ErrorObject(_str["badParameter", "SchoolHour"]));
+                errors.Add(
+                    new FieldErrorObject(
+                        "schoolHour",
+                        _str["badParameter", _strFields["SchoolHour"]]
+                    )
+                );
             }
 
             if (
-                !Regex.IsMatch(request.dto.SchoolDays, @"^[01]+$")
-                || request.dto.SchoolDays.Length != 7
+                !Regex.IsMatch(request.dto.SchoolDays!, @"^[01]+$")
+                || request.dto.SchoolDays!.Length != 7
             )
             {
-                errors.Add(new ErrorObject(_str["badParameter", "SchoolDays"]));
+                errors.Add(
+                    new FieldErrorObject(
+                        "schoolDays",
+                        _str["badParameter", _strFields["SchoolDays"]]
+                    )
+                );
             }
             if (
-                (request.dto.SchoolYearEnd.Year - request.dto.SchoolYearStart.Year) * 12
-                    + (request.dto.SchoolYearEnd.Month - request.dto.SchoolYearStart.Month)
+                (request.dto.SchoolYearEnd!.Value.Year - request.dto.SchoolYearStart!.Value.Year)
+                    * 12
+                    + (
+                        request.dto.SchoolYearEnd!.Value.Month
+                        - request.dto.SchoolYearStart!.Value.Month
+                    )
                 > Configuration.maxSchoolYearDuration
             )
             {
@@ -61,7 +79,7 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
             AllowedCharacterTypes[]? allowedCharacterTypesScheduleName =
                 Configuration.GetAllowedCharacterTypesForScheduleName();
 
-            if (!CharacterFilter.Allowed(request.dto.Name, allowedCharacterTypesScheduleName))
+            if (!CharacterFilter.Allowed(request.dto.Name!, allowedCharacterTypesScheduleName))
             {
                 errors.Add(
                     new ErrorObject(
@@ -91,7 +109,12 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
             if (scheduleName != null)
             {
                 throw new ApiErrorException(
-                    [new ErrorObject(_str["alreadyExists", "Schedule", request.dto.Name])]
+                    [
+                        new FieldErrorObject(
+                            "name",
+                            _str["alreadyExists", _strFields["Schedule"], request.dto.Name!]
+                        )
+                    ]
                 );
             }
 

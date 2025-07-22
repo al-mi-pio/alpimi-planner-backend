@@ -21,10 +21,12 @@ namespace AlpimiTest.Entities.ELesson.Commands
     {
         private readonly Mock<IDbService> _dbService = new();
         private readonly Mock<IStringLocalizer<Errors>> _str;
+        private readonly Mock<IStringLocalizer<Fields>> _strFields;
 
         public UpdateLessonCommandUnit()
         {
             _str = ResourceSetup.Setup();
+            _strFields = ResourceSetup.FieldSetup();
         }
 
         [Fact]
@@ -39,14 +41,18 @@ namespace AlpimiTest.Entities.ELesson.Commands
                 .ReturnsAsync(MockData.GetSubgroupDetails());
 
             var createLessonCommand = new UpdateLessonCommand(new Guid(), dto, new Guid(), "User");
-            var createLessonHandler = new UpdateLessonHandler(_dbService.Object, _str.Object);
+            var createLessonHandler = new UpdateLessonHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createLessonHandler.Handle(createLessonCommand, new CancellationToken())
             );
 
             Assert.Equal(
-                "LessonType with id 00000000-0000-0000-0000-000000000000 was not found",
+                "Lesson Type with id 00000000-0000-0000-0000-000000000000 was not found",
                 result.errors.First().message
             );
         }
@@ -73,14 +79,18 @@ namespace AlpimiTest.Entities.ELesson.Commands
                 .ReturnsAsync(MockData.GetTeacherDetails());
 
             var createLessonCommand = new UpdateLessonCommand(new Guid(), dto, new Guid(), "User");
-            var createLessonHandler = new UpdateLessonHandler(_dbService.Object, _str.Object);
+            var createLessonHandler = new UpdateLessonHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createLessonHandler.Handle(createLessonCommand, new CancellationToken())
             );
 
             Assert.Equal(
-                "ClassroomType with id 00000000-0000-0000-0000-000000000000 was not found",
+                "Classroom Type with id 00000000-0000-0000-0000-000000000000 was not found",
                 result.errors.First().message
             );
         }
@@ -101,7 +111,11 @@ namespace AlpimiTest.Entities.ELesson.Commands
                 .ReturnsAsync(MockData.GetTeacherDetails());
 
             var createLessonCommand = new UpdateLessonCommand(new Guid(), dto, new Guid(), "User");
-            var createLessonHandler = new UpdateLessonHandler(_dbService.Object, _str.Object);
+            var createLessonHandler = new UpdateLessonHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createLessonHandler.Handle(createLessonCommand, new CancellationToken())
@@ -125,7 +139,11 @@ namespace AlpimiTest.Entities.ELesson.Commands
                 .ReturnsAsync(MockData.GetLessonDetails());
 
             var createLessonCommand = new UpdateLessonCommand(new Guid(), dto, new Guid(), "User");
-            var createLessonHandler = new UpdateLessonHandler(_dbService.Object, _str.Object);
+            var createLessonHandler = new UpdateLessonHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createLessonHandler.Handle(createLessonCommand, new CancellationToken())
@@ -161,7 +179,11 @@ namespace AlpimiTest.Entities.ELesson.Commands
                 .ReturnsAsync(MockData.GetTeacherDetails());
 
             var updateLessonCommand = new UpdateLessonCommand(new Guid(), dto, new Guid(), "Admin");
-            var updateLessonHandler = new UpdateLessonHandler(_dbService.Object, _str.Object);
+            var updateLessonHandler = new UpdateLessonHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateLessonHandler.Handle(updateLessonCommand, new CancellationToken())
@@ -180,13 +202,17 @@ namespace AlpimiTest.Entities.ELesson.Commands
             dto.AmountOfHours = -1;
 
             var updateLessonCommand = new UpdateLessonCommand(new Guid(), dto, new Guid(), "Admin");
-            var updateLessonHandler = new UpdateLessonHandler(_dbService.Object, _str.Object);
+            var updateLessonHandler = new UpdateLessonHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateLessonHandler.Handle(updateLessonCommand, new CancellationToken())
             );
 
-            Assert.Equal("AmountOfHours parameter is invalid", result.errors.First().message);
+            Assert.Equal("Amount Of Hours parameter is invalid", result.errors.First().message);
         }
 
         [Fact]
@@ -208,14 +234,18 @@ namespace AlpimiTest.Entities.ELesson.Commands
                 .ReturnsAsync(MockData.GetTeacherDetails());
 
             var createLessonCommand = new UpdateLessonCommand(new Guid(), dto, new Guid(), "User");
-            var createLessonHandler = new UpdateLessonHandler(_dbService.Object, _str.Object);
+            var createLessonHandler = new UpdateLessonHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createLessonHandler.Handle(createLessonCommand, new CancellationToken())
             );
 
             Assert.Equal(
-                "Cannot add multiple ClassroomType with the value 00000000-0000-0000-0000-000000000000",
+                "Cannot add multiple Classroom Type with the value 00000000-0000-0000-0000-000000000000",
                 result.errors.First().message
             );
         }
@@ -239,7 +269,11 @@ namespace AlpimiTest.Entities.ELesson.Commands
                 .ReturnsAsync(MockData.GetTeacherDetails());
 
             var createLessonCommand = new UpdateLessonCommand(new Guid(), dto, new Guid(), "User");
-            var createLessonHandler = new UpdateLessonHandler(_dbService.Object, _str.Object);
+            var createLessonHandler = new UpdateLessonHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createLessonHandler.Handle(createLessonCommand, new CancellationToken())
@@ -278,14 +312,18 @@ namespace AlpimiTest.Entities.ELesson.Commands
                 .ReturnsAsync(MockData.GetTeacherDetails());
 
             var createLessonCommand = new UpdateLessonCommand(new Guid(), dto, new Guid(), "User");
-            var createLessonHandler = new UpdateLessonHandler(_dbService.Object, _str.Object);
+            var createLessonHandler = new UpdateLessonHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createLessonHandler.Handle(createLessonCommand, new CancellationToken())
             );
 
             Assert.Equal(
-                "ClassroomType must be in the same Schedule as Lesson",
+                "Classroom Type must be in the same Schedule as Lesson",
                 result.errors.First().message
             );
         }
@@ -314,14 +352,18 @@ namespace AlpimiTest.Entities.ELesson.Commands
                 .ReturnsAsync(MockData.GetTeacherDetails());
 
             var createLessonCommand = new UpdateLessonCommand(new Guid(), dto, new Guid(), "User");
-            var createLessonHandler = new UpdateLessonHandler(_dbService.Object, _str.Object);
+            var createLessonHandler = new UpdateLessonHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createLessonHandler.Handle(createLessonCommand, new CancellationToken())
             );
 
             Assert.Equal(
-                "Subgroup must be in the same Schedule as LessonType",
+                "Subgroup must be in the same Schedule as Lesson Type",
                 result.errors.First().message
             );
         }
@@ -349,14 +391,18 @@ namespace AlpimiTest.Entities.ELesson.Commands
                 .ReturnsAsync(MockData.GetTeacherDetails());
 
             var createLessonCommand = new UpdateLessonCommand(new Guid(), dto, new Guid(), "User");
-            var createLessonHandler = new UpdateLessonHandler(_dbService.Object, _str.Object);
+            var createLessonHandler = new UpdateLessonHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createLessonHandler.Handle(createLessonCommand, new CancellationToken())
             );
 
             Assert.Equal(
-                "Teacher must be in the same Schedule as LessonType",
+                "Teacher must be in the same Schedule as Lesson Type",
                 result.errors.First().message
             );
         }

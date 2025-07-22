@@ -27,11 +27,17 @@ namespace AlpimiAPI.Entities.ELesson.Commands
     {
         private readonly IDbService _dbService;
         private readonly IStringLocalizer<Errors> _str;
+        private readonly IStringLocalizer<Fields> _strFields;
 
-        public UpdateLessonHandler(IDbService dbService, IStringLocalizer<Errors> str)
+        public UpdateLessonHandler(
+            IDbService dbService,
+            IStringLocalizer<Errors> str,
+            IStringLocalizer<Fields> strFields
+        )
         {
             _dbService = dbService;
             _str = str;
+            _strFields = strFields;
         }
 
         public async Task<Lesson?> Handle(
@@ -44,7 +50,12 @@ namespace AlpimiAPI.Entities.ELesson.Commands
                 if (request.dto.AmountOfHours < 1)
                 {
                     throw new ApiErrorException(
-                        [new ErrorObject(_str["badParameter", "AmountOfHours"])]
+                        [
+                            new FieldErrorObject(
+                                "AmountOfHours",
+                                _str["badParameter", _strFields["AmountOfHours"]]
+                            )
+                        ]
                     );
                 }
             }
@@ -96,7 +107,7 @@ namespace AlpimiAPI.Entities.ELesson.Commands
             {
                 errors.Add(
                     new ErrorObject(
-                        _str["resourceNotFound", "LessonType", request.dto.LessonTypeId]
+                        _str["resourceNotFound", _strFields["LessonType"], request.dto.LessonTypeId]
                     )
                 );
             }
@@ -115,7 +126,9 @@ namespace AlpimiAPI.Entities.ELesson.Commands
             if (teacher.Value == null)
             {
                 errors.Add(
-                    new ErrorObject(_str["resourceNotFound", "Teacher", request.dto.TeacherId])
+                    new ErrorObject(
+                        _str["resourceNotFound", _strFields["Teacher"], request.dto.TeacherId]
+                    )
                 );
             }
 
@@ -127,7 +140,16 @@ namespace AlpimiAPI.Entities.ELesson.Commands
             if (teacher.Value!.ScheduleId != lessonType.Value!.ScheduleId)
             {
                 throw new ApiErrorException(
-                    [new ErrorObject(_str["wrongSet", "Teacher", "Schedule", "LessonType"])]
+                    [
+                        new ErrorObject(
+                            _str[
+                                "wrongSet",
+                                _strFields["Teacher"],
+                                _strFields["Schedule"],
+                                _strFields["LessonType"]
+                            ]
+                        )
+                    ]
                 );
             }
 
@@ -143,7 +165,12 @@ namespace AlpimiAPI.Entities.ELesson.Commands
             if (lessonName!.Any())
             {
                 throw new ApiErrorException(
-                    [new ErrorObject(_str["alreadyExists", "Lesson", request.dto.Name])]
+                    [
+                        new FieldErrorObject(
+                            "name",
+                            _str["alreadyExists", _strFields["Lesson"], request.dto.Name]
+                        )
+                    ]
                 );
             }
             if (request.dto.SubgroupIds != null)
@@ -159,7 +186,10 @@ namespace AlpimiAPI.Entities.ELesson.Commands
                     foreach (var duplicate in duplicates)
                     {
                         duplicateErrors.Add(
-                            new ErrorObject(_str["duplicateData", "Subgroup", duplicate])
+                            new FieldErrorObject(
+                                "subgroup",
+                                _str["duplicateData", _strFields["Subgroup"], duplicate]
+                            )
                         );
                     }
                     throw new ApiErrorException(duplicateErrors);
@@ -181,7 +211,9 @@ namespace AlpimiAPI.Entities.ELesson.Commands
                     if (subgroup.Value == null)
                     {
                         errors.Add(
-                            new ErrorObject(_str["resourceNotFound", "Subgroup", subgroupId])
+                            new ErrorObject(
+                                _str["resourceNotFound", _strFields["Subgroup"], subgroupId]
+                            )
                         );
                     }
                     else if (
@@ -190,7 +222,14 @@ namespace AlpimiAPI.Entities.ELesson.Commands
                     )
                     {
                         errors.Add(
-                            new ErrorObject(_str["wrongSet", "Subgroup", "Schedule", "LessonType"])
+                            new ErrorObject(
+                                _str[
+                                    "wrongSet",
+                                    _strFields["Subgroup"],
+                                    _strFields["Schedule"],
+                                    _strFields["LessonType"]
+                                ]
+                            )
                         );
                     }
                 }
@@ -258,7 +297,10 @@ namespace AlpimiAPI.Entities.ELesson.Commands
                     foreach (var duplicate in duplicates)
                     {
                         duplicateErrors.Add(
-                            new ErrorObject(_str["duplicateData", "ClassroomType", duplicate])
+                            new FieldErrorObject(
+                                "classroomType",
+                                _str["duplicateData", _strFields["ClassroomType"], duplicate]
+                            )
                         );
                     }
                     throw new ApiErrorException(duplicateErrors);
@@ -284,7 +326,11 @@ namespace AlpimiAPI.Entities.ELesson.Commands
                     {
                         errors.Add(
                             new ErrorObject(
-                                _str["resourceNotFound", "ClassroomType", classroomTypeId]
+                                _str[
+                                    "resourceNotFound",
+                                    _strFields["ClassroomType"],
+                                    classroomTypeId
+                                ]
                             )
                         );
                     }
@@ -293,7 +339,14 @@ namespace AlpimiAPI.Entities.ELesson.Commands
                     )
                     {
                         errors.Add(
-                            new ErrorObject(_str["wrongSet", "ClassroomType", "Schedule", "Lesson"])
+                            new ErrorObject(
+                                _str[
+                                    "wrongSet",
+                                    _strFields["ClassroomType"],
+                                    _strFields["Schedule"],
+                                    _strFields["Lesson"]
+                                ]
+                            )
                         );
                     }
                 }

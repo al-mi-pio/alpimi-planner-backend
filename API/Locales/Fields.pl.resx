@@ -117,85 +117,184 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="alreadyExists" xml:space="preserve">
-    <value>{0} o nazwie {1} już istnieje</value>
+  <data name="Name" xml:space="preserve">
+    <value>Nazwa</value>
   </data>
-  <data name="badParameter" xml:space="preserve">
-    <value>Parametr {0} jest niepoprawny</value>
+  <data name="Description" xml:space="preserve">
+    <value>Opis</value>
   </data>
-  <data name="invalidLoginOrPassword" xml:space="preserve">
-    <value>Niepoprawny login lub hasło</value>
+  <data name="Login" xml:space="preserve">
+    <value>Login</value>
   </data>
-  <data name="invalidPassword" xml:space="preserve">
-    <value>Niepoprawne hasło</value>
+  <data name="Password" xml:space="preserve">
+    <value>Hasło</value>
   </data>
-  <data name="longPassword" xml:space="preserve">
-    <value>Hasło nie może być dłuższe niż {0} znaków</value>
+  <data name="CustomUrl" xml:space="preserve">
+    <value>Własny URL</value>
   </data>
-  <data name="notFound" xml:space="preserve">
-    <value>Encja nie została znaleziona</value>
+  <data name="Timestamp" xml:space="preserve">
+    <value>Znacznik Czasu</value>
   </data>
-  <data name="passwordMustContain" xml:space="preserve">
-    <value>Hasło musi zawierać po jednym z następujących: {0}</value>
+  <data name="AffectedEntity" xml:space="preserve">
+    <value>Dotknięta Encja</value>
   </data>
-  <data name="shortPassword" xml:space="preserve">
-    <value>Hasło nie może być krótsze niż {0} znaków</value>
+  <data name="Command" xml:space="preserve">
+    <value>Polecenie</value>
   </data>
-  <data name="unknownError" xml:space="preserve">
-    <value>Wystąpił błąd: {0}</value>
+  <data name="ReversalId" xml:space="preserve">
+    <value>Id Odwrócenia</value>
   </data>
-  <data name="connectionError" xml:space="preserve">
-    <value>Wystąpił problem połączenia z bazą danych. Sprawdź parametry połączenia oraz połączenie z internetem</value>
+  <data name="IsUndone" xml:space="preserve">
+    <value>Czy Cofnięte</value>
   </data>
-  <data name="tooManyRequests" xml:space="preserve">
-    <value>Zbyt dużo zapytań. Spróbuj ponownie poźniej</value>
+  <data name="IsUndoneChecked" xml:space="preserve">
+    <value>Czy Cofnięcie Sprawdzone</value>
   </data>
-  <data name="notAuthenticated" xml:space="preserve">
-    <value>Brak autentykacji</value>
+  <data name="SchoolHour" xml:space="preserve">
+    <value>Godzina Szkolna</value>
   </data>
-  <data name="notAuthorized" xml:space="preserve">
-    <value>Brak dostępu do danego zasobu</value>
+  <data name="SchoolYearStart" xml:space="preserve">
+    <value>Początek Roku Szkolnego</value>
   </data>
-  <data name="scheduleDate" xml:space="preserve">
-    <value>Data zakończenia nie może być przed datą rozpoczęcia</value>
+  <data name="SchoolYearEnd" xml:space="preserve">
+    <value>Koniec Roku Szkolnego</value>
   </data>
-  <data name="dateOutOfRange" xml:space="preserve">
-    <value>Data musi mieścić się w zakresie od {0} do {1}</value>
+  <data name="From" xml:space="preserve">
+    <value>Od</value>
   </data>
-  <data name="scheduleTime" xml:space="preserve">
-    <value>Czas zakończenia nie może być przed czasem rozpoczęcia</value>
+  <data name="To" xml:space="preserve">
+    <value>Do</value>
   </data>
-  <data name="timeOverlap" xml:space="preserve">
-    <value>{0} nie mogą nakładać się na siebie</value>
+  <data name="StartTime" xml:space="preserve">
+    <value>Godzina Rozpoczęcia</value>
   </data>
-  <data name="outOfRange" xml:space="preserve">
-    <value>Isnieją {0} poza podanym zakresem. Proszę je najpierw zmienić</value>
+  <data name="Weight" xml:space="preserve">
+    <value>Waga</value>
   </data>
-  <data name="tooManyStudents" xml:space="preserve">
-    <value>Liczba studentów w podgrupie nie może być większa niż liczba studentów w grupie</value>
+  <data name="Filter" xml:space="preserve">
+    <value>Filtr</value>
   </data>
-  <data name="duplicateData" xml:space="preserve">
-    <value>Nie można wielokrotnie dodać {0} o wartości {1}</value>
+  <data name="Category" xml:space="preserve">
+    <value>Kategoria</value>
   </data>
-  <data name="resourceNotFound" xml:space="preserve">
-    <value>{0} z id {1} nie został znaleziony</value>
+  <data name="Capacity" xml:space="preserve">
+    <value>Pojemność</value>
   </data>
-  <data name="wrongSet" xml:space="preserve">
-    <value>{0} musi należeć do tego samego {1} co {2}</value>
+  <data name="Color" xml:space="preserve">
+    <value>Kolor</value>
   </data>
-  <data name="badWeekDay" xml:space="preserve">
-    <value>Lekcja nie może odbywać się w {0}</value>
+  <data name="WeekDay" xml:space="preserve">
+    <value>Dzień Tygodnia</value>
   </data>
-  <data name="cantContain" xml:space="preserve">
-    <value>{0} może tylko zawierać następujące: {1}</value>
+  <data name="Start" xml:space="preserve">
+    <value>Start</value>
   </data>
-  <data name="scheduleDuration" xml:space="preserve">
-    <value>Rok szkolny nie może trwać dłużej niż {0} mies.</value>
+  <data name="End" xml:space="preserve">
+    <value>Koniec</value>
   </data>
-  <data name="cantUndo" xml:space="preserve">
-    <value>Niema nic do cofnięcia</value>
+  <data name="Surname" xml:space="preserve">
+    <value>Nazwisko</value>
   </data>
-  <data name="cantRedo" xml:space="preserve">
-    <value>Nie ma nic do ponownego wykonania</value>
+  <data name="StudentCount" xml:space="preserve">
+    <value>Liczba Studentów</value>
+  </data>
+  <data name="AlbumNumber" xml:space="preserve">
+    <value>Numer Albumu</value>
+  </data>
+  <data name="CollidingObject1" xml:space="preserve">
+    <value>Obiekt Kolizji 1</value>
+  </data>
+  <data name="CollidingObject2" xml:space="preserve">
+    <value>Obiekt Kolizji 2</value>
+  </data>
+  <data name="Ignored" xml:space="preserve">
+    <value>Ignorowane</value>
+  </data>
+  <data name="Subgroup" xml:space="preserve">
+    <value>Podgrupa</value>
+  </data>
+  <data name="ClassroomType" xml:space="preserve">
+    <value>Typ Sali</value>
+  </data>
+  <data name="LessonPeriod" xml:space="preserve">
+    <value>Okres Lekcyjny</value>
+  </data>
+  <data name="Auth" xml:space="preserve">
+    <value>Uwierzytelnianie</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>Użytkownik</value>
+  </data>
+  <data name="Schedule" xml:space="preserve">
+    <value>Harmonogram</value>
+  </data>
+  <data name="History" xml:space="preserve">
+    <value>Historia</value>
+  </data>
+  <data name="ScheduleSettings" xml:space="preserve">
+    <value>Ustawienia Harmonogramu</value>
+  </data>
+  <data name="DayOff" xml:space="preserve">
+    <value>Dzień Wolny</value>
+  </data>
+  <data name="CollisionType" xml:space="preserve">
+    <value>Typ Kolizji</value>
+  </data>
+  <data name="Collision" xml:space="preserve">
+    <value>Kolizja</value>
+  </data>
+  <data name="Classroom" xml:space="preserve">
+    <value>Sala</value>
+  </data>
+  <data name="LessonType" xml:space="preserve">
+    <value>Typ Lekcji</value>
+  </data>
+  <data name="Lesson" xml:space="preserve">
+    <value>Lekcja</value>
+  </data>
+  <data name="Teacher" xml:space="preserve">
+    <value>Nauczyciel</value>
+  </data>
+  <data name="Availability" xml:space="preserve">
+    <value>Dostępność</value>
+  </data>
+  <data name="Group" xml:space="preserve">
+    <value>Grupa</value>
+  </data>
+  <data name="Student" xml:space="preserve">
+    <value>Student</value>
+  </data>
+  <data name="LessonBlock" xml:space="preserve">
+    <value>Blok Lekcyjny</value>
+  </data>
+  <data name="Page" xml:space="preserve">
+    <value>Strona</value>
+  </data>
+  <data name="PerPage" xml:space="preserve">
+    <value>Na Strone</value>
+  </data>
+  <data name="SortBy" xml:space="preserve">
+    <value>Sortuj według</value>
+  </data>
+  <data name="OrderBy" xml:space="preserve">
+    <value>Uporządkuj według</value>
+  </data>
+  <data name="SortOrder" xml:space="preserve">
+    <value>Kolejność sortowania</value>
+  </data>
+  <data name="AmountOfHours" xml:space="preserve">
+    <value>Ilość Godzin</value>
+  </data>
+  <data name="LessonStart" xml:space="preserve">
+    <value>Początek Lekcji</value>
+  </data>
+  <data name="LessonEnd" xml:space="preserve">
+    <value>Koniec Lekcji</value>
+  </data>
+  <data name="WeekInterval" xml:space="preserve">
+    <value>Interwał tygodniowy</value>
+  </data>
+  <data name="SchoolDays" xml:space="preserve">
+    <value>Dni Szkolne</value>
   </data>
 </root>

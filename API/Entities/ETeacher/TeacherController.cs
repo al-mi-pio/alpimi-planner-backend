@@ -23,11 +23,17 @@ namespace AlpimiAPI.Entities.ETeacher
     {
         private readonly IMediator _mediator;
         private readonly IStringLocalizer<Errors> _str;
+        private readonly IStringLocalizer<Fields> _strFields;
 
-        public TeacherController(IMediator mediator, IStringLocalizer<Errors> str)
+        public TeacherController(
+            IMediator mediator,
+            IStringLocalizer<Errors> str,
+            IStringLocalizer<Fields> strFields
+        )
         {
             _mediator = mediator;
             _str = str;
+            _strFields = strFields;
         }
 
         /// <summary>
@@ -127,7 +133,10 @@ namespace AlpimiAPI.Entities.ETeacher
                 if (result == null)
                 {
                     return NotFound(
-                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "Teacher"])])
+                        new ApiErrorResponse(
+                            404,
+                            [new ErrorObject(_str["notFound", _strFields["Teacher"]])]
+                        )
                     );
                 }
 
@@ -222,7 +231,10 @@ namespace AlpimiAPI.Entities.ETeacher
                 if (result == null)
                 {
                     return NotFound(
-                        new ApiErrorResponse(404, [new ErrorObject(_str["notFound", "Teacher"])])
+                        new ApiErrorResponse(
+                            404,
+                            [new ErrorObject(_str["notFound", _strFields["Teacher"]])]
+                        )
                     );
                 }
 

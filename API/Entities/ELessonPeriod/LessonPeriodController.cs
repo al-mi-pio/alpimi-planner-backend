@@ -1,5 +1,4 @@
-﻿using AlpimiAPI.Entities.ELessonPeriod;
-using AlpimiAPI.Entities.ELessonPeriod.Commands;
+﻿using AlpimiAPI.Entities.ELessonPeriod.Commands;
 using AlpimiAPI.Entities.ELessonPeriod.DTO;
 using AlpimiAPI.Entities.ELessonPeriod.Queries;
 using AlpimiAPI.Locales;
@@ -24,11 +23,17 @@ namespace AlpimiAPI.Entities.ELessonPeriod
     {
         private readonly IMediator _mediator;
         private readonly IStringLocalizer<Errors> _str;
+        private readonly IStringLocalizer<Fields> _strFields;
 
-        public LessonPeriodController(IMediator mediator, IStringLocalizer<Errors> str)
+        public LessonPeriodController(
+            IMediator mediator,
+            IStringLocalizer<Errors> str,
+            IStringLocalizer<Fields> strFields
+        )
         {
             _mediator = mediator;
             _str = str;
+            _strFields = strFields;
         }
 
         /// <summary>
@@ -135,7 +140,7 @@ namespace AlpimiAPI.Entities.ELessonPeriod
                     return NotFound(
                         new ApiErrorResponse(
                             404,
-                            [new ErrorObject(_str["notFound", "LessonPeriod"])]
+                            [new ErrorObject(_str["notFound", _strFields["LessonPeriod"]])]
                         )
                     );
                 }

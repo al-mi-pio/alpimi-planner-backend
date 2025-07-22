@@ -25,11 +25,17 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
     {
         private readonly IDbService _dbService;
         private readonly IStringLocalizer<Errors> _str;
+        private readonly IStringLocalizer<Fields> _strFields;
 
-        public CreateClassroomHandler(IDbService dbService, IStringLocalizer<Errors> str)
+        public CreateClassroomHandler(
+            IDbService dbService,
+            IStringLocalizer<Errors> str,
+            IStringLocalizer<Fields> strFields
+        )
         {
             _dbService = dbService;
             _str = str;
+            _strFields = strFields;
         }
 
         public async Task<Guid> Handle(
@@ -39,12 +45,14 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
         {
             if (request.dto.Capacity < 1)
             {
-                throw new ApiErrorException([new ErrorObject(_str["badParameter", "Capacity"])]);
+                throw new ApiErrorException(
+                    [new FieldErrorObject("capacity", _str["badParameter", _strFields["Capacity"]])]
+                );
             }
 
             GetScheduleHandler getScheduleHandler = new GetScheduleHandler(_dbService);
             GetScheduleQuery getScheduleQuery = new GetScheduleQuery(
-                request.dto.ScheduleId,
+                request.dto.ScheduleId!.Value,
                 request.FilteredId,
                 request.Role
             );
@@ -56,7 +64,11 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
             if (schedule.Value == null)
             {
                 throw new ApiErrorException(
-                    [new ErrorObject(_str["resourceNotFound", "Schedule", request.dto.ScheduleId])]
+                    [
+                        new ErrorObject(
+                            _str["resourceNotFound", _strFields["Schedule"], request.dto.ScheduleId]
+                        )
+                    ]
                 );
             }
 
@@ -72,7 +84,12 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
             if (classroomName != null)
             {
                 throw new ApiErrorException(
-                    [new ErrorObject(_str["alreadyExists", "Classroom", request.dto.Name])]
+                    [
+                        new FieldErrorObject(
+                            "name",
+                            _str["alreadyExists", _strFields["Classroom"], request.dto.Name!]
+                        )
+                    ]
                 );
             }
 
@@ -90,7 +107,10 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
                     foreach (var duplicate in duplicates)
                     {
                         duplicateErrors.Add(
-                            new ErrorObject(_str["duplicateData", "ClassroomType", duplicate])
+                            new FieldErrorObject(
+                                "classroomType",
+                                _str["duplicateData", _strFields["ClassroomType"], duplicate]
+                            )
                         );
                     }
                     throw new ApiErrorException(duplicateErrors);
@@ -116,7 +136,11 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
                     {
                         errors.Add(
                             new ErrorObject(
-                                _str["resourceNotFound", "ClassroomType", classroomTypeId]
+                                _str[
+                                    "resourceNotFound",
+                                    _strFields["ClassroomType"],
+                                    classroomTypeId
+                                ]
                             )
                         );
                     }
@@ -124,7 +148,12 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
                     {
                         errors.Add(
                             new ErrorObject(
-                                _str["wrongSet", "ClassroomType", "Schedule", "Classroom"]
+                                _str[
+                                    "wrongSet",
+                                    _strFields["ClassroomType"],
+                                    _strFields["Schedule"],
+                                    _strFields["Classroom"]
+                                ]
                             )
                         );
                     }

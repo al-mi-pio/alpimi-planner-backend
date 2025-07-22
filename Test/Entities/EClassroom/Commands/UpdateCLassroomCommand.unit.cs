@@ -17,10 +17,12 @@ namespace AlpimiTest.Entities.EClassroom.Commands
     {
         private readonly Mock<IDbService> _dbService = new();
         private readonly Mock<IStringLocalizer<Errors>> _str;
+        private readonly Mock<IStringLocalizer<Fields>> _strFields;
 
         public UpdateClassroomCommandUnit()
         {
             _str = ResourceSetup.Setup();
+            _strFields = ResourceSetup.FieldSetup();
         }
 
         [Fact]
@@ -40,7 +42,11 @@ namespace AlpimiTest.Entities.EClassroom.Commands
                 new Guid(),
                 "Admin"
             );
-            var updateClassroomHandler = new UpdateClassroomHandler(_dbService.Object, _str.Object);
+            var updateClassroomHandler = new UpdateClassroomHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateClassroomHandler.Handle(
@@ -67,7 +73,11 @@ namespace AlpimiTest.Entities.EClassroom.Commands
                 new Guid(),
                 "Admin"
             );
-            var updateClassroomHandler = new UpdateClassroomHandler(_dbService.Object, _str.Object);
+            var updateClassroomHandler = new UpdateClassroomHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateClassroomHandler.Handle(
@@ -94,7 +104,11 @@ namespace AlpimiTest.Entities.EClassroom.Commands
                 new Guid(),
                 "User"
             );
-            var createClassroomHandler = new UpdateClassroomHandler(_dbService.Object, _str.Object);
+            var createClassroomHandler = new UpdateClassroomHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createClassroomHandler.Handle(
@@ -104,7 +118,7 @@ namespace AlpimiTest.Entities.EClassroom.Commands
             );
 
             Assert.Equal(
-                "Cannot add multiple ClassroomType with the value 00000000-0000-0000-0000-000000000000",
+                "Cannot add multiple Classroom Type with the value 00000000-0000-0000-0000-000000000000",
                 result.errors.First().message
             );
         }
@@ -124,7 +138,11 @@ namespace AlpimiTest.Entities.EClassroom.Commands
                 new Guid(),
                 "User"
             );
-            var createClassroomHandler = new UpdateClassroomHandler(_dbService.Object, _str.Object);
+            var createClassroomHandler = new UpdateClassroomHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createClassroomHandler.Handle(
@@ -134,7 +152,7 @@ namespace AlpimiTest.Entities.EClassroom.Commands
             );
 
             Assert.Equal(
-                "ClassroomType with id 00000000-0000-0000-0000-000000000000 was not found",
+                "Classroom Type with id 00000000-0000-0000-0000-000000000000 was not found",
                 result.errors.First().message
             );
         }
@@ -159,7 +177,11 @@ namespace AlpimiTest.Entities.EClassroom.Commands
                 new Guid(),
                 "User"
             );
-            var createClassroomHandler = new UpdateClassroomHandler(_dbService.Object, _str.Object);
+            var createClassroomHandler = new UpdateClassroomHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createClassroomHandler.Handle(
@@ -169,7 +191,7 @@ namespace AlpimiTest.Entities.EClassroom.Commands
             );
 
             Assert.Equal(
-                "ClassroomType must be in the same Schedule as Classroom",
+                "Classroom Type must be in the same Schedule as Classroom",
                 result.errors.First().message
             );
         }

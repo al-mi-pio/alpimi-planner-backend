@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace AlpimiAPI.Entities.ELessonBlock.DTO
+﻿namespace AlpimiAPI.Entities.ELessonBlock.DTO
 {
     public class UpdateLessonBlockDTO
     {

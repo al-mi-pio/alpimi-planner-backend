@@ -23,11 +23,17 @@ namespace AlpimiAPI.Entities.ECollisionType
     {
         private readonly IMediator _mediator;
         private readonly IStringLocalizer<Errors> _str;
+        private readonly IStringLocalizer<Fields> _strFields;
 
-        public CollisionTypeController(IMediator mediator, IStringLocalizer<Errors> str)
+        public CollisionTypeController(
+            IMediator mediator,
+            IStringLocalizer<Errors> str,
+            IStringLocalizer<Fields> strFields
+        )
         {
             _mediator = mediator;
             _str = str;
+            _strFields = strFields;
         }
 
         /// <summary>
@@ -134,7 +140,7 @@ namespace AlpimiAPI.Entities.ECollisionType
                     return NotFound(
                         new ApiErrorResponse(
                             404,
-                            [new ErrorObject(_str["notFound", "CollisionType"])]
+                            [new ErrorObject(_str["notFound", _strFields["CollisionType"]])]
                         )
                     );
                 }
@@ -231,7 +237,7 @@ namespace AlpimiAPI.Entities.ECollisionType
                     return NotFound(
                         new ApiErrorResponse(
                             404,
-                            [new ErrorObject(_str["notFound", "CollisionType"])]
+                            [new ErrorObject(_str["notFound", _strFields["CollisionType"]])]
                         )
                     );
                 }

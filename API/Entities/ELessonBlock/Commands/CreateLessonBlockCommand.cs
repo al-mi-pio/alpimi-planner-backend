@@ -27,11 +27,17 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
     {
         private readonly IDbService _dbService;
         private readonly IStringLocalizer<Errors> _str;
+        private readonly IStringLocalizer<Fields> _strFields;
 
-        public CreateLessonBlockHandler(IDbService dbService, IStringLocalizer<Errors> str)
+        public CreateLessonBlockHandler(
+            IDbService dbService,
+            IStringLocalizer<Errors> str,
+            IStringLocalizer<Fields> strFields
+        )
         {
             _dbService = dbService;
             _str = str;
+            _strFields = strFields;
         }
 
         public async Task<Guid> Handle(
@@ -54,7 +60,9 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
             if (lesson.Value == null)
             {
                 errors.Add(
-                    new ErrorObject(_str["resourceNotFound", "Lesson", request.dto.LessonId])
+                    new ErrorObject(
+                        _str["resourceNotFound", _strFields["Lesson"], request.dto.LessonId]
+                    )
                 );
             }
 
@@ -74,7 +82,11 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                 {
                     errors.Add(
                         new ErrorObject(
-                            _str["resourceNotFound", "Classroom", request.dto.ClassroomId]
+                            _str[
+                                "resourceNotFound",
+                                _strFields["Classroom"],
+                                request.dto.ClassroomId
+                            ]
                         )
                     );
                 }
@@ -83,7 +95,14 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                     if (lesson.Value.LessonType.ScheduleId != classroom.Value.ScheduleId)
                     {
                         errors.Add(
-                            new ErrorObject(_str["wrongSet", "Classroom", "Schedule", "Lesson"])
+                            new ErrorObject(
+                                _str[
+                                    "wrongSet",
+                                    _strFields["Classroom"],
+                                    _strFields["Schedule"],
+                                    _strFields["Lesson"]
+                                ]
+                            )
                         );
                     }
                 }
@@ -116,12 +135,19 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
 
             if (request.dto.LessonStart < 1)
             {
-                errors.Add(new ErrorObject(_str["badParameter", "LessonStart"]));
+                errors.Add(
+                    new FieldErrorObject(
+                        "lessonStart",
+                        _str["badParameter", _strFields["LessonStart"]]
+                    )
+                );
             }
 
             if (request.dto.LessonEnd > lessonPeriodCount)
             {
-                errors.Add(new ErrorObject(_str["badParameter", "LessonEnd"]));
+                errors.Add(
+                    new FieldErrorObject("lessonEnd", _str["badParameter", _strFields["LessonEnd"]])
+                );
             }
 
             if (
@@ -140,9 +166,11 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                 );
             }
 
-            if (scheduleSettings!.SchoolDays[(int)request.dto.LessonDate.DayOfWeek] == '0')
+            if (scheduleSettings!.SchoolDays[(int)request.dto.LessonDate!.Value.DayOfWeek] == '0')
             {
-                errors.Add(new ErrorObject(_str["badWeekDay", request.dto.LessonDate.DayOfWeek]));
+                errors.Add(
+                    new ErrorObject(_str["badWeekDay", request.dto.LessonDate!.Value.DayOfWeek])
+                );
             }
 
             int amountOfLessonsToInsert = 1;
@@ -150,7 +178,12 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
             {
                 if (request.dto.WeekInterval < 1)
                 {
-                    errors.Add(new ErrorObject(_str["badParameter", "WeekInterval"]));
+                    errors.Add(
+                        new FieldErrorObject(
+                            "weekInterval",
+                            _str["badParameter", _strFields["WeekInterval"]]
+                        )
+                    );
                 }
                 else
                 {
@@ -158,7 +191,7 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                         Math.Floor(
                             (
                                 scheduleSettings.SchoolYearEnd.DayNumber
-                                - request.dto.LessonDate.DayNumber
+                                - request.dto.LessonDate!.Value.DayNumber
                             ) / (7.0 * request.dto.WeekInterval!.Value)
                         ) + 1
                     );
@@ -191,7 +224,8 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                 if (request.dto.WeekInterval != null)
                 {
                     request.dto.LessonDate = DateOnly.FromDayNumber(
-                        request.dto.LessonDate.DayNumber + 7 * request.dto.WeekInterval!.Value
+                        request.dto.LessonDate!.Value.DayNumber
+                            + 7 * request.dto.WeekInterval!.Value
                     );
                     request = request with
                     {

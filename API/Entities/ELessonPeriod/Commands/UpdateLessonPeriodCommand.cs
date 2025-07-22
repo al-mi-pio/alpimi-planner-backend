@@ -26,11 +26,17 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Commands
     {
         private readonly IDbService _dbService;
         private readonly IStringLocalizer<Errors> _str;
+        private readonly IStringLocalizer<Fields> _strFields;
 
-        public UpdateLessonPeriodHandler(IDbService dbService, IStringLocalizer<Errors> str)
+        public UpdateLessonPeriodHandler(
+            IDbService dbService,
+            IStringLocalizer<Errors> str,
+            IStringLocalizer<Fields> strFields
+        )
         {
             _dbService = dbService;
             _str = str;
+            _strFields = strFields;
         }
 
         public async Task<LessonPeriod?> Handle(
@@ -92,7 +98,7 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Commands
                 );
 
             GetAllLessonPeriodByScheduleHandler getAllLessonPeriodByScheduleHandler =
-                new GetAllLessonPeriodByScheduleHandler(_dbService, _str);
+                new GetAllLessonPeriodByScheduleHandler(_dbService, _str, _strFields);
             GetAllLessonPeriodByScheduleQuery getAllLessonPeriodByScheduleQuery =
                 new GetAllLessonPeriodByScheduleQuery(
                     scheduleSettings.Value!.ScheduleId,
@@ -119,7 +125,12 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Commands
                     )
                     {
                         throw new ApiErrorException(
-                            [new ErrorObject(_str["timeOverlap", "LessonPeriod"])]
+                            [
+                                new FieldErrorObject(
+                                    "start",
+                                    _str["timeOverlap", _strFields["LessonPeriod"]]
+                                )
+                            ]
                         );
                     }
                 }

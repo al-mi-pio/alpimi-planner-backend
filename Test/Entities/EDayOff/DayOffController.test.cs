@@ -104,7 +104,7 @@ namespace AlpimiTest.Entities.EDayOff
             var query = $"?scheduleId={scheduleId}";
             response = await _client.GetAsync($"/api/DayOff{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
-            Assert.Contains(dayOffRequest.Name, stringResponse);
+            Assert.Contains(dayOffRequest.Name!, stringResponse);
         }
 
         [Fact]
@@ -122,7 +122,7 @@ namespace AlpimiTest.Entities.EDayOff
             var query = $"?scheduleId={scheduleId}";
             var response = await _client.GetAsync($"/api/DayOff{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
-            Assert.DoesNotContain(dayOffRequest.Name, stringResponse);
+            Assert.DoesNotContain(dayOffRequest.Name!, stringResponse);
         }
 
         [Fact]
@@ -141,7 +141,7 @@ namespace AlpimiTest.Entities.EDayOff
             var query = $"?scheduleId={scheduleId}";
             var response = await _client.GetAsync($"/api/DayOff{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
-            Assert.Contains(dayOffRequest.Name, stringResponse);
+            Assert.Contains(dayOffRequest.Name!, stringResponse);
         }
 
         [Fact]
@@ -160,7 +160,7 @@ namespace AlpimiTest.Entities.EDayOff
             var query = $"?scheduleId={scheduleId}";
             response = await _client.GetAsync($"/api/DayOff");
             var stringResponse = await response.Content.ReadAsStringAsync();
-            Assert.DoesNotContain(dayOffRequest.Name, stringResponse);
+            Assert.DoesNotContain(dayOffRequest.Name!, stringResponse);
         }
 
         [Fact]
@@ -292,8 +292,8 @@ namespace AlpimiTest.Entities.EDayOff
             var response = await _client.GetAsync($"/api/DayOff{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
 
-            Assert.Contains(dayOffRequest1.Name, stringResponse);
-            Assert.Contains(dayOffRequest2.Name, stringResponse);
+            Assert.Contains(dayOffRequest1.Name!, stringResponse);
+            Assert.Contains(dayOffRequest2.Name!, stringResponse);
         }
 
         [Fact]
@@ -310,8 +310,8 @@ namespace AlpimiTest.Entities.EDayOff
             var response = await _client.GetAsync($"/api/DayOff{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
 
-            Assert.Contains(dayOffRequest1.Name, stringResponse);
-            Assert.Contains(dayOffRequest2.Name, stringResponse);
+            Assert.Contains(dayOffRequest1.Name!, stringResponse);
+            Assert.Contains(dayOffRequest2.Name!, stringResponse);
         }
 
         [Fact]
@@ -330,8 +330,8 @@ namespace AlpimiTest.Entities.EDayOff
             var response = await _client.GetAsync($"/api/DayOff{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
 
-            Assert.DoesNotContain(dayOffRequest1.Name, stringResponse);
-            Assert.DoesNotContain(dayOffRequest2.Name, stringResponse);
+            Assert.DoesNotContain(dayOffRequest1.Name!, stringResponse);
+            Assert.DoesNotContain(dayOffRequest2.Name!, stringResponse);
         }
 
         [Fact]
@@ -350,8 +350,8 @@ namespace AlpimiTest.Entities.EDayOff
             var response = await _client.GetAsync($"/api/DayOff{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
 
-            Assert.DoesNotContain(dayOffRequest1.Name, stringResponse);
-            Assert.DoesNotContain(dayOffRequest2.Name, stringResponse);
+            Assert.DoesNotContain(dayOffRequest1.Name!, stringResponse);
+            Assert.DoesNotContain(dayOffRequest2.Name!, stringResponse);
         }
     }
 }

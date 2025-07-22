@@ -1,19 +1,17 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace AlpimiAPI.Entities.ELessonBlock.DTO
+﻿namespace AlpimiAPI.Entities.ELessonBlock.DTO
 {
     public class CreateLessonBlockDTO
     {
-        [Required]
-        public required DateOnly LessonDate { get; set; }
+        [LocalizedRequired]
+        public required DateOnly? LessonDate { get; set; }
 
-        [Required]
-        public required int LessonStart { get; set; }
+        [LocalizedRequired]
+        public required int? LessonStart { get; set; }
 
-        [Required]
-        public required int LessonEnd { get; set; }
+        [LocalizedRequired]
+        public required int? LessonEnd { get; set; }
 
-        [Required]
+        [LocalizedRequired]
         public required Guid LessonId { get; set; }
 
         public Guid? ClassroomId { get; set; }

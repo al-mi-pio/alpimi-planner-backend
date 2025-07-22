@@ -1,13 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace AlpimiAPI.Entities.EClassroomType.DTO
+﻿namespace AlpimiAPI.Entities.EClassroomType.DTO
 {
     public class CreateClassroomTypeDTO
     {
-        [Required]
-        public required string Name { get; set; }
+        [LocalizedRequired]
+        public required string? Name { get; set; }
 
-        [Required]
-        public required Guid ScheduleId { get; set; }
+        [LocalizedRequired]
+        public required Guid? ScheduleId { get; set; }
     }
 }

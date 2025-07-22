@@ -19,10 +19,13 @@ namespace AlpimiTest.Entities.EStudent.Commands
     {
         private readonly Mock<IDbService> _dbService = new();
         private readonly Mock<IStringLocalizer<Errors>> _str;
+        private readonly Mock<IStringLocalizer<Fields>> _strFields;
 
         public CreateStudentCommandUnit()
         {
             _str = ResourceSetup.Setup();
+            _strFields = ResourceSetup.FieldSetup();
+            _strFields = ResourceSetup.FieldSetup();
         }
 
         [Fact]
@@ -34,7 +37,11 @@ namespace AlpimiTest.Entities.EStudent.Commands
                 new Guid(),
                 "User"
             );
-            var createStudentHandler = new CreateStudentHandler(_dbService.Object, _str.Object);
+            var createStudentHandler = new CreateStudentHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createStudentHandler.Handle(createStudentCommand, new CancellationToken())
@@ -68,7 +75,11 @@ namespace AlpimiTest.Entities.EStudent.Commands
                 new Guid(),
                 "User"
             );
-            var createStudentHandler = new CreateStudentHandler(_dbService.Object, _str.Object);
+            var createStudentHandler = new CreateStudentHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createStudentHandler.Handle(createStudentCommand, new CancellationToken())
@@ -95,7 +106,11 @@ namespace AlpimiTest.Entities.EStudent.Commands
                 new Guid(),
                 "User"
             );
-            var createStudentHandler = new CreateStudentHandler(_dbService.Object, _str.Object);
+            var createStudentHandler = new CreateStudentHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createStudentHandler.Handle(createStudentCommand, new CancellationToken())
@@ -127,7 +142,11 @@ namespace AlpimiTest.Entities.EStudent.Commands
                 new Guid(),
                 "User"
             );
-            var createStudentHandler = new CreateStudentHandler(_dbService.Object, _str.Object);
+            var createStudentHandler = new CreateStudentHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createStudentHandler.Handle(createStudentCommand, new CancellationToken())
@@ -156,7 +175,11 @@ namespace AlpimiTest.Entities.EStudent.Commands
                 new Guid(),
                 "User"
             );
-            var createStudentHandler = new CreateStudentHandler(_dbService.Object, _str.Object);
+            var createStudentHandler = new CreateStudentHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createStudentHandler.Handle(createStudentCommand, new CancellationToken())

@@ -24,11 +24,17 @@ namespace AlpimiAPI.Entities.EAvailability.Commands
     {
         private readonly IDbService _dbService;
         private readonly IStringLocalizer<Errors> _str;
+        private readonly IStringLocalizer<Fields> _strFields;
 
-        public CreateAvailabilityHandler(IDbService dbService, IStringLocalizer<Errors> str)
+        public CreateAvailabilityHandler(
+            IDbService dbService,
+            IStringLocalizer<Errors> str,
+            IStringLocalizer<Fields> strFields
+        )
         {
             _dbService = dbService;
             _str = str;
+            _strFields = strFields;
         }
 
         public async Task<Guid> Handle(
@@ -38,7 +44,7 @@ namespace AlpimiAPI.Entities.EAvailability.Commands
         {
             GetTeacherHandler getTeacherHandler = new GetTeacherHandler(_dbService);
             GetTeacherQuery getTeacherQuery = new GetTeacherQuery(
-                request.dto.TeacherId,
+                request.dto.TeacherId!.Value,
                 request.FilteredId,
                 request.Role
             );
@@ -49,7 +55,11 @@ namespace AlpimiAPI.Entities.EAvailability.Commands
             if (teacher.Value == null)
             {
                 throw new ApiErrorException(
-                    [new ErrorObject(_str["resourceNotFound", "Teacher", request.dto.TeacherId])]
+                    [
+                        new ErrorObject(
+                            _str["resourceNotFound", _strFields["Teacher"], request.dto.TeacherId]
+                        )
+                    ]
                 );
             }
 
@@ -75,17 +85,21 @@ namespace AlpimiAPI.Entities.EAvailability.Commands
 
             if (request.dto.Start < 1)
             {
-                errors.Add(new ErrorObject(_str["badParameter", "Start"]));
+                errors.Add(
+                    new FieldErrorObject("start", _str["badParameter", _strFields["Start"]])
+                );
             }
 
             if (request.dto.End > lessonPeriodCount)
             {
-                errors.Add(new ErrorObject(_str["badParameter", "End"]));
+                errors.Add(new FieldErrorObject("end", _str["badParameter", _strFields["End"]]));
             }
 
             if (request.dto.WeekDay < 0 || request.dto.WeekDay > 6)
             {
-                errors.Add(new ErrorObject(_str["badParameter", "WeekDay"]));
+                errors.Add(
+                    new FieldErrorObject("weekDay", _str["badParameter", _strFields["WeekDay"]])
+                );
             }
 
             if (errors.Count != 0)

@@ -23,11 +23,17 @@ namespace AlpimiAPI.Entities.ECollisionType.Commands
     {
         private readonly IDbService _dbService;
         private readonly IStringLocalizer<Errors> _str;
+        private readonly IStringLocalizer<Fields> _strFields;
 
-        public CreateCollisionTypeHandler(IDbService dbService, IStringLocalizer<Errors> str)
+        public CreateCollisionTypeHandler(
+            IDbService dbService,
+            IStringLocalizer<Errors> str,
+            IStringLocalizer<Fields> strFields
+        )
         {
             _dbService = dbService;
             _str = str;
+            _strFields = strFields;
         }
 
         public async Task<Guid> Handle(
@@ -37,12 +43,14 @@ namespace AlpimiAPI.Entities.ECollisionType.Commands
         {
             if (request.dto.Weight > 1 || request.dto.Weight < 0)
             {
-                throw new ApiErrorException([new ErrorObject(_str["badParameter", "Weight"])]);
+                throw new ApiErrorException(
+                    [new FieldErrorObject("weight", _str["badParameter", _strFields["Weight"]])]
+                );
             }
 
             GetScheduleHandler getScheduleHandler = new GetScheduleHandler(_dbService);
             GetScheduleQuery getScheduleQuery = new GetScheduleQuery(
-                request.dto.ScheduleId,
+                request.dto.ScheduleId!.Value,
                 request.FilteredId,
                 request.Role
             );
@@ -54,7 +62,11 @@ namespace AlpimiAPI.Entities.ECollisionType.Commands
             if (schedule.Value == null)
             {
                 throw new ApiErrorException(
-                    [new ErrorObject(_str["resourceNotFound", "Schedule", request.dto.ScheduleId])]
+                    [
+                        new ErrorObject(
+                            _str["resourceNotFound", _strFields["Schedule"], request.dto.ScheduleId]
+                        )
+                    ]
                 );
             }
 
@@ -70,7 +82,12 @@ namespace AlpimiAPI.Entities.ECollisionType.Commands
             if (collisionTypeName != null)
             {
                 throw new ApiErrorException(
-                    [new ErrorObject(_str["alreadyExists", "CollisionType", request.dto.Name])]
+                    [
+                        new FieldErrorObject(
+                            "name",
+                            _str["alreadyExists", _strFields["CollisionType"], request.dto.Name!]
+                        )
+                    ]
                 );
             }
 

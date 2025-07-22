@@ -1,24 +1,22 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace AlpimiAPI.Entities.ECollisionType.DTO
+﻿namespace AlpimiAPI.Entities.ECollisionType.DTO
 {
     public class CreateCollisionTypeDTO
     {
-        [Required]
-        public required string Name { get; set; }
+        [LocalizedRequired]
+        public required string? Name { get; set; }
 
-        [Required]
-        public required string Description { get; set; }
+        [LocalizedRequired]
+        public required string? Description { get; set; }
 
-        [Required]
-        public required double Weight { get; set; }
+        [LocalizedRequired]
+        public required double? Weight { get; set; }
 
         public string? Filter { get; set; }
 
-        [Required]
+        [LocalizedRequired]
         public required string Category { get; set; }
 
-        [Required]
-        public required Guid ScheduleId { get; set; }
+        [LocalizedRequired]
+        public required Guid? ScheduleId { get; set; }
     }
 }

@@ -18,10 +18,12 @@ namespace AlpimiTest.Entities.EClassroomType.Commands
     {
         private readonly Mock<IDbService> _dbService = new();
         private readonly Mock<IStringLocalizer<Errors>> _str;
+        private readonly Mock<IStringLocalizer<Fields>> _strFields;
 
         public CreateClassroomTypeCommandUnit()
         {
             _str = ResourceSetup.Setup();
+            _strFields = ResourceSetup.FieldSetup();
         }
 
         [Fact]
@@ -35,7 +37,8 @@ namespace AlpimiTest.Entities.EClassroomType.Commands
             );
             var createClassroomTypeHandler = new CreateClassroomTypeHandler(
                 _dbService.Object,
-                _str.Object
+                _str.Object,
+                _strFields.Object
             );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
@@ -77,7 +80,8 @@ namespace AlpimiTest.Entities.EClassroomType.Commands
             );
             var createClassroomTypeHandler = new CreateClassroomTypeHandler(
                 _dbService.Object,
-                _str.Object
+                _str.Object,
+                _strFields.Object
             );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
@@ -88,7 +92,7 @@ namespace AlpimiTest.Entities.EClassroomType.Commands
             );
 
             Assert.Equal(
-                "There is already a ClassroomType with the name Komputerowa",
+                "There is already a Classroom Type with the name Komputerowa",
                 result.errors.First().message
             );
         }

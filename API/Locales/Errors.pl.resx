@@ -118,87 +118,87 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="alreadyExists" xml:space="preserve">
-    <value>There is already a {0} with the name {1}</value>
+    <value>{0} o nazwie {1} już istnieje</value>
   </data>
   <data name="badParameter" xml:space="preserve">
-    <value>{0} parameter is invalid</value>
+    <value>Parametr {0} jest niepoprawny</value>
   </data>
   <data name="invalidLoginOrPassword" xml:space="preserve">
-    <value>Invalid login or password</value>
+    <value>Niepoprawny login lub hasło</value>
   </data>
   <data name="invalidPassword" xml:space="preserve">
-    <value>Invalid password</value>
+    <value>Niepoprawne hasło</value>
   </data>
   <data name="longPassword" xml:space="preserve">
-    <value>Password cannot be longer than {0} characters</value>
+    <value>Hasło nie może być dłuższe niż {0} znaków</value>
   </data>
   <data name="notFound" xml:space="preserve">
-    <value>Entity was not found</value>
+    <value>Encja nie została znaleziona</value>
   </data>
   <data name="passwordMustContain" xml:space="preserve">
-    <value>Password must contain at least one of the following: {0}</value>
+    <value>Hasło musi zawierać po jednym z następujących: {0}</value>
   </data>
   <data name="shortPassword" xml:space="preserve">
-    <value>Password cannot be shorter than {0} characters</value>
+    <value>Hasło nie może być krótsze niż {0} znaków</value>
   </data>
   <data name="unknownError" xml:space="preserve">
-    <value>An error occured: {0}</value>
+    <value>Wystąpił błąd: {0}</value>
   </data>
   <data name="connectionError" xml:space="preserve">
-    <value>There was a problem connecting with the database. Check your connection string and internet access</value>
+    <value>Wystąpił problem połączenia z bazą danych. Sprawdź parametry połączenia oraz połączenie z internetem</value>
   </data>
   <data name="tooManyRequests" xml:space="preserve">
-    <value>Too many requests. Try again later</value>
+    <value>Zbyt dużo zapytań. Spróbuj ponownie poźniej</value>
   </data>
   <data name="notAuthenticated" xml:space="preserve">
-    <value>You are not authenticated</value>
+    <value>Brak autentykacji</value>
   </data>
   <data name="notAuthorized" xml:space="preserve">
-    <value>You have no permission to access this resource</value>
+    <value>Brak dostępu do danego zasobu</value>
   </data>
   <data name="scheduleDate" xml:space="preserve">
-    <value>The end date cannot happen before the start date</value>
+    <value>Data zakończenia nie może być przed datą rozpoczęcia</value>
   </data>
   <data name="dateOutOfRange" xml:space="preserve">
-    <value>Date must be in between {0} and {1}</value>
+    <value>Data musi mieścić się w zakresie od {0} do {1}</value>
   </data>
   <data name="scheduleTime" xml:space="preserve">
-    <value>The end time cannot happen before the start time</value>
+    <value>Czas zakończenia nie może być przed czasem rozpoczęcia</value>
   </data>
   <data name="timeOverlap" xml:space="preserve">
-    <value>{0}s cannot overlap</value>
+    <value>{0} nie mogą nakładać się na siebie</value>
   </data>
   <data name="outOfRange" xml:space="preserve">
-    <value>There are {0} outside of provided range. Please change them first</value>
+    <value>Isnieją {0} poza podanym zakresem. Proszę je najpierw zmienić</value>
   </data>
   <data name="tooManyStudents" xml:space="preserve">
-    <value>Student count in a subgroup cannot be greater than the student count in a group</value>
+    <value>Liczba studentów w podgrupie nie może być większa niż liczba studentów w grupie</value>
   </data>
   <data name="duplicateData" xml:space="preserve">
-    <value>Cannot add multiple {0} with the value {1}</value>
+    <value>Nie można wielokrotnie dodać {0} o wartości {1}</value>
   </data>
   <data name="resourceNotFound" xml:space="preserve">
-    <value>{0} with id {1} was not found</value>
+    <value>{0} z id {1} nie został znaleziony</value>
   </data>
   <data name="wrongSet" xml:space="preserve">
-    <value>{0} must be in the same {1} as {2}</value>
+    <value>{0} musi należeć do tego samego {1} co {2}</value>
   </data>
   <data name="badWeekDay" xml:space="preserve">
-    <value>Lessons cannot occur on {0}</value>
+    <value>Lekcja nie może odbywać się w {0}</value>
   </data>
   <data name="cantContain" xml:space="preserve">
-    <value>{0} can only contain the following: {1}</value>
+    <value>{0} może tylko zawierać następujące: {1}</value>
   </data>
   <data name="scheduleDuration" xml:space="preserve">
-    <value>The school year cannot be longer than {0} month(s)</value>
+    <value>Rok szkolny nie może trwać dłużej niż {0} mies.</value>
   </data>
   <data name="cantUndo" xml:space="preserve">
-    <value>There is nothing to undo</value>
+    <value>Niema nic do cofnięcia</value>
   </data>
   <data name="cantRedo" xml:space="preserve">
-    <value>There is nothing to redo</value>
+    <value>Nie ma nic do ponownego wykonania</value>
   </data>
   <data name="requiredField" xml:space="preserve">
-    <value>The {0} field is required.</value>
+    <value>Pole {0} jest wymagane</value>
   </data>
 </root>

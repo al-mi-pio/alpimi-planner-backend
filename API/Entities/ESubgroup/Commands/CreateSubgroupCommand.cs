@@ -3,7 +3,6 @@ using AlpimiAPI.Entities.EDayOff.Commands;
 using AlpimiAPI.Entities.EGroup;
 using AlpimiAPI.Entities.EGroup.Queries;
 using AlpimiAPI.Entities.EHistory.DTO;
-using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Entities.ESubgroup.DTO;
 using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
@@ -24,11 +23,17 @@ namespace AlpimiAPI.Entities.ESubgroup.Commands
     {
         private readonly IDbService _dbService;
         private readonly IStringLocalizer<Errors> _str;
+        private readonly IStringLocalizer<Fields> _strFields;
 
-        public CreateSubgroupHandler(IDbService dbService, IStringLocalizer<Errors> str)
+        public CreateSubgroupHandler(
+            IDbService dbService,
+            IStringLocalizer<Errors> str,
+            IStringLocalizer<Fields> strFields
+        )
         {
             _dbService = dbService;
             _str = str;
+            _strFields = strFields;
         }
 
         public async Task<Guid> Handle(
@@ -39,13 +44,18 @@ namespace AlpimiAPI.Entities.ESubgroup.Commands
             if (request.dto.StudentCount < 1)
             {
                 throw new ApiErrorException(
-                    [new ErrorObject(_str["badParameter", "StudentCount"])]
+                    [
+                        new FieldErrorObject(
+                            "StudentCount",
+                            _str["badParameter", _strFields["StudentCount"]]
+                        )
+                    ]
                 );
             }
 
             GetGroupHandler getGroupHandler = new GetGroupHandler(_dbService);
             GetGroupQuery getGroupQuery = new GetGroupQuery(
-                request.dto.GroupId,
+                request.dto.GroupId!.Value,
                 request.FilteredId,
                 request.Role
             );
@@ -57,7 +67,11 @@ namespace AlpimiAPI.Entities.ESubgroup.Commands
             if (group.Value == null)
             {
                 throw new ApiErrorException(
-                    [new ErrorObject(_str["resourceNotFound", "Group", request.dto.GroupId])]
+                    [
+                        new ErrorObject(
+                            _str["resourceNotFound", _strFields["Group"], request.dto.GroupId]
+                        )
+                    ]
                 );
             }
 
@@ -78,7 +92,12 @@ namespace AlpimiAPI.Entities.ESubgroup.Commands
             if (groupName!.Any())
             {
                 throw new ApiErrorException(
-                    [new ErrorObject(_str["alreadyExists", "Group", request.dto.Name])]
+                    [
+                        new FieldErrorObject(
+                            "name",
+                            _str["alreadyExists", _strFields["Group"], request.dto.Name!]
+                        )
+                    ]
                 );
             }
 
@@ -94,7 +113,12 @@ namespace AlpimiAPI.Entities.ESubgroup.Commands
             if (subgroupName!.Any())
             {
                 throw new ApiErrorException(
-                    [new ErrorObject(_str["alreadyExists", "Subgroup", request.dto.Name])]
+                    [
+                        new FieldErrorObject(
+                            "name",
+                            _str["alreadyExists", _strFields["Subgroup"], request.dto.Name!]
+                        )
+                    ]
                 );
             }
 

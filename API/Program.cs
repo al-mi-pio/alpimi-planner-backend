@@ -1,12 +1,10 @@
 using System.Data;
-using System.Globalization;
 using System.Reflection;
 using System.Text;
 using AlpimiAPI;
 using AlpimiAPI.Database;
 using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
-using AlpimiAPI.Settings;
 using AlpimiAPI.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
@@ -36,11 +34,11 @@ try
 
     builder.Services.Configure<RequestLocalizationOptions>(options =>
     {
-        var supportedCultures = new List<CultureInfo>
-        {
-            new CultureInfo("en-US"),
-            new CultureInfo("pl-PL")
-        };
+        var supportedCultures = new[] { "en-US", "pl" };
+        options
+            .SetDefaultCulture(supportedCultures[0])
+            .AddSupportedCultures(supportedCultures)
+            .AddSupportedUICultures(supportedCultures);
     });
 
     builder.Services.AddEndpointsApiExplorer();
@@ -155,9 +153,27 @@ try
                     .Select(e => e.ErrorMessage)
                     .ToArray();
 
-                return new BadRequestObjectResult(
-                    new ApiErrorResponse(400, [new ErrorObject(errors[0])!])
-                );
+                List<ErrorObject> errorObjects = new List<ErrorObject>();
+
+                foreach (var error in errors)
+                {
+                    if (error.StartsWith("[FieldErrorObject]"))
+                    {
+                        int start = error.IndexOf('<');
+                        int end = error.IndexOf('>');
+
+                        var field = error.Substring(start + 1, end - start - 1);
+                        var message = error.Substring(end + 1).TrimStart();
+
+                        errorObjects.Add(new FieldErrorObject(field, message));
+                    }
+                    else
+                    {
+                        errorObjects.Add(new ErrorObject(error));
+                    }
+                }
+
+                return new BadRequestObjectResult(new ApiErrorResponse(400, errorObjects));
             };
         });
 

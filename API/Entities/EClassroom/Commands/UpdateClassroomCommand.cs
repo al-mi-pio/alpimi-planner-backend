@@ -6,7 +6,6 @@ using AlpimiAPI.Entities.EClassroomType;
 using AlpimiAPI.Entities.EClassroomType.Queries;
 using AlpimiAPI.Entities.EDayOff.Commands;
 using AlpimiAPI.Entities.EHistory.DTO;
-using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
 using MediatR;
@@ -26,11 +25,17 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
     {
         private readonly IDbService _dbService;
         private readonly IStringLocalizer<Errors> _str;
+        private readonly IStringLocalizer<Fields> _strFields;
 
-        public UpdateClassroomHandler(IDbService dbService, IStringLocalizer<Errors> str)
+        public UpdateClassroomHandler(
+            IDbService dbService,
+            IStringLocalizer<Errors> str,
+            IStringLocalizer<Fields> strFields
+        )
         {
             _dbService = dbService;
             _str = str;
+            _strFields = strFields;
         }
 
         public async Task<Classroom?> Handle(
@@ -43,7 +48,12 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
                 if (request.dto.Capacity < 1)
                 {
                     throw new ApiErrorException(
-                        [new ErrorObject(_str["badParameter", "Capacity"])]
+                        [
+                            new FieldErrorObject(
+                                "Capacity",
+                                _str["badParameter", _strFields["Capacity"]]
+                            )
+                        ]
                     );
                 }
             }
@@ -85,7 +95,12 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
             if (classroomName!.Any())
             {
                 throw new ApiErrorException(
-                    [new ErrorObject(_str["alreadyExists", "Classroom", request.dto.Name])]
+                    [
+                        new FieldErrorObject(
+                            "name",
+                            _str["alreadyExists", _strFields["Classroom"], request.dto.Name]
+                        )
+                    ]
                 );
             }
 
@@ -103,7 +118,10 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
                     foreach (var duplicate in duplicates)
                     {
                         duplicateErrors.Add(
-                            new ErrorObject(_str["duplicateData", "ClassroomType", duplicate])
+                            new FieldErrorObject(
+                                "classroomType",
+                                _str["duplicateData", _strFields["ClassroomType"], duplicate]
+                            )
                         );
                     }
                     throw new ApiErrorException(duplicateErrors);
@@ -129,7 +147,11 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
                     {
                         errors.Add(
                             new ErrorObject(
-                                _str["resourceNotFound", "ClassroomType", classroomTypeId]
+                                _str[
+                                    "resourceNotFound",
+                                    _strFields["ClassroomType"],
+                                    classroomTypeId
+                                ]
                             )
                         );
                     }
@@ -137,7 +159,12 @@ namespace AlpimiAPI.Entities.EClassroom.Commands
                     {
                         errors.Add(
                             new ErrorObject(
-                                _str["wrongSet", "ClassroomType", "Schedule", "Classroom"]
+                                _str[
+                                    "wrongSet",
+                                    _strFields["ClassroomType"],
+                                    _strFields["Schedule"],
+                                    _strFields["Classroom"]
+                                ]
                             )
                         );
                     }

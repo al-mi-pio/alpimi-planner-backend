@@ -1,12 +1,10 @@
 ﻿using System.Net;
 using System.Net.Http.Headers;
 using AlpimiAPI.Entities.ESchedule.DTO;
-using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
 using AlpimiAPI.Utilities;
 using AlpimiTest.TestSetup;
 using AlpimiTest.TestUtilities;
-using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
 using Xunit;
 
 namespace AlpimiTest.Entities.ESchedule
@@ -227,8 +225,8 @@ namespace AlpimiTest.Entities.ESchedule
             var response = await _client.GetAsync("/api/Schedule");
             var stringResponse = await response.Content.ReadAsStringAsync();
 
-            Assert.Contains(scheduleRequest1.Name, stringResponse);
-            Assert.Contains(scheduleRequest2.Name, stringResponse);
+            Assert.Contains(scheduleRequest1.Name!, stringResponse);
+            Assert.Contains(scheduleRequest2.Name!, stringResponse);
         }
 
         [Fact]
@@ -250,8 +248,8 @@ namespace AlpimiTest.Entities.ESchedule
             var response = await _client.GetAsync("/api/Schedule");
             var stringResponse = await response.Content.ReadAsStringAsync();
 
-            Assert.DoesNotContain(scheduleRequest1.Name, stringResponse);
-            Assert.DoesNotContain(scheduleRequest2.Name, stringResponse);
+            Assert.DoesNotContain(scheduleRequest1.Name!, stringResponse);
+            Assert.DoesNotContain(scheduleRequest2.Name!, stringResponse);
         }
 
         [Fact]
@@ -273,8 +271,8 @@ namespace AlpimiTest.Entities.ESchedule
             var response = await _client.GetAsync("/api/Schedule");
             var stringResponse = await response.Content.ReadAsStringAsync();
 
-            Assert.Contains(scheduleRequest1.Name, stringResponse);
-            Assert.DoesNotContain(scheduleRequest2.Name, stringResponse);
+            Assert.Contains(scheduleRequest1.Name!, stringResponse);
+            Assert.DoesNotContain(scheduleRequest2.Name!, stringResponse);
         }
 
         [Fact]
@@ -344,8 +342,8 @@ namespace AlpimiTest.Entities.ESchedule
             var response = await _client.GetAsync($"/api/Schedule/byURL{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
 
-            Assert.Contains(scheduleRequest1.Name, stringResponse);
-            Assert.Contains(scheduleRequest2.Name, stringResponse);
+            Assert.Contains(scheduleRequest1.Name!, stringResponse);
+            Assert.Contains(scheduleRequest2.Name!, stringResponse);
         }
 
         [Fact]
@@ -363,8 +361,8 @@ namespace AlpimiTest.Entities.ESchedule
             var response = await _client.GetAsync($"/api/Schedule/byURL{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
 
-            Assert.Contains(scheduleRequest1.Name, stringResponse);
-            Assert.DoesNotContain(scheduleRequest2.Name, stringResponse);
+            Assert.Contains(scheduleRequest1.Name!, stringResponse);
+            Assert.DoesNotContain(scheduleRequest2.Name!, stringResponse);
         }
 
         [Fact]
@@ -384,8 +382,8 @@ namespace AlpimiTest.Entities.ESchedule
             var response = await _client.GetAsync($"/api/Schedule/byURL{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
 
-            Assert.DoesNotContain(scheduleRequest1.Name, stringResponse);
-            Assert.DoesNotContain(scheduleRequest2.Name, stringResponse);
+            Assert.DoesNotContain(scheduleRequest1.Name!, stringResponse);
+            Assert.DoesNotContain(scheduleRequest2.Name!, stringResponse);
         }
 
         [Fact]
@@ -404,8 +402,8 @@ namespace AlpimiTest.Entities.ESchedule
             var response = await _client.GetAsync($"/api/Schedule/byURL{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
 
-            Assert.DoesNotContain(scheduleRequest1.Name, stringResponse);
-            Assert.DoesNotContain(scheduleRequest2.Name, stringResponse);
+            Assert.DoesNotContain(scheduleRequest1.Name!, stringResponse);
+            Assert.DoesNotContain(scheduleRequest2.Name!, stringResponse);
         }
     }
 }

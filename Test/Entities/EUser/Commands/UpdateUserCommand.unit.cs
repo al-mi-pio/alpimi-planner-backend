@@ -18,10 +18,12 @@ namespace AlpimiTest.Entities.EUser.Commands
     {
         private readonly Mock<IDbService> _dbService = new();
         private readonly Mock<IStringLocalizer<Errors>> _str;
+        private readonly Mock<IStringLocalizer<Fields>> _strFields;
 
         public UpdateUserCommandUnit()
         {
             _str = ResourceSetup.Setup();
+            _strFields = ResourceSetup.FieldSetup();
         }
 
         [Fact]
@@ -36,7 +38,11 @@ namespace AlpimiTest.Entities.EUser.Commands
                 .ReturnsAsync(["TakenLogin"]);
 
             var updateUserCommand = new UpdateUserCommand(new Guid(), dto, new Guid(), "Admin");
-            var updateUserHandler = new UpdateUserHandler(_dbService.Object, _str.Object);
+            var updateUserHandler = new UpdateUserHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateUserHandler.Handle(updateUserCommand, new CancellationToken())
@@ -46,7 +52,10 @@ namespace AlpimiTest.Entities.EUser.Commands
                 JsonConvert.SerializeObject(
                     new ErrorObject[]
                     {
-                        new ErrorObject("There is already a Login with the name UpdatedMarek")
+                        new FieldErrorObject(
+                            "login",
+                            "There is already a Login with the name UpdatedMarek"
+                        )
                     }
                 ),
                 JsonConvert.SerializeObject(result.errors)
@@ -65,7 +74,11 @@ namespace AlpimiTest.Entities.EUser.Commands
                 .ReturnsAsync("TakenURL");
 
             var updateUserCommand = new UpdateUserCommand(new Guid(), dto, new Guid(), "Admin");
-            var updateUserHandler = new UpdateUserHandler(_dbService.Object, _str.Object);
+            var updateUserHandler = new UpdateUserHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateUserHandler.Handle(updateUserCommand, new CancellationToken())
@@ -75,7 +88,10 @@ namespace AlpimiTest.Entities.EUser.Commands
                 JsonConvert.SerializeObject(
                     new ErrorObject[]
                     {
-                        new ErrorObject("There is already a URL with the name UpdatedURL")
+                        new FieldErrorObject(
+                            "customUrl",
+                            "There is already a Custom URL with the name UpdatedURL"
+                        )
                     }
                 ),
                 JsonConvert.SerializeObject(result.errors)
@@ -92,7 +108,11 @@ namespace AlpimiTest.Entities.EUser.Commands
                 .ReturnsAsync(MockData.GetUserDetails());
 
             var updateUserCommand = new UpdateUserCommand(new Guid(), dto, new Guid(), "Admin");
-            var updateUserHandler = new UpdateUserHandler(_dbService.Object, _str.Object);
+            var updateUserHandler = new UpdateUserHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateUserHandler.Handle(updateUserCommand, new CancellationToken())
@@ -123,7 +143,11 @@ namespace AlpimiTest.Entities.EUser.Commands
                 .ReturnsAsync(MockData.GetUserDetails());
 
             var updateUserCommand = new UpdateUserCommand(new Guid(), dto, new Guid(), "Admin");
-            var updateUserHandler = new UpdateUserHandler(_dbService.Object, _str.Object);
+            var updateUserHandler = new UpdateUserHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateUserHandler.Handle(updateUserCommand, new CancellationToken())

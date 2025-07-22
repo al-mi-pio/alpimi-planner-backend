@@ -26,11 +26,17 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
     {
         private readonly IDbService _dbService;
         private readonly IStringLocalizer<Errors> _str;
+        private readonly IStringLocalizer<Fields> _strFields;
 
-        public UpdateLessonBlockHandler(IDbService dbService, IStringLocalizer<Errors> str)
+        public UpdateLessonBlockHandler(
+            IDbService dbService,
+            IStringLocalizer<Errors> str,
+            IStringLocalizer<Fields> strFields
+        )
         {
             _dbService = dbService;
             _str = str;
+            _strFields = strFields;
         }
 
         public async Task<Guid?> Handle(
@@ -55,7 +61,7 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
             if (lessonBlock.Value == null)
             {
                 GetAllLessonBlocksHandler getFirstLessonBlocksHandler =
-                    new GetAllLessonBlocksHandler(_dbService, _str);
+                    new GetAllLessonBlocksHandler(_dbService, _str, _strFields);
                 GetAllLessonBlocksQuery getFirstLessonBlocksQuery = new GetAllLessonBlocksQuery(
                     request.Id,
                     null,
@@ -76,7 +82,7 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                 }
 
                 GetAllLessonBlocksHandler getLastLessonBlocksHandler =
-                    new GetAllLessonBlocksHandler(_dbService, _str);
+                    new GetAllLessonBlocksHandler(_dbService, _str, _strFields);
                 GetAllLessonBlocksQuery getLastLessonBlocksQuery = new GetAllLessonBlocksQuery(
                     request.Id,
                     null,
@@ -117,14 +123,25 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                 {
                     errors.Add(
                         new ErrorObject(
-                            _str["resourceNotFound", "Classroom", request.dto.ClassroomId]
+                            _str[
+                                "resourceNotFound",
+                                _strFields["Classroom"],
+                                request.dto.ClassroomId
+                            ]
                         )
                     );
                 }
                 else if (oneLessonBlock.Lesson.LessonType.ScheduleId != classroom.Value.ScheduleId)
                 {
                     errors.Add(
-                        new ErrorObject(_str["wrongSet", "Classroom", "Schedule", "Lesson"])
+                        new ErrorObject(
+                            _str[
+                                "wrongSet",
+                                _strFields["Classroom"],
+                                _strFields["Schedule"],
+                                _strFields["Lesson"]
+                            ]
+                        )
                     );
                 }
             }
@@ -166,17 +183,26 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
 
             if (request.dto.LessonStart < 1)
             {
-                errors.Add(new ErrorObject(_str["badParameter", "LessonStart"]));
+                errors.Add(
+                    new FieldErrorObject(
+                        "lessonStart",
+                        _str["badParameter", _strFields["LessonStart"]]
+                    )
+                );
             }
 
             if (request.dto.LessonEnd > lessonPeriodCount)
             {
-                errors.Add(new ErrorObject(_str["badParameter", "LessonEnd"]));
+                errors.Add(
+                    new FieldErrorObject("lessonEnd", _str["badParameter", _strFields["LessonEnd"]])
+                );
             }
 
             if (request.dto.WeekDay < 0 || request.dto.WeekDay > 6)
             {
-                errors.Add(new ErrorObject(_str["badParameter", "WeekDay"]));
+                errors.Add(
+                    new FieldErrorObject("weekDay", _str["badParameter", _strFields["WeekDay"]])
+                );
             }
 
             if (errors.Count != 0)

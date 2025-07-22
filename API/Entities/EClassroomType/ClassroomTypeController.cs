@@ -23,11 +23,17 @@ namespace AlpimiAPI.Entities.EClassroomType
     {
         private readonly IMediator _mediator;
         private readonly IStringLocalizer<Errors> _str;
+        private readonly IStringLocalizer<Fields> _strFields;
 
-        public ClassroomTypeController(IMediator mediator, IStringLocalizer<Errors> str)
+        public ClassroomTypeController(
+            IMediator mediator,
+            IStringLocalizer<Errors> str,
+            IStringLocalizer<Fields> strFields
+        )
         {
             _mediator = mediator;
             _str = str;
+            _strFields = strFields;
         }
 
         /// <summary>
@@ -134,7 +140,7 @@ namespace AlpimiAPI.Entities.EClassroomType
                     return NotFound(
                         new ApiErrorResponse(
                             404,
-                            [new ErrorObject(_str["notFound", "ClassroomType"])]
+                            [new ErrorObject(_str["notFound", _strFields["ClassroomType"]])]
                         )
                     );
                 }
@@ -232,7 +238,7 @@ namespace AlpimiAPI.Entities.EClassroomType
                     return NotFound(
                         new ApiErrorResponse(
                             404,
-                            [new ErrorObject(_str["notFound", "ClassroomType"])]
+                            [new ErrorObject(_str["notFound", _strFields["ClassroomType"]])]
                         )
                     );
                 }

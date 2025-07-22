@@ -49,9 +49,11 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                 cancellationToken
             );
             var emptyLocalizer = new Mock<IStringLocalizer<Locales.Errors>>();
+            var emptyFieldLocalizer = new Mock<IStringLocalizer<Locales.Fields>>();
             GetAllLessonBlocksHandler getFirstLessonBlocksHandler = new GetAllLessonBlocksHandler(
                 _dbService,
-                emptyLocalizer.Object
+                emptyLocalizer.Object,
+                emptyFieldLocalizer.Object
             );
             GetAllLessonBlocksQuery getFirstTwoLessonBlocksQuery = new GetAllLessonBlocksQuery(
                 request.Id,

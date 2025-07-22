@@ -1,6 +1,5 @@
 ﻿using System.Text.Json;
 using AlpimiAPI.Database;
-using AlpimiAPI.Entities.EDayOff;
 using AlpimiAPI.Entities.EDayOff.Commands;
 using AlpimiAPI.Entities.EHistory.DTO;
 using AlpimiAPI.Entities.ELessonPeriod.DTO;
@@ -100,7 +99,7 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Commands
                     Command = "Delete",
                     ReversaleDTO = JsonSerializer.Serialize(reversaleDTO),
                     CollisionChecked = true,
-                    ScheduleId = reversaleDTO.ScheduleId,
+                    ScheduleId = reversaleDTO.ScheduleId!.Value,
                 };
                 AddToHistoryCommand addToHistoryCommand = new AddToHistoryCommand(addToHistoryDTO);
                 await addToHistoryHandler.Handle(addToHistoryCommand, cancellationToken);

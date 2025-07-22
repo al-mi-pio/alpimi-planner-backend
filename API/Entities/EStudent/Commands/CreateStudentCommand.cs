@@ -3,7 +3,6 @@ using AlpimiAPI.Entities.EDayOff.Commands;
 using AlpimiAPI.Entities.EGroup;
 using AlpimiAPI.Entities.EGroup.Queries;
 using AlpimiAPI.Entities.EHistory.DTO;
-using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Entities.EStudent.DTO;
 using AlpimiAPI.Entities.ESubgroup;
 using AlpimiAPI.Entities.ESubgroup.Queries;
@@ -22,11 +21,17 @@ namespace AlpimiAPI.Entities.EStudent.Commands
     {
         private readonly IDbService _dbService;
         private readonly IStringLocalizer<Errors> _str;
+        private readonly IStringLocalizer<Fields> _strFields;
 
-        public CreateStudentHandler(IDbService dbService, IStringLocalizer<Errors> str)
+        public CreateStudentHandler(
+            IDbService dbService,
+            IStringLocalizer<Errors> str,
+            IStringLocalizer<Fields> strFields
+        )
         {
             _dbService = dbService;
             _str = str;
+            _strFields = strFields;
         }
 
         public async Task<Guid> Handle(
@@ -36,7 +41,7 @@ namespace AlpimiAPI.Entities.EStudent.Commands
         {
             GetGroupHandler getGroupHandler = new GetGroupHandler(_dbService);
             GetGroupQuery getGroupQuery = new GetGroupQuery(
-                request.dto.GroupId,
+                request.dto.GroupId!.Value,
                 request.FilteredId,
                 request.Role
             );
@@ -48,7 +53,11 @@ namespace AlpimiAPI.Entities.EStudent.Commands
             if (group.Value == null)
             {
                 throw new ApiErrorException(
-                    [new ErrorObject(_str["resourceNotFound", "Group", request.dto.GroupId])]
+                    [
+                        new ErrorObject(
+                            _str["resourceNotFound", _strFields["Group"], request.dto.GroupId]
+                        )
+                    ]
                 );
             }
 
@@ -65,7 +74,12 @@ namespace AlpimiAPI.Entities.EStudent.Commands
             if (studentAlbum != null)
             {
                 throw new ApiErrorException(
-                    [new ErrorObject(_str["alreadyExists", "Student", request.dto.AlbumNumber])]
+                    [
+                        new FieldErrorObject(
+                            "albumNumber",
+                            _str["alreadyExists", _strFields["Student"], request.dto.AlbumNumber!]
+                        )
+                    ]
                 );
             }
 
@@ -83,7 +97,10 @@ namespace AlpimiAPI.Entities.EStudent.Commands
                     foreach (var duplicate in duplicates)
                     {
                         duplicateErrors.Add(
-                            new ErrorObject(_str["duplicateData", "Subgroup", duplicate])
+                            new FieldErrorObject(
+                                "subgroup",
+                                _str["duplicateData", _strFields["Subgroup"], duplicate]
+                            )
                         );
                     }
                     throw new ApiErrorException(duplicateErrors);
@@ -105,13 +122,22 @@ namespace AlpimiAPI.Entities.EStudent.Commands
                     if (subgroup.Value == null)
                     {
                         errors.Add(
-                            new ErrorObject(_str["resourceNotFound", "Subgroup", subgroupId])
+                            new ErrorObject(
+                                _str["resourceNotFound", _strFields["Subgroup"], subgroupId]
+                            )
                         );
                     }
                     else if (subgroup.Value.GroupId != request.dto.GroupId)
                     {
                         errors.Add(
-                            new ErrorObject(_str["wrongSet", "Subgroup", "Group", "Student"])
+                            new ErrorObject(
+                                _str[
+                                    "wrongSet",
+                                    _strFields["Subgroup"],
+                                    _strFields["Group"],
+                                    _strFields["Student"]
+                                ]
+                            )
                         );
                     }
                 }

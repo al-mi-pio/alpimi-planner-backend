@@ -17,10 +17,12 @@ namespace AlpimiTest.Entities.ESubgroup.Commands
     {
         private readonly Mock<IDbService> _dbService = new();
         private readonly Mock<IStringLocalizer<Errors>> _str;
+        private readonly Mock<IStringLocalizer<Fields>> _strFields;
 
         public UpdateSubgroupCommandUnit()
         {
             _str = ResourceSetup.Setup();
+            _strFields = ResourceSetup.FieldSetup();
         }
 
         [Fact]
@@ -45,7 +47,11 @@ namespace AlpimiTest.Entities.ESubgroup.Commands
                 new Guid(),
                 "Admin"
             );
-            var updateSubgroupHandler = new UpdateSubgroupHandler(_dbService.Object, _str.Object);
+            var updateSubgroupHandler = new UpdateSubgroupHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateSubgroupHandler.Handle(
@@ -80,7 +86,11 @@ namespace AlpimiTest.Entities.ESubgroup.Commands
                 new Guid(),
                 "Admin"
             );
-            var updateSubgroupHandler = new UpdateSubgroupHandler(_dbService.Object, _str.Object);
+            var updateSubgroupHandler = new UpdateSubgroupHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateSubgroupHandler.Handle(
@@ -107,7 +117,11 @@ namespace AlpimiTest.Entities.ESubgroup.Commands
                 new Guid(),
                 "Admin"
             );
-            var updateSubgroupHandler = new UpdateSubgroupHandler(_dbService.Object, _str.Object);
+            var updateSubgroupHandler = new UpdateSubgroupHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateSubgroupHandler.Handle(
@@ -116,7 +130,7 @@ namespace AlpimiTest.Entities.ESubgroup.Commands
                     )
             );
 
-            Assert.Equal("StudentCount parameter is invalid", result.errors.First().message);
+            Assert.Equal("Student Count parameter is invalid", result.errors.First().message);
         }
 
         [Fact]
@@ -137,7 +151,11 @@ namespace AlpimiTest.Entities.ESubgroup.Commands
                 new Guid(),
                 "Admin"
             );
-            var updateSubgroupHandler = new UpdateSubgroupHandler(_dbService.Object, _str.Object);
+            var updateSubgroupHandler = new UpdateSubgroupHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateSubgroupHandler.Handle(

@@ -43,7 +43,7 @@ namespace AlpimiAPI.Entities.EAuth.Queries
 
             GetUserByLoginHandler getUserByLoginHandler = new GetUserByLoginHandler(_dbService);
             GetUserByLoginQuery getUserByLoginQuery = new GetUserByLoginQuery(
-                request.dto.Login,
+                request.dto.Login!,
                 new Guid(),
                 "Admin"
             );
@@ -59,7 +59,7 @@ namespace AlpimiAPI.Entities.EAuth.Queries
             auth.User = user.Value;
 
             byte[] inputHash = Rfc2898DeriveBytes.Pbkdf2(
-                request.dto.Password,
+                request.dto.Password!,
                 Convert.FromBase64String(auth.Salt),
                 Configuration.GetHashIterations(),
                 Configuration.GetHashAlgorithm(),

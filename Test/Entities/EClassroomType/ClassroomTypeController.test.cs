@@ -117,7 +117,7 @@ namespace AlpimiTest.Entities.EClassroomType
             var query = $"?id={scheduleId}";
             response = await _client.GetAsync($"/api/ClassroomType{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
-            Assert.Contains(classroomTypeRequest.Name, stringResponse);
+            Assert.Contains(classroomTypeRequest.Name!, stringResponse);
         }
 
         [Fact]
@@ -135,7 +135,7 @@ namespace AlpimiTest.Entities.EClassroomType
             var query = $"?id={scheduleId}";
             var response = await _client.GetAsync($"/api/ClassroomType{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
-            Assert.DoesNotContain(classroomTypeRequest.Name, stringResponse);
+            Assert.DoesNotContain(classroomTypeRequest.Name!, stringResponse);
         }
 
         [Fact]
@@ -154,7 +154,7 @@ namespace AlpimiTest.Entities.EClassroomType
             var query = $"?id={scheduleId}";
             var response = await _client.GetAsync($"/api/ClassroomType{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
-            Assert.Contains(classroomTypeRequest.Name, stringResponse);
+            Assert.Contains(classroomTypeRequest.Name!, stringResponse);
         }
 
         [Fact]
@@ -173,7 +173,7 @@ namespace AlpimiTest.Entities.EClassroomType
             var query = $"?id={scheduleId}";
             response = await _client.GetAsync($"/api/ClassroomType{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
-            Assert.DoesNotContain(classroomTypeRequest.Name, stringResponse);
+            Assert.DoesNotContain(classroomTypeRequest.Name!, stringResponse);
         }
 
         [Fact]
@@ -192,7 +192,7 @@ namespace AlpimiTest.Entities.EClassroomType
             var query = $"?id={scheduleId}";
             var response = await _client.GetAsync($"/api/ClassroomType{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
-            Assert.Contains(classroomTypeRequest.Name, stringResponse);
+            Assert.Contains(classroomTypeRequest.Name!, stringResponse);
         }
 
         [Fact]
@@ -212,7 +212,7 @@ namespace AlpimiTest.Entities.EClassroomType
             var query = $"?id={scheduleId}";
             var response = await _client.GetAsync($"/api/ClassroomType{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
-            Assert.DoesNotContain(classroomTypeRequest.Name, stringResponse);
+            Assert.DoesNotContain(classroomTypeRequest.Name!, stringResponse);
         }
 
         [Fact]
@@ -349,8 +349,8 @@ namespace AlpimiTest.Entities.EClassroomType
             var response = await _client.GetAsync($"/api/ClassroomType{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
 
-            Assert.Contains(classroomTypeRequest1.Name, stringResponse);
-            Assert.Contains(classroomTypeRequest2.Name, stringResponse);
+            Assert.Contains(classroomTypeRequest1.Name!, stringResponse);
+            Assert.Contains(classroomTypeRequest2.Name!, stringResponse);
         }
 
         [Fact]
@@ -377,8 +377,8 @@ namespace AlpimiTest.Entities.EClassroomType
             var response = await _client.GetAsync($"/api/ClassroomType{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
 
-            Assert.Contains(classroomTypeRequest1.Name, stringResponse);
-            Assert.DoesNotContain(classroomTypeRequest2.Name, stringResponse);
+            Assert.Contains(classroomTypeRequest1.Name!, stringResponse);
+            Assert.DoesNotContain(classroomTypeRequest2.Name!, stringResponse);
         }
 
         [Fact]
@@ -420,8 +420,8 @@ namespace AlpimiTest.Entities.EClassroomType
             var response = await _client.GetAsync($"/api/ClassroomType{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
 
-            Assert.Contains(classroomTypeRequest1.Name, stringResponse);
-            Assert.DoesNotContain(classroomTypeRequest2.Name, stringResponse);
+            Assert.Contains(classroomTypeRequest1.Name!, stringResponse);
+            Assert.DoesNotContain(classroomTypeRequest2.Name!, stringResponse);
         }
 
         [Fact]
@@ -440,8 +440,8 @@ namespace AlpimiTest.Entities.EClassroomType
             var response = await _client.GetAsync($"/api/ClassroomType{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
 
-            Assert.DoesNotContain(classroomTypeRequest1.Name, stringResponse);
-            Assert.DoesNotContain(classroomTypeRequest2.Name, stringResponse);
+            Assert.DoesNotContain(classroomTypeRequest1.Name!, stringResponse);
+            Assert.DoesNotContain(classroomTypeRequest2.Name!, stringResponse);
         }
 
         [Fact]
@@ -460,8 +460,8 @@ namespace AlpimiTest.Entities.EClassroomType
             var response = await _client.GetAsync($"/api/ClassroomType{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
 
-            Assert.DoesNotContain(classroomTypeRequest1.Name, stringResponse);
-            Assert.DoesNotContain(classroomTypeRequest2.Name, stringResponse);
+            Assert.DoesNotContain(classroomTypeRequest1.Name!, stringResponse);
+            Assert.DoesNotContain(classroomTypeRequest2.Name!, stringResponse);
         }
 
         [Fact]
@@ -479,7 +479,7 @@ namespace AlpimiTest.Entities.EClassroomType
                 ApiGetResponse<ClassroomTypeDTO>
             >();
 
-            Assert.Equal(classroomTypeRequest.Name, jsonResponse!.Content.Name);
+            Assert.Equal(classroomTypeRequest.Name!, jsonResponse!.Content.Name);
         }
 
         [Fact]

@@ -113,7 +113,7 @@ namespace AlpimiTest.Entities.ECollisionType
             var query = $"?scheduleId={scheduleId}";
             response = await _client.GetAsync($"/api/CollisionType{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
-            Assert.Contains(collisionTypeRequest.Name, stringResponse);
+            Assert.Contains(collisionTypeRequest.Name!, stringResponse);
         }
 
         [Fact]
@@ -131,7 +131,7 @@ namespace AlpimiTest.Entities.ECollisionType
             var query = $"?scheduleId={scheduleId}";
             var response = await _client.GetAsync($"/api/CollisionType{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
-            Assert.DoesNotContain(collisionTypeRequest.Name, stringResponse);
+            Assert.DoesNotContain(collisionTypeRequest.Name!, stringResponse);
         }
 
         [Fact]
@@ -150,7 +150,7 @@ namespace AlpimiTest.Entities.ECollisionType
             var query = $"?scheduleId={scheduleId}";
             var response = await _client.GetAsync($"/api/CollisionType{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
-            Assert.Contains(collisionTypeRequest.Name, stringResponse);
+            Assert.Contains(collisionTypeRequest.Name!, stringResponse);
         }
 
         [Fact]
@@ -169,7 +169,7 @@ namespace AlpimiTest.Entities.ECollisionType
             var query = $"?scheduleId={scheduleId}";
             response = await _client.GetAsync($"/api/CollisionType{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
-            Assert.DoesNotContain(collisionTypeRequest.Name, stringResponse);
+            Assert.DoesNotContain(collisionTypeRequest.Name!, stringResponse);
         }
 
         [Fact]
@@ -188,7 +188,7 @@ namespace AlpimiTest.Entities.ECollisionType
             var query = $"?scheduleId={scheduleId}";
             var response = await _client.GetAsync($"/api/CollisionType{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
-            Assert.Contains(collisionTypeRequest.Name, stringResponse);
+            Assert.Contains(collisionTypeRequest.Name!, stringResponse);
         }
 
         [Fact]
@@ -208,7 +208,7 @@ namespace AlpimiTest.Entities.ECollisionType
             var query = $"?scheduleId={scheduleId}";
             var response = await _client.GetAsync($"/api/CollisionType{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
-            Assert.DoesNotContain(collisionTypeRequest.Name, stringResponse);
+            Assert.DoesNotContain(collisionTypeRequest.Name!, stringResponse);
         }
 
         [Fact]
@@ -347,8 +347,8 @@ namespace AlpimiTest.Entities.ECollisionType
             var response = await _client.GetAsync($"/api/CollisionType{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
 
-            Assert.Contains(collisionTypeRequest1.Name, stringResponse);
-            Assert.Contains(collisionTypeRequest2.Name, stringResponse);
+            Assert.Contains(collisionTypeRequest1.Name!, stringResponse);
+            Assert.Contains(collisionTypeRequest2.Name!, stringResponse);
         }
 
         [Fact]
@@ -367,8 +367,8 @@ namespace AlpimiTest.Entities.ECollisionType
             var response = await _client.GetAsync($"/api/CollisionType{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
 
-            Assert.DoesNotContain(collisionTypeRequest1.Name, stringResponse);
-            Assert.DoesNotContain(collisionTypeRequest2.Name, stringResponse);
+            Assert.DoesNotContain(collisionTypeRequest1.Name!, stringResponse);
+            Assert.DoesNotContain(collisionTypeRequest2.Name!, stringResponse);
         }
 
         [Fact]
@@ -387,8 +387,8 @@ namespace AlpimiTest.Entities.ECollisionType
             var response = await _client.GetAsync($"/api/CollisionType{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
 
-            Assert.DoesNotContain(collisionTypeRequest1.Name, stringResponse);
-            Assert.DoesNotContain(collisionTypeRequest2.Name, stringResponse);
+            Assert.DoesNotContain(collisionTypeRequest1.Name!, stringResponse);
+            Assert.DoesNotContain(collisionTypeRequest2.Name!, stringResponse);
         }
 
         [Fact]
@@ -406,7 +406,7 @@ namespace AlpimiTest.Entities.ECollisionType
                 ApiGetResponse<CollisionTypeDTO>
             >();
 
-            Assert.Equal(collisionTypeRequest.Name, jsonResponse!.Content.Name);
+            Assert.Equal(collisionTypeRequest.Name!, jsonResponse!.Content.Name);
             Assert.Equal(collisionTypeRequest.Weight, jsonResponse!.Content.Weight);
         }
 

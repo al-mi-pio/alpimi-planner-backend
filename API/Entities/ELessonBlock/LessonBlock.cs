@@ -1,6 +1,5 @@
 ﻿using AlpimiAPI.Entities.EClassroom;
 using AlpimiAPI.Entities.ELesson;
-using AlpimiAPI.Entities.ETeacher;
 
 namespace AlpimiAPI.Entities.ELessonBlock
 {

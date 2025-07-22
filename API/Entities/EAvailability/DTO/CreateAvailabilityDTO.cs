@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace AlpimiAPI.Entities.EAvailability.DTO
+﻿namespace AlpimiAPI.Entities.EAvailability.DTO
 {
     public class CreateAvailabilityDTO
     {

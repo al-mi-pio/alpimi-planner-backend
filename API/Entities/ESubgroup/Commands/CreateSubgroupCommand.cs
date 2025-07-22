@@ -3,7 +3,6 @@ using AlpimiAPI.Entities.EDayOff.Commands;
 using AlpimiAPI.Entities.EGroup;
 using AlpimiAPI.Entities.EGroup.Queries;
 using AlpimiAPI.Entities.EHistory.DTO;
-using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Entities.ESubgroup.DTO;
 using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;

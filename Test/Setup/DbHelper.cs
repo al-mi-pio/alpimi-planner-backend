@@ -7,7 +7,6 @@ using AlpimiAPI.Entities.ECollisionType.DTO;
 using AlpimiAPI.Entities.EDayOff.DTO;
 using AlpimiAPI.Entities.EGroup.DTO;
 using AlpimiAPI.Entities.ELesson.DTO;
-using AlpimiAPI.Entities.ELessonBlock;
 using AlpimiAPI.Entities.ELessonBlock.DTO;
 using AlpimiAPI.Entities.ELessonPeriod.DTO;
 using AlpimiAPI.Entities.ELessonType.DTO;

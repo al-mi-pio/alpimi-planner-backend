@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace AlpimiAPI.Entities.ETeacher.DTO
+﻿namespace AlpimiAPI.Entities.ETeacher.DTO
 {
     public class CreateTeacherDTO
     {

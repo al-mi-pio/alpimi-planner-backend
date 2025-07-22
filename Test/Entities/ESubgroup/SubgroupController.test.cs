@@ -479,7 +479,7 @@ namespace AlpimiTest.Entities.ESubgroup
                 ApiGetResponse<SubgroupDTO>
             >();
 
-            Assert.Equal(subgroupRequest.Name, jsonResponse!.Content.Name);
+            Assert.Equal(subgroupRequest.Name!, jsonResponse!.Content.Name);
             Assert.Equal(subgroupRequest.StudentCount, jsonResponse!.Content.StudentCount);
         }
 

@@ -1,12 +1,10 @@
 using System.Data;
-using System.Globalization;
 using System.Reflection;
 using System.Text;
 using AlpimiAPI;
 using AlpimiAPI.Database;
 using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
-using AlpimiAPI.Settings;
 using AlpimiAPI.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;

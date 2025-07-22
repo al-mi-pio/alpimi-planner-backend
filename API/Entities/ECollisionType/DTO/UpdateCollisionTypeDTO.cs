@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace AlpimiAPI.Entities.ECollisionType.DTO
+﻿namespace AlpimiAPI.Entities.ECollisionType.DTO
 {
     public class UpdateCollisionTypeDTO
     {

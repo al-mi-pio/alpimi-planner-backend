@@ -114,7 +114,7 @@ namespace AlpimiTest.Entities.ELessonType
             var query = $"?scheduleId={scheduleId}";
             response = await _client.GetAsync($"/api/LessonType{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
-            Assert.Contains(lessonTypeRequest.Name, stringResponse);
+            Assert.Contains(lessonTypeRequest.Name!, stringResponse);
         }
 
         [Fact]
@@ -132,7 +132,7 @@ namespace AlpimiTest.Entities.ELessonType
             var query = $"?scheduleId={scheduleId}";
             var response = await _client.GetAsync($"/api/LessonType{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
-            Assert.DoesNotContain(lessonTypeRequest.Name, stringResponse);
+            Assert.DoesNotContain(lessonTypeRequest.Name!, stringResponse);
         }
 
         [Fact]
@@ -151,7 +151,7 @@ namespace AlpimiTest.Entities.ELessonType
             var query = $"?scheduleId={scheduleId}";
             var response = await _client.GetAsync($"/api/LessonType{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
-            Assert.Contains(lessonTypeRequest.Name, stringResponse);
+            Assert.Contains(lessonTypeRequest.Name!, stringResponse);
         }
 
         [Fact]
@@ -170,7 +170,7 @@ namespace AlpimiTest.Entities.ELessonType
             var query = $"?scheduleId={scheduleId}";
             response = await _client.GetAsync($"/api/LessonType{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
-            Assert.DoesNotContain(lessonTypeRequest.Name, stringResponse);
+            Assert.DoesNotContain(lessonTypeRequest.Name!, stringResponse);
         }
 
         [Fact]
@@ -189,7 +189,7 @@ namespace AlpimiTest.Entities.ELessonType
             var query = $"?scheduleId={scheduleId}";
             var response = await _client.GetAsync($"/api/LessonType{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
-            Assert.Contains(lessonTypeRequest.Name, stringResponse);
+            Assert.Contains(lessonTypeRequest.Name!, stringResponse);
         }
 
         [Fact]
@@ -209,7 +209,7 @@ namespace AlpimiTest.Entities.ELessonType
             var query = $"?scheduleId={scheduleId}";
             var response = await _client.GetAsync($"/api/LessonType{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
-            Assert.DoesNotContain(lessonTypeRequest.Name, stringResponse);
+            Assert.DoesNotContain(lessonTypeRequest.Name!, stringResponse);
         }
 
         [Fact]
@@ -348,8 +348,8 @@ namespace AlpimiTest.Entities.ELessonType
             var response = await _client.GetAsync($"/api/LessonType{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
 
-            Assert.Contains(lessonTypeRequest1.Name, stringResponse);
-            Assert.Contains(lessonTypeRequest2.Name, stringResponse);
+            Assert.Contains(lessonTypeRequest1.Name!, stringResponse);
+            Assert.Contains(lessonTypeRequest2.Name!, stringResponse);
         }
 
         [Fact]
@@ -368,8 +368,8 @@ namespace AlpimiTest.Entities.ELessonType
             var response = await _client.GetAsync($"/api/LessonType{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
 
-            Assert.DoesNotContain(lessonTypeRequest1.Name, stringResponse);
-            Assert.DoesNotContain(lessonTypeRequest2.Name, stringResponse);
+            Assert.DoesNotContain(lessonTypeRequest1.Name!, stringResponse);
+            Assert.DoesNotContain(lessonTypeRequest2.Name!, stringResponse);
         }
 
         [Fact]
@@ -388,8 +388,8 @@ namespace AlpimiTest.Entities.ELessonType
             var response = await _client.GetAsync($"/api/LessonType{query}");
             var stringResponse = await response.Content.ReadAsStringAsync();
 
-            Assert.DoesNotContain(lessonTypeRequest1.Name, stringResponse);
-            Assert.DoesNotContain(lessonTypeRequest2.Name, stringResponse);
+            Assert.DoesNotContain(lessonTypeRequest1.Name!, stringResponse);
+            Assert.DoesNotContain(lessonTypeRequest2.Name!, stringResponse);
         }
 
         [Fact]

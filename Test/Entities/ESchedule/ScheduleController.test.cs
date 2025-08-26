@@ -405,5 +405,26 @@ namespace AlpimiTest.Entities.ESchedule
             Assert.DoesNotContain(scheduleRequest1.Name!, stringResponse);
             Assert.DoesNotContain(scheduleRequest2.Name!, stringResponse);
         }
+
+        [Fact]
+        public async Task GetScheduleUpdatesModifyDate()
+        {
+            var scheduleId = await DbHelper.SetupSchedule(
+                _client,
+                userId,
+                MockData.GetCreateScheduleDTODetails()
+            );
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", userId)
+            );
+
+            var response = await _client.GetAsync($"/api/Schedule/{scheduleId}");
+            var jsonResponse = await response.Content.ReadFromJsonAsync<
+                ApiGetResponse<ScheduleDTO>
+            >();
+
+            Assert.Equal(jsonResponse!.Content.ModifyDate.Date, DateTime.Today);
+        }
     }
 }

@@ -41,7 +41,7 @@ namespace AlpimiAPI.Entities.ESchedule.Queries
                             SELECT 
                             [Id], [Name], [UserId]
                             FROM [Schedule] 
-                            WHERE [Id] =@Id AND [UserId] = @FilteredId;",
+                            WHERE [Id] = @Id AND [UserId] = @FilteredId;",
                         request
                     );
                     break;
@@ -56,6 +56,18 @@ namespace AlpimiAPI.Entities.ESchedule.Queries
                     cancellationToken
                 );
                 schedule.User = user.Value!;
+
+                var currentDate = DateTime.Now;
+
+                await _dbService.Update<Schedule?>(
+                    $@"
+                        UPDATE [Schedule] 
+                        SET 
+                        [ModifyDate] = '{currentDate}'
+                        WHERE [Id] = '{request.Id}';",
+                    ' '
+                );
+                schedule.ModifyDate = currentDate;
             }
 
             return schedule;

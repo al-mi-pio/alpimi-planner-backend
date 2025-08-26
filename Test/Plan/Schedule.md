@@ -129,3 +129,6 @@
 - [GetScheduleThrowsNotFoundWhenWrongIdIsGiven()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
   Check if returns an error when a schedule doesn't exists
 
+- [GetScheduleUpdatesModifyDate()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
+  Check if updates modify date
+

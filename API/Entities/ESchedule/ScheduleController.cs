@@ -41,6 +41,7 @@ namespace AlpimiAPI.Entities.ESchedule
         /// </summary>
         /// <remarks>
         /// - JWT token is required
+        /// - SchoolDays ex. "0110110" this means monday, tuesday, thursday and friday are school days and wendsday, saturday and sunday arent (you cant place lesson blocks inside them)
         /// </remarks>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]

@@ -8,6 +8,8 @@ namespace AlpimiAPI.Entities.ESchedule
 
         public required string Name { get; set; }
 
+        public required DateTime ModifyDate { get; set; }
+
         public required Guid UserId { get; set; }
 
         public required User User { get; set; }

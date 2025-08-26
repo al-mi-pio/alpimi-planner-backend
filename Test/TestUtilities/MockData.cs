@@ -53,6 +53,7 @@ namespace AlpimiTest.TestUtilities
             {
                 Id = new Guid(),
                 Name = "PlanMarka",
+                ModifyDate = new DateTime(2025, 08, 26, 14, 30, 00),
                 UserId = new Guid(),
                 User = GetUserDetails()
             };

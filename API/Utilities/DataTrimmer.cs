@@ -47,7 +47,12 @@ namespace AlpimiAPI.Utilities
 
         public static ScheduleDTO Trim(Schedule data)
         {
-            return new ScheduleDTO { Id = data.Id, Name = data.Name };
+            return new ScheduleDTO
+            {
+                Id = data.Id,
+                Name = data.Name,
+                ModifyDate = data.ModifyDate
+            };
         }
 
         public static LessonPeriodDTO Trim(LessonPeriod data)

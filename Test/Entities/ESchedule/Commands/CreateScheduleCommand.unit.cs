@@ -285,7 +285,8 @@ namespace AlpimiTest.Entities.ESchedule.Commands
                 JsonConvert.SerializeObject(
                     new ErrorObject[]
                     {
-                        new ErrorObject(
+                        new FieldErrorObject(
+                            "name",
                             "Name can only contain the following: "
                                 + string.Join(", ", allowedCharacters!)
                         )

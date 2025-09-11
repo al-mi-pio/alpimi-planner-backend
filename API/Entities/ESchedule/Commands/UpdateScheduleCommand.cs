@@ -65,7 +65,8 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
                 {
                     throw new ApiErrorException(
                         [
-                            new ErrorObject(
+                            new FieldErrorObject(
+                                "name",
                                 _str[
                                     "cantContain",
                                     "Name",

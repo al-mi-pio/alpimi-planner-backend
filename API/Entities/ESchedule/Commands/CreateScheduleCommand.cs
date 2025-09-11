@@ -82,7 +82,8 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
             if (!CharacterFilter.Allowed(request.dto.Name!, allowedCharacterTypesScheduleName))
             {
                 errors.Add(
-                    new ErrorObject(
+                    new FieldErrorObject(
+                        "name",
                         _str[
                             "cantContain",
                             "Name",

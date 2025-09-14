@@ -88,7 +88,7 @@ namespace AlpimiAPI.Entities.ESchedule.Queries
                     schedules = await _dbService.GetAll<Schedule>(
                         $@"
                             SELECT 
-                            s.[Id], [Name], [UserId]
+                            s.[Id], [Name], [UserId], [ModifyDate]
                             FROM [Schedule] s
                             INNER JOIN [User] u ON u.[Id] = s.[UserId]
                             WHERE u.[CustomURL] = @URL
@@ -116,7 +116,7 @@ namespace AlpimiAPI.Entities.ESchedule.Queries
                     schedules = await _dbService.GetAll<Schedule>(
                         $@"
                             SELECT 
-                            s.[Id], [Name], [UserId] 
+                            s.[Id], [Name], [UserId], [ModifyDate] 
                             FROM [Schedule] s
                             INNER JOIN [User] u ON u.[Id] = s.[UserId]
                             INNER JOIN [ScheduleSettings] ss ON ss.[ScheduleId] = s.[Id]
@@ -145,7 +145,7 @@ namespace AlpimiAPI.Entities.ESchedule.Queries
                     schedules = await _dbService.GetAll<Schedule>(
                         $@"
                             SELECT 
-                            s.[Id], [Name], [UserId] 
+                            s.[Id], [Name], [UserId], [ModifyDate] 
                             FROM [Schedule] s
                             INNER JOIN [User] u ON u.[Id] = s.[UserId]
                             INNER JOIN [ScheduleSettings] ss ON ss.[ScheduleId] = s.[Id]

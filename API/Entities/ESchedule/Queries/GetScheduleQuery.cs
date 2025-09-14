@@ -62,10 +62,9 @@ namespace AlpimiAPI.Entities.ESchedule.Queries
                 await _dbService.Update<Schedule?>(
                     $@"
                         UPDATE [Schedule] 
-                        SET 
-                        [ModifyDate] = '{currentDate}'
-                        WHERE [Id] = '{request.Id}';",
-                    ' '
+                        SET [ModifyDate] = @ModifyDate
+                        WHERE [Id] = @Id;",
+                    new { ModifyDate = currentDate, Id = request.Id }
                 );
                 schedule.ModifyDate = currentDate;
             }

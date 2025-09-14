@@ -128,14 +128,19 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
                 $@"
                     INSERT INTO [Schedule] 
                     ([Id], [Name], [UserId], [ModifyDate])
-                    OUTPUT 
-                    INSERTED.Id                    
+                    OUTPUT INSERTED.Id                    
                     VALUES (
-                    '{request.Id}',   
+                    @Id,   
                     @Name,
-                    '{request.UserId}',
-                    '{DateTime.Now}');",
-                request.dto
+                    @UserId,
+                    @ModifyDate);",
+                new
+                {
+                    Id = request.Id,
+                    Name = request.dto.Name,
+                    UserId = request.UserId,
+                    ModifyDate = DateTime.Now
+                }
             );
 
             await _dbService.Post<Guid>(

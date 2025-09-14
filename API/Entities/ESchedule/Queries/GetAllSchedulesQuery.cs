@@ -82,7 +82,7 @@ namespace AlpimiAPI.Entities.ESchedule.Queries
                     schedules = await _dbService.GetAll<Schedule>(
                         $@"
                             SELECT 
-                            [Id], [Name], [UserId]
+                            [Id], [Name], [UserId], [ModifyDate]
                             FROM [Schedule] 
                             ORDER BY 
                             {request.Pagination.SortBy}
@@ -106,7 +106,7 @@ namespace AlpimiAPI.Entities.ESchedule.Queries
                     schedules = await _dbService.GetAll<Schedule>(
                         $@"
                             SELECT 
-                            [Id], [Name], [UserId] 
+                            [Id], [Name], [UserId], [ModifyDate]
                             FROM [Schedule]
                             WHERE [UserId] = @FilteredId
                             ORDER BY 

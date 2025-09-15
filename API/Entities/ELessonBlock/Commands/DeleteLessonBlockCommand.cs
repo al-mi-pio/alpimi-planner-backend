@@ -99,7 +99,7 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                     AffectedEntity = "LessonBlock",
                     Command = "Delete",
                     ReversaleDTO = JsonSerializer.Serialize(reversaleDTO),
-                    CollisionChecked = true,
+                    CollisionChecked = false,
                     ScheduleId = lessonBlock.Lesson.LessonType.ScheduleId,
                 };
                 AddToHistoryCommand addToHistoryCommand = new AddToHistoryCommand(addToHistoryDTO);

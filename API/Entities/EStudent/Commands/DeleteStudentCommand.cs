@@ -60,7 +60,7 @@ namespace AlpimiAPI.Entities.EStudent.Commands
                     AffectedEntity = "Student",
                     Command = "Delete",
                     ReversaleDTO = JsonSerializer.Serialize(reversaleDTO),
-                    CollisionChecked = true,
+                    CollisionChecked = false,
                     ScheduleId = student.Value.Group.ScheduleId,
                 };
                 AddToHistoryCommand addToHistoryCommand = new AddToHistoryCommand(addToHistoryDTO);

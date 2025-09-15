@@ -49,7 +49,7 @@ namespace AlpimiAPI.Entities.EGroup.Commands
                     AffectedEntity = "Group",
                     Command = "Delete",
                     ReversaleDTO = JsonSerializer.Serialize(reversaleDTO),
-                    CollisionChecked = true,
+                    CollisionChecked = false,
                     ScheduleId = reversaleDTO.ScheduleId!.Value,
                 };
                 AddToHistoryCommand addToHistoryCommand = new AddToHistoryCommand(addToHistoryDTO);

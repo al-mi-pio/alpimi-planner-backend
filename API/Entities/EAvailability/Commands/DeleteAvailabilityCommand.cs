@@ -98,7 +98,7 @@ namespace AlpimiAPI.Entities.EAvailability.Commands
                     AffectedEntity = "Availability",
                     Command = "Delete",
                     ReversaleDTO = JsonSerializer.Serialize(reversaleDTO),
-                    CollisionChecked = true,
+                    CollisionChecked = false,
                     ScheduleId = availability.Teacher.ScheduleId,
                 };
                 AddToHistoryCommand addToHistoryCommand = new AddToHistoryCommand(addToHistoryDTO);

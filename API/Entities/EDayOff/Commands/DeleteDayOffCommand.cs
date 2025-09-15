@@ -95,7 +95,7 @@ namespace AlpimiAPI.Entities.EDayOff.Commands
                     AffectedEntity = "DayOff",
                     Command = "Delete",
                     ReversaleDTO = JsonSerializer.Serialize(reversaleDTO),
-                    CollisionChecked = true,
+                    CollisionChecked = false,
                     ScheduleId = reversaleDTO.ScheduleId!.Value,
                 };
                 AddToHistoryCommand addToHistoryCommand = new AddToHistoryCommand(addToHistoryDTO);

@@ -118,6 +118,7 @@
 - [ThrowsMultipleErrorMessages()](../Entities/ESchedule/Queries/GetAllSchedulesByURLQuery.unit.cs) - **unit**  
   Check if returns multiple errors when provided with multiple invalid parameters
 
+
 ## `GET` `api/Schedule/{id}`
 
 - [GetScheduleReturnsSchedule()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
@@ -131,4 +132,21 @@
 
 - [GetScheduleUpdatesModifyDate()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
   Check if updates modify date
+
+
+## `GET` `api/Schedule/{URL}/{name}`
+
+- [GetScheduleByURLAndNameReturnsSchedule()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
+  Check if returns a schedule when a valid token is provided
+
+- [GetScheduleByURLAndNameThrowsNotFoundErrorWhenWrongUserTokenIsGiven()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
+  Check if returns an error when a schedule is inaccessible for user
+
+- [GetScheduleByURLAndNameThrowsNotFoundWhenWrongURLIsGiven()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
+  Check if returns an error when a schedule doesn't exists
+
+- [GetScheduleByURLAndNameThrowsNotFoundWhenWrongNameIsGiven()](../Entities/ESchedule/ScheduleController.test.cs) - **integrity**  
+  Check if returns an error when a schedule doesn't exists
+
+
 

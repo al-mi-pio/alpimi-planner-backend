@@ -101,9 +101,9 @@ namespace AlpimiAPI.Entities.ESchedule.Commands
             var scheduleName = await _dbService.Get<Schedule?>(
                 $@"
                        SELECT
-                       [Id], [Name], [UserId] 
+                       [Id]
                        FROM [Schedule] 
-                       WHERE [Name] = @Name;",
+                       WHERE [Name] = @Name AND [UserId] = '{request.UserId}';",
                 request.dto
             );
 

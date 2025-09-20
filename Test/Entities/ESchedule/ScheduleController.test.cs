@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Net.Http.Headers;
 using AlpimiAPI.Entities.ESchedule.DTO;
+using AlpimiAPI.Entities.EUser;
 using AlpimiAPI.Responses;
 using AlpimiAPI.Utilities;
 using AlpimiTest.TestSetup;
@@ -276,56 +277,6 @@ namespace AlpimiTest.Entities.ESchedule
         }
 
         [Fact]
-        public async Task GetScheduleReturnsSchedule()
-        {
-            var scheduleRequest = MockData.GetCreateScheduleDTODetails();
-            var scheduleId = await DbHelper.SetupSchedule(_client, userId, scheduleRequest);
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-                "Bearer",
-                TestAuthorization.GetToken("Admin", "User", userId)
-            );
-
-            var response = await _client.GetAsync($"/api/Schedule/{scheduleId}");
-            var jsonResponse = await response.Content.ReadFromJsonAsync<
-                ApiGetResponse<ScheduleDTO>
-            >();
-
-            Assert.Equal(scheduleRequest.Name, jsonResponse!.Content.Name);
-        }
-
-        [Fact]
-        public async Task GetScheduleThrowsNotFoundErrorWhenWrongUserTokenIsGiven()
-        {
-            var scheduleId = await DbHelper.SetupSchedule(
-                _client,
-                userId,
-                MockData.GetCreateScheduleDTODetails()
-            );
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-                "Bearer",
-                TestAuthorization.GetToken("User", "User", new Guid())
-            );
-
-            var response = await _client.GetAsync($"/api/Schedule/{scheduleId}");
-
-            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
-        }
-
-        [Fact]
-        public async Task GetScheduleThrowsNotFoundErrorWhenWrongIdIsGiven()
-        {
-            await DbHelper.SetupSchedule(_client, userId, MockData.GetCreateScheduleDTODetails());
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-                "Bearer",
-                TestAuthorization.GetToken("Admin", "User", userId)
-            );
-
-            var response = await _client.GetAsync($"/api/Schedule/{new Guid()}");
-
-            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
-        }
-
-        [Fact]
         public async Task GetAllSchedulesByURLReturnsSchedulesFromURL()
         {
             var user = MockData.GetUserDetails();
@@ -407,6 +358,56 @@ namespace AlpimiTest.Entities.ESchedule
         }
 
         [Fact]
+        public async Task GetScheduleReturnsSchedule()
+        {
+            var scheduleRequest = MockData.GetCreateScheduleDTODetails();
+            var scheduleId = await DbHelper.SetupSchedule(_client, userId, scheduleRequest);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", userId)
+            );
+
+            var response = await _client.GetAsync($"/api/Schedule/{scheduleId}");
+            var jsonResponse = await response.Content.ReadFromJsonAsync<
+                ApiGetResponse<ScheduleDTO>
+            >();
+
+            Assert.Equal(scheduleRequest.Name, jsonResponse!.Content.Name);
+        }
+
+        [Fact]
+        public async Task GetScheduleThrowsNotFoundErrorWhenWrongUserTokenIsGiven()
+        {
+            var scheduleId = await DbHelper.SetupSchedule(
+                _client,
+                userId,
+                MockData.GetCreateScheduleDTODetails()
+            );
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("User", "User", new Guid())
+            );
+
+            var response = await _client.GetAsync($"/api/Schedule/{scheduleId}");
+
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task GetScheduleThrowsNotFoundErrorWhenWrongIdIsGiven()
+        {
+            await DbHelper.SetupSchedule(_client, userId, MockData.GetCreateScheduleDTODetails());
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", userId)
+            );
+
+            var response = await _client.GetAsync($"/api/Schedule/{new Guid()}");
+
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        [Fact]
         public async Task GetScheduleUpdatesModifyDate()
         {
             var scheduleId = await DbHelper.SetupSchedule(
@@ -425,6 +426,75 @@ namespace AlpimiTest.Entities.ESchedule
             >();
 
             Assert.Equal(jsonResponse!.Content.ModifyDate.Date, DateTime.Today);
+        }
+
+        [Fact]
+        public async Task GetScheduleByURLAndNameReturnsSchedule()
+        {
+            var scheduleRequest = MockData.GetCreateScheduleDTODetails();
+            var user = MockData.GetUserDetails();
+            await DbHelper.SetupSchedule(_client, userId, scheduleRequest);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", userId)
+            );
+
+            var response = await _client.GetAsync(
+                $"/api/Schedule/{user.CustomURL}/{scheduleRequest.Name}"
+            );
+            var jsonResponse = await response.Content.ReadFromJsonAsync<
+                ApiGetResponse<ScheduleDTO>
+            >();
+
+            Assert.Equal(scheduleRequest.Name, jsonResponse!.Content.Name);
+        }
+
+        [Fact]
+        public async Task GetScheduleByURLAndNameThrowsNotFoundErrorWhenWrongUserTokenIsGiven()
+        {
+            var scheduleRequest = MockData.GetCreateScheduleDTODetails();
+            var user = MockData.GetUserDetails();
+            var scheduleId = await DbHelper.SetupSchedule(_client, userId, scheduleRequest);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("User", "User", new Guid())
+            );
+
+            var response = await _client.GetAsync(
+                $"/api/Schedule/{user.CustomURL}/{scheduleRequest.Name}"
+            );
+
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task GetScheduleByURLAndNameThrowsNotFoundErrorWhenWrongURLIsGiven()
+        {
+            var scheduleRequest = MockData.GetCreateScheduleDTODetails();
+            await DbHelper.SetupSchedule(_client, userId, scheduleRequest);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", userId)
+            );
+
+            var response = await _client.GetAsync($"/api/Schedule/WrongURL/{scheduleRequest.Name}");
+
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task GetScheduleByURLAndNameThrowsNotFoundErrorWhenWrongNameIsGiven()
+        {
+            var user = MockData.GetUserDetails();
+            await DbHelper.SetupSchedule(_client, userId, MockData.GetCreateScheduleDTODetails());
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", userId)
+            );
+
+            var response = await _client.GetAsync($"/api/Schedule/{user.CustomURL}/WrongName");
+
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
     }
 }

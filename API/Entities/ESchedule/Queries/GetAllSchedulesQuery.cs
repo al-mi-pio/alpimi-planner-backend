@@ -55,7 +55,11 @@ namespace AlpimiAPI.Entities.ESchedule.Queries
                     new FieldErrorObject("sortOrder", _str["badParameter", _strFields["SortOrder"]])
                 );
             }
-            if (request.Pagination.SortBy != "Id" && request.Pagination.SortBy != "Name")
+            if (
+                request.Pagination.SortBy != "Id"
+                && request.Pagination.SortBy != "Name"
+                && request.Pagination.SortBy != "ModifyDate"
+            )
             {
                 errors.Add(
                     new FieldErrorObject("sortBy", _str["badParameter", _strFields["SortBy"]])

@@ -30,7 +30,8 @@
         [
             AllowedCharacterTypes.SmallLetters,
             AllowedCharacterTypes.BigLetters,
-            AllowedCharacterTypes.Digits
+            AllowedCharacterTypes.Digits,
+            AllowedCharacterTypes.Spaces
         ];
 
         public static AllowedCharacterTypes[]? AllowedCharacterTypesForLogin =

@@ -181,7 +181,7 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                 errors.Add(new ErrorObject(_str["scheduleTime"]));
             }
 
-            if (request.dto.LessonStart < 1)
+            if (request.dto.LessonStart < 0)
             {
                 errors.Add(
                     new FieldErrorObject(
@@ -191,7 +191,7 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                 );
             }
 
-            if (request.dto.LessonEnd > lessonPeriodCount)
+            if (request.dto.LessonEnd >= lessonPeriodCount)
             {
                 errors.Add(
                     new FieldErrorObject("lessonEnd", _str["badParameter", _strFields["LessonEnd"]])

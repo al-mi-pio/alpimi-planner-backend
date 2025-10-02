@@ -243,11 +243,12 @@ namespace AlpimiTest.TestUtilities
         public static CreateUserDTO GetCreateUserDTODetails()
         {
             var user = GetUserDetails();
+            var auth = GetAuthDetails();
             return new CreateUserDTO()
             {
                 Login = user.Login,
                 CustomURL = user.CustomURL!,
-                Password = "sssSSS1!"
+                Password = auth.Password,
             };
         }
 

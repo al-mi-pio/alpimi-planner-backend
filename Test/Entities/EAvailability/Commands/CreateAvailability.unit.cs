@@ -108,7 +108,7 @@ namespace AlpimiTest.Entities.EAvailability.Commands
         }
 
         [Fact]
-        public async Task ThrowsErrorWhenStartIsLessThan1()
+        public async Task ThrowsErrorWhenStartIsLessThan0()
         {
             _dbService
                 .Setup(s => s.Get<Teacher>(It.IsAny<string>(), It.IsAny<object>()))
@@ -121,7 +121,7 @@ namespace AlpimiTest.Entities.EAvailability.Commands
                 .ReturnsAsync(5);
 
             var createRequest = MockData.GetCreateAvailabilityDTODetails(new Guid());
-            createRequest.Start = 0;
+            createRequest.Start = -1;
             var createAvailabilityCommand = new CreateAvailabilityCommand(
                 new Guid(),
                 createRequest,

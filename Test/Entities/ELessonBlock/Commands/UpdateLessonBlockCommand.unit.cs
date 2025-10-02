@@ -204,7 +204,7 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
         }
 
         [Fact]
-        public async Task ThrowsErrorWhenLessonStartIsLessThan1()
+        public async Task ThrowsErrorWhenLessonStartIsLessThan0()
         {
             _dbService
                 .Setup(s => s.Get<LessonBlock>(It.IsAny<string>(), It.IsAny<object>()))
@@ -229,7 +229,7 @@ namespace AlpimiTest.Entities.ELessonBlock.Commands
                 .ReturnsAsync(5);
 
             var updateLessonRequest = MockData.GetUpdateLessonBlockDTODetails();
-            updateLessonRequest.LessonStart = 0;
+            updateLessonRequest.LessonStart = -1;
             var updateLessonBlockCommand = new UpdateLessonBlockCommand(
                 new Guid(),
                 updateLessonRequest,

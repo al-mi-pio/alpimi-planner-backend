@@ -132,14 +132,14 @@ namespace AlpimiAPI.Entities.EAvailability.Commands
                 errors.Add(new ErrorObject(_str["scheduleTime"]));
             }
 
-            if (request.dto.Start < 1)
+            if (request.dto.Start < 0)
             {
                 errors.Add(
                     new FieldErrorObject("start", _str["badParameter", _strFields["Start"]])
                 );
             }
 
-            if (request.dto.End > lessonPeriodCount)
+            if (request.dto.End >= lessonPeriodCount)
             {
                 errors.Add(new FieldErrorObject("end", _str["badParameter", _strFields["End"]]));
             }

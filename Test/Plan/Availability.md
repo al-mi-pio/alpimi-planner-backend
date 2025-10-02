@@ -20,8 +20,8 @@
 - [ThrowsErrorWhenStartIsAfterEnd()](../Entities/EAvailability/Commands/CreateAvailabilityCommand.unit.cs) - **unit** 
   Check if returns an error when incorrect  start and end times are provided
 
-- [ThrowsErrorWhenStartIsLessThan1()](../Entities/EAvailability/Commands/CreateAvailabilityCommand.unit.cs) - **unit** 
-  Check if returns an error when start is less than one
+- [ThrowsErrorWhenStartIsLessThan0()](../Entities/EAvailability/Commands/CreateAvailabilityCommand.unit.cs) - **unit** 
+  Check if returns an error when start is less than zero
 
 - [ThrowsErrorWhenEndIsMoreThanTheAmountOfPeriods()](../Entities/EAvailability/Commands/CreateAvailabilityCommand.unit.cs) - **unit** 
   Check if returns an error when end is more than the amount of  periods
@@ -61,8 +61,8 @@
 - [ThrowsErrorWhenStartIsAfterEnd()](../Entities/EAvailability/Commands/UpdateAvailabilityCommand.unit.cs) - **unit** 
   Check if returns an error when incorrect  start and end times are provided
 
-- [ThrowsErrorWhenStartIsLessThan1()](../Entities/EAvailability/Commands/UpdateAvailabilityCommand.unit.cs) - **unit** 
-  Check if returns an error when start is less than one
+- [ThrowsErrorWhenStartIsLessThan0()](../Entities/EAvailability/Commands/UpdateAvailabilityCommand.unit.cs) - **unit** 
+  Check if returns an error when start is less than zero
 
 - [ThrowsErrorWhenEndIsMoreThanTheAmountOfPeriods()](../Entities/EAvailability/Commands/UpdateAvailabilityCommand.unit.cs) - **unit** 
   Check if returns an error when end is more than the amount of periods

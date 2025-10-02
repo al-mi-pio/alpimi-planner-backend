@@ -32,8 +32,8 @@
 - [ThrowsErrorWhenLessonStartIsAfterLessonEnd()](../Entities/ELessonBlock/Commands/CreateLessonBlockCommand.unit.cs) - **unit** 
   Check if returns an error when incorrect lesson start and end times are provided
 
-- [ThrowsErrorWhenLessonStartIsLessThan1()](../Entities/ELessonBlock/Commands/CreateLessonBlockCommand.unit.cs) - **unit** 
-  Check if returns an error when lesson start is less than one
+- [ThrowsErrorWhenLessonStartIsLessThan0()](../Entities/ELessonBlock/Commands/CreateLessonBlockCommand.unit.cs) - **unit** 
+  Check if returns an error when lesson start is less than zero
 
 - [ThrowsErrorWhenLessonEndIsMoreThanTheAmountOfLessonPeriods()](../Entities/ELessonBlock/Commands/CreateLessonBlockCommand.unit.cs) - **unit** 
   Check if returns an error when lesson end is more than the amount of lesson periods
@@ -48,7 +48,7 @@
   Check if returns an error when lesson occurs on a day of the week that is not allowed by schedule settings
 
 - [ThrowsErrorWhenWeekIntervalIsLessThan1()](../Entities/ELessonBlock/Commands/CreateLessonBlockCommand.unit.cs) - **unit** 
-  Check if returns an error when lesson end is more than the amount of lesson periods
+  Check if returns an error when week interval is less than one
 
 - [CreateLessonBlockIsUndone()](../Entities/ELessonBlock/LessonBlockController.test.cs) - **integrity**  
   Check if create lesson block is undone
@@ -114,7 +114,7 @@
   Check if returns an error when incorrect lesson start and end times are provided
 
 - [ThrowsErrorWhenLessonStartIsLessThan1()](../Entities/ELessonBlock/Commands/UpdateLessonBlockCommand.unit.cs) - **unit** 
-  Check if returns an error when lesson start is less than one
+  Check if returns an error when lesson start is less than zero
 
 - [ThrowsErrorWhenLessonEndIsMoreThanTheAmountOfLessonPeriods()](../Entities/ELessonBlock/Commands/UpdateLessonBlockCommand.unit.cs) - **unit** 
   Check if returns an error when lesson end is more than the amount of lesson periods

@@ -1,9 +1,11 @@
-﻿using AlpimiAPI.Entities.EAvailability;
+﻿using System.Linq;
+using AlpimiAPI.Entities.EAvailability;
 using AlpimiAPI.Entities.EAvailability.DTO;
 using AlpimiAPI.Entities.EClassroom;
 using AlpimiAPI.Entities.EClassroom.DTO;
 using AlpimiAPI.Entities.EClassroomType;
 using AlpimiAPI.Entities.EClassroomType.DTO;
+using AlpimiAPI.Entities.EClassroomType.Queries;
 using AlpimiAPI.Entities.ECollision;
 using AlpimiAPI.Entities.ECollision.DTO;
 using AlpimiAPI.Entities.ECollisionType;
@@ -29,6 +31,10 @@ using AlpimiAPI.Entities.ESubgroup;
 using AlpimiAPI.Entities.ESubgroup.DTO;
 using AlpimiAPI.Entities.ETeacher;
 using AlpimiAPI.Entities.ETeacher.DTO;
+using AlpimiAPI.Locales;
+using MediatR;
+using Microsoft.Extensions.Localization;
+using Sprache;
 
 namespace AlpimiAPI.Utilities
 {
@@ -65,13 +71,14 @@ namespace AlpimiAPI.Utilities
             return new ClassroomTypeDTO { Id = data.Id, Name = data.Name };
         }
 
-        public static ClassroomDTO Trim(Classroom data)
+        public static ClassroomDTO Trim(Classroom data, IEnumerable<ClassroomType> classroomTypes)
         {
             return new ClassroomDTO
             {
                 Id = data.Id,
                 Name = data.Name,
-                Capacity = data.Capacity
+                Capacity = data.Capacity,
+                ClassroomTypes = classroomTypes.Select(DataTrimmer.Trim)
             };
         }
 
@@ -105,28 +112,30 @@ namespace AlpimiAPI.Utilities
             };
         }
 
-        public static SubgroupDTO Trim(Subgroup data)
+        public static SubgroupDTO Trim(Subgroup data, IEnumerable<Lesson> lessons)
         {
             return new SubgroupDTO
             {
                 Id = data.Id,
                 Name = data.Name,
                 StudentCount = data.StudentCount,
+                Lessons = lessons.Select(lesson => DataTrimmer.Trim(lesson, [])),
                 Group = Trim(data.Group)
             };
         }
 
-        public static StudentDTO Trim(Student data)
+        public static StudentDTO Trim(Student data, IEnumerable<Subgroup> subgroups)
         {
             return new StudentDTO
             {
                 Id = data.Id,
                 AlbumNumber = data.AlbumNumber,
+                Subgroups = subgroups.Select(subgroup => DataTrimmer.Trim(subgroup, [])),
                 Group = Trim(data.Group)
             };
         }
 
-        public static LessonDTO Trim(Lesson data)
+        public static LessonDTO Trim(Lesson data, IEnumerable<Subgroup> subgroups)
         {
             return new LessonDTO
             {
@@ -134,8 +143,9 @@ namespace AlpimiAPI.Utilities
                 Name = data.Name,
                 CurrentHours = data.CurrentHours,
                 AmountOfHours = data.AmountOfHours,
+                Subgroups = subgroups.Select(subgroup => DataTrimmer.Trim(subgroup, [])),
                 LessonType = Trim(data.LessonType),
-                Teacher = Trim(data.Teacher),
+                Teacher = Trim(data.Teacher)
             };
         }
 
@@ -152,7 +162,7 @@ namespace AlpimiAPI.Utilities
             };
         }
 
-        public static LessonBlockDTO Trim(LessonBlock data)
+        public static LessonBlockDTO Trim(LessonBlock data, IEnumerable<Subgroup> subgroups)
         {
             return new LessonBlockDTO
             {
@@ -160,8 +170,8 @@ namespace AlpimiAPI.Utilities
                 LessonDate = data.LessonDate,
                 LessonStart = data.LessonStart,
                 LessonEnd = data.LessonEnd,
-                Lesson = Trim(data.Lesson),
-                Classroom = data.Classroom == null ? null : Trim(data.Classroom),
+                Lesson = Trim(data.Lesson, subgroups),
+                Classroom = data.Classroom == null ? null : Trim(data.Classroom, []),
                 ClusterId = data.ClusterId
             };
         }

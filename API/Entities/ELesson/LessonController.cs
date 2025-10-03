@@ -1,6 +1,8 @@
 ﻿using AlpimiAPI.Entities.ELesson.Commands;
 using AlpimiAPI.Entities.ELesson.DTO;
 using AlpimiAPI.Entities.ELesson.Queries;
+using AlpimiAPI.Entities.ESubgroup;
+using AlpimiAPI.Entities.ESubgroup.Queries;
 using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
 using AlpimiAPI.Utilities;
@@ -140,7 +142,17 @@ namespace AlpimiAPI.Entities.ELesson
                     );
                 }
 
-                var response = new ApiGetResponse<LessonDTO>(DataTrimmer.Trim(result));
+                var allSubgroupsQuery = new GetAllSubgroupsQuery(
+                    id,
+                    filteredId,
+                    privileges,
+                    new PaginationParams(int.MaxValue, 0, "Id", "ASC")
+                );
+                (IEnumerable<Subgroup>?, int) subgroups = await _mediator.Send(allSubgroupsQuery);
+
+                var response = new ApiGetResponse<LessonDTO>(
+                    DataTrimmer.Trim(result, subgroups.Item1!)
+                );
                 return Ok(response);
             }
             catch (ApiErrorException ex)
@@ -187,8 +199,24 @@ namespace AlpimiAPI.Entities.ELesson
             {
                 (IEnumerable<Lesson>?, int) result = await _mediator.Send(query);
 
+                var lessonDTOs = new List<LessonDTO>();
+
+                foreach (var lesson in result.Item1!)
+                {
+                    var allSubgroupsQuery = new GetAllSubgroupsQuery(
+                        lesson.Id,
+                        filteredId,
+                        privileges,
+                        new PaginationParams(int.MaxValue, 0, "Id", "ASC")
+                    );
+
+                    var subgroups = await _mediator.Send(allSubgroupsQuery);
+
+                    lessonDTOs.Add(DataTrimmer.Trim(lesson, subgroups.Item1!));
+                }
+
                 var response = new ApiGetAllResponse<IEnumerable<LessonDTO>>(
-                    result.Item1!.Select(DataTrimmer.Trim),
+                    lessonDTOs,
                     new Pagination(result.Item2, perPage, page, sortBy, sortOrder)
                 );
                 return Ok(response);
@@ -238,7 +266,17 @@ namespace AlpimiAPI.Entities.ELesson
                     );
                 }
 
-                var response = new ApiGetResponse<LessonDTO>(DataTrimmer.Trim(result));
+                var allSubgroupsQuery = new GetAllSubgroupsQuery(
+                    id,
+                    filteredId,
+                    privileges,
+                    new PaginationParams(int.MaxValue, 0, "Id", "ASC")
+                );
+                (IEnumerable<Subgroup>?, int) subgroups = await _mediator.Send(allSubgroupsQuery);
+
+                var response = new ApiGetResponse<LessonDTO>(
+                    DataTrimmer.Trim(result, subgroups.Item1!)
+                );
                 return Ok(response);
             }
             catch (Exception ex)

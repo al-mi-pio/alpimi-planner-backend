@@ -1,6 +1,10 @@
-﻿using AlpimiAPI.Entities.ELessonBlock.Commands;
+﻿using AlpimiAPI.Entities.ELesson;
+using AlpimiAPI.Entities.ELessonBlock.Commands;
 using AlpimiAPI.Entities.ELessonBlock.DTO;
 using AlpimiAPI.Entities.ELessonBlock.Queries;
+using AlpimiAPI.Entities.ESubgroup;
+using AlpimiAPI.Entities.ESubgroup.Queries;
+using AlpimiAPI.Entities.ETeacher;
 using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
 using AlpimiAPI.Utilities;
@@ -204,10 +208,39 @@ namespace AlpimiAPI.Entities.ELessonBlock
             {
                 (IEnumerable<LessonBlock>?, int) result = await _mediator.Send(query);
 
+                var lessonBlockDTOs = new List<LessonBlockDTO>();
+                var subgroupsMap = new Dictionary<Guid, IEnumerable<Subgroup>>();
+
+                foreach (var lesson in result.Item1!)
+                {
+                    if (subgroupsMap.ContainsKey(lesson.LessonId))
+                    {
+                        lessonBlockDTOs.Add(
+                            DataTrimmer.Trim(lesson, subgroupsMap[lesson.LessonId])
+                        );
+                        continue;
+                    }
+
+                    var allSubgroupsQuery = new GetAllSubgroupsQuery(
+                        lesson.LessonId,
+                        filteredId,
+                        privileges,
+                        new PaginationParams(int.MaxValue, 0, "Id", "ASC")
+                    );
+
+                    (IEnumerable<Subgroup>?, int) subgroups = await _mediator.Send(
+                        allSubgroupsQuery
+                    );
+
+                    subgroupsMap.Add(lesson.LessonId, subgroups.Item1!);
+                    lessonBlockDTOs.Add(DataTrimmer.Trim(lesson, subgroups.Item1!));
+                }
+
                 var response = new ApiGetAllResponse<IEnumerable<LessonBlockDTO>>(
-                    result.Item1!.Select(DataTrimmer.Trim),
+                    lessonBlockDTOs,
                     new Pagination(result.Item2, perPage, page, sortBy, sortOrder)
                 );
+
                 return Ok(response);
             }
             catch (ApiErrorException ex)
@@ -255,7 +288,17 @@ namespace AlpimiAPI.Entities.ELessonBlock
                     );
                 }
 
-                var response = new ApiGetResponse<LessonBlockDTO>(DataTrimmer.Trim(result));
+                var allSubgroupsQuery = new GetAllSubgroupsQuery(
+                    result.LessonId,
+                    filteredId,
+                    privileges,
+                    new PaginationParams(int.MaxValue, 0, "Id", "ASC")
+                );
+                (IEnumerable<Subgroup>?, int) subgroups = await _mediator.Send(allSubgroupsQuery);
+
+                var response = new ApiGetResponse<LessonBlockDTO>(
+                    DataTrimmer.Trim(result, subgroups.Item1!)
+                );
                 return Ok(response);
             }
             catch (Exception ex)

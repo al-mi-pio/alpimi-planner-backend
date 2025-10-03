@@ -297,15 +297,22 @@ namespace AlpimiTest.Entities.ELessonBlock
             );
 
             await _client.PostAsJsonAsync("/api/LessonBlock", lessonBlockRequest);
+            var query = $"?id={groupId}";
+            var initialResponse = await _client.GetAsync($"/api/LessonBlock{query}");
+            var initialJsonResponse = await initialResponse.Content.ReadFromJsonAsync<
+                ApiGetAllResponse<IEnumerable<LessonBlockDTO>>
+            >();
             await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
             await _client.PatchAsJsonAsync($"/api/History/redo/{scheduleId}", "");
 
-            var query = $"?id={groupId}";
             var secondResponse = await _client.GetAsync($"/api/LessonBlock{query}");
             var jsonResponse = await secondResponse.Content.ReadFromJsonAsync<
                 ApiGetAllResponse<IEnumerable<LessonBlockDTO>>
             >();
-            Assert.NotEqual(0, jsonResponse!.Pagination.TotalItems);
+            Assert.Equal(
+                initialJsonResponse!.Pagination.TotalItems,
+                jsonResponse!.Pagination.TotalItems
+            );
         }
 
         [Fact]

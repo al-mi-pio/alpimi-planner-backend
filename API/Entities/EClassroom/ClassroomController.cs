@@ -1,6 +1,8 @@
 ﻿using AlpimiAPI.Entities.EClassroom.Commands;
 using AlpimiAPI.Entities.EClassroom.DTO;
 using AlpimiAPI.Entities.EClassroom.Queries;
+using AlpimiAPI.Entities.EClassroomType;
+using AlpimiAPI.Entities.EClassroomType.Queries;
 using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
 using AlpimiAPI.Utilities;
@@ -145,7 +147,19 @@ namespace AlpimiAPI.Entities.EClassroom
                     );
                 }
 
-                var response = new ApiGetResponse<ClassroomDTO>(DataTrimmer.Trim(result));
+                var allClassroomTypesQuery = new GetAllClassroomTypesQuery(
+                    id,
+                    filteredId,
+                    privileges,
+                    new PaginationParams(int.MaxValue, 0, "Id", "ASC")
+                );
+                (IEnumerable<ClassroomType>?, int) classroomTypes = await _mediator.Send(
+                    allClassroomTypesQuery
+                );
+
+                var response = new ApiGetResponse<ClassroomDTO>(
+                    DataTrimmer.Trim(result, classroomTypes.Item1!)
+                );
                 return Ok(response);
             }
             catch (ApiErrorException ex)
@@ -192,8 +206,24 @@ namespace AlpimiAPI.Entities.EClassroom
             {
                 (IEnumerable<Classroom>?, int) result = await _mediator.Send(query);
 
+                var classroomDTOs = new List<ClassroomDTO>();
+
+                foreach (var classroom in result.Item1!)
+                {
+                    var allClassroomTypesQuery = new GetAllClassroomTypesQuery(
+                        classroom.Id,
+                        filteredId,
+                        privileges,
+                        new PaginationParams(int.MaxValue, 0, "Id", "ASC")
+                    );
+
+                    var classroomTypes = await _mediator.Send(allClassroomTypesQuery);
+
+                    classroomDTOs.Add(DataTrimmer.Trim(classroom, classroomTypes.Item1!));
+                }
+
                 var response = new ApiGetAllResponse<IEnumerable<ClassroomDTO>>(
-                    result.Item1!.Select(DataTrimmer.Trim),
+                    classroomDTOs,
                     new Pagination(result.Item2, perPage, page, sortBy, sortOrder)
                 );
                 return Ok(response);
@@ -243,7 +273,19 @@ namespace AlpimiAPI.Entities.EClassroom
                     );
                 }
 
-                var response = new ApiGetResponse<ClassroomDTO>(DataTrimmer.Trim(result));
+                var allClassroomTypesQuery = new GetAllClassroomTypesQuery(
+                    id,
+                    filteredId,
+                    privileges,
+                    new PaginationParams(int.MaxValue, 0, "Id", "ASC")
+                );
+                (IEnumerable<ClassroomType>?, int) classroomTypes = await _mediator.Send(
+                    allClassroomTypesQuery
+                );
+
+                var response = new ApiGetResponse<ClassroomDTO>(
+                    DataTrimmer.Trim(result, classroomTypes.Item1!)
+                );
                 return Ok(response);
             }
             catch (Exception ex)

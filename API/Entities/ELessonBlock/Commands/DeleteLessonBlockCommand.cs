@@ -83,7 +83,7 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                     LessonId = lessonBlock.LessonId,
                     ClassroomId = lessonBlock.ClassroomId,
                     WeekInterval =
-                        firstTwoLessonBlocks.Value.Item2 == 2
+                        firstTwoLessonBlocks.Value.Item2 >= 2
                             ? (
                                 firstTwoLessonBlocks.Value.Item1!.Last().LessonDate.DayNumber
                                 - firstTwoLessonBlocks.Value.Item1!.First().LessonDate.DayNumber

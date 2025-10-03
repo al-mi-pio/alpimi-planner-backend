@@ -4,6 +4,7 @@ using AlpimiAPI.Entities.ELessonBlock.DTO;
 using AlpimiAPI.Entities.ELessonBlock.Queries;
 using AlpimiAPI.Entities.ESubgroup;
 using AlpimiAPI.Entities.ESubgroup.Queries;
+using AlpimiAPI.Entities.ETeacher;
 using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
 using AlpimiAPI.Utilities;
@@ -208,9 +209,18 @@ namespace AlpimiAPI.Entities.ELessonBlock
                 (IEnumerable<LessonBlock>?, int) result = await _mediator.Send(query);
 
                 var lessonBlockDTOs = new List<LessonBlockDTO>();
+                var subgroupsMap = new Dictionary<Guid, IEnumerable<Subgroup>>();
 
                 foreach (var lesson in result.Item1!)
                 {
+                    if (subgroupsMap.ContainsKey(lesson.LessonId))
+                    {
+                        lessonBlockDTOs.Add(
+                            DataTrimmer.Trim(lesson, subgroupsMap[lesson.LessonId])
+                        );
+                        continue;
+                    }
+
                     var allSubgroupsQuery = new GetAllSubgroupsQuery(
                         lesson.LessonId,
                         filteredId,
@@ -222,6 +232,7 @@ namespace AlpimiAPI.Entities.ELessonBlock
                         allSubgroupsQuery
                     );
 
+                    subgroupsMap.Add(lesson.LessonId, subgroups.Item1!);
                     lessonBlockDTOs.Add(DataTrimmer.Trim(lesson, subgroups.Item1!));
                 }
 

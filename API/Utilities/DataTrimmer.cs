@@ -1,11 +1,9 @@
-﻿using System.Linq;
-using AlpimiAPI.Entities.EAvailability;
+﻿using AlpimiAPI.Entities.EAvailability;
 using AlpimiAPI.Entities.EAvailability.DTO;
 using AlpimiAPI.Entities.EClassroom;
 using AlpimiAPI.Entities.EClassroom.DTO;
 using AlpimiAPI.Entities.EClassroomType;
 using AlpimiAPI.Entities.EClassroomType.DTO;
-using AlpimiAPI.Entities.EClassroomType.Queries;
 using AlpimiAPI.Entities.ECollision;
 using AlpimiAPI.Entities.ECollision.DTO;
 using AlpimiAPI.Entities.ECollisionType;
@@ -31,10 +29,6 @@ using AlpimiAPI.Entities.ESubgroup;
 using AlpimiAPI.Entities.ESubgroup.DTO;
 using AlpimiAPI.Entities.ETeacher;
 using AlpimiAPI.Entities.ETeacher.DTO;
-using AlpimiAPI.Locales;
-using MediatR;
-using Microsoft.Extensions.Localization;
-using Sprache;
 
 namespace AlpimiAPI.Utilities
 {

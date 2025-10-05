@@ -251,7 +251,8 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                 Timestamp = DateTime.Now,
                 AffectedEntityId =
                     request.dto.WeekInterval == null ? request.Id : request.ClusterId,
-                AffectedEntity = "LessonBlock",
+                AffectedEntity =
+                    request.dto.WeekInterval == null ? "LessonBlock" : "LessonBlockCluster",
                 Command = "Create",
                 ReversaleDTO = null,
                 CollisionChecked = false,

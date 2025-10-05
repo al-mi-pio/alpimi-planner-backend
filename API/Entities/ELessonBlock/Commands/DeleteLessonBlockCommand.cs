@@ -96,7 +96,8 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                     Id = Guid.NewGuid(),
                     Timestamp = DateTime.Now,
                     AffectedEntityId = request.Id,
-                    AffectedEntity = "LessonBlock",
+                    AffectedEntity =
+                        singleLessonblock.Value != null ? "LessonBlock" : "LessonBlockCluster",
                     Command = "Delete",
                     ReversaleDTO = JsonSerializer.Serialize(reversaleDTO),
                     CollisionChecked = false,

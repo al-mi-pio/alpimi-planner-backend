@@ -1,5 +1,4 @@
-﻿using AlpimiAPI.Entities.ESchedule.DTO;
-using AlpimiAPI.Entities.EScheduleSettings.Commands;
+﻿using AlpimiAPI.Entities.EScheduleSettings.Commands;
 using AlpimiAPI.Entities.EScheduleSettings.DTO;
 using AlpimiAPI.Entities.EScheduleSettings.Queries;
 using AlpimiAPI.Locales;
@@ -92,7 +91,7 @@ namespace AlpimiAPI.Entities.EScheduleSettings
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
         [ProducesResponseType(typeof(ApiErrorResponse), 404)]
-        public async Task<ActionResult<ApiGetResponse<ScheduleDTO>>> Get(
+        public async Task<ActionResult<ApiGetResponse<ScheduleSettingsDTO>>> Get(
             [FromRoute] Guid id,
             [FromHeader] string? Authorization
         )

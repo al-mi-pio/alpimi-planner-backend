@@ -57,6 +57,7 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                 getLessonBlockQuery,
                 cancellationToken
             );
+            var affectedEntity = lessonBlock.Value != null ? "LessonBlock" : "LessonBlockCluster";
 
             if (lessonBlock.Value == null)
             {
@@ -269,7 +270,7 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                 Id = Guid.NewGuid(),
                 Timestamp = DateTime.Now,
                 AffectedEntityId = request.Id,
-                AffectedEntity = "LessonBlock",
+                AffectedEntity = affectedEntity,
                 Command = "Patch",
                 ReversaleDTO = JsonSerializer.Serialize(reversaleDTOLessonBlock),
                 CollisionChecked = false,

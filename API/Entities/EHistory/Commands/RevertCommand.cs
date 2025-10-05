@@ -236,6 +236,7 @@ namespace AlpimiAPI.Entities.EHistory.Commands
                             break;
 
                         case "LessonBlock":
+                        case "LessonBlockCluster":
                             DeleteLessonBlockHandler deleteLessonBlockHandler =
                                 new DeleteLessonBlockHandler(_dbService);
                             DeleteLessonBlockCommand deleteLessonBlockCommand =
@@ -476,6 +477,7 @@ namespace AlpimiAPI.Entities.EHistory.Commands
                             break;
 
                         case "LessonBlock":
+                        case "LessonBlockCluster":
                             UpdateLessonBlockHandler updateLessonBlockHandler =
                                 new UpdateLessonBlockHandler(_dbService, _str, _strFields);
                             UpdateLessonBlockCommand updateLessonBlockCommand =
@@ -749,6 +751,7 @@ namespace AlpimiAPI.Entities.EHistory.Commands
                             break;
 
                         case "LessonBlock":
+                        case "LessonBlockCluster":
                             CreateLessonBlockDTO createLessonBlockDTO =
                                 JsonSerializer.Deserialize<CreateLessonBlockDTO>(
                                     latestHistory.ReversaleDTO!

@@ -114,8 +114,8 @@ namespace AlpimiAPI.Entities.EAvailability.Queries
                             COUNT(*)
                             FROM [Availability] a
                             INNER JOIN [Teacher] t ON t.[Id] = a.[TeacherId]
-                            INNER JOIN [Schedule] s ON s.[Id]= t.[TeacherId]
-                            INNER JOIN [ScheduleSettings] ss ON ss.[TeacherId] = s.[Id]
+                            INNER JOIN [Schedule] s ON s.[Id]= t.[ScheduleId]
+                            INNER JOIN [ScheduleSettings] ss ON ss.[ScheduleId] = s.[Id]
                             WHERE s.[UserId] = @FilteredId AND t.[Id] = @TeacherId;",
                         request
                     );
@@ -125,8 +125,8 @@ namespace AlpimiAPI.Entities.EAvailability.Queries
                             a.[Id], a.[WeekDay], a.[Start], a.[End], a.[TeacherId]
                             FROM [Availability] a
                             INNER JOIN [Teacher] t ON t.[Id] = a.[TeacherId]
-                            INNER JOIN [Schedule] s ON s.[Id]= t.[TeacherId]
-                            INNER JOIN [ScheduleSettings] ss ON ss.[TeacherId] = s.[Id]
+                            INNER JOIN [Schedule] s ON s.[Id]= t.[ScheduleId]
+                            INNER JOIN [ScheduleSettings] ss ON ss.[ScheduleId] = s.[Id]
                             WHERE s.[UserId] = @FilteredId AND t.[Id] = @TeacherId 
                             ORDER BY
                             {request.Pagination.SortBy}

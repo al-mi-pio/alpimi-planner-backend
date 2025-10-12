@@ -168,7 +168,7 @@ namespace AlpimiAPI.Entities.ELesson
         }
 
         /// <summary>
-        /// Gets all Lessons by SubroupId or GroupId
+        /// Gets all Lessons by SubroupId, GroupId, TeacherId or ScheduleId
         /// </summary>
         /// <remarks>
         /// - JWT token is required

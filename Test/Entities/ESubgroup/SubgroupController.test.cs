@@ -114,6 +114,7 @@ namespace AlpimiTest.Entities.ESubgroup
 
             var query = $"?id={groupId}";
             response = await _client.GetAsync($"/api/Subgroup{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.Contains(subgroupRequest.Name!, stringResponse);
         }
@@ -132,6 +133,7 @@ namespace AlpimiTest.Entities.ESubgroup
 
             var query = $"?id={groupId}";
             var response = await _client.GetAsync($"/api/Subgroup{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.DoesNotContain(subgroupRequest.Name!, stringResponse);
         }
@@ -151,6 +153,7 @@ namespace AlpimiTest.Entities.ESubgroup
 
             var query = $"?id={groupId}";
             var response = await _client.GetAsync($"/api/Subgroup{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.Contains(subgroupRequest.Name!, stringResponse);
         }
@@ -170,6 +173,7 @@ namespace AlpimiTest.Entities.ESubgroup
 
             var query = $"?id={groupId}";
             response = await _client.GetAsync($"/api/Subgroup{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.DoesNotContain(subgroupRequest.Name!, stringResponse);
         }
@@ -189,6 +193,7 @@ namespace AlpimiTest.Entities.ESubgroup
 
             var query = $"?id={groupId}";
             var response = await _client.GetAsync($"/api/Subgroup{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.Contains(subgroupRequest.Name!, stringResponse);
         }
@@ -209,6 +214,7 @@ namespace AlpimiTest.Entities.ESubgroup
 
             var query = $"?id={groupId}";
             var response = await _client.GetAsync($"/api/Subgroup{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.DoesNotContain(subgroupRequest.Name!, stringResponse);
         }
@@ -342,6 +348,7 @@ namespace AlpimiTest.Entities.ESubgroup
 
             var query = $"?id={groupId}";
             var response = await _client.GetAsync($"/api/Subgroup{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
 
             Assert.Contains(subgroupRequest1.Name!, stringResponse);
@@ -365,6 +372,7 @@ namespace AlpimiTest.Entities.ESubgroup
 
             var query = $"?id={studentId}";
             var response = await _client.GetAsync($"/api/Subgroup{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
 
             Assert.Contains(subgroupRequest1.Name!, stringResponse);
@@ -400,6 +408,7 @@ namespace AlpimiTest.Entities.ESubgroup
 
             var query = $"?id={lessonId}";
             var response = await _client.GetAsync($"/api/Subgroup{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
 
             Assert.Contains(subgroupRequest1.Name!, stringResponse);
@@ -418,6 +427,7 @@ namespace AlpimiTest.Entities.ESubgroup
 
             var query = $"?id={groupId}";
             var response = await _client.GetAsync($"/api/Subgroup{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
 
             Assert.Contains(subgroupRequest1.Name!, stringResponse);
@@ -438,6 +448,7 @@ namespace AlpimiTest.Entities.ESubgroup
 
             var query = $"?id={groupId}";
             var response = await _client.GetAsync($"/api/Subgroup{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
 
             Assert.DoesNotContain(subgroupRequest1.Name!, stringResponse);
@@ -458,6 +469,7 @@ namespace AlpimiTest.Entities.ESubgroup
 
             var query = $"?id={Guid.NewGuid()}";
             var response = await _client.GetAsync($"/api/Subgroup{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
 
             Assert.DoesNotContain(subgroupRequest1.Name!, stringResponse);

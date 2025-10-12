@@ -118,7 +118,7 @@ namespace AlpimiAPI.Entities.EGroup.Queries
                     groups = await _dbService.GetAll<Group>(
                         $@"
                             SELECT 
-                            g.[Id], g.[Name], [StudentCount], [ScheduleId] 
+                            g.[Id], g.[Name], g.[StudentCount], g.[ScheduleId] 
                             FROM [Group] g
                             INNER JOIN [Schedule] s ON s.[Id]=g.[ScheduleId]
                             INNER JOIN [ScheduleSettings] ss ON ss.[ScheduleId] = s.[Id]

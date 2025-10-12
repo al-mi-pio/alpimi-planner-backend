@@ -128,6 +128,7 @@ namespace AlpimiTest.Entities.EStudent
 
             var query = $"?id={groupId1}";
             response = await _client.GetAsync($"/api/Student{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.Contains(studentRequest.AlbumNumber!, stringResponse);
         }
@@ -146,6 +147,7 @@ namespace AlpimiTest.Entities.EStudent
 
             var query = $"?id={groupId1}";
             var response = await _client.GetAsync($"/api/Student{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.DoesNotContain(studentRequest.AlbumNumber!, stringResponse);
         }
@@ -165,6 +167,7 @@ namespace AlpimiTest.Entities.EStudent
 
             var query = $"?id={groupId1}";
             var response = await _client.GetAsync($"/api/Student{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.Contains(studentRequest.AlbumNumber!, stringResponse);
         }
@@ -184,6 +187,7 @@ namespace AlpimiTest.Entities.EStudent
 
             var query = $"?id={subgroupId}";
             response = await _client.GetAsync($"/api/Student{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.Contains(studentRequest.AlbumNumber!, stringResponse);
         }
@@ -203,6 +207,7 @@ namespace AlpimiTest.Entities.EStudent
 
             var query = $"?id={groupId1}";
             response = await _client.GetAsync($"/api/Student{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.DoesNotContain(studentRequest.AlbumNumber!, stringResponse);
         }
@@ -222,6 +227,7 @@ namespace AlpimiTest.Entities.EStudent
 
             var query = $"?id={groupId1}";
             var response = await _client.GetAsync($"/api/Student{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.Contains(studentRequest.AlbumNumber!, stringResponse);
         }
@@ -242,6 +248,7 @@ namespace AlpimiTest.Entities.EStudent
 
             var query = $"?id={groupId1}";
             var response = await _client.GetAsync($"/api/Student{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.DoesNotContain(studentRequest.AlbumNumber!, stringResponse);
         }
@@ -288,6 +295,7 @@ namespace AlpimiTest.Entities.EStudent
 
             var query = $"?id={subgroupId}";
             var response = await _client.GetAsync($"/api/Student{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.Contains(studentUpdateRequest.AlbumNumber!, stringResponse);
         }
@@ -393,6 +401,7 @@ namespace AlpimiTest.Entities.EStudent
 
             var query = $"?id={groupId1}";
             var response = await _client.GetAsync($"/api/Student{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
 
             Assert.Contains(studentRequest1.AlbumNumber!, stringResponse);
@@ -413,6 +422,7 @@ namespace AlpimiTest.Entities.EStudent
 
             var query = $"?id={scheduleId}";
             var response = await _client.GetAsync($"/api/Student{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
 
             Assert.Contains(studentRequest1.AlbumNumber!, stringResponse);
@@ -434,6 +444,7 @@ namespace AlpimiTest.Entities.EStudent
 
             var query = $"?id={subgroupId}";
             var response = await _client.GetAsync($"/api/Student{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
 
             Assert.Contains(studentRequest1.AlbumNumber!, stringResponse);
@@ -454,6 +465,7 @@ namespace AlpimiTest.Entities.EStudent
 
             var query = $"?id={groupId1}";
             var response = await _client.GetAsync($"/api/Student{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
 
             Assert.DoesNotContain(studentRequest1.AlbumNumber!, stringResponse);
@@ -474,6 +486,7 @@ namespace AlpimiTest.Entities.EStudent
 
             var query = $"?id={new Guid()}";
             var response = await _client.GetAsync($"/api/Student{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
 
             Assert.DoesNotContain(studentRequest1.AlbumNumber!, stringResponse);

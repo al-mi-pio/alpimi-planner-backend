@@ -124,7 +124,7 @@ namespace AlpimiAPI.Entities.EClassroom.Queries
                     classrooms = await _dbService.GetAll<Classroom>(
                         $@"
                             SELECT 
-                            c.[Id], c.[Name], c.[Capacity], [ScheduleId] 
+                            c.[Id], c.[Name], c.[Capacity], c.[ScheduleId] 
                             FROM [Classroom] c
                             INNER JOIN [Schedule] s ON s.[Id] = c.[ScheduleId]
                             INNER JOIN [ScheduleSettings] ss ON ss.[ScheduleId] = s.[Id]

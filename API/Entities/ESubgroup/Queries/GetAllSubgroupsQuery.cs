@@ -125,7 +125,7 @@ namespace AlpimiAPI.Entities.ESubgroup.Queries
                             LEFT JOIN [Student] st ON st.[Id] = ssg.[StudentId]
                             LEFT JOIN [LessonSubgroup] lsg ON lsg.[SubgroupId] = sg.[Id]
                             LEFT JOIN [Lesson] l ON l.[Id] = lsg.[LessonId]
-                            WHERE (s.[UserId] = @FilteredId OR ss.[IsPublic] = 'TRUE') AND (sg.[GroupId] = @Id OR st.[Id] = @Id l.[Id] = @Id);",
+                            WHERE (s.[UserId] = @FilteredId OR ss.[IsPublic] = 'TRUE') AND (sg.[GroupId] = @Id OR st.[Id] = @Id OR l.[Id] = @Id);",
                         request
                     );
                     subgroups = await _dbService.GetAll<Subgroup>(

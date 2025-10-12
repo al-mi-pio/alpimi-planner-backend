@@ -119,6 +119,7 @@ namespace AlpimiTest.Entities.EAvailability
 
             var query = $"?id={teacherId1}";
             response = await _client.GetAsync($"/api/Availability{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.Contains(teacherId1.ToString(), stringResponse);
         }
@@ -137,6 +138,7 @@ namespace AlpimiTest.Entities.EAvailability
 
             var query = $"?id={teacherId1}";
             var response = await _client.GetAsync($"/api/Availability{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.DoesNotContain(teacherId1.ToString(), stringResponse);
         }
@@ -156,6 +158,7 @@ namespace AlpimiTest.Entities.EAvailability
 
             var query = $"?id={teacherId1}";
             var response = await _client.GetAsync($"/api/Availability{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.Contains(teacherId1.ToString(), stringResponse);
         }
@@ -175,6 +178,7 @@ namespace AlpimiTest.Entities.EAvailability
 
             var query = $"?id={teacherId1}";
             response = await _client.GetAsync($"/api/Availability{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.DoesNotContain(Convert.ToString(availabilityRequest.TeacherId)!, stringResponse);
         }
@@ -194,6 +198,7 @@ namespace AlpimiTest.Entities.EAvailability
 
             var query = $"?id={teacherId1}";
             var response = await _client.GetAsync($"/api/Availability{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.Contains(Convert.ToString(availabilityRequest.TeacherId)!, stringResponse);
         }
@@ -214,6 +219,7 @@ namespace AlpimiTest.Entities.EAvailability
 
             var query = $"?id={teacherId1}";
             var response = await _client.GetAsync($"/api/Availability{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.DoesNotContain(Convert.ToString(availabilityRequest.TeacherId)!, stringResponse);
         }
@@ -305,6 +311,7 @@ namespace AlpimiTest.Entities.EAvailability
 
             var query = $"?id={teacherId1}";
             var response = await _client.GetAsync($"/api/Availability{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
 
             Assert.Contains("\"weekDay\":" + dto.WeekDay.ToString(), stringResponse);
@@ -336,6 +343,7 @@ namespace AlpimiTest.Entities.EAvailability
 
             var query = $"?id={teacherId1}";
             var response = await _client.GetAsync($"/api/Availability{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
 
             Assert.Contains(
@@ -362,6 +370,7 @@ namespace AlpimiTest.Entities.EAvailability
 
             var query = $"?id={teacherId1}";
             var response = await _client.GetAsync($"/api/Availability{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
 
             Assert.Contains(teacherId1.ToString(), stringResponse);
@@ -386,6 +395,7 @@ namespace AlpimiTest.Entities.EAvailability
 
             var query = $"?id={new Guid()}";
             var response = await _client.GetAsync($"/api/Availability{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
 
             Assert.DoesNotContain(teacherId1.ToString(), stringResponse);
@@ -411,6 +421,7 @@ namespace AlpimiTest.Entities.EAvailability
 
             var query = $"?id={teacherId1}";
             var response = await _client.GetAsync($"/api/Availability{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
 
             Assert.DoesNotContain(teacherId1.ToString(), stringResponse);

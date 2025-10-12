@@ -103,6 +103,7 @@ namespace AlpimiTest.Entities.EDayOff
 
             var query = $"?scheduleId={scheduleId}";
             response = await _client.GetAsync($"/api/DayOff{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.Contains(dayOffRequest.Name!, stringResponse);
         }
@@ -121,6 +122,7 @@ namespace AlpimiTest.Entities.EDayOff
 
             var query = $"?scheduleId={scheduleId}";
             var response = await _client.GetAsync($"/api/DayOff{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.DoesNotContain(dayOffRequest.Name!, stringResponse);
         }
@@ -140,6 +142,7 @@ namespace AlpimiTest.Entities.EDayOff
 
             var query = $"?scheduleId={scheduleId}";
             var response = await _client.GetAsync($"/api/DayOff{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.Contains(dayOffRequest.Name!, stringResponse);
         }
@@ -159,6 +162,7 @@ namespace AlpimiTest.Entities.EDayOff
 
             var query = $"?scheduleId={scheduleId}";
             response = await _client.GetAsync($"/api/DayOff");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.DoesNotContain(dayOffRequest.Name!, stringResponse);
         }
@@ -249,6 +253,7 @@ namespace AlpimiTest.Entities.EDayOff
 
             var query = $"?scheduleId={scheduleId}";
             var response = await _client.GetAsync($"/api/DayOff{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.DoesNotContain(dayOffUpdateRequest.Name!, stringResponse);
         }
@@ -272,6 +277,7 @@ namespace AlpimiTest.Entities.EDayOff
 
             var query = $"?scheduleId={scheduleId}";
             var response = await _client.GetAsync($"/api/DayOff{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.Contains(dayOffUpdateRequest.Name!, stringResponse);
         }
@@ -290,6 +296,7 @@ namespace AlpimiTest.Entities.EDayOff
 
             var query = $"?scheduleId={scheduleId}";
             var response = await _client.GetAsync($"/api/DayOff{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
 
             Assert.Contains(dayOffRequest1.Name!, stringResponse);
@@ -308,6 +315,7 @@ namespace AlpimiTest.Entities.EDayOff
 
             var query = $"?scheduleId={scheduleId}";
             var response = await _client.GetAsync($"/api/DayOff{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
 
             Assert.Contains(dayOffRequest1.Name!, stringResponse);
@@ -328,6 +336,7 @@ namespace AlpimiTest.Entities.EDayOff
 
             var query = $"?scheduleId={scheduleId}";
             var response = await _client.GetAsync($"/api/DayOff{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
 
             Assert.DoesNotContain(dayOffRequest1.Name!, stringResponse);
@@ -348,6 +357,7 @@ namespace AlpimiTest.Entities.EDayOff
 
             var query = $"?scheduleId={new Guid()}";
             var response = await _client.GetAsync($"/api/DayOff{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
 
             Assert.DoesNotContain(dayOffRequest1.Name!, stringResponse);

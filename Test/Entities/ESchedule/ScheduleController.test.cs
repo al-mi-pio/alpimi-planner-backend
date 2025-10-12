@@ -224,6 +224,7 @@ namespace AlpimiTest.Entities.ESchedule
             );
 
             var response = await _client.GetAsync("/api/Schedule");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
 
             Assert.Contains(scheduleRequest1.Name!, stringResponse);
@@ -247,6 +248,7 @@ namespace AlpimiTest.Entities.ESchedule
             );
 
             var response = await _client.GetAsync("/api/Schedule");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
 
             Assert.DoesNotContain(scheduleRequest1.Name!, stringResponse);
@@ -270,6 +272,7 @@ namespace AlpimiTest.Entities.ESchedule
             );
 
             var response = await _client.GetAsync("/api/Schedule");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
 
             Assert.Contains(scheduleRequest1.Name!, stringResponse);
@@ -291,6 +294,7 @@ namespace AlpimiTest.Entities.ESchedule
 
             var query = $"?url={user.CustomURL}";
             var response = await _client.GetAsync($"/api/Schedule/byURL{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
 
             Assert.Contains(scheduleRequest1.Name!, stringResponse);
@@ -310,6 +314,7 @@ namespace AlpimiTest.Entities.ESchedule
 
             var query = $"?url={user.CustomURL}";
             var response = await _client.GetAsync($"/api/Schedule/byURL{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
 
             Assert.Contains(scheduleRequest1.Name!, stringResponse);
@@ -331,6 +336,7 @@ namespace AlpimiTest.Entities.ESchedule
 
             var query = $"?url={user.CustomURL}";
             var response = await _client.GetAsync($"/api/Schedule/byURL{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
 
             Assert.DoesNotContain(scheduleRequest1.Name!, stringResponse);
@@ -351,6 +357,7 @@ namespace AlpimiTest.Entities.ESchedule
 
             var query = "?url=wrongURL";
             var response = await _client.GetAsync($"/api/Schedule/byURL{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
 
             Assert.DoesNotContain(scheduleRequest1.Name!, stringResponse);

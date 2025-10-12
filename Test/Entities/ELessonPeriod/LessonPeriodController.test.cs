@@ -104,6 +104,7 @@ namespace AlpimiTest.Entities.ELessonPeriod
 
             var query = $"?scheduleId={scheduleId}";
             response = await _client.GetAsync($"/api/LessonPeriod{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.Contains(lessonPeriodRequest.Start.ToString()!, stringResponse);
         }
@@ -122,6 +123,7 @@ namespace AlpimiTest.Entities.ELessonPeriod
 
             var query = $"?scheduleId={scheduleId}";
             var response = await _client.GetAsync($"/api/LessonPeriod{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.DoesNotContain(lessonPeriodRequest.Start.ToString()!, stringResponse);
         }
@@ -141,6 +143,7 @@ namespace AlpimiTest.Entities.ELessonPeriod
 
             var query = $"?scheduleId={scheduleId}";
             var response = await _client.GetAsync($"/api/LessonPeriod{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.Contains(lessonPeriodRequest.Start.ToString()!, stringResponse);
         }
@@ -160,6 +163,7 @@ namespace AlpimiTest.Entities.ELessonPeriod
 
             var query = $"?scheduleId={scheduleId}";
             response = await _client.GetAsync($"/api/LessonPeriod{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.DoesNotContain(lessonPeriodRequest.Start.ToString()!, stringResponse);
         }
@@ -179,6 +183,7 @@ namespace AlpimiTest.Entities.ELessonPeriod
 
             var query = $"?scheduleId={scheduleId}";
             var response = await _client.GetAsync($"/api/LessonPeriod{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.Contains(lessonPeriodRequest.Start.ToString()!, stringResponse);
         }
@@ -199,6 +204,7 @@ namespace AlpimiTest.Entities.ELessonPeriod
 
             var query = $"?scheduleId={scheduleId}";
             var response = await _client.GetAsync($"/api/LessonPeriod{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.DoesNotContain(lessonPeriodRequest.Start.ToString()!, stringResponse);
         }
@@ -290,6 +296,7 @@ namespace AlpimiTest.Entities.ELessonPeriod
 
             var query = $"?scheduleId={scheduleId}";
             var response = await _client.GetAsync($"/api/LessonPeriod{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
 
             Assert.Contains(dto.Start.ToString()!, stringResponse);
@@ -317,6 +324,7 @@ namespace AlpimiTest.Entities.ELessonPeriod
 
             var query = $"?scheduleId={scheduleId}";
             var response = await _client.GetAsync($"/api/LessonPeriod{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
 
             Assert.Contains(lessonPeriodUpdateRequest.Start.ToString()!, stringResponse);
@@ -336,6 +344,7 @@ namespace AlpimiTest.Entities.ELessonPeriod
 
             var query = $"?scheduleId={scheduleId}";
             var response = await _client.GetAsync($"/api/LessonPeriod{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
 
             Assert.Contains(lessonPeriodRequest1.Start.ToString()!, stringResponse);
@@ -354,6 +363,7 @@ namespace AlpimiTest.Entities.ELessonPeriod
 
             var query = $"?scheduleId={scheduleId}";
             var response = await _client.GetAsync($"/api/LessonPeriod{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
 
             Assert.Contains(lessonPeriodRequest1.Start.ToString()!, stringResponse);
@@ -374,6 +384,7 @@ namespace AlpimiTest.Entities.ELessonPeriod
 
             var query = $"?scheduleId={scheduleId}";
             var response = await _client.GetAsync($"/api/LessonPeriod{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
 
             Assert.DoesNotContain(lessonPeriodRequest1.Start.ToString()!, stringResponse);
@@ -394,6 +405,7 @@ namespace AlpimiTest.Entities.ELessonPeriod
 
             var query = $"?scheduleId={new Guid()}";
             var response = await _client.GetAsync($"/api/LessonPeriod{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
 
             Assert.DoesNotContain(lessonPeriodRequest1.Start.ToString()!, stringResponse);

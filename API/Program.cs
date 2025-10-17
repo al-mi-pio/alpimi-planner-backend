@@ -177,41 +177,7 @@ try
             };
         });
 
-    builder.Services.AddRateLimiter(options =>
-    {
-        options
-            .AddFixedWindowLimiter(
-                "FixedWindow",
-                limiterOptions =>
-                {
-                    limiterOptions.PermitLimit = Configuration.GetPermitLimit();
-                    limiterOptions.Window = Configuration.GetTimeWindow();
-                }
-            )
-            .OnRejected = async (context, _) =>
-        {
-            var _str = context.HttpContext.RequestServices.GetRequiredService<
-                IStringLocalizer<Errors>
-            >();
-
-            context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
-            context.HttpContext.Response.ContentType = "application/json";
-            var jsonResponse = System.Text.Json.JsonSerializer.Serialize(
-                new ApiErrorResponse(429, [new ErrorObject(_str["tooManyRequests"])])
-            );
-            await context.HttpContext.Response.WriteAsync(jsonResponse);
-        };
-    });
-
-    builder.Services.AddCors(options =>
-    {
-        options.AddDefaultPolicy(policy =>
-        {
-            policy.AllowAnyOrigin();
-            policy.AllowAnyHeader();
-            policy.WithMethods("GET", "POST", "DELETE", "PATCH", "OPTIONS");
-        });
-    });
+    builder.Services.AddCustomRateLimiters();
 
     var app = builder.Build();
 

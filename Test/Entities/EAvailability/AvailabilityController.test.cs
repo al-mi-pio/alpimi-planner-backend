@@ -77,31 +77,56 @@ namespace AlpimiTest.Entities.EAvailability
         }
 
         [Fact]
-        public async Task AvailabilityControllerThrowsTooManyRequests()
+        public async Task ClassroomControllerThrowsTooManyRequests()
         {
-            for (int i = 0; i != Configuration.GetPermitLimit(); i++)
-            {
-                await _client.GetAsync("/api/Availability");
-            }
             _client.DefaultRequestHeaders.Authorization = null;
 
-            var response = await _client.DeleteAsync($"/api/Availability/{new Guid()}");
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+            {
+                await _client.DeleteAsync($"/api/Classroom/{new Guid()}");
+            }
+            var response = await _client.DeleteAsync($"/api/Classroom/{new Guid()}");
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
 
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+            {
+                await _client.PostAsJsonAsync(
+                    "/api/Classroom",
+                    MockData.GetCreateClassroomDTODetails(scheduleId)
+                );
+            }
             response = await _client.PostAsJsonAsync(
-                "/api/Availability",
-                MockData.GetCreateAvailabilityDTODetails(teacherId1)
+                "/api/Classroom",
+                MockData.GetCreateClassroomDTODetails(scheduleId)
             );
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
 
-            var query = $"?groupId={new Guid()}";
-            response = await _client.GetAsync($"/api/Availability{query}");
+            var query = $"?id={new Guid()}";
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+            {
+                await _client.GetAsync($"/api/Classroom{query}");
+            }
+            response = await _client.GetAsync($"/api/Classroom{query}");
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
 
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+            {
+                await _client.PatchAsJsonAsync(
+                    $"/api/Classroom/{new Guid()}",
+                    MockData.GetUpdateClassroomDTODetails()
+                );
+            }
             response = await _client.PatchAsJsonAsync(
-                $"/api/Availability/{new Guid()}",
-                MockData.GetUpdateLessonDTODetails()
+                $"/api/Classroom/{new Guid()}",
+                MockData.GetUpdateClassroomDTODetails()
             );
+            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
+
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+            {
+                await _client.GetAsync($"/api/Classroom/{new Guid()}");
+            }
+            response = await _client.GetAsync($"/api/Classroom/{new Guid()}");
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
         }
 

@@ -63,15 +63,18 @@ namespace AlpimiTest.Entities.EDayOff
         [Fact]
         public async Task DayOffControllerThrowsTooManyRequests()
         {
-            for (int i = 0; i != Configuration.GetPermitLimit(); i++)
-            {
-                await _client.GetAsync("/api/DayOff");
-            }
             _client.DefaultRequestHeaders.Authorization = null;
 
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+                await _client.DeleteAsync($"/api/DayOff/{new Guid()}");
             var response = await _client.DeleteAsync($"/api/DayOff/{new Guid()}");
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
 
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+                await _client.PostAsJsonAsync(
+                    "/api/DayOff",
+                    MockData.GetCreateDayOffDTODetails(scheduleId)
+                );
             response = await _client.PostAsJsonAsync(
                 "/api/DayOff",
                 MockData.GetCreateDayOffDTODetails(scheduleId)
@@ -79,9 +82,16 @@ namespace AlpimiTest.Entities.EDayOff
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
 
             var query = $"?scheduleId={new Guid()}";
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+                await _client.GetAsync($"/api/DayOff{query}");
             response = await _client.GetAsync($"/api/DayOff{query}");
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
 
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+                await _client.PatchAsJsonAsync(
+                    $"/api/DayOff/{new Guid()}",
+                    MockData.GetUpdateDayOffDTODetails()
+                );
             response = await _client.PatchAsJsonAsync(
                 $"/api/DayOff/{new Guid()}",
                 MockData.GetUpdateDayOffDTODetails()

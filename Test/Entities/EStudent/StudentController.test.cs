@@ -85,15 +85,18 @@ namespace AlpimiTest.Entities.EStudent
         [Fact]
         public async Task StudentControllerThrowsTooManyRequests()
         {
-            for (int i = 0; i != Configuration.GetPermitLimit(); i++)
-            {
-                await _client.GetAsync("/api/Student");
-            }
             _client.DefaultRequestHeaders.Authorization = null;
 
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+                await _client.DeleteAsync($"/api/Student/{new Guid()}");
             var response = await _client.DeleteAsync($"/api/Student/{new Guid()}");
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
 
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+                await _client.PostAsJsonAsync(
+                    "/api/Student",
+                    MockData.GetCreateStudentDTODetails(groupId1)
+                );
             response = await _client.PostAsJsonAsync(
                 "/api/Student",
                 MockData.GetCreateStudentDTODetails(groupId1)
@@ -101,15 +104,24 @@ namespace AlpimiTest.Entities.EStudent
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
 
             var query = $"?Id={new Guid()}";
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+                await _client.GetAsync($"/api/Student{query}");
             response = await _client.GetAsync($"/api/Student{query}");
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
 
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+                await _client.PatchAsJsonAsync(
+                    $"/api/Student/{new Guid()}",
+                    MockData.GetUpdateStudentDTODetails()
+                );
             response = await _client.PatchAsJsonAsync(
                 $"/api/Student/{new Guid()}",
                 MockData.GetUpdateStudentDTODetails()
             );
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
 
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+                await _client.GetAsync($"/api/Student/{new Guid()}");
             response = await _client.GetAsync($"/api/Student/{new Guid()}");
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
         }

@@ -64,15 +64,18 @@ namespace AlpimiTest.Entities.ELessonPeriod
         [Fact]
         public async Task LessonPeriodControllerThrowsTooManyRequests()
         {
-            for (int i = 0; i != Configuration.GetPermitLimit(); i++)
-            {
-                await _client.GetAsync("/api/LessonPeriod");
-            }
             _client.DefaultRequestHeaders.Authorization = null;
 
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+                await _client.DeleteAsync($"/api/LessonPeriod/{new Guid()}");
             var response = await _client.DeleteAsync($"/api/LessonPeriod/{new Guid()}");
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
 
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+                await _client.PostAsJsonAsync(
+                    "/api/LessonPeriod",
+                    MockData.GetCreateLessonPeriodDTODetails(scheduleId)
+                );
             response = await _client.PostAsJsonAsync(
                 "/api/LessonPeriod",
                 MockData.GetCreateLessonPeriodDTODetails(scheduleId)
@@ -80,9 +83,16 @@ namespace AlpimiTest.Entities.ELessonPeriod
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
 
             var query = $"?scheduleId={new Guid()}";
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+                await _client.GetAsync($"/api/LessonPeriod{query}");
             response = await _client.GetAsync($"/api/LessonPeriod{query}");
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
 
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+                await _client.PatchAsJsonAsync(
+                    $"/api/LessonPeriod/{new Guid()}",
+                    MockData.GetUpdateLessonPeriodDTODetails()
+                );
             response = await _client.PatchAsJsonAsync(
                 $"/api/LessonPeriod/{new Guid()}",
                 MockData.GetUpdateLessonPeriodDTODetails()

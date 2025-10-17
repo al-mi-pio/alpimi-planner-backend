@@ -65,36 +65,47 @@ namespace AlpimiTest.Entities.ESchedule
         [Fact]
         public async Task ScheduleControllerThrowsTooManyRequests()
         {
-            for (int i = 0; i != Configuration.GetPermitLimit(); i++)
-            {
-                await _client.GetAsync("/api/Schedule");
-            }
             _client.DefaultRequestHeaders.Authorization = null;
 
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+                await _client.GetAsync("/api/Schedule");
             var response = await _client.GetAsync("/api/Schedule");
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
 
-            response = await _client.GetAsync("/api/Schedule");
-            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
-
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+                await _client.GetAsync($"/api/Schedule/{new Guid()}");
             response = await _client.GetAsync($"/api/Schedule/{new Guid()}");
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
 
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+                await _client.GetAsync("/api/Schedule/byURL");
             response = await _client.GetAsync("/api/Schedule/byURL");
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
 
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+                await _client.PatchAsJsonAsync(
+                    $"/api/Schedule/{new Guid()}",
+                    MockData.GetUpdateScheduleDTODetails()
+                );
             response = await _client.PatchAsJsonAsync(
                 $"/api/Schedule/{new Guid()}",
                 MockData.GetUpdateScheduleDTODetails()
             );
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
 
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+                await _client.PostAsJsonAsync(
+                    "/api/Schedule",
+                    MockData.GetCreateScheduleDTODetails()
+                );
             response = await _client.PostAsJsonAsync(
                 "/api/Schedule",
                 MockData.GetCreateScheduleDTODetails()
             );
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
 
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+                await _client.DeleteAsync("/api/Schedule/b70eda99-ed0a-4c06-bc65-44166ce58bb0");
             response = await _client.DeleteAsync(
                 "/api/Schedule/b70eda99-ed0a-4c06-bc65-44166ce58bb0"
             );

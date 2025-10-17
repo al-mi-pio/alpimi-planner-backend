@@ -20,8 +20,7 @@ namespace AlpimiTest.Entities.ELesson
         Guid subgroupId1;
         Guid subgroupId2;
         Guid lessonTypeId;
-        Guid teacherId1;
-        Guid teacherId2;
+        Guid teacherId;
 
         public LessonControllerTest()
         {
@@ -54,13 +53,9 @@ namespace AlpimiTest.Entities.ELesson
                 _client,
                 MockData.GetCreateLessonTypeDTODetails(scheduleId)
             );
-            teacherId1 = await DbHelper.SetupTeacher(
+            teacherId = await DbHelper.SetupTeacher(
                 _client,
                 MockData.GetCreateTeacherDTODetails(scheduleId)
-            );
-            teacherId2 = await DbHelper.SetupTeacher(
-                _client,
-                MockData.GetCreateSecondTeacherDTODetails(scheduleId)
             );
         }
 
@@ -79,7 +74,7 @@ namespace AlpimiTest.Entities.ELesson
 
             response = await _client.PostAsJsonAsync(
                 "/api/Lesson",
-                MockData.GetCreateLessonDTODetails([subgroupId1], lessonTypeId, teacherId1)
+                MockData.GetCreateLessonDTODetails([subgroupId1], lessonTypeId, teacherId)
             );
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
 
@@ -100,31 +95,43 @@ namespace AlpimiTest.Entities.ELesson
         [Fact]
         public async Task LessonControllerThrowsTooManyRequests()
         {
-            for (int i = 0; i != Configuration.GetPermitLimit(); i++)
-            {
-                await _client.GetAsync("/api/Lesson");
-            }
             _client.DefaultRequestHeaders.Authorization = null;
 
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+                await _client.DeleteAsync($"/api/Lesson/{new Guid()}");
             var response = await _client.DeleteAsync($"/api/Lesson/{new Guid()}");
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
 
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+                await _client.PostAsJsonAsync(
+                    "/api/Lesson",
+                    MockData.GetCreateLessonDTODetails([subgroupId1], lessonTypeId, teacherId)
+                );
             response = await _client.PostAsJsonAsync(
                 "/api/Lesson",
-                MockData.GetCreateLessonDTODetails([subgroupId1], lessonTypeId, teacherId1)
+                MockData.GetCreateLessonDTODetails([subgroupId1], lessonTypeId, teacherId)
             );
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
 
             var query = $"?groupId={new Guid()}";
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+                await _client.GetAsync($"/api/Lesson{query}");
             response = await _client.GetAsync($"/api/Lesson{query}");
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
 
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+                await _client.PatchAsJsonAsync(
+                    $"/api/Lesson/{new Guid()}",
+                    MockData.GetUpdateLessonDTODetails()
+                );
             response = await _client.PatchAsJsonAsync(
                 $"/api/Lesson/{new Guid()}",
                 MockData.GetUpdateLessonDTODetails()
             );
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
 
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+                await _client.GetAsync($"/api/Lesson/{new Guid()}");
             response = await _client.GetAsync($"/api/Lesson/{new Guid()}");
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
         }
@@ -135,7 +142,7 @@ namespace AlpimiTest.Entities.ELesson
             var lessonRequest = MockData.GetCreateLessonDTODetails(
                 [subgroupId1],
                 lessonTypeId,
-                teacherId1
+                teacherId
             );
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
@@ -145,7 +152,7 @@ namespace AlpimiTest.Entities.ELesson
             var response = await _client.PostAsJsonAsync("/api/Lesson", lessonRequest);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-            var query = $"?id={teacherId1}";
+            var query = $"?id={teacherId}";
             response = await _client.GetAsync($"/api/Lesson{query}");
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
@@ -158,7 +165,7 @@ namespace AlpimiTest.Entities.ELesson
             var lessonRequest = MockData.GetCreateLessonDTODetails(
                 [subgroupId1],
                 lessonTypeId,
-                teacherId1
+                teacherId
             );
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
@@ -168,7 +175,7 @@ namespace AlpimiTest.Entities.ELesson
             await _client.PostAsJsonAsync("/api/Lesson", lessonRequest);
             await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
 
-            var query = $"?id={teacherId1}";
+            var query = $"?id={teacherId}";
             var response = await _client.GetAsync($"/api/Lesson{query}");
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
@@ -181,7 +188,7 @@ namespace AlpimiTest.Entities.ELesson
             var lessonRequest = MockData.GetCreateLessonDTODetails(
                 [subgroupId1],
                 lessonTypeId,
-                teacherId1
+                teacherId
             );
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
@@ -192,7 +199,7 @@ namespace AlpimiTest.Entities.ELesson
             await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
             await _client.PatchAsJsonAsync($"/api/History/redo/{scheduleId}", "");
 
-            var query = $"?id={teacherId1}";
+            var query = $"?id={teacherId}";
             var response = await _client.GetAsync($"/api/Lesson{query}");
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
@@ -205,7 +212,7 @@ namespace AlpimiTest.Entities.ELesson
             var lessonRequest = MockData.GetCreateLessonDTODetails(
                 [subgroupId1],
                 lessonTypeId,
-                teacherId1
+                teacherId
             );
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
@@ -232,7 +239,7 @@ namespace AlpimiTest.Entities.ELesson
             var lessonRequest = MockData.GetCreateLessonDTODetails(
                 [subgroupId1],
                 lessonTypeId,
-                teacherId1
+                teacherId
             );
             var lessonId = await DbHelper.SetupLesson(_client, lessonRequest);
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
@@ -243,7 +250,7 @@ namespace AlpimiTest.Entities.ELesson
             var response = await _client.DeleteAsync($"/api/Lesson/{lessonId}");
             Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
 
-            var query = $"?id={teacherId1}";
+            var query = $"?id={teacherId}";
             response = await _client.GetAsync($"/api/Lesson{query}");
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
@@ -256,7 +263,7 @@ namespace AlpimiTest.Entities.ELesson
             var lessonRequest = MockData.GetCreateLessonDTODetails(
                 [subgroupId1],
                 lessonTypeId,
-                teacherId1
+                teacherId
             );
             var lessonId = await DbHelper.SetupLesson(_client, lessonRequest);
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
@@ -267,7 +274,7 @@ namespace AlpimiTest.Entities.ELesson
             await _client.DeleteAsync($"/api/Lesson/{lessonId}");
             await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
 
-            var query = $"?id={teacherId1}";
+            var query = $"?id={teacherId}";
             var response = await _client.GetAsync($"/api/Lesson{query}");
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
@@ -280,7 +287,7 @@ namespace AlpimiTest.Entities.ELesson
             var lessonRequest = MockData.GetCreateLessonDTODetails(
                 [subgroupId1],
                 lessonTypeId,
-                teacherId1
+                teacherId
             );
             var lessonId = await DbHelper.SetupLesson(_client, lessonRequest);
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
@@ -292,7 +299,7 @@ namespace AlpimiTest.Entities.ELesson
             await _client.PatchAsJsonAsync($"/api/History/undo/{scheduleId}", "");
             await _client.PatchAsJsonAsync($"/api/History/redo/{scheduleId}", "");
 
-            var query = $"?id={teacherId1}";
+            var query = $"?id={teacherId}";
             var response = await _client.GetAsync($"/api/Lesson{query}");
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
@@ -309,7 +316,7 @@ namespace AlpimiTest.Entities.ELesson
             );
             var lessonId = await DbHelper.SetupLesson(
                 _client,
-                MockData.GetCreateLessonDTODetails([subgroupId1], lessonTypeId, teacherId1)
+                MockData.GetCreateLessonDTODetails([subgroupId1], lessonTypeId, teacherId)
             );
 
             var response = await _client.PatchAsJsonAsync(
@@ -329,7 +336,7 @@ namespace AlpimiTest.Entities.ELesson
         {
             var lessonId = await DbHelper.SetupLesson(
                 _client,
-                MockData.GetCreateLessonDTODetails([subgroupId1], lessonTypeId, teacherId1)
+                MockData.GetCreateLessonDTODetails([subgroupId1], lessonTypeId, teacherId)
             );
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
@@ -354,7 +361,7 @@ namespace AlpimiTest.Entities.ELesson
         {
             var lessonId = await DbHelper.SetupLesson(
                 _client,
-                MockData.GetCreateLessonDTODetails([subgroupId1], lessonTypeId, teacherId1)
+                MockData.GetCreateLessonDTODetails([subgroupId1], lessonTypeId, teacherId)
             );
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
@@ -375,7 +382,7 @@ namespace AlpimiTest.Entities.ELesson
         {
             var lessonId = await DbHelper.SetupLesson(
                 _client,
-                MockData.GetCreateLessonDTODetails([subgroupId1], lessonTypeId, teacherId1)
+                MockData.GetCreateLessonDTODetails([subgroupId1], lessonTypeId, teacherId)
             );
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
@@ -395,7 +402,7 @@ namespace AlpimiTest.Entities.ELesson
         public async Task UpdateLessonIsUndone()
         {
             var lessonUpdateRequest = MockData.GetUpdateLessonDTODetails();
-            var dto = MockData.GetCreateLessonDTODetails([subgroupId1], lessonTypeId, teacherId1);
+            var dto = MockData.GetCreateLessonDTODetails([subgroupId1], lessonTypeId, teacherId);
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "Bob", userId)
@@ -422,7 +429,7 @@ namespace AlpimiTest.Entities.ELesson
             );
             var lessonId = await DbHelper.SetupLesson(
                 _client,
-                MockData.GetCreateLessonDTODetails([subgroupId1], lessonTypeId, teacherId1)
+                MockData.GetCreateLessonDTODetails([subgroupId1], lessonTypeId, teacherId)
             );
 
             await _client.PatchAsJsonAsync($"/api/Lesson/{lessonId}", lessonUpdateRequest);
@@ -442,12 +449,12 @@ namespace AlpimiTest.Entities.ELesson
             var lessonRequest1 = MockData.GetCreateLessonDTODetails(
                 [subgroupId1],
                 lessonTypeId,
-                teacherId1
+                teacherId
             );
             var lessonRequest2 = MockData.GetCreateSecondLessonDTODetails(
                 [subgroupId2],
                 lessonTypeId,
-                teacherId1
+                teacherId
             );
             await DbHelper.SetupLesson(_client, lessonRequest1);
             await DbHelper.SetupLesson(_client, lessonRequest2);
@@ -471,12 +478,12 @@ namespace AlpimiTest.Entities.ELesson
             var lessonRequest1 = MockData.GetCreateLessonDTODetails(
                 [subgroupId1],
                 lessonTypeId,
-                teacherId1
+                teacherId
             );
             var lessonRequest2 = MockData.GetCreateSecondLessonDTODetails(
                 [subgroupId2],
                 lessonTypeId,
-                teacherId1
+                teacherId
             );
             var lessonId = await DbHelper.SetupLesson(_client, lessonRequest1);
             await DbHelper.SetupLesson(_client, lessonRequest2);
@@ -500,12 +507,12 @@ namespace AlpimiTest.Entities.ELesson
             var lessonRequest1 = MockData.GetCreateLessonDTODetails(
                 [subgroupId1],
                 lessonTypeId,
-                teacherId1
+                teacherId
             );
             var lessonRequest2 = MockData.GetCreateSecondLessonDTODetails(
                 [subgroupId2],
                 lessonTypeId,
-                teacherId1
+                teacherId
             );
             await DbHelper.SetupLesson(_client, lessonRequest1);
             await DbHelper.SetupLesson(_client, lessonRequest2);
@@ -529,12 +536,12 @@ namespace AlpimiTest.Entities.ELesson
             var lessonRequest1 = MockData.GetCreateLessonDTODetails(
                 [subgroupId1],
                 lessonTypeId,
-                teacherId1
+                teacherId
             );
             var lessonRequest2 = MockData.GetCreateSecondLessonDTODetails(
                 [subgroupId2],
                 lessonTypeId,
-                teacherId1
+                teacherId
             );
             await DbHelper.SetupLesson(_client, lessonRequest1);
             await DbHelper.SetupLesson(_client, lessonRequest2);
@@ -558,7 +565,7 @@ namespace AlpimiTest.Entities.ELesson
             var lessonRequest = MockData.GetCreateLessonDTODetails(
                 [subgroupId1],
                 lessonTypeId,
-                teacherId1
+                teacherId
             );
             var lessonId = await DbHelper.SetupLesson(_client, lessonRequest);
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
@@ -581,7 +588,7 @@ namespace AlpimiTest.Entities.ELesson
             var lessonRequest = MockData.GetCreateLessonDTODetails(
                 [subgroupId1],
                 lessonTypeId,
-                teacherId1
+                teacherId
             );
             var lessonId = await DbHelper.SetupLesson(_client, lessonRequest);
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
@@ -600,7 +607,7 @@ namespace AlpimiTest.Entities.ELesson
             var lessonRequest = MockData.GetCreateLessonDTODetails(
                 [subgroupId1],
                 lessonTypeId,
-                teacherId1
+                teacherId
             );
             await DbHelper.SetupLesson(_client, lessonRequest);
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(

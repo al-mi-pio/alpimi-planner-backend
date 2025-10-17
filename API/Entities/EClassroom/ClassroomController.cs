@@ -182,7 +182,7 @@ namespace AlpimiAPI.Entities.EClassroom
         /// <remarks>
         /// </remarks>
         [HttpGet]
-        [EnableRateLimiting("Moderate")]
+        [EnableRateLimiting("Regular")]
         [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
@@ -250,7 +250,7 @@ namespace AlpimiAPI.Entities.EClassroom
         /// - JWT token is required
         /// </remarks>
         [HttpGet("{id}")]
-        [EnableRateLimiting("Moderate")]
+        [EnableRateLimiting("Regular")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]

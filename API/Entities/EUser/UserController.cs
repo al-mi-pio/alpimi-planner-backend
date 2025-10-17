@@ -18,7 +18,6 @@ namespace AlpimiAPI.Entities.EUser
     [Consumes("application/json")]
     [Produces("application/json")]
     [ProducesResponseType(typeof(ApiErrorResponse), 429)]
-    [EnableRateLimiting("FixedWindow")]
     public class UserController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -44,6 +43,7 @@ namespace AlpimiAPI.Entities.EUser
         /// - JWT token is required
         /// </remarks>
         [HttpPost]
+        [EnableRateLimiting("Aggressive")]
         [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
@@ -78,6 +78,7 @@ namespace AlpimiAPI.Entities.EUser
         /// - JWT is required
         /// </remarks>
         [HttpDelete("{id}")]
+        [EnableRateLimiting("Strict")]
         [Authorize(Roles = "Admin")]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(ApiErrorResponse), 403)]
@@ -108,6 +109,7 @@ namespace AlpimiAPI.Entities.EUser
         /// - JWT token is required
         /// </remarks>
         [HttpPatch("{id}")]
+        [EnableRateLimiting("Strict")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
@@ -157,6 +159,7 @@ namespace AlpimiAPI.Entities.EUser
         /// - JWT token is required
         /// </remarks>
         [HttpGet("{id}")]
+        [EnableRateLimiting("Regular")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
@@ -202,6 +205,7 @@ namespace AlpimiAPI.Entities.EUser
         /// - JWT token is required
         /// </remarks>
         [HttpGet("byLogin/{login}")]
+        [EnableRateLimiting("Regular")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]

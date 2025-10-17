@@ -1,7 +1,5 @@
 ﻿using AlpimiAPI.Entities.ELesson;
 using AlpimiAPI.Entities.ELesson.Queries;
-using AlpimiAPI.Entities.EStudent;
-using AlpimiAPI.Entities.EStudent.Queries;
 using AlpimiAPI.Entities.ESubgroup.Commands;
 using AlpimiAPI.Entities.ESubgroup.DTO;
 using AlpimiAPI.Entities.ESubgroup.Queries;
@@ -22,7 +20,6 @@ namespace AlpimiAPI.Entities.ESubgroup
     [Consumes("application/json")]
     [Produces("application/json")]
     [ProducesResponseType(typeof(ApiErrorResponse), 429)]
-    [EnableRateLimiting("FixedWindow")]
     public class SubgroupController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -47,6 +44,7 @@ namespace AlpimiAPI.Entities.ESubgroup
         /// - JWT token is required
         /// </remarks>
         [HttpPost]
+        [EnableRateLimiting("Moderate")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
@@ -90,6 +88,7 @@ namespace AlpimiAPI.Entities.ESubgroup
         /// - JWT is required
         /// </remarks>
         [HttpDelete("{id}")]
+        [EnableRateLimiting("Moderate")]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
         public async Task<ActionResult> Delete(
@@ -122,6 +121,7 @@ namespace AlpimiAPI.Entities.ESubgroup
         /// - JWT token is required
         /// </remarks>
         [HttpPatch("{id}")]
+        [EnableRateLimiting("Moderate")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
@@ -180,6 +180,7 @@ namespace AlpimiAPI.Entities.ESubgroup
         /// <remarks>
         /// </remarks>
         [HttpGet]
+        [EnableRateLimiting("Regular")]
         [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
@@ -247,6 +248,7 @@ namespace AlpimiAPI.Entities.ESubgroup
         /// - JWT token is required
         /// </remarks>
         [HttpGet("{id}")]
+        [EnableRateLimiting("Regular")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]

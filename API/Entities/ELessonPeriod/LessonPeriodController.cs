@@ -18,7 +18,6 @@ namespace AlpimiAPI.Entities.ELessonPeriod
     [Consumes("application/json")]
     [Produces("application/json")]
     [ProducesResponseType(typeof(ApiErrorResponse), 429)]
-    [EnableRateLimiting("FixedWindow")]
     public class LessonPeriodController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -43,6 +42,7 @@ namespace AlpimiAPI.Entities.ELessonPeriod
         /// - JWT token is required
         /// </remarks>
         [HttpPost]
+        [EnableRateLimiting("Moderate")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
@@ -86,6 +86,7 @@ namespace AlpimiAPI.Entities.ELessonPeriod
         /// - JWT is required
         /// </remarks>
         [HttpDelete("{id}")]
+        [EnableRateLimiting("Moderate")]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
         public async Task<ActionResult> Delete(
@@ -118,6 +119,7 @@ namespace AlpimiAPI.Entities.ELessonPeriod
         /// - JWT token is required
         /// </remarks>
         [HttpPatch("{id}")]
+        [EnableRateLimiting("Moderate")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
@@ -166,6 +168,7 @@ namespace AlpimiAPI.Entities.ELessonPeriod
         /// <remarks>
         /// </remarks>
         [HttpGet]
+        [EnableRateLimiting("Regular")]
         [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]

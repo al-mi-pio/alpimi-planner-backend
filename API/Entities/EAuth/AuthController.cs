@@ -15,7 +15,6 @@ namespace AlpimiAPI.Entities.EAuth
     [Consumes("application/json")]
     [Produces("application/json")]
     [ProducesResponseType(typeof(ApiErrorResponse), 429)]
-    [EnableRateLimiting("FixedWindow")]
     public class AuthController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -35,6 +34,7 @@ namespace AlpimiAPI.Entities.EAuth
         /// Provide a valid token inside the Authorization header with the 'Bearer' prefix
         /// </remarks>
         [AllowAnonymous]
+        [EnableRateLimiting("Aggressive")]
         [HttpPost]
         [Route("login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -70,6 +70,7 @@ namespace AlpimiAPI.Entities.EAuth
         /// - JWT token is required
         /// </remarks>
         [Authorize]
+        [EnableRateLimiting("Loose")]
         [HttpGet]
         [Route("refresh")]
         [ProducesResponseType(StatusCodes.Status200OK)]

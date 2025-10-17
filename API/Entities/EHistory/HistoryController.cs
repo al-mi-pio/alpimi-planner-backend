@@ -16,7 +16,6 @@ namespace AlpimiAPI.Entities.EHistory
     [Consumes("application/json")]
     [Produces("application/json")]
     [ProducesResponseType(typeof(ApiErrorResponse), 429)]
-    [EnableRateLimiting("FixedWindow")]
     public class HistoryController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -35,6 +34,7 @@ namespace AlpimiAPI.Entities.EHistory
         /// - JWT is required
         /// </remarks>
         [HttpPatch("undo/{scheduleId}")]
+        [EnableRateLimiting("Moderate")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
@@ -74,6 +74,7 @@ namespace AlpimiAPI.Entities.EHistory
         /// - JWT is required
         /// </remarks>
         [HttpPatch("redo/{scheduleId}")]
+        [EnableRateLimiting("Moderate")]
         [ProducesResponseType(204)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]

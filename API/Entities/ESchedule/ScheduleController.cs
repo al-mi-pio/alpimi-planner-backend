@@ -18,7 +18,6 @@ namespace AlpimiAPI.Entities.ESchedule
     [Consumes("application/json")]
     [Produces("application/json")]
     [ProducesResponseType(typeof(ApiErrorResponse), 429)]
-    [EnableRateLimiting("FixedWindow")]
     public class ScheduleController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -44,6 +43,7 @@ namespace AlpimiAPI.Entities.ESchedule
         /// - SchoolDays ex. "0110110" this means monday, tuesday, thursday and friday are school days and wendsday, saturday and sunday arent (you cant place lesson blocks inside them)
         /// </remarks>
         [HttpPost]
+        [EnableRateLimiting("Moderate")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
@@ -86,6 +86,7 @@ namespace AlpimiAPI.Entities.ESchedule
         /// - JWT is required
         /// </remarks>
         [HttpDelete("{id}")]
+        [EnableRateLimiting("Moderate")]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
         public async Task<ActionResult> Delete(
@@ -118,6 +119,7 @@ namespace AlpimiAPI.Entities.ESchedule
         /// - JWT token is required
         /// </remarks>
         [HttpPatch("{id}")]
+        [EnableRateLimiting("Moderate")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
@@ -167,6 +169,7 @@ namespace AlpimiAPI.Entities.ESchedule
         /// - JWT token is required
         /// </remarks>
         [HttpGet]
+        [EnableRateLimiting("Regular")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
@@ -215,6 +218,7 @@ namespace AlpimiAPI.Entities.ESchedule
         /// - JWT token is required
         /// </remarks>
         [HttpGet("{id}")]
+        [EnableRateLimiting("Loose")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
@@ -258,6 +262,7 @@ namespace AlpimiAPI.Entities.ESchedule
         /// <remarks>
         /// </remarks>
         [HttpGet("byURL")]
+        [EnableRateLimiting("Moderate")]
         [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
@@ -310,6 +315,8 @@ namespace AlpimiAPI.Entities.ESchedule
         /// - JWT token is required
         /// </remarks>
         [HttpGet("{URL}/{name}")]
+        [EnableRateLimiting("Regular")]
+        [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]

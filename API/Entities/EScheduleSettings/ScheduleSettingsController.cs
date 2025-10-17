@@ -18,7 +18,6 @@ namespace AlpimiAPI.Entities.EScheduleSettings
     [Consumes("application/json")]
     [Produces("application/json")]
     [ProducesResponseType(typeof(ApiErrorResponse), 429)]
-    [EnableRateLimiting("FixedWindow")]
     public class ScheduleSettingsController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -38,6 +37,7 @@ namespace AlpimiAPI.Entities.EScheduleSettings
         /// - SchoolDays ex. "0110110" this means monday, tuesday, thursday and friday are school days and wendsday, saturday and sunday arent (you cant place lesson blocks inside them)
         /// </remarks>
         [HttpPatch("{scheduleId}")]
+        [EnableRateLimiting("Moderate")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
@@ -86,6 +86,7 @@ namespace AlpimiAPI.Entities.EScheduleSettings
         /// <remarks>
         /// </remarks>
         [HttpGet("{id}")]
+        [EnableRateLimiting("Regular")]
         [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]

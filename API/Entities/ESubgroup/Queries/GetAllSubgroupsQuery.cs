@@ -85,7 +85,7 @@ namespace AlpimiAPI.Entities.ESubgroup.Queries
                             SELECT 
                             COUNT(*)
                             FROM [Subgroup] sg
-                            LEFT JOIN [Group] g ON g.[id] = sg.[GroupId]
+                            LEFT JOIN [Group] g ON g.[Id] = sg.[GroupId]
                             LEFT JOIN [StudentSubgroup] ssg ON ssg.[SubgroupId] = sg.[Id]
                             LEFT JOIN [Student] st ON st.[Id] = ssg.[StudentId]
                             LEFT JOIN [LessonSubgroup] lsg ON lsg.[SubgroupId] = sg.[Id]
@@ -98,7 +98,7 @@ namespace AlpimiAPI.Entities.ESubgroup.Queries
                             SELECT
                             sg.[Id], sg.[Name], sg.[StudentCount], sg.[GroupId] 
                             FROM [Subgroup] sg
-                            LEFT JOIN [Group] g ON g.[id] = sg.[GroupId]
+                            LEFT JOIN [Group] g ON g.[Id] = sg.[GroupId]
                             LEFT JOIN [StudentSubgroup] ssg ON ssg.[SubgroupId] = sg.[Id]
                             LEFT JOIN [Student] st ON st.[Id] = ssg.[StudentId]
                             LEFT JOIN [LessonSubgroup] lsg ON lsg.[SubgroupId] = sg.[Id]

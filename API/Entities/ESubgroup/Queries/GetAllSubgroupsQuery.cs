@@ -85,11 +85,12 @@ namespace AlpimiAPI.Entities.ESubgroup.Queries
                             SELECT 
                             COUNT(*)
                             FROM [Subgroup] sg
+                            LEFT JOIN [Group] g ON g.[id] = sg.[GroupId]
                             LEFT JOIN [StudentSubgroup] ssg ON ssg.[SubgroupId] = sg.[Id]
                             LEFT JOIN [Student] st ON st.[Id] = ssg.[StudentId]
                             LEFT JOIN [LessonSubgroup] lsg ON lsg.[SubgroupId] = sg.[Id]
                             LEFT JOIN [Lesson] l ON l.[Id] = lsg.[LessonId]
-                            WHERE sg.[GroupId] = @Id OR st.[Id] = @Id OR l.[Id] = @Id;",
+                            WHERE sg.[GroupId] = @Id OR st.[Id] = @Id OR l.[Id] = @Id OR g.[ScheduleId] = @Id;",
                         request
                     );
                     subgroups = await _dbService.GetAll<Subgroup>(
@@ -97,11 +98,12 @@ namespace AlpimiAPI.Entities.ESubgroup.Queries
                             SELECT
                             sg.[Id], sg.[Name], sg.[StudentCount], sg.[GroupId] 
                             FROM [Subgroup] sg
+                            LEFT JOIN [Group] g ON g.[id] = sg.[GroupId]
                             LEFT JOIN [StudentSubgroup] ssg ON ssg.[SubgroupId] = sg.[Id]
                             LEFT JOIN [Student] st ON st.[Id] = ssg.[StudentId]
                             LEFT JOIN [LessonSubgroup] lsg ON lsg.[SubgroupId] = sg.[Id]
                             LEFT JOIN [Lesson] l ON l.[Id] = lsg.[LessonId]
-                            WHERE sg.[GroupId] = @Id OR st.[Id] = @Id OR l.[Id] = @Id
+                            WHERE sg.[GroupId] = @Id OR st.[Id] = @Id OR l.[Id] = @Id OR g.[ScheduleId] = @Id
                             ORDER BY
                             {request.Pagination.SortBy}
                             {request.Pagination.SortOrder}
@@ -125,7 +127,7 @@ namespace AlpimiAPI.Entities.ESubgroup.Queries
                             LEFT JOIN [Student] st ON st.[Id] = ssg.[StudentId]
                             LEFT JOIN [LessonSubgroup] lsg ON lsg.[SubgroupId] = sg.[Id]
                             LEFT JOIN [Lesson] l ON l.[Id] = lsg.[LessonId]
-                            WHERE (s.[UserId] = @FilteredId OR ss.[IsPublic] = 'TRUE') AND (sg.[GroupId] = @Id OR st.[Id] = @Id OR l.[Id] = @Id);",
+                            WHERE (s.[UserId] = @FilteredId OR ss.[IsPublic] = 'TRUE') AND (sg.[GroupId] = @Id OR st.[Id] = @Id OR l.[Id] = @Id OR g.[ScheduleId] = @Id);",
                         request
                     );
                     subgroups = await _dbService.GetAll<Subgroup>(
@@ -140,7 +142,7 @@ namespace AlpimiAPI.Entities.ESubgroup.Queries
                             LEFT JOIN [Student] st ON st.[Id] = ssg.[StudentId]
                             LEFT JOIN [LessonSubgroup] lsg ON lsg.[SubgroupId] = sg.[Id]
                             LEFT JOIN [Lesson] l ON l.[Id] = lsg.[LessonId]
-                            WHERE (s.[UserId] = @FilteredId OR ss.[IsPublic] = 'TRUE') AND (sg.[GroupId] = @Id OR st.[Id] = @Id OR l.[Id] = @Id)
+                            WHERE (s.[UserId] = @FilteredId OR ss.[IsPublic] = 'TRUE') AND (sg.[GroupId] = @Id OR st.[Id] = @Id OR l.[Id] = @Id OR g.[ScheduleId] = @Id)
                             ORDER BY
                             {request.Pagination.SortBy}
                             {request.Pagination.SortOrder}
@@ -164,7 +166,7 @@ namespace AlpimiAPI.Entities.ESubgroup.Queries
                             LEFT JOIN [Student] st ON st.[Id] = ssg.[StudentId]
                             LEFT JOIN [LessonSubgroup] lsg ON lsg.[SubgroupId] = sg.[Id]
                             LEFT JOIN [Lesson] l ON l.[Id] = lsg.[LessonId]
-                            WHERE ss.[IsPublic] = 'TRUE' AND (sg.[GroupId] = @Id OR st.[Id] = @Id OR l.[Id] = @Id);",
+                            WHERE ss.[IsPublic] = 'TRUE' AND (sg.[GroupId] = @Id OR st.[Id] = @Id OR l.[Id] = @Id OR g.[ScheduleId] = @Id);",
                         request
                     );
                     subgroups = await _dbService.GetAll<Subgroup>(
@@ -179,7 +181,7 @@ namespace AlpimiAPI.Entities.ESubgroup.Queries
                             LEFT JOIN [Student] st ON st.[Id] = ssg.[StudentId]
                             LEFT JOIN [LessonSubgroup] lsg ON lsg.[SubgroupId] = sg.[Id]
                             LEFT JOIN [Lesson] l ON l.[Id] = lsg.[LessonId]
-                            WHERE ss.[IsPublic] = 'TRUE' AND (sg.[GroupId] = @Id OR st.[Id] = @Id OR l.[Id] = @Id)
+                            WHERE ss.[IsPublic] = 'TRUE' AND (sg.[GroupId] = @Id OR st.[Id] = @Id OR l.[Id] = @Id OR g.[ScheduleId] = @Id)
                             ORDER BY
                             {request.Pagination.SortBy}
                             {request.Pagination.SortOrder}

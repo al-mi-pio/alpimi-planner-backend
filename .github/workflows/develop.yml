@@ -81,4 +81,15 @@ jobs:
           sqlcmd -d "alpimi" -i tmp/db.sql
 
       - name: Run unit and integration tests
-        run: dotnet test --verbosity normal
+        run: >
+          dotnet test --verbosity normal
+          -e AGGRESSIVE_PERMIT_LIMIT=30
+          -e STRICT_PERMIT_LIMIT=30
+          -e REGULAR_PERMIT_LIMIT=30
+          -e MODERATE_PERMIT_LIMIT=30
+          -e LOOSE_PERMIT_LIMIT=30
+          -e AGGRESSIVE_TIME_WINDOW=5
+          -e STRICT_TIME_WINDOW=5
+          -e REGULAR_TIME_WINDOW=5
+          -e MODERATE_TIME_WINDOW=5
+          -e LOOSE_TIME_WINDOW=5

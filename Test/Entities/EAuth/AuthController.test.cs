@@ -33,14 +33,17 @@ namespace AlpimiTest.Entities.EAuth
         [Fact]
         public async Task AuthControllerThrowsTooManyRequests()
         {
-            for (int i = 0; i != Configuration.GetPermitLimit(); i++)
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
             {
                 await _client.GetAsync("/api/Auth/refresh");
             }
-
             var response = await _client.GetAsync("/api/Auth/refresh");
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
 
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+            {
+                await _client.PostAsJsonAsync("/api/Auth/login", MockData.GetLoginDTODetails());
+            }
             response = await _client.PostAsJsonAsync(
                 "/api/Auth/login",
                 MockData.GetLoginDTODetails()

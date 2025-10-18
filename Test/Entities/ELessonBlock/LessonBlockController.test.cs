@@ -123,15 +123,18 @@ namespace AlpimiTest.Entities.ELessonBlock
         [Fact]
         public async Task LessonBlockControllerThrowsTooManyRequests()
         {
-            for (int i = 0; i != Configuration.GetPermitLimit(); i++)
-            {
-                await _client.GetAsync("/api/LessonBlock");
-            }
             _client.DefaultRequestHeaders.Authorization = null;
 
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+                await _client.DeleteAsync($"/api/LessonBlock/{new Guid()}");
             var response = await _client.DeleteAsync($"/api/LessonBlock/{new Guid()}");
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
 
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+                await _client.PostAsJsonAsync(
+                    "/api/LessonBlock",
+                    MockData.GetCreateLessonBlockDTODetails(lessonId1, classroomId1)
+                );
             response = await _client.PostAsJsonAsync(
                 "/api/LessonBlock",
                 MockData.GetCreateLessonBlockDTODetails(lessonId1, classroomId1)
@@ -139,15 +142,24 @@ namespace AlpimiTest.Entities.ELessonBlock
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
 
             var query = $"?groupId={new Guid()}";
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+                await _client.GetAsync($"/api/LessonBlock{query}");
             response = await _client.GetAsync($"/api/LessonBlock{query}");
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
 
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+                await _client.PatchAsJsonAsync(
+                    $"/api/LessonBlock/{new Guid()}",
+                    MockData.GetUpdateLessonDTODetails()
+                );
             response = await _client.PatchAsJsonAsync(
                 $"/api/LessonBlock/{new Guid()}",
                 MockData.GetUpdateLessonDTODetails()
             );
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
 
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+                await _client.GetAsync($"/api/LessonBlock/{new Guid()}");
             response = await _client.GetAsync($"/api/LessonBlock/{new Guid()}");
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
         }

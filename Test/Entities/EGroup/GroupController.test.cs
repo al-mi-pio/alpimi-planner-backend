@@ -66,15 +66,18 @@ namespace AlpimiTest.Entities.EGroup
         [Fact]
         public async Task GroupControllerThrowsTooManyRequests()
         {
-            for (int i = 0; i != Configuration.GetPermitLimit(); i++)
-            {
-                await _client.GetAsync("/api/Group");
-            }
             _client.DefaultRequestHeaders.Authorization = null;
 
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+                await _client.DeleteAsync($"/api/Group/{new Guid()}");
             var response = await _client.DeleteAsync($"/api/Group/{new Guid()}");
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
 
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+                await _client.PostAsJsonAsync(
+                    "/api/Group",
+                    MockData.GetCreateGroupDTODetails(scheduleId)
+                );
             response = await _client.PostAsJsonAsync(
                 "/api/Group",
                 MockData.GetCreateGroupDTODetails(scheduleId)
@@ -82,15 +85,24 @@ namespace AlpimiTest.Entities.EGroup
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
 
             var query = $"?scheduleId={new Guid()}";
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+                await _client.GetAsync($"/api/Group{query}");
             response = await _client.GetAsync($"/api/Group{query}");
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
 
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+                await _client.PatchAsJsonAsync(
+                    $"/api/Group/{new Guid()}",
+                    MockData.GetUpdateGroupDTODetails()
+                );
             response = await _client.PatchAsJsonAsync(
                 $"/api/Group/{new Guid()}",
                 MockData.GetUpdateGroupDTODetails()
             );
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
 
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+                await _client.GetAsync($"/api/Group/{new Guid()}");
             response = await _client.GetAsync($"/api/Group/{new Guid()}");
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
         }

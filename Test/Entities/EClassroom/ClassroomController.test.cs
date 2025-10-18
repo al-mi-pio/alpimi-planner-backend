@@ -64,34 +64,56 @@ namespace AlpimiTest.Entities.EClassroom
         }
 
         [Fact]
-        public async Task ClassroomControllerThrowsTooManyRequests()
+        public async Task ClassroomTypeControllerThrowsTooManyRequests()
         {
-            for (int i = 0; i != Configuration.GetPermitLimit(); i++)
-            {
-                await _client.GetAsync("/api/Classroom");
-            }
             _client.DefaultRequestHeaders.Authorization = null;
 
-            var response = await _client.DeleteAsync($"/api/Classroom/{new Guid()}");
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+            {
+                await _client.DeleteAsync($"/api/ClassroomType/{new Guid()}");
+            }
+            var response = await _client.DeleteAsync($"/api/ClassroomType/{new Guid()}");
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
 
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+            {
+                await _client.PostAsJsonAsync(
+                    "/api/ClassroomType",
+                    MockData.GetCreateClassroomTypeDTODetails(scheduleId)
+                );
+            }
             response = await _client.PostAsJsonAsync(
-                "/api/Classroom",
-                MockData.GetCreateClassroomDTODetails(scheduleId)
+                "/api/ClassroomType",
+                MockData.GetCreateClassroomTypeDTODetails(scheduleId)
             );
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
 
             var query = $"?id={new Guid()}";
-            response = await _client.GetAsync($"/api/Classroom{query}");
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+            {
+                await _client.GetAsync($"/api/ClassroomType{query}");
+            }
+            response = await _client.GetAsync($"/api/ClassroomType{query}");
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
 
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+            {
+                await _client.PatchAsJsonAsync(
+                    $"/api/ClassroomType/{new Guid()}",
+                    MockData.GetUpdateClassroomTypeDTODetails()
+                );
+            }
             response = await _client.PatchAsJsonAsync(
-                $"/api/Classroom/{new Guid()}",
-                MockData.GetUpdateClassroomDTODetails()
+                $"/api/ClassroomType/{new Guid()}",
+                MockData.GetUpdateClassroomTypeDTODetails()
             );
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
 
-            response = await _client.GetAsync($"/api/Classroom/{new Guid()}");
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+            {
+                await _client.GetAsync($"/api/ClassroomType/{new Guid()}");
+            }
+            response = await _client.GetAsync($"/api/ClassroomType/{new Guid()}");
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
         }
 

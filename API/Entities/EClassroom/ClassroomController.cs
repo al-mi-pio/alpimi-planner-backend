@@ -20,7 +20,6 @@ namespace AlpimiAPI.Entities.EClassroom
     [Consumes("application/json")]
     [Produces("application/json")]
     [ProducesResponseType(typeof(ApiErrorResponse), 429)]
-    [EnableRateLimiting("FixedWindow")]
     public class ClassroomController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -45,6 +44,7 @@ namespace AlpimiAPI.Entities.EClassroom
         /// - JWT token is required
         /// </remarks>
         [HttpPost]
+        [EnableRateLimiting("Moderate")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
@@ -88,6 +88,7 @@ namespace AlpimiAPI.Entities.EClassroom
         /// - JWT is required
         /// </remarks>
         [HttpDelete("{id}")]
+        [EnableRateLimiting("Moderate")]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
         public async Task<ActionResult> Delete(
@@ -120,6 +121,7 @@ namespace AlpimiAPI.Entities.EClassroom
         /// - JWT token is required
         /// </remarks>
         [HttpPatch("{id}")]
+        [EnableRateLimiting("Moderate")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
@@ -180,6 +182,7 @@ namespace AlpimiAPI.Entities.EClassroom
         /// <remarks>
         /// </remarks>
         [HttpGet]
+        [EnableRateLimiting("Regular")]
         [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
@@ -247,6 +250,7 @@ namespace AlpimiAPI.Entities.EClassroom
         /// - JWT token is required
         /// </remarks>
         [HttpGet("{id}")]
+        [EnableRateLimiting("Regular")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]

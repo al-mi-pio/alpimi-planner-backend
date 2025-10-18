@@ -18,7 +18,6 @@ namespace AlpimiAPI.Entities.ELessonType
     [Consumes("application/json")]
     [Produces("application/json")]
     [ProducesResponseType(typeof(ApiErrorResponse), 429)]
-    [EnableRateLimiting("FixedWindow")]
     public class LessonTypeController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -43,6 +42,7 @@ namespace AlpimiAPI.Entities.ELessonType
         /// - JWT token is required
         /// </remarks>
         [HttpPost]
+        [EnableRateLimiting("Moderate")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
@@ -86,6 +86,7 @@ namespace AlpimiAPI.Entities.ELessonType
         /// - JWT is required
         /// </remarks>
         [HttpDelete("{id}")]
+        [EnableRateLimiting("Moderate")]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
         public async Task<ActionResult> Delete(
@@ -118,6 +119,7 @@ namespace AlpimiAPI.Entities.ELessonType
         /// - JWT token is required
         /// </remarks>
         [HttpPatch("{id}")]
+        [EnableRateLimiting("Moderate")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
@@ -167,6 +169,7 @@ namespace AlpimiAPI.Entities.ELessonType
         /// - JWT token is required
         /// </remarks>
         [HttpGet]
+        [EnableRateLimiting("Regular")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
@@ -217,6 +220,7 @@ namespace AlpimiAPI.Entities.ELessonType
         /// - JWT token is required
         /// </remarks>
         [HttpGet("{id}")]
+        [EnableRateLimiting("Regular")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]

@@ -57,15 +57,15 @@ namespace AlpimiTest.Entities.EHistory
         [Fact]
         public async Task HistoryControllerThrowsTooManyRequests()
         {
-            for (int i = 0; i != Configuration.GetPermitLimit(); i++)
-            {
-                await _client.PatchAsJsonAsync($"/api/History/undo/{new Guid()}", "");
-            }
             _client.DefaultRequestHeaders.Authorization = null;
 
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+                await _client.PatchAsJsonAsync($"/api/History/undo/{new Guid()}", "");
             var response = await _client.PatchAsJsonAsync($"/api/History/undo/{new Guid()}", "");
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
 
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+                await _client.PatchAsJsonAsync($"/api/History/redo/{new Guid()}", "");
             response = await _client.PatchAsJsonAsync($"/api/History/redo/{new Guid()}", "");
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
         }

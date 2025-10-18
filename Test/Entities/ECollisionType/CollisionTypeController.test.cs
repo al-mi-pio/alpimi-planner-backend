@@ -66,15 +66,18 @@ namespace AlpimiTest.Entities.ECollisionType
         [Fact]
         public async Task CollisionTypeControllerThrowsTooManyRequests()
         {
-            for (int i = 0; i != Configuration.GetPermitLimit(); i++)
-            {
-                await _client.GetAsync("/api/CollisionType");
-            }
             _client.DefaultRequestHeaders.Authorization = null;
 
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+                await _client.DeleteAsync($"/api/CollisionType/{new Guid()}");
             var response = await _client.DeleteAsync($"/api/CollisionType/{new Guid()}");
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
 
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+                await _client.PostAsJsonAsync(
+                    "/api/CollisionType",
+                    MockData.GetCreateCollisionTypeDTODetails(scheduleId)
+                );
             response = await _client.PostAsJsonAsync(
                 "/api/CollisionType",
                 MockData.GetCreateCollisionTypeDTODetails(scheduleId)
@@ -82,15 +85,24 @@ namespace AlpimiTest.Entities.ECollisionType
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
 
             var query = $"?scheduleId={new Guid()}";
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+                await _client.GetAsync($"/api/CollisionType{query}");
             response = await _client.GetAsync($"/api/CollisionType{query}");
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
 
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+                await _client.PatchAsJsonAsync(
+                    $"/api/CollisionType/{new Guid()}",
+                    MockData.GetUpdateCollisionTypeDTODetails()
+                );
             response = await _client.PatchAsJsonAsync(
                 $"/api/CollisionType/{new Guid()}",
                 MockData.GetUpdateCollisionTypeDTODetails()
             );
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
 
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+                await _client.GetAsync($"/api/CollisionType/{new Guid()}");
             response = await _client.GetAsync($"/api/CollisionType/{new Guid()}");
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
         }

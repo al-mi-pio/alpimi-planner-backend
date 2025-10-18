@@ -52,20 +52,23 @@ namespace AlpimiTest.Entities.EScheduleSettings
         }
 
         [Fact]
-        public async Task ScheduleControllerThrowsTooManyRequests()
+        public async Task ScheduleSettingsControllerThrowsTooManyRequests()
         {
-            for (int i = 0; i != Configuration.GetPermitLimit(); i++)
-            {
-                await _client.GetAsync($"/api/ScheduleSettings/{new Guid()}");
-            }
             _client.DefaultRequestHeaders.Authorization = null;
 
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+                await _client.PatchAsJsonAsync(
+                    $"/api/ScheduleSettings/{new Guid()}",
+                    MockData.GetUpdateScheduleSettingsDTO()
+                );
             var response = await _client.PatchAsJsonAsync(
                 $"/api/ScheduleSettings/{new Guid()}",
                 MockData.GetUpdateScheduleSettingsDTO()
             );
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
 
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+                await _client.GetAsync($"/api/ScheduleSettings/{new Guid()}");
             response = await _client.GetAsync($"/api/ScheduleSettings/{new Guid()}");
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
         }

@@ -71,15 +71,18 @@ namespace AlpimiTest.Entities.ESubgroup
         [Fact]
         public async Task SubgroupControllerThrowsTooManyRequests()
         {
-            for (int i = 0; i != Configuration.GetPermitLimit(); i++)
-            {
-                await _client.GetAsync("/api/Subgroup");
-            }
             _client.DefaultRequestHeaders.Authorization = null;
 
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+                await _client.DeleteAsync($"/api/Subgroup/{new Guid()}");
             var response = await _client.DeleteAsync($"/api/Subgroup/{new Guid()}");
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
 
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+                await _client.PostAsJsonAsync(
+                    "/api/Subgroup",
+                    MockData.GetCreateSubgroupDTODetails(groupId)
+                );
             response = await _client.PostAsJsonAsync(
                 "/api/Subgroup",
                 MockData.GetCreateSubgroupDTODetails(groupId)
@@ -87,15 +90,24 @@ namespace AlpimiTest.Entities.ESubgroup
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
 
             var query = $"?groupId={new Guid()}";
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+                await _client.GetAsync($"/api/Subgroup{query}");
             response = await _client.GetAsync($"/api/Subgroup{query}");
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
 
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+                await _client.PatchAsJsonAsync(
+                    $"/api/Subgroup/{new Guid()}",
+                    MockData.GetUpdateSubgroupDTODetails()
+                );
             response = await _client.PatchAsJsonAsync(
                 $"/api/Subgroup/{new Guid()}",
                 MockData.GetUpdateSubgroupDTODetails()
             );
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
 
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+                await _client.GetAsync($"/api/Subgroup/{new Guid()}");
             response = await _client.GetAsync($"/api/Subgroup/{new Guid()}");
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
         }

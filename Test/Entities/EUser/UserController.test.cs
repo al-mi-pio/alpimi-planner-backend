@@ -62,30 +62,39 @@ namespace AlpimiTest.Entities.EUser
         [Fact]
         public async Task UserControllerThrowsTooManyRequests()
         {
-            for (int i = 0; i != Configuration.GetPermitLimit(); i++)
-            {
-                await _client.GetAsync($"/api/User/{new Guid()}");
-            }
             _client.DefaultRequestHeaders.Authorization = null;
 
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+                await _client.GetAsync($"/api/User/{new Guid()}");
             var response = await _client.GetAsync($"/api/User/{new Guid()}");
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
 
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+                await _client.GetAsync("/api/User/byLogin/AnyLogin");
             response = await _client.GetAsync("/api/User/byLogin/AnyLogin");
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
 
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+                await _client.PatchAsJsonAsync(
+                    $"/api/User/{new Guid()}",
+                    MockData.GetUpdateUserDTODetails()
+                );
             response = await _client.PatchAsJsonAsync(
                 $"/api/User/{new Guid()}",
                 MockData.GetUpdateUserDTODetails()
             );
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
 
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+                await _client.PostAsJsonAsync("/api/User", MockData.GetUpdateUserDTODetails());
             response = await _client.PostAsJsonAsync(
                 "/api/User",
                 MockData.GetUpdateUserDTODetails()
             );
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
 
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+                await _client.DeleteAsync($"/api/User/{new Guid()}");
             response = await _client.DeleteAsync($"/api/User/{new Guid()}");
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
         }

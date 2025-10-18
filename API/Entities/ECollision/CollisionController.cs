@@ -17,7 +17,6 @@ namespace AlpimiAPI.Entities.ECollision
     [Consumes("application/json")]
     [Produces("application/json")]
     [ProducesResponseType(typeof(ApiErrorResponse), 429)]
-    [EnableRateLimiting("FixedWindow")]
     public class CollisionController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -35,6 +34,7 @@ namespace AlpimiAPI.Entities.ECollision
         /// <remarks>
         /// </remarks>
         [HttpGet]
+        [EnableRateLimiting("Regular")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]

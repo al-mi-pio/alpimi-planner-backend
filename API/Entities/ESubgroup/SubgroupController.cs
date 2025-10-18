@@ -175,7 +175,7 @@ namespace AlpimiAPI.Entities.ESubgroup
         }
 
         /// <summary>
-        /// Gets all Subgroups by GroupId or StudentId
+        /// Gets all Subgroups by GroupId, StudentId or ScheduleId
         /// </summary>
         /// <remarks>
         /// </remarks>

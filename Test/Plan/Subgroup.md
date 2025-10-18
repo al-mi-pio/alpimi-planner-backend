@@ -89,8 +89,11 @@
 - [GetAllSubgroupsReturnsSubgroupsFromLessonIfLessonIdIsProvided()](../Entities/ESubgroup/SubgroupController.test.cs) - **integrity**  
   Check if returns two subgroups when a valid lesson id provided
 
+- [GetAllSubgroupsReturnsSubgroupsFromScheduleIfScheduleIdIsProvided()](../Entities/ESubgroup/SubgroupController.test.cs) - **integrity**  
+  Check if returns two subgroups when a valid schedule id provided
+
 - [GetAllSubgroupsReturnsSubgroupsFromPublicSchedules()](../Entities/ESubgroup/SubgroupController.test.cs) - **integrity**   
-  Check if returns two classrooms when no token is provided
+  Check if returns two subgroups when no token is provided
 
 - [GetAllSubgroupsReturnsEmptyContentWhenWrongUserAttemptsGet()](../Entities/ESubgroup/SubgroupController.test.cs) - **integrity**  
   Check if returns no subgroups when other user's token is provided

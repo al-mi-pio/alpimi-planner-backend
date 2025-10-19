@@ -177,6 +177,16 @@ try
             };
         });
 
+    builder.Services.AddCors(options =>
+    {
+        options.AddDefaultPolicy(policy =>
+        {
+            policy.AllowAnyOrigin();
+            policy.AllowAnyHeader();
+            policy.WithMethods("GET", "POST", "DELETE", "PATCH", "OPTIONS");
+        });
+    });
+
     builder.Services.AddCustomRateLimiters();
 
     var app = builder.Build();

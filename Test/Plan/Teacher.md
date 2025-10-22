@@ -17,8 +17,11 @@
 - [ThrowsErrorWhenWrongScheduleIdIsGiven()](../Entities/ETeacher/CreateTeacherCommand.unit.cs) - **unit** 
   Check if returns an error when incorrect id is provided
 
-- [ThrowsErrorWhenNameAndSurnameAreAlreadyTaken()](../Entities/ETeacher/CreateTeacherCommand.unit.cs) - **unit**  
-  Check if returns an error when a taken name and surname is provided
+- [ThrowsErrorWhenEmailAreAlreadyTaken()](../Entities/ETeacher/CreateTeacherCommand.unit.cs) - **unit**  
+  Check if returns an error when a taken email is provided
+
+- [ThrowsErrorWhenEmailIsIncorrect()](../Entities/ETeacher/CreateTeacherCommand.unit.cs) - **unit**  
+  Check if returns an error when a incorrect email is provided
 
 - [CreateTeacherIsUndone()](../Entities/ETeacher/TeacherController.test.cs) - **integrity**  
   Check if create teacher is undone
@@ -44,14 +47,17 @@
 - [UpdateTeacherReturnsUpdatedTeacher()](../Entities/ETeacher/TeacherController.test.cs) - **integrity**  
   Check if returns an updated day off when provided with correct data
 
-- [pdateTeacherThrowsNotFoundErrorWhenWrongIdIsGiven()](../Entities/ETeacher/TeacherController.test.cs) - **integrity**  
+- [UpdateTeacherThrowsNotFoundErrorWhenWrongIdIsGiven()](../Entities/ETeacher/TeacherController.test.cs) - **integrity**  
   Check if returns an error when day off doesn't exists
 
 - [UpdateTeacherThrowsNotFoundErrorWhenWrongUserAttemptsUpdate()](../Entities/ETeacher/TeacherController.test.cs) - **integrity**  
   Check if returns an error when day off is inaccessible for user
 
-- [ThrowsErrorWhenNameAndSurnameAreAlreadyTaken()](../Entities/ETeacher/Commands/UpdateTeacherCommand.unit.cs) - **unit**  
-  Check if returns an error when out of range date is provided
+- [ThrowsErrorWhenEmailAreAlreadyTaken()](../Entities/ETeacher/Commands/UpdateTeacherCommand.unit.cs) - **unit**  
+  Check if returns an error when a taken email is provided
+
+- [ThrowsErrorWhenEmailIsIncorrect()](../Entities/ETeacher/UpdateTeacherCommand.unit.cs) - **unit**  
+  Check if returns an error when a incorrect email is provided
 
 - [PatchTeacherIsUndone()](../Entities/ETeacher/TeacherController.test.cs) - **integrity**  
   Check if patch teacher is undone
@@ -64,6 +70,9 @@
 
 - [GetAllTeachersByScheduleReturnsTeachers()](../Entities/ETeacher/TeacherController.test.cs) - **integrity**  
   Check if returns two teachers when a valid token is provided
+
+- [GetAllTeachersReturnsTeachersFromPublicSchedules()](../Entities/ETeacher/TeacherController.test.cs) - **integrity**  
+  Check if returns two teachers when no token is provided
 
 - [GetAllTeachersByScheduleReturnsEmptyContentWhenWrongUserAttemptsGet()](../Entities/ETeacher/TeacherController.test.cs) - **integrity**  
   Check if returns no teachers when other user's token is provided

@@ -54,9 +54,6 @@ namespace AlpimiTest.Entities.ETeacher
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
 
             var query = $"?scheduleId={new Guid()}";
-            response = await _client.GetAsync($"/api/Teacher{query}");
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-
             response = await _client.PatchAsJsonAsync(
                 $"/api/Teacher/{new Guid()}",
                 MockData.GetUpdateTeacherDTODetails()
@@ -355,6 +352,25 @@ namespace AlpimiTest.Entities.ETeacher
                 "Bearer",
                 TestAuthorization.GetToken("Admin", "User", userId)
             );
+
+            var query = $"?scheduleId={scheduleId}";
+            var response = await _client.GetAsync($"/api/Teacher{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            var stringResponse = await response.Content.ReadAsStringAsync();
+
+            Assert.Contains(teacherRequest1.Name!, stringResponse);
+            Assert.Contains(teacherRequest2.Name!, stringResponse);
+        }
+
+        [Fact]
+        public async Task GetAllTeachersReturnsTeachersFromPublicSchedules()
+        {
+            await DbHelper.PublishSchedule(_client, scheduleId);
+            var teacherRequest1 = MockData.GetCreateTeacherDTODetails(scheduleId);
+            var teacherRequest2 = MockData.GetCreateSecondTeacherDTODetails(scheduleId);
+            await DbHelper.SetupTeacher(_client, teacherRequest1);
+            await DbHelper.SetupTeacher(_client, teacherRequest2);
+            _client.DefaultRequestHeaders.Authorization = null;
 
             var query = $"?scheduleId={scheduleId}";
             var response = await _client.GetAsync($"/api/Teacher{query}");

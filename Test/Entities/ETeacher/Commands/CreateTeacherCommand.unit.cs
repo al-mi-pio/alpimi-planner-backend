@@ -89,9 +89,38 @@ namespace AlpimiTest.Entities.ETeacher.Commands
             );
 
             Assert.Equal(
-                "There is already a Teacher with the name Jac Pie",
+                "There is already a Teacher with the name JP@gmail.com",
                 result.errors.First().message
             );
+        }
+
+        [Fact]
+        public async Task ThrowsErrorWhenEmailIsIncorrect()
+        {
+            var dto = MockData.GetCreateTeacherDTODetails(new Guid());
+            dto.Email = "IncorrectEmail";
+            var schedule = MockData.GetScheduleDetails();
+            _dbService
+                .Setup(s => s.Get<Schedule>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(schedule);
+
+            var createTeacherCommand = new CreateTeacherCommand(
+                new Guid(),
+                dto,
+                new Guid(),
+                "User"
+            );
+            var createTeacherHandler = new CreateTeacherHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
+            var result = await Assert.ThrowsAsync<ApiErrorException>(
+                async () =>
+                    await createTeacherHandler.Handle(createTeacherCommand, new CancellationToken())
+            );
+
+            Assert.Equal("Email parameter is invalid", result.errors.First().message);
         }
     }
 }

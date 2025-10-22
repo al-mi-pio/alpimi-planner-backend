@@ -117,6 +117,7 @@ namespace AlpimiTest.TestUtilities
             {
                 Name = "Jac",
                 Surname = "Pie",
+                Email = "JP@gmail.com",
                 ScheduleId = new Guid(),
                 Schedule = GetScheduleDetails()
             };
@@ -376,6 +377,7 @@ namespace AlpimiTest.TestUtilities
             {
                 Name = teacher.Name,
                 Surname = teacher.Surname,
+                Email = teacher.Email,
                 ScheduleId = scheduleId
             };
         }
@@ -386,13 +388,19 @@ namespace AlpimiTest.TestUtilities
             {
                 Name = "Mariusz",
                 Surname = "Mazeowski",
+                Email = "MarMaz@wp.pl",
                 ScheduleId = scheduleId
             };
         }
 
         public static UpdateTeacherDTO GetUpdateTeacherDTODetails()
         {
-            return new UpdateTeacherDTO() { Name = "Pan", Surname = "Jan" };
+            return new UpdateTeacherDTO()
+            {
+                Name = "Pan",
+                Surname = "Jan",
+                Email = "pp@pp.pp"
+            };
         }
 
         public static CreateGroupDTO GetCreateGroupDTODetails(Guid scheduleId)

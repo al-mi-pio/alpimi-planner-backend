@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using System.Text.RegularExpressions;
 using AlpimiAPI.Database;
 using AlpimiAPI.Entities.EDayOff.Commands;
 using AlpimiAPI.Entities.EHistory.DTO;
@@ -31,6 +32,16 @@ namespace AlpimiAPI.Entities.ETeacher.Commands
             CancellationToken cancellationToken
         )
         {
+            if (request.dto.Email != null)
+            {
+                if (!Regex.IsMatch(request.dto.Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+                {
+                    throw new ApiErrorException(
+                        [new FieldErrorObject("email", _str["badParameter", "Email"])]
+                    );
+                }
+            }
+
             GetTeacherHandler getTeacherHandler = new GetTeacherHandler(_dbService);
             GetTeacherQuery getTeacherQuery = new GetTeacherQuery(
                 request.Id,
@@ -51,30 +62,29 @@ namespace AlpimiAPI.Entities.ETeacher.Commands
             {
                 Name = originalTeacher.Value!.Name,
                 Surname = originalTeacher.Value!.Surname,
+                Email = originalTeacher.Value!.Email,
             };
 
             request.dto.Name = request.dto.Name ?? originalTeacher.Value!.Name;
             request.dto.Surname = request.dto.Surname ?? originalTeacher.Value!.Surname;
+            request.dto.Email = request.dto.Email ?? originalTeacher.Value!.Email;
 
-            var teacherName = await _dbService.Get<Teacher>(
+            var teacherEmail = await _dbService.Get<Teacher>(
                 $@"
                     SELECT 
                     [Id]
                     FROM [Teacher] 
-                    WHERE [Name] = @Name AND [Surname] = @Surname  AND [ScheduleId] = '{originalTeacher .Value .ScheduleId}' AND [Id] != '{request.Id}';",
+                    WHERE [Email] = @Email  AND [ScheduleId] = '{originalTeacher .Value .ScheduleId}' AND [Id] != '{request.Id}';",
                 request.dto
             );
 
-            if (teacherName != null)
+            if (teacherEmail != null)
             {
                 throw new ApiErrorException(
                     [
-                        new ErrorObject(
-                            _str[
-                                "alreadyExists",
-                                "Teacher",
-                                request.dto.Name + " " + request.dto.Surname
-                            ]
+                        new FieldErrorObject(
+                            "email",
+                            _str["alreadyExists", "Teacher", request.dto.Email]
                         )
                     ]
                 );
@@ -84,10 +94,11 @@ namespace AlpimiAPI.Entities.ETeacher.Commands
                 $@"
                     UPDATE [Teacher] 
                     SET
-                    [Name] = @Name, [Surname] = @Surname 
+                    [Name] = @Name, [Surname] = @Surname , [Email] = @Email
                     OUTPUT
                     INSERTED.[Id],
                     INSERTED.[Name],
+                    INSERTED.[Email],
                     INSERTED.[Surname],
                     INSERTED.[ScheduleId]
                     WHERE [Id] = '{request.Id}';",

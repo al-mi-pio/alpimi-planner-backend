@@ -102,6 +102,7 @@ namespace AlpimiAPI.Utilities
             {
                 Id = data.Id,
                 Name = data.Name,
+                Email = data.Email,
                 Surname = data.Surname
             };
         }

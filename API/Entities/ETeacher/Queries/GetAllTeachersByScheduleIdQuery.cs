@@ -63,6 +63,7 @@ namespace AlpimiAPI.Entities.ETeacher.Queries
                 request.Pagination.SortBy != "Id"
                 && request.Pagination.SortBy != "Name"
                 && request.Pagination.SortBy != "Surname"
+                && request.Pagination.SortBy != "Email"
             )
             {
                 errors.Add(
@@ -91,9 +92,38 @@ namespace AlpimiAPI.Entities.ETeacher.Queries
                     teachers = await _dbService.GetAll<Teacher>(
                         $@"
                             SELECT
-                            [Id], [Name], [Surname], [ScheduleId] 
+                            [Id], [Name], [Surname], [Email], [ScheduleId] 
                             FROM [Teacher]
                             WHERE [ScheduleId] = @ScheduleId 
+                            ORDER BY
+                            {request.Pagination.SortBy}
+                            {request.Pagination.SortOrder}
+                            OFFSET
+                            {request.Pagination.Offset} ROWS
+                            FETCH NEXT
+                            {request.Pagination.PerPage} ROWS ONLY;",
+                        request
+                    );
+                    break;
+                case "User":
+                    count = await _dbService.Get<int>(
+                        @"
+                            SELECT 
+                            COUNT(*)
+                            FROM [Teacher] t
+                            INNER JOIN [Schedule] s ON s.[Id]=t.[ScheduleId]
+                            INNER JOIN [ScheduleSettings] ss ON ss.[ScheduleId] = s.[Id]
+                            WHERE (s.[UserId] = @FilteredId OR ss.[IsPublic] = 'TRUE') AND t.[ScheduleId] = @ScheduleId;",
+                        request
+                    );
+                    teachers = await _dbService.GetAll<Teacher>(
+                        $@"
+                            SELECT 
+                            t.[Id], t.[Name], [Surname], [Email], t.[ScheduleId] 
+                            FROM [Teacher] t
+                            INNER JOIN [Schedule] s ON s.[Id] = t.[ScheduleId]
+                            INNER JOIN [ScheduleSettings] ss ON ss.[ScheduleId] = s.[Id]
+                            WHERE (s.[UserId] = @FilteredId OR ss.[IsPublic] = 'TRUE') AND t.[ScheduleId] = @ScheduleId 
                             ORDER BY
                             {request.Pagination.SortBy}
                             {request.Pagination.SortOrder}
@@ -111,16 +141,18 @@ namespace AlpimiAPI.Entities.ETeacher.Queries
                             COUNT(*)
                             FROM [Teacher] t
                             INNER JOIN [Schedule] s ON s.[Id]=t.[ScheduleId]
-                            WHERE s.[UserId] = @FilteredId AND t.[ScheduleId] = @ScheduleId;",
+                            INNER JOIN [ScheduleSettings] ss ON ss.[ScheduleId] = s.[Id]
+                            WHERE ss.[IsPublic] = 'TRUE' AND t.[ScheduleId] = @ScheduleId;",
                         request
                     );
                     teachers = await _dbService.GetAll<Teacher>(
                         $@"
                             SELECT 
-                            t.[Id], t.[Name], [Surname], [ScheduleId] 
+                            t.[Id], t.[Name], [Surname], [Email], t.[ScheduleId] 
                             FROM [Teacher] t
                             INNER JOIN [Schedule] s ON s.[Id] = t.[ScheduleId]
-                            WHERE s.[UserId] = @FilteredId AND t.[ScheduleId] = @ScheduleId 
+                            INNER JOIN [ScheduleSettings] ss ON ss.[ScheduleId] = s.[Id]
+                            WHERE ss.[IsPublic] = 'TRUE' AND t.[ScheduleId] = @ScheduleId 
                             ORDER BY
                             {request.Pagination.SortBy}
                             {request.Pagination.SortOrder}

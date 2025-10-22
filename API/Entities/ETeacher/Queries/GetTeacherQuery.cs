@@ -29,7 +29,7 @@ namespace AlpimiAPI.Entities.ETeacher.Queries
                     teacher = await _dbService.Get<Teacher?>(
                         @"
                             SELECT 
-                            [Id], [Name], [Surname], [ScheduleId] 
+                            [Id], [Name], [Surname], [Email], [ScheduleId] 
                             FROM [Teacher] 
                             WHERE [Id] = @Id;",
                         request
@@ -39,7 +39,7 @@ namespace AlpimiAPI.Entities.ETeacher.Queries
                     teacher = await _dbService.Get<Teacher?>(
                         @"
                             SELECT 
-                            t.[Id], t.[Name], [Surname], [ScheduleId] 
+                            t.[Id], t.[Name], [Surname], [Email], [ScheduleId] 
                             FROM [Teacher] t
                             INNER JOIN [Schedule] s ON t.[ScheduleId]=s.[Id]
                             WHERE t.[Id] = @Id AND s.[UserId] = @FilteredId;",

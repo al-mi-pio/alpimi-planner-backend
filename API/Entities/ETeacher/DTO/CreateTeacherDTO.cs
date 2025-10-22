@@ -9,6 +9,9 @@
         public required string? Surname { get; set; }
 
         [LocalizedRequired]
+        public required string Email { get; set; }
+
+        [LocalizedRequired]
         public required Guid? ScheduleId { get; set; }
     }
 }

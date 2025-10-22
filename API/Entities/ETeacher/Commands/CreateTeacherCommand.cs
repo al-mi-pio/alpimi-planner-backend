@@ -1,4 +1,5 @@
-﻿using AlpimiAPI.Database;
+﻿using System.Text.RegularExpressions;
+using AlpimiAPI.Database;
 using AlpimiAPI.Entities.EDayOff.Commands;
 using AlpimiAPI.Entities.EHistory.DTO;
 using AlpimiAPI.Entities.ESchedule;
@@ -59,25 +60,29 @@ namespace AlpimiAPI.Entities.ETeacher.Commands
                 );
             }
 
-            var teacherName = await _dbService.Get<Teacher>(
+            if (!Regex.IsMatch(request.dto.Email!, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+            {
+                throw new ApiErrorException(
+                    [new FieldErrorObject("email", _str["badParameter", "Email"])]
+                );
+            }
+
+            var teacherEmail = await _dbService.Get<Teacher>(
                 @"
                     SELECT 
                     [Id]
                     FROM [Teacher] 
-                    WHERE [Name] = @Name AND [Surname] = @Surname  AND [ScheduleId] = @ScheduleId;",
+                    WHERE [Email] = @Email AND [ScheduleId] = @ScheduleId;",
                 request.dto
             );
 
-            if (teacherName != null)
+            if (teacherEmail != null)
             {
                 throw new ApiErrorException(
                     [
-                        new ErrorObject(
-                            _str[
-                                "alreadyExists",
-                                "Teacher",
-                                request.dto.Name + " " + request.dto.Surname
-                            ]
+                        new FieldErrorObject(
+                            "email",
+                            _str["alreadyExists", "Teacher", request.dto.Email]
                         )
                     ]
                 );
@@ -86,13 +91,14 @@ namespace AlpimiAPI.Entities.ETeacher.Commands
             var insertedId = await _dbService.Post<Guid>(
                 $@"
                     INSERT INTO [Teacher] 
-                    ([Id], [Name], [Surname], [ScheduleId])
+                    ([Id], [Name], [Surname], [Email], [ScheduleId])
                     OUTPUT 
                     INSERTED.Id                    
                     VALUES (
                     '{request.Id}',   
                     @Name,
                     @Surname,
+                    @Email,
                     @ScheduleId);",
                 request.dto
             );

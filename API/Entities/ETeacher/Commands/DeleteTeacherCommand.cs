@@ -38,6 +38,7 @@ namespace AlpimiAPI.Entities.ETeacher.Commands
                 {
                     Name = teacher.Value.Name,
                     Surname = teacher.Value.Surname,
+                    Email = teacher.Value.Email,
                     ScheduleId = teacher.Value.ScheduleId,
                 };
                 AddToHistoryHandler addToHistoryHandler = new AddToHistoryHandler(_dbService);

@@ -27,6 +27,37 @@ namespace AlpimiTest.Entities.EDayOff.Commands
         }
 
         [Fact]
+        public async Task ThrowsErrorWhenNameIsAlreadyTakenByDayOff()
+        {
+            var dto = MockData.GetUpdateDayOffDTODetails();
+            _dbService
+                .Setup(s => s.Get<ScheduleSettings>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetScheduleSettingsDetails());
+            _dbService
+                .Setup(s => s.Get<DayOff>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetDayOffDetails());
+            _dbService
+                .Setup(s => s.GetAll<DayOff>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync([MockData.GetDayOffDetails()]);
+
+            var updateDayOffCommand = new UpdateDayOffCommand(new Guid(), dto, new Guid(), "Admin");
+            var updateDayOffHandler = new UpdateDayOffHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
+            var result = await Assert.ThrowsAsync<ApiErrorException>(
+                async () =>
+                    await updateDayOffHandler.Handle(updateDayOffCommand, new CancellationToken())
+            );
+
+            Assert.Equal(
+                "There is already a Day Off with the name Inny_fest",
+                result.errors.First().message
+            );
+        }
+
+        [Fact]
         public async Task ThrowsErrorWhenOutOfRangeDateIsProvided()
         {
             var dto = MockData.GetUpdateDayOffDTODetails();
@@ -41,7 +72,11 @@ namespace AlpimiTest.Entities.EDayOff.Commands
                 .ReturnsAsync(dayOff);
 
             var updateDayOffCommand = new UpdateDayOffCommand(new Guid(), dto, new Guid(), "Admin");
-            var updateDayOffHandler = new UpdateDayOffHandler(_dbService.Object, _str.Object);
+            var updateDayOffHandler = new UpdateDayOffHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateDayOffHandler.Handle(updateDayOffCommand, new CancellationToken())
@@ -61,7 +96,11 @@ namespace AlpimiTest.Entities.EDayOff.Commands
                 .ReturnsAsync(MockData.GetDayOffDetails());
 
             var updateDayOffCommand = new UpdateDayOffCommand(new Guid(), dto, new Guid(), "User");
-            var updateDayOffHandler = new UpdateDayOffHandler(_dbService.Object, _str.Object);
+            var updateDayOffHandler = new UpdateDayOffHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await updateDayOffHandler.Handle(updateDayOffCommand, new CancellationToken())

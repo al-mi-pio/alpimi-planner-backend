@@ -1,4 +1,5 @@
 ﻿using AlpimiAPI.Database;
+using AlpimiAPI.Entities.EDayOff;
 using AlpimiAPI.Entities.EDayOff.Commands;
 using AlpimiAPI.Entities.EScheduleSettings;
 using AlpimiAPI.Locales;
@@ -34,7 +35,11 @@ namespace AlpimiTest.Entities.EDayOff.Commands
                 new Guid(),
                 "User"
             );
-            var createDayOffHandler = new CreateDayOffHandler(_dbService.Object, _str.Object);
+            var createDayOffHandler = new CreateDayOffHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createDayOffHandler.Handle(createDayOffCommand, new CancellationToken())
@@ -54,6 +59,34 @@ namespace AlpimiTest.Entities.EDayOff.Commands
         }
 
         [Fact]
+        public async Task ThrowsErrorWhenNameIsAlreadyTakenByDayOff()
+        {
+            var dto = MockData.GetCreateDayOffDTODetails(new Guid());
+            _dbService
+                .Setup(s => s.Get<ScheduleSettings>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetScheduleSettingsDetails());
+            _dbService
+                .Setup(s => s.Get<DayOff>(It.IsAny<string>(), It.IsAny<object>()))
+                .ReturnsAsync(MockData.GetDayOffDetails());
+
+            var createDayOffCommand = new CreateDayOffCommand(new Guid(), dto, new Guid(), "User");
+            var createDayOffHandler = new CreateDayOffHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
+            var result = await Assert.ThrowsAsync<ApiErrorException>(
+                async () =>
+                    await createDayOffHandler.Handle(createDayOffCommand, new CancellationToken())
+            );
+
+            Assert.Equal(
+                "There is already a Day Off with the name Marek_Fest",
+                result.errors.First().message
+            );
+        }
+
+        [Fact]
         public async Task ThrowsErrorWhenOutOfRangeDateIsProvided()
         {
             var dto = MockData.GetCreateDayOffDTODetails(new Guid());
@@ -64,7 +97,11 @@ namespace AlpimiTest.Entities.EDayOff.Commands
                 .ReturnsAsync(scheduleSettings);
 
             var createDayOffCommand = new CreateDayOffCommand(new Guid(), dto, new Guid(), "User");
-            var createDayOffHandler = new CreateDayOffHandler(_dbService.Object, _str.Object);
+            var createDayOffHandler = new CreateDayOffHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createDayOffHandler.Handle(createDayOffCommand, new CancellationToken())
@@ -84,7 +121,11 @@ namespace AlpimiTest.Entities.EDayOff.Commands
                 .ReturnsAsync(scheduleSettings);
 
             var createDayOffCommand = new CreateDayOffCommand(new Guid(), dto, new Guid(), "User");
-            var createDayOffHandler = new CreateDayOffHandler(_dbService.Object, _str.Object);
+            var createDayOffHandler = new CreateDayOffHandler(
+                _dbService.Object,
+                _str.Object,
+                _strFields.Object
+            );
             var result = await Assert.ThrowsAsync<ApiErrorException>(
                 async () =>
                     await createDayOffHandler.Handle(createDayOffCommand, new CancellationToken())

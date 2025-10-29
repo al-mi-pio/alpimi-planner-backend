@@ -19,11 +19,17 @@ namespace AlpimiAPI.Entities.EDayOff.Commands
     {
         private readonly IDbService _dbService;
         private readonly IStringLocalizer<Errors> _str;
+        private readonly IStringLocalizer<Fields> _strFields;
 
-        public UpdateDayOffHandler(IDbService dbService, IStringLocalizer<Errors> str)
+        public UpdateDayOffHandler(
+            IDbService dbService,
+            IStringLocalizer<Errors> str,
+            IStringLocalizer<Fields> strFields
+        )
         {
             _dbService = dbService;
             _str = str;
+            _strFields = strFields;
         }
 
         public async Task<DayOff?> Handle(
@@ -73,6 +79,27 @@ namespace AlpimiAPI.Entities.EDayOff.Commands
             request.dto.Name = request.dto.Name ?? originalDayOff.Name;
             request.dto.From = request.dto.From ?? originalDayOff.From;
             request.dto.To = request.dto.To ?? originalDayOff.To;
+
+            var dayOffName = await _dbService.GetAll<DayOff>(
+                $@"
+                    SELECT 
+                    [Id]
+                    FROM [DayOff]
+                    WHERE [Name] = @Name 
+                    AND [ScheduleSettingsId] = '{originalDayOff.ScheduleSettingsId}' AND [Id] != '{request.Id}';",
+                request.dto
+            );
+            if (dayOffName!.Any())
+            {
+                throw new ApiErrorException(
+                    [
+                        new FieldErrorObject(
+                            "name",
+                            _str["alreadyExists", _strFields["DayOff"], request.dto.Name]
+                        )
+                    ]
+                );
+            }
 
             if (request.dto.From > request.dto.To)
             {

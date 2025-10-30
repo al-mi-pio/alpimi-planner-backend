@@ -516,7 +516,8 @@ namespace AlpimiAPI.Entities.EHistory.Commands
                         case "DayOff":
                             UpdateDayOffHandler updateDayOffHandler = new UpdateDayOffHandler(
                                 _dbService,
-                                _str
+                                _str,
+                                _strFields
                             );
                             UpdateDayOffCommand updateDayOffCommand = new UpdateDayOffCommand(
                                 latestHistory.AffectedEntityId,
@@ -797,7 +798,8 @@ namespace AlpimiAPI.Entities.EHistory.Commands
                         case "DayOff":
                             CreateDayOffHandler createDayOffHandler = new CreateDayOffHandler(
                                 _dbService,
-                                _str
+                                _str,
+                                _strFields
                             );
                             CreateDayOffCommand createDayOffCommand = new CreateDayOffCommand(
                                 insertedId,

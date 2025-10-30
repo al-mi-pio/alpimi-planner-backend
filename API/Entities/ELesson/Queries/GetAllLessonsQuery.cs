@@ -85,7 +85,7 @@ namespace AlpimiAPI.Entities.ELesson.Queries
                     count = await _dbService.Get<int>(
                         @"
                             SELECT 
-                            COUNT(*)
+                            COUNT(DISTINCT l.[Id])
                             FROM [Lesson] l
                             INNER JOIN [Teacher] t ON t.[Id] = l.[TeacherId]
                             LEFT JOIN [LessonSubgroup] lsg ON lsg.[LessonId] = l.[Id]
@@ -98,7 +98,7 @@ namespace AlpimiAPI.Entities.ELesson.Queries
                     lessons = await _dbService.GetAll<Lesson>(
                         $@"
                             SELECT
-                            l.[Id], l.[Name], [CurrentHours], [AmountOfHours], l.[LessonTypeId], l.[TeacherId]  
+                            DISTINCT l.[Id], l.[Name], [CurrentHours], [AmountOfHours], l.[LessonTypeId], l.[TeacherId]  
                             FROM [Lesson] l
                             INNER JOIN [Teacher] t ON t.[Id] = l.[TeacherId]
                             LEFT JOIN [LessonSubgroup] lsg ON lsg.[LessonId] = l.[Id]
@@ -120,7 +120,7 @@ namespace AlpimiAPI.Entities.ELesson.Queries
                     count = await _dbService.Get<int>(
                         @"
                             SELECT 
-                            COUNT(*)
+                            COUNT(DISTINCT l.[Id])
                             FROM [Lesson] l
                             INNER JOIN [Teacher] t ON t.[Id] = l.[TeacherId]
                             INNER JOIN [Schedule] s ON s.[Id] = t.[ScheduleId]
@@ -133,7 +133,7 @@ namespace AlpimiAPI.Entities.ELesson.Queries
                     lessons = await _dbService.GetAll<Lesson>(
                         $@"
                             SELECT 
-                            l.[Id], l.[Name], [CurrentHours], [AmountOfHours], l.[LessonTypeId], l.[TeacherId]  
+                            DISTINCT l.[Id], l.[Name], [CurrentHours], [AmountOfHours], l.[LessonTypeId], l.[TeacherId]  
                             FROM [Lesson] l
                             INNER JOIN [Teacher] t ON t.[Id] = l.[TeacherId]
                             INNER JOIN [Schedule] s ON s.[Id] = t.[ScheduleId]

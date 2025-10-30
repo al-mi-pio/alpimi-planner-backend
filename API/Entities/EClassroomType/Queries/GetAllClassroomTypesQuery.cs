@@ -79,7 +79,7 @@ namespace AlpimiAPI.Entities.EClassroomType.Queries
                     count = await _dbService.Get<int>(
                         @"
                             SELECT 
-                            COUNT(*)
+                            COUNT(DISTINCT ct.[Id])
                             FROM [ClassroomType] ct
                             LEFT JOIN [ClassroomClassroomType] cct ON cct.[ClassroomTypeId] = ct.[Id]
                             LEFT JOIN [Classroom] c ON c.[Id] = cct.[ClassroomId]
@@ -91,7 +91,7 @@ namespace AlpimiAPI.Entities.EClassroomType.Queries
                     classroomTypes = await _dbService.GetAll<ClassroomType>(
                         $@"
                             SELECT
-                            ct.[Id], ct.[Name], ct.[ScheduleId] 
+                            DISTINCT ct.[Id], ct.[Name], ct.[ScheduleId] 
                             FROM [ClassroomType] ct
                             LEFT JOIN [ClassroomClassroomType] cct ON cct.[ClassroomTypeId] = ct.[Id]
                             LEFT JOIN [Classroom] c ON c.[Id] = cct.[ClassroomId]
@@ -112,7 +112,7 @@ namespace AlpimiAPI.Entities.EClassroomType.Queries
                     count = await _dbService.Get<int>(
                         @"
                             SELECT
-                            COUNT(*)
+                            COUNT(DISTINCT ct.[Id])
                             FROM [ClassroomType] ct
                             INNER JOIN [Schedule] s ON s.[Id] = ct.[ScheduleId]
                             LEFT JOIN [ClassroomClassroomType] cct ON cct.[ClassroomTypeId] = ct.[Id]
@@ -125,7 +125,7 @@ namespace AlpimiAPI.Entities.EClassroomType.Queries
                     classroomTypes = await _dbService.GetAll<ClassroomType>(
                         $@"
                             SELECT 
-                            ct.[Id], ct.[Name], ct.[ScheduleId] 
+                            DISTINCT ct.[Id], ct.[Name], ct.[ScheduleId] 
                             FROM [ClassroomType] ct
                             INNER JOIN [Schedule] s ON s.[Id] = ct.[ScheduleId]
                             LEFT JOIN [ClassroomClassroomType] cct ON cct.[ClassroomTypeId] = ct.[Id]

@@ -83,7 +83,7 @@ namespace AlpimiAPI.Entities.EClassroom.Queries
                     count = await _dbService.Get<int>(
                         @"
                             SELECT 
-                            COUNT(*)
+                            COUNT(DISTINCT c.[Id])
                             FROM [Classroom] c
                             LEFT JOIN [ClassroomClassroomType] cct ON cct.[ClassroomId] = c.[Id]
                             LEFT JOIN [ClassroomType] ct on ct.[Id] = cct.[ClassroomTypeId]
@@ -93,7 +93,7 @@ namespace AlpimiAPI.Entities.EClassroom.Queries
                     classrooms = await _dbService.GetAll<Classroom>(
                         $@"
                             SELECT
-                            c.[Id], c.[Name], c.[Capacity], c.[ScheduleId] 
+                            DISTINCT c.[Id], c.[Name], c.[Capacity], c.[ScheduleId] 
                             FROM [Classroom] c
                             LEFT JOIN [ClassroomClassroomType] cct ON cct.[ClassroomId] = c.[Id]
                             LEFT JOIN [ClassroomType] ct on ct.[Id] = cct.[ClassroomTypeId]
@@ -112,7 +112,7 @@ namespace AlpimiAPI.Entities.EClassroom.Queries
                     count = await _dbService.Get<int>(
                         @"
                             SELECT
-                            COUNT(*)
+                            COUNT(DISTINCT c.[Id])
                             FROM [Classroom] c
                             INNER JOIN [Schedule] s ON s.[Id] = c.[ScheduleId]
                             INNER JOIN [ScheduleSettings] ss ON ss.[ScheduleId] = s.[Id]
@@ -124,7 +124,7 @@ namespace AlpimiAPI.Entities.EClassroom.Queries
                     classrooms = await _dbService.GetAll<Classroom>(
                         $@"
                             SELECT 
-                            c.[Id], c.[Name], c.[Capacity], c.[ScheduleId] 
+                            DISTINCT c.[Id], c.[Name], c.[Capacity], c.[ScheduleId] 
                             FROM [Classroom] c
                             INNER JOIN [Schedule] s ON s.[Id] = c.[ScheduleId]
                             INNER JOIN [ScheduleSettings] ss ON ss.[ScheduleId] = s.[Id]
@@ -145,7 +145,7 @@ namespace AlpimiAPI.Entities.EClassroom.Queries
                     count = await _dbService.Get<int>(
                         @"
                             SELECT
-                            COUNT(*)
+                            COUNT(DISTINCT c.[Id])
                             FROM [Classroom] c
                             INNER JOIN [Schedule] s ON s.[Id] = c.[ScheduleId]
                             INNER JOIN [ScheduleSettings] ss ON ss.[ScheduleId] = s.[Id]
@@ -157,7 +157,7 @@ namespace AlpimiAPI.Entities.EClassroom.Queries
                     classrooms = await _dbService.GetAll<Classroom>(
                         $@"
                             SELECT 
-                            c.[Id], c.[Name], c.[Capacity], c.[ScheduleId] 
+                            DISTINCT c.[Id], c.[Name], c.[Capacity], c.[ScheduleId] 
                             FROM [Classroom] c
                             INNER JOIN [Schedule] s ON s.[Id] = c.[ScheduleId]
                             INNER JOIN [ScheduleSettings] ss ON ss.[ScheduleId] = s.[Id]

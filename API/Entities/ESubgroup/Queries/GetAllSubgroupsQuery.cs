@@ -83,7 +83,7 @@ namespace AlpimiAPI.Entities.ESubgroup.Queries
                     count = await _dbService.Get<int>(
                         @"
                             SELECT 
-                            COUNT(*)
+                            COUNT(DISTINCT sg.[Id])
                             FROM [Subgroup] sg
                             LEFT JOIN [Group] g ON g.[Id] = sg.[GroupId]
                             LEFT JOIN [StudentSubgroup] ssg ON ssg.[SubgroupId] = sg.[Id]
@@ -96,7 +96,7 @@ namespace AlpimiAPI.Entities.ESubgroup.Queries
                     subgroups = await _dbService.GetAll<Subgroup>(
                         $@"
                             SELECT
-                            sg.[Id], sg.[Name], sg.[StudentCount], sg.[GroupId] 
+                            DISTINCT sg.[Id], sg.[Name], sg.[StudentCount], sg.[GroupId] 
                             FROM [Subgroup] sg
                             LEFT JOIN [Group] g ON g.[Id] = sg.[GroupId]
                             LEFT JOIN [StudentSubgroup] ssg ON ssg.[SubgroupId] = sg.[Id]
@@ -118,7 +118,7 @@ namespace AlpimiAPI.Entities.ESubgroup.Queries
                     count = await _dbService.Get<int>(
                         @"
                             SELECT
-                            COUNT(*)
+                            COUNT(DISTINCT sg.[Id])
                             FROM [Subgroup] sg
                             INNER JOIN [Group] g ON g.[Id] = sg.[GroupId]
                             INNER JOIN [Schedule] s ON s.[Id] = g.[ScheduleId]
@@ -133,7 +133,7 @@ namespace AlpimiAPI.Entities.ESubgroup.Queries
                     subgroups = await _dbService.GetAll<Subgroup>(
                         $@"
                             SELECT 
-                            sg.[Id], sg.[Name], sg.[StudentCount], sg.[GroupId] 
+                            DISTINCT sg.[Id], sg.[Name], sg.[StudentCount], sg.[GroupId] 
                             FROM [Subgroup] sg
                             INNER JOIN [Group] g ON g.[Id] = sg.[GroupId]
                             INNER JOIN [Schedule] s ON s.[Id] = g.[ScheduleId]
@@ -157,7 +157,7 @@ namespace AlpimiAPI.Entities.ESubgroup.Queries
                     count = await _dbService.Get<int>(
                         @"
                             SELECT
-                            COUNT(*)
+                            COUNT(DISTINCT sg.[Id])
                             FROM [Subgroup] sg
                             INNER JOIN [Group] g ON g.[Id] = sg.[GroupId]
                             INNER JOIN [Schedule] s ON s.[Id] = g.[ScheduleId]
@@ -172,7 +172,7 @@ namespace AlpimiAPI.Entities.ESubgroup.Queries
                     subgroups = await _dbService.GetAll<Subgroup>(
                         $@"
                             SELECT 
-                            sg.[Id], sg.[Name], sg.[StudentCount], sg.[GroupId] 
+                            DISTINCT sg.[Id], sg.[Name], sg.[StudentCount], sg.[GroupId] 
                             FROM [Subgroup] sg
                             INNER JOIN [Group] g ON g.[Id] = sg.[GroupId]
                             INNER JOIN [Schedule] s ON s.[Id] = g.[ScheduleId]

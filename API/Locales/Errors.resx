@@ -201,4 +201,7 @@
   <data name="requiredField" xml:space="preserve">
     <value>The {0} field is required.</value>
   </data>
+  <data name="badImportData" xml:space="preserve">
+    <value>Data format is invalid in this row</value>
+  </data>
 </root>

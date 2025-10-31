@@ -8,6 +8,114 @@ namespace AlpimiTest.TestSetup
     {
         private static readonly Mock<IStringLocalizer<Errors>> _str = new();
         private static readonly Mock<IStringLocalizer<Fields>> _strFields = new();
+        private static readonly Mock<IStringLocalizer<Data>> _strData = new();
+
+        private static readonly Dictionary<string, string> locolaizedDataErrors = new Dictionary<
+            string,
+            string
+        >
+        {
+            { "SchoolDays", "School Days" },
+            { "WeekInterval", "Week Interval" },
+            { "LessonEnd", "Lesson End" },
+            { "LessonStart", "Lesson Start" },
+            { "AmountOfHours", "Amount Of Hours" },
+            { "SortOrder", "Sort Order" },
+            { "Page", "Page" },
+            { "PerPage", "Per Page" },
+            { "SortBy", "Sort By" },
+            { "OrderBy", "Oder by" },
+            { "Description", "Description" },
+            { "Login", "Login" },
+            { "Password", "Password" },
+            { "CustomUrl", "Custom URL" },
+            { "Timestamp", "Timestamp" },
+            { "AffectedEntity", "Affected Entity" },
+            { "Command", "Command" },
+            { "ReversalId", "Reversal ID" },
+            { "IsUndone", "Is Undone" },
+            { "IsUndoneChecked", "Is Undone Checked" },
+            { "SchoolHour", "School Hour" },
+            { "SchoolYearStart", "School Year Start" },
+            { "SchoolYearEnd", "School Year End" },
+            { "From", "From" },
+            { "To", "To" },
+            { "StartTime", "Start Time" },
+            { "Weight", "Weight" },
+            { "Filter", "Filter" },
+            { "Category", "Category" },
+            { "Capacity", "Capacity" },
+            { "Color", "Color (number in the range 1 - 359)" },
+            { "WeekDay", "Week Day" },
+            { "Start", "Start" },
+            { "End", "End" },
+            { "Surname", "Surname" },
+            { "StudentCount", "Student Count" },
+            { "AlbumNumber", "Album Number" },
+            { "CollidingObject1", "Colliding Object 1" },
+            { "CollidingObject2", "Colliding Object 2" },
+            { "Ignored", "Ignored" },
+            { "Subgroup", "Subgroup" },
+            { "ClassroomType", "Classroom Type" },
+            { "LessonPeriod", "Lesson Period" },
+            { "Auth", "Auth" },
+            { "User", "User" },
+            { "Schedule", "Schedule" },
+            { "History", "History" },
+            { "ScheduleSettings", "Schedule Settings" },
+            { "DayOff", "Day Off" },
+            { "CollisionType", "Collision Type" },
+            { "Collision", "Collision" },
+            { "Classroom", "Classroom" },
+            { "LessonType", "Lesson type" },
+            { "Lesson", "Lesson" },
+            { "Teacher", "Teacher" },
+            { "Availability", "Teacher's availability" },
+            { "Group", "Group" },
+            { "Student", "Student" },
+            { "LessonBlock", "Lesson Block" },
+            { "ClassroomName", "Classroom name" },
+            { "Classrooms", "Classrooms" },
+            { "ClassroomTypeName", "Classroom type name" },
+            { "ClassroomTypes", "Classroom types" },
+            { "ClassroomTypesSeparated", "Classroom types (separated by semicolon)" },
+            { "DayOffName", "Day off name" },
+            { "DaysOff", "Days off" },
+            { "DayOfWeek", "Day of week" },
+            { "Email", "Email" },
+            { "EndDate", "End date (MM/DD/YYYY)" },
+            { "GroupName", "Group name" },
+            { "Groups", "Groups" },
+            { "LessonBlockStartHour", "Lesson block start hour (HH:MM:SS)" },
+            { "LessonHours", "Lesson hours" },
+            { "LessonName", "Lesson name" },
+            { "LessonNumberFrom", "Lesson number from" },
+            { "LessonNumberTo", "Lesson number to" },
+            { "LessonPeriods", "Lesson periods" },
+            { "Lessons", "Lessons" },
+            { "LessonTypeName", "Lesson type name" },
+            { "LessonTypes", "Lesson types" },
+            { "Name", "Name" },
+            { "StartDate", "Start date (MM/DD/YYYY)" },
+            { "Students", "Students" },
+            { "StudentsGroup", "Student's group" },
+            { "StudentsSubgroupSeperated", "Student's subgroups (separated by semicolon)" },
+            { "SubgroupName", "Subgroup name" },
+            { "Subgroups", "Subgroups" },
+            {
+                "SubgroupsSeperated",
+                "Subgroups (seperated by semicolon, format: parent group/subgroup)"
+            },
+            { "Teachers", "Teachers" },
+            { "TeachersEmail", "Teacher's email" },
+            { "Monday", "Monday" },
+            { "Tuesday", "Tuesday" },
+            { "Wednesday", "Wednesday" },
+            { "Thursday", "Thursday" },
+            { "Friday", "Friday" },
+            { "Saturday", "Saturday" },
+            { "Sunday", "Sunday" }
+        };
 
         private static readonly Dictionary<string, string> locolaizedFieldErrors = new Dictionary<
             string,
@@ -86,7 +194,8 @@ namespace AlpimiTest.TestSetup
                     "Student count in a subgroup cannot be greater than the student count in a group"
                 },
                 { "cantUndo", "There is nothing to undo" },
-                { "cantRedo", "There is nothing to redo" }
+                { "cantRedo", "There is nothing to redo" },
+                { "badImportData", "Data format is invalid in this row" }
             };
         private static readonly Dictionary<
             string,
@@ -232,6 +341,19 @@ namespace AlpimiTest.TestSetup
                 );
 
             return _strFields;
+        }
+
+        public static Mock<IStringLocalizer<Data>> DataSetup()
+        {
+            _strData
+                .Setup(localizer => localizer[It.IsAny<string>()])
+                .Returns(
+                    (string key) =>
+                    {
+                        return new LocalizedString(key, locolaizedDataErrors[key]);
+                    }
+                );
+            return _strData;
         }
     }
 }

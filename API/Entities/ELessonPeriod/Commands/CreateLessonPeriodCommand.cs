@@ -88,9 +88,23 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Commands
                 {
                     if (
                         request.dto.Start
-                            > lessonPeriod.Start.AddMinutes(-scheduleSettings.Value.SchoolHour)
+                            >= (
+                                lessonPeriod.Start.AddMinutes(-scheduleSettings.Value.SchoolHour)
+                                > lessonPeriod.Start
+                                    ? TimeOnly.MinValue
+                                    : lessonPeriod.Start.AddMinutes(
+                                        -scheduleSettings.Value.SchoolHour
+                                    )
+                            )
                         && request.dto.Start
-                            < lessonPeriod.Start.AddMinutes(scheduleSettings.Value.SchoolHour)
+                            < (
+                                lessonPeriod.Start.AddMinutes(scheduleSettings.Value.SchoolHour)
+                                < lessonPeriod.Start
+                                    ? TimeOnly.MaxValue
+                                    : lessonPeriod.Start.AddMinutes(
+                                        scheduleSettings.Value.SchoolHour
+                                    )
+                            )
                     )
                     {
                         throw new ApiErrorException(

@@ -18,11 +18,18 @@ namespace AlpimiAPI.Entities.EDayOff.Commands
     {
         private readonly IDbService _dbService;
         private readonly IStringLocalizer<Errors> _str;
+        private readonly IStringLocalizer<Fields> _strFields;
 
-        public CreateDayOffHandler(IDbService dbService, IStringLocalizer<Errors> str)
+        public CreateDayOffHandler(
+            IDbService dbService,
+            IStringLocalizer<Errors> str,
+            IStringLocalizer<Fields> strFields
+        )
         {
             _dbService = dbService;
             _str = str;
+            _strFields = strFields;
+            _strFields = strFields;
         }
 
         public async Task<Guid> Handle(
@@ -64,22 +71,46 @@ namespace AlpimiAPI.Entities.EDayOff.Commands
                 );
             }
 
+            List<ErrorObject> errors = new List<ErrorObject>();
+
+            var dayOffName = await _dbService.Get<DayOff>(
+                @"
+                    SELECT 
+                    do.[Id]
+                    FROM [DayOff] do
+                    INNER JOIN [ScheduleSettings] ss on ss.[Id] = do.[ScheduleSettingsId]
+                    WHERE [Name] = @Name AND ss.[ScheduleId] = @ScheduleId;",
+                request.dto
+            );
+            if (dayOffName != null)
+            {
+                errors.Add(
+                    new FieldErrorObject(
+                        "name",
+                        _str["alreadyExists", _strFields["DayOff"], request.dto.Name!]
+                    )
+                );
+            }
+
             if (
                 request.dto.From < scheduleSettings.Value!.SchoolYearStart
                 || request.dto.To > scheduleSettings.Value.SchoolYearEnd
             )
             {
-                throw new ApiErrorException(
-                    [
-                        new ErrorObject(
-                            _str[
-                                "dateOutOfRange",
-                                scheduleSettings.Value!.SchoolYearStart.ToString("dd/MM/yyyy"),
-                                scheduleSettings.Value.SchoolYearEnd.ToString("dd/MM/yyyy")
-                            ]
-                        )
-                    ]
+                errors.Add(
+                    new ErrorObject(
+                        _str[
+                            "dateOutOfRange",
+                            scheduleSettings.Value!.SchoolYearStart.ToString("dd/MM/yyyy"),
+                            scheduleSettings.Value.SchoolYearEnd.ToString("dd/MM/yyyy")
+                        ]
+                    )
                 );
+            }
+
+            if (errors.Count != 0)
+            {
+                throw new ApiErrorException(errors);
             }
 
             var insertedId = await _dbService.Post<Guid>(

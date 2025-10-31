@@ -2,7 +2,7 @@
 
 ## `ALL` `api/DayOff/*`
 
-- [DayOffSettingsControllerThrowsUnauthorized()](../Entities/EDayOff/DayOffController.test.cs) - **integrity**  
+- [DayOffControllerThrowsUnauthorized()](../Entities/EDayOff/DayOffController.test.cs) - **integrity**  
   Check if returns an error when token is not provided
 
 - [DayOffControllerThrowsTooManyRequests()](../Entities/EDayOff/DayOffController.test.cs) - **integrity**  
@@ -16,6 +16,9 @@
 
 - [ThrowsErrorWhenWrongScheduleIdIsGiven()](../Entities/EDayOff/CreateDayOffCommand.unit.cs) - **unit** 
   Check if returns an error when incorrect id is provided
+
+- [ThrowsErrorWhenNameIsAlreadyTakenByDayOff()](../Entities/EDayOff/CreateDayOffCommand.unit.cs) - **unit**  
+  Check if returns an error when a taken by day off name is provided
 
 - [ThrowsErrorWhenOutOfRangeDateIsProvided()](../Entities/EDayOff/CreateDayOffCommand.unit.cs) - **unit**  
   Check if returns an error when a out of range date is provided
@@ -52,6 +55,9 @@
 
 - [UpdateDayOffThrowsNotFoundErrorWhenWrongUserAttemptsUpdate()](../Entities/EDayOff/DayOffController.test.cs) - **integrity**  
   Check if returns an error when day off is inaccessible for user
+
+- [ThrowsErrorWhenNameIsAlreadyTakenByDayOff()](../Entities/EDayOff/UpdateDayOffCommand.unit.cs) - **unit**  
+  Check if returns an error when a taken by day off name is provided
 
 - [ThrowsErrorWhenOutOfRangeDateIsProvided()](../Entities/EDayOff/Commands/UpdateDayOffCommand.unit.cs) - **unit**  
   Check if returns an error when out of range date is provided

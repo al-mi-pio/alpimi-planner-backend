@@ -79,7 +79,7 @@ namespace AlpimiAPI.Entities.EStudent.Queries
                     count = await _dbService.Get<int>(
                         @"
                             SELECT 
-                            COUNT(*)
+                            COUNT(DISTINCT st.[Id])
                             FROM [Student] st
                             INNER JOIN [Group] g ON g.[Id] = st.[GroupId]
                             LEFT JOIN [StudentSubgroup] ssg ON ssg.[StudentId] = st.[Id]
@@ -90,7 +90,7 @@ namespace AlpimiAPI.Entities.EStudent.Queries
                     students = await _dbService.GetAll<Student>(
                         $@"
                             SELECT
-                            st.[Id], [AlbumNumber], st.[GroupId] 
+                            DISTINCT st.[Id], [AlbumNumber], st.[GroupId] 
                             FROM [Student] st
                             INNER JOIN [Group] g ON g.[Id] = st.[GroupId]
                             LEFT JOIN [StudentSubgroup] ssg ON ssg.[StudentId] = st.[Id]
@@ -110,7 +110,7 @@ namespace AlpimiAPI.Entities.EStudent.Queries
                     count = await _dbService.Get<int>(
                         @"
                             SELECT
-                            COUNT(*)
+                            COUNT(DISTINCT st.[Id])
                             FROM [Student] st
                             INNER JOIN [Group] g ON g.[Id] = st.[GroupId]
                             INNER JOIN [Schedule] s ON s.[Id] = g.[ScheduleId]
@@ -122,7 +122,7 @@ namespace AlpimiAPI.Entities.EStudent.Queries
                     students = await _dbService.GetAll<Student>(
                         $@"
                             SELECT 
-                            st.[Id], [AlbumNumber], st.[GroupId] 
+                            DISTINCT st.[Id], [AlbumNumber], st.[GroupId] 
                             FROM [Student] st
                             INNER JOIN [Group] g ON g.[Id] = st.[GroupId]
                             INNER JOIN [Schedule] s ON s.[Id] = g.[ScheduleId]

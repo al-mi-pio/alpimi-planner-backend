@@ -2,7 +2,7 @@
 
 ## `ALL` `api/DayOff/*`
 
-- [DayOffSettingsControllerThrowsUnauthorized()](../Entities/EDayOff/DayOffController.test.cs) - **integrity**  
+- [DayOffControllerThrowsUnauthorized()](../Entities/EDayOff/DayOffController.test.cs) - **integrity**  
   Check if returns an error when token is not provided
 
 - [DayOffControllerThrowsTooManyRequests()](../Entities/EDayOff/DayOffController.test.cs) - **integrity**  

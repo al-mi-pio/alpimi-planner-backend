@@ -117,91 +117,139 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="alreadyExists" xml:space="preserve">
-    <value>{0} o nazwie {1} już istnieje</value>
+  <data name="AlbumNumber" xml:space="preserve">
+    <value>Album number</value>
   </data>
-  <data name="badParameter" xml:space="preserve">
-    <value>Parametr {0} jest niepoprawny</value>
+  <data name="Availability" xml:space="preserve">
+    <value>Teacher's availability</value>
   </data>
-  <data name="invalidLoginOrPassword" xml:space="preserve">
-    <value>Niepoprawny login lub hasło</value>
+  <data name="Capacity" xml:space="preserve">
+    <value>Capacity</value>
   </data>
-  <data name="invalidPassword" xml:space="preserve">
-    <value>Niepoprawne hasło</value>
+  <data name="ClassroomName" xml:space="preserve">
+    <value>Classroom name</value>
   </data>
-  <data name="longPassword" xml:space="preserve">
-    <value>Hasło nie może być dłuższe niż {0} znaków</value>
+  <data name="Classrooms" xml:space="preserve">
+    <value>Classrooms</value>
   </data>
-  <data name="notFound" xml:space="preserve">
-    <value>Encja nie została znaleziona</value>
+  <data name="ClassroomTypeName" xml:space="preserve">
+    <value>Classroom type name</value>
   </data>
-  <data name="passwordMustContain" xml:space="preserve">
-    <value>Hasło musi zawierać po jednym z następujących: {0}</value>
+  <data name="ClassroomTypes" xml:space="preserve">
+    <value>Classroom types</value>
   </data>
-  <data name="shortPassword" xml:space="preserve">
-    <value>Hasło nie może być krótsze niż {0} znaków</value>
+  <data name="ClassroomTypesSeparated" xml:space="preserve">
+    <value>Classroom types (separated by semicolon)</value>
   </data>
-  <data name="unknownError" xml:space="preserve">
-    <value>Wystąpił błąd: {0}</value>
+  <data name="Color" xml:space="preserve">
+    <value>Color (number in the range 1 - 359)</value>
   </data>
-  <data name="connectionError" xml:space="preserve">
-    <value>Wystąpił problem połączenia z bazą danych. Sprawdź parametry połączenia oraz połączenie z internetem</value>
+  <data name="DayOffName" xml:space="preserve">
+    <value>Day off name</value>
   </data>
-  <data name="tooManyRequests" xml:space="preserve">
-    <value>Zbyt dużo zapytań. Spróbuj ponownie poźniej</value>
+  <data name="DaysOff" xml:space="preserve">
+    <value>Days off</value>
   </data>
-  <data name="notAuthenticated" xml:space="preserve">
-    <value>Brak autentykacji</value>
+  <data name="DayOfWeek" xml:space="preserve">
+    <value>Day of week</value>
   </data>
-  <data name="notAuthorized" xml:space="preserve">
-    <value>Brak dostępu do danego zasobu</value>
+  <data name="Email" xml:space="preserve">
+    <value>Email</value>
   </data>
-  <data name="scheduleDate" xml:space="preserve">
-    <value>Data zakończenia nie może być przed datą rozpoczęcia</value>
+  <data name="EndDate" xml:space="preserve">
+    <value>End date (MM/DD/YYYY)</value>
   </data>
-  <data name="dateOutOfRange" xml:space="preserve">
-    <value>Data musi mieścić się w zakresie od {0} do {1}</value>
+  <data name="GroupName" xml:space="preserve">
+    <value>Group name</value>
   </data>
-  <data name="scheduleTime" xml:space="preserve">
-    <value>Czas zakończenia nie może być przed czasem rozpoczęcia</value>
+  <data name="Groups" xml:space="preserve">
+    <value>Groups</value>
   </data>
-  <data name="timeOverlap" xml:space="preserve">
-    <value>{0} nie mogą nakładać się na siebie</value>
+  <data name="LessonBlockStartHour" xml:space="preserve">
+    <value>Lesson block start hour (HH:MM:SS)</value>
   </data>
-  <data name="outOfRange" xml:space="preserve">
-    <value>Isnieją {0} poza podanym zakresem. Proszę je najpierw zmienić</value>
+  <data name="LessonHours" xml:space="preserve">
+    <value>Lesson hours</value>
   </data>
-  <data name="tooManyStudents" xml:space="preserve">
-    <value>Liczba studentów w podgrupie nie może być większa niż liczba studentów w grupie</value>
+  <data name="LessonName" xml:space="preserve">
+    <value>Lesson name</value>
   </data>
-  <data name="duplicateData" xml:space="preserve">
-    <value>Nie można wielokrotnie dodać {0} o wartości {1}</value>
+  <data name="LessonNumberFrom" xml:space="preserve">
+    <value>Lesson number from</value>
   </data>
-  <data name="resourceNotFound" xml:space="preserve">
-    <value>{0} z id {1} nie został znaleziony</value>
+  <data name="LessonNumberTo" xml:space="preserve">
+    <value>Lesson number to</value>
   </data>
-  <data name="wrongSet" xml:space="preserve">
-    <value>{0} musi należeć do tego samego {1} co {2}</value>
+  <data name="LessonPeriods" xml:space="preserve">
+    <value>Lesson periods</value>
   </data>
-  <data name="badWeekDay" xml:space="preserve">
-    <value>Lekcja nie może odbywać się w {0}</value>
+  <data name="Lessons" xml:space="preserve">
+    <value>Lessons</value>
   </data>
-  <data name="cantContain" xml:space="preserve">
-    <value>{0} może tylko zawierać następujące: {1}</value>
+  <data name="LessonTypeName" xml:space="preserve">
+    <value>Lesson type name</value>
   </data>
-  <data name="scheduleDuration" xml:space="preserve">
-    <value>Rok szkolny nie może trwać dłużej niż {0} mies.</value>
+  <data name="LessonTypes" xml:space="preserve">
+    <value>Lesson types</value>
   </data>
-  <data name="cantUndo" xml:space="preserve">
-    <value>Niema nic do cofnięcia</value>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
   </data>
-  <data name="cantRedo" xml:space="preserve">
-    <value>Nie ma nic do ponownego wykonania</value>
+  <data name="StartDate" xml:space="preserve">
+    <value>Start date (MM/DD/YYYY)</value>
   </data>
-  <data name="requiredField" xml:space="preserve">
-    <value>Pole {0} jest wymagane</value>
+  <data name="StudentCount" xml:space="preserve">
+    <value>Student count</value>
   </data>
-  <data name="badImportData" xml:space="preserve">
-    <value>Format danych jest niepoprawny w tym rzędzie</value>
+  <data name="Students" xml:space="preserve">
+    <value>Students</value>
+  </data>
+  <data name="StudentsGroup" xml:space="preserve">
+    <value>Student's group</value>
+  </data>
+  <data name="StudentsSubgroupSeperated" xml:space="preserve">
+    <value>Student's subgroups (separated by semicolon)</value>
+  </data>
+  <data name="SubgroupName" xml:space="preserve">
+    <value>Subgroup name</value>
+  </data>
+  <data name="Subgroups" xml:space="preserve">
+    <value>Subgroups</value>
+  </data>
+  <data name="SubgroupsSeperated" xml:space="preserve">
+    <value>Subgroups (seperated by semicolon, format: parent group/subgroup)</value>
+  </data>
+  <data name="Surname" xml:space="preserve">
+    <value>Surname</value>
+  </data>
+  <data name="Teachers" xml:space="preserve">
+    <value>Teachers</value>
+  </data>
+  <data name="TeachersEmail" xml:space="preserve">
+    <value>Teacher's email</value>
+  </data>
+  <data name="LessonType" xml:space="preserve">
+    <value>Lesson type</value>
+  </data>
+  <data name="Monday" xml:space="preserve">
+    <value>Monday</value>
+  </data>
+  <data name="Tuesday" xml:space="preserve">
+    <value>Tuesday</value>
+  </data>
+  <data name="Wednesday" xml:space="preserve">
+    <value>Wednesday</value>
+  </data>
+  <data name="Thursday" xml:space="preserve">
+    <value>Thursday</value>
+  </data>
+  <data name="Friday" xml:space="preserve">
+    <value>Friday</value>
+  </data>
+  <data name="Saturday" xml:space="preserve">
+    <value>Saturday</value>
+  </data>
+  <data name="Sunday" xml:space="preserve">
+    <value>Sunday</value>
   </data>
 </root>

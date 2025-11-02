@@ -82,7 +82,7 @@ namespace AlpimiAPI.Entities.ETeacher.Commands
                     [
                         new FieldErrorObject(
                             "email",
-                            _str["alreadyExists", "Teacher", request.dto.Email]
+                            _str["alreadyExists", _strFields["Teacher"], request.dto.Email]
                         )
                     ]
                 );

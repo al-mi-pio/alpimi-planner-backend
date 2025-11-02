@@ -136,7 +136,7 @@
     <value>Timestamp</value>
   </data>
   <data name="AffectedEntity" xml:space="preserve">
-    <value>Affected Entity</value>
+    <value>Affected entity</value>
   </data>
   <data name="Command" xml:space="preserve">
     <value>Command</value>
@@ -145,19 +145,19 @@
     <value>Reversal ID</value>
   </data>
   <data name="IsUndone" xml:space="preserve">
-    <value>Is Undone</value>
+    <value>Is undone</value>
   </data>
   <data name="IsUndoneChecked" xml:space="preserve">
-    <value>Is Undone Checked</value>
+    <value>Is undone checked</value>
   </data>
   <data name="SchoolHour" xml:space="preserve">
-    <value>School Hour</value>
+    <value>School hour</value>
   </data>
   <data name="SchoolYearStart" xml:space="preserve">
-    <value>School Year Start</value>
+    <value>School year start</value>
   </data>
   <data name="SchoolYearEnd" xml:space="preserve">
-    <value>School Year End</value>
+    <value>School year end</value>
   </data>
   <data name="From" xml:space="preserve">
     <value>From</value>
@@ -166,7 +166,7 @@
     <value>To</value>
   </data>
   <data name="StartTime" xml:space="preserve">
-    <value>Start Time</value>
+    <value>Start time</value>
   </data>
   <data name="Weight" xml:space="preserve">
     <value>Weight</value>
@@ -184,7 +184,7 @@
     <value>Color</value>
   </data>
   <data name="WeekDay" xml:space="preserve">
-    <value>Week Day</value>
+    <value>Week day</value>
   </data>
   <data name="Start" xml:space="preserve">
     <value>Start</value>
@@ -196,16 +196,16 @@
     <value>Surname</value>
   </data>
   <data name="StudentCount" xml:space="preserve">
-    <value>Student Count</value>
+    <value>Student count</value>
   </data>
   <data name="AlbumNumber" xml:space="preserve">
-    <value>Album Number</value>
+    <value>Album number</value>
   </data>
   <data name="CollidingObject1" xml:space="preserve">
-    <value>Colliding Object 1</value>
+    <value>Colliding object 1</value>
   </data>
   <data name="CollidingObject2" xml:space="preserve">
-    <value>Colliding Object 2</value>
+    <value>Colliding object 2</value>
   </data>
   <data name="Ignored" xml:space="preserve">
     <value>Ignored</value>
@@ -214,10 +214,10 @@
     <value>Subgroup</value>
   </data>
   <data name="ClassroomType" xml:space="preserve">
-    <value>Classroom Type</value>
+    <value>Classroom type</value>
   </data>
   <data name="LessonPeriod" xml:space="preserve">
-    <value>Lesson Period</value>
+    <value>Lesson period</value>
   </data>
   <data name="Auth" xml:space="preserve">
     <value>Auth</value>
@@ -232,13 +232,13 @@
     <value>History</value>
   </data>
   <data name="ScheduleSettings" xml:space="preserve">
-    <value>ScheduleSettings</value>
+    <value>Schedule settings</value>
   </data>
   <data name="DayOff" xml:space="preserve">
-    <value>Day Off</value>
+    <value>Day off</value>
   </data>
   <data name="CollisionType" xml:space="preserve">
-    <value>Collision Type</value>
+    <value>Collision type</value>
   </data>
   <data name="Collision" xml:space="preserve">
     <value>Collision</value>
@@ -247,7 +247,7 @@
     <value>Classroom</value>
   </data>
   <data name="LessonType" xml:space="preserve">
-    <value>Lesson Type</value>
+    <value>Lesson type</value>
   </data>
   <data name="Lesson" xml:space="preserve">
     <value>Lesson</value>
@@ -265,36 +265,36 @@
     <value>Student</value>
   </data>
   <data name="LessonBlock" xml:space="preserve">
-    <value>Lesson Block</value>
+    <value>Lesson block</value>
   </data>
   <data name="Page" xml:space="preserve">
     <value>Page</value>
   </data>
   <data name="PerPage" xml:space="preserve">
-    <value>Per Page</value>
+    <value>Per page</value>
   </data>
   <data name="SortBy" xml:space="preserve">
-    <value>Sort By</value>
+    <value>Sort by</value>
   </data>
   <data name="OrderBy" xml:space="preserve">
-    <value>Order By</value>
+    <value>Order by</value>
   </data>
   <data name="SortOrder" xml:space="preserve">
-    <value>Sort Order</value>
+    <value>Sort order</value>
   </data>
   <data name="AmountOfHours" xml:space="preserve">
-    <value>AmountOfHours</value>
+    <value>Amount of hours</value>
   </data>
   <data name="LessonStart" xml:space="preserve">
-    <value>Lesson Start</value>
+    <value>Lesson start</value>
   </data>
   <data name="LessonEnd" xml:space="preserve">
-    <value>Lesson End</value>
+    <value>Lesson end</value>
   </data>
   <data name="WeekInterval" xml:space="preserve">
-    <value>Week Interval</value>
+    <value>Week interval</value>
   </data>
   <data name="SchoolDays" xml:space="preserve">
-    <value>School Days</value>
+    <value>School days</value>
   </data>
 </root>

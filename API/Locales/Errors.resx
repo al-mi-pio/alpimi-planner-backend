@@ -166,7 +166,7 @@
     <value>The end time cannot happen before the start time</value>
   </data>
   <data name="timeOverlap" xml:space="preserve">
-    <value>{0}s cannot overlap</value>
+    <value>{0} cannot overlap with another</value>
   </data>
   <data name="outOfRange" xml:space="preserve">
     <value>There are {0} outside of provided range. Please change them first</value>

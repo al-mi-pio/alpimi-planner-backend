@@ -133,31 +133,31 @@
     <value>Własny URL</value>
   </data>
   <data name="Timestamp" xml:space="preserve">
-    <value>Znacznik Czasu</value>
+    <value>Znacznik czasu</value>
   </data>
   <data name="AffectedEntity" xml:space="preserve">
-    <value>Dotknięta Encja</value>
+    <value>Dotknięta encja</value>
   </data>
   <data name="Command" xml:space="preserve">
     <value>Polecenie</value>
   </data>
   <data name="ReversalId" xml:space="preserve">
-    <value>Id Odwrócenia</value>
+    <value>ID odwrócenia</value>
   </data>
   <data name="IsUndone" xml:space="preserve">
-    <value>Czy Cofnięte</value>
+    <value>Czy cofnięte</value>
   </data>
   <data name="IsUndoneChecked" xml:space="preserve">
-    <value>Czy Cofnięcie Sprawdzone</value>
+    <value>Czy cofnięcie sprawdzone</value>
   </data>
   <data name="SchoolHour" xml:space="preserve">
-    <value>Godzina Szkolna</value>
+    <value>Godzina lekcyjna</value>
   </data>
   <data name="SchoolYearStart" xml:space="preserve">
-    <value>Początek Roku Szkolnego</value>
+    <value>Data rozpoczęcia semestru</value>
   </data>
   <data name="SchoolYearEnd" xml:space="preserve">
-    <value>Koniec Roku Szkolnego</value>
+    <value>Data zakończenia semestru</value>
   </data>
   <data name="From" xml:space="preserve">
     <value>Od</value>
@@ -166,7 +166,7 @@
     <value>Do</value>
   </data>
   <data name="StartTime" xml:space="preserve">
-    <value>Godzina Rozpoczęcia</value>
+    <value>Godzina rozpoczęcia</value>
   </data>
   <data name="Weight" xml:space="preserve">
     <value>Waga</value>
@@ -184,7 +184,7 @@
     <value>Kolor</value>
   </data>
   <data name="WeekDay" xml:space="preserve">
-    <value>Dzień Tygodnia</value>
+    <value>Dzień tygodnia</value>
   </data>
   <data name="Start" xml:space="preserve">
     <value>Start</value>
@@ -196,16 +196,16 @@
     <value>Nazwisko</value>
   </data>
   <data name="StudentCount" xml:space="preserve">
-    <value>Liczba Studentów</value>
+    <value>Liczba uczniów</value>
   </data>
   <data name="AlbumNumber" xml:space="preserve">
-    <value>Numer Albumu</value>
+    <value>Numer albumu</value>
   </data>
   <data name="CollidingObject1" xml:space="preserve">
-    <value>Obiekt Kolizji 1</value>
+    <value>Obiekt kolizji 1</value>
   </data>
   <data name="CollidingObject2" xml:space="preserve">
-    <value>Obiekt Kolizji 2</value>
+    <value>Obiekt kolizji 2</value>
   </data>
   <data name="Ignored" xml:space="preserve">
     <value>Ignorowane</value>
@@ -214,10 +214,10 @@
     <value>Podgrupa</value>
   </data>
   <data name="ClassroomType" xml:space="preserve">
-    <value>Typ Sali</value>
+    <value>Rodzaj sali</value>
   </data>
   <data name="LessonPeriod" xml:space="preserve">
-    <value>Okres Lekcyjny</value>
+    <value>Okres lekcyjny</value>
   </data>
   <data name="Auth" xml:space="preserve">
     <value>Uwierzytelnianie</value>
@@ -226,19 +226,19 @@
     <value>Użytkownik</value>
   </data>
   <data name="Schedule" xml:space="preserve">
-    <value>Harmonogram</value>
+    <value>Plan zajęć</value>
   </data>
   <data name="History" xml:space="preserve">
     <value>Historia</value>
   </data>
   <data name="ScheduleSettings" xml:space="preserve">
-    <value>Ustawienia Harmonogramu</value>
+    <value>Ustawienia planu</value>
   </data>
   <data name="DayOff" xml:space="preserve">
-    <value>Dzień Wolny</value>
+    <value>Dzień wolny</value>
   </data>
   <data name="CollisionType" xml:space="preserve">
-    <value>Typ Kolizji</value>
+    <value>Rodzaj kolizji</value>
   </data>
   <data name="Collision" xml:space="preserve">
     <value>Kolizja</value>
@@ -247,31 +247,31 @@
     <value>Sala</value>
   </data>
   <data name="LessonType" xml:space="preserve">
-    <value>Typ Lekcji</value>
+    <value>Rodzaj zajęć</value>
   </data>
   <data name="Lesson" xml:space="preserve">
-    <value>Lekcja</value>
+    <value>Zajęcia</value>
   </data>
   <data name="Teacher" xml:space="preserve">
     <value>Nauczyciel</value>
   </data>
   <data name="Availability" xml:space="preserve">
-    <value>Dostępność</value>
+    <value>Dostępność nauczyciela</value>
   </data>
   <data name="Group" xml:space="preserve">
     <value>Grupa</value>
   </data>
   <data name="Student" xml:space="preserve">
-    <value>Student</value>
+    <value>Uczeń</value>
   </data>
   <data name="LessonBlock" xml:space="preserve">
-    <value>Blok Lekcyjny</value>
+    <value>Blok lekcyjny</value>
   </data>
   <data name="Page" xml:space="preserve">
     <value>Strona</value>
   </data>
   <data name="PerPage" xml:space="preserve">
-    <value>Na Strone</value>
+    <value>Na stronę</value>
   </data>
   <data name="SortBy" xml:space="preserve">
     <value>Sortuj według</value>
@@ -283,18 +283,18 @@
     <value>Kolejność sortowania</value>
   </data>
   <data name="AmountOfHours" xml:space="preserve">
-    <value>Ilość Godzin</value>
+    <value>Całkowita liczba godzin</value>
   </data>
   <data name="LessonStart" xml:space="preserve">
-    <value>Początek Lekcji</value>
+    <value>Rozpoczęcie zajęć</value>
   </data>
   <data name="LessonEnd" xml:space="preserve">
-    <value>Koniec Lekcji</value>
+    <value>Zakończenie zajęć</value>
   </data>
   <data name="WeekInterval" xml:space="preserve">
     <value>Interwał tygodniowy</value>
   </data>
   <data name="SchoolDays" xml:space="preserve">
-    <value>Dni Szkolne</value>
+    <value>Dni zajęć szkolnych</value>
   </data>
 </root>

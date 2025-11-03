@@ -218,16 +218,19 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
                 );
             }
 
-            int daysDifference =
+            int daysDifferenceFirst =
                 request.dto.WeekDay.Value - (int)oneLessonBlock.LessonDate.DayOfWeek;
+            int daysDifferenceLast =
+                request.dto.WeekDay.Value - (int)lastLessonBlock.LessonDate.DayOfWeek;
             if (
-                scheduleSettings.SchoolYearStart > oneLessonBlock.LessonDate.AddDays(daysDifference)
+                scheduleSettings.SchoolYearStart
+                    > oneLessonBlock.LessonDate.AddDays(daysDifferenceFirst)
                 || scheduleSettings.SchoolYearEnd
-                    < oneLessonBlock.LessonDate.AddDays(daysDifference)
+                    < oneLessonBlock.LessonDate.AddDays(daysDifferenceFirst)
                 || scheduleSettings.SchoolYearStart
-                    > lastLessonBlock.LessonDate.AddDays(daysDifference)
+                    > lastLessonBlock.LessonDate.AddDays(daysDifferenceLast)
                 || scheduleSettings.SchoolYearEnd
-                    < lastLessonBlock.LessonDate.AddDays(daysDifference)
+                    < lastLessonBlock.LessonDate.AddDays(daysDifferenceLast)
             )
             {
                 errors.Add(
@@ -248,13 +251,14 @@ namespace AlpimiAPI.Entities.ELessonBlock.Commands
 
             await _dbService.Update<LessonBlock?>(
                 $@"
-                    UPDATE [LessonBlock] 
+                    UPDATE [LessonBlock]
                     SET
-                    [LessonDate] = DATEADD(DAY,{daysDifference},[LessonDate]), 
-                    [LessonStart] = @LessonStart, 
-                    [LessonEnd] = @LessonEnd, 
+                    [LessonDate] = DATEADD(DAY,@WeekDay - DATEPART(WEEKDAY, [LessonDate]) + 1,[LessonDate]),
+                    [LessonStart] = @LessonStart,
+                    [LessonEnd] = @LessonEnd,
                     [ClassroomId] = @ClassroomId
-                    WHERE [Id] = '{request.Id}' OR [ClusterId] = '{request.Id}';",
+                    WHERE [Id] = '{request.Id}' OR [ClusterId] = '{request.Id}';
+                ",
                 request.dto
             );
 

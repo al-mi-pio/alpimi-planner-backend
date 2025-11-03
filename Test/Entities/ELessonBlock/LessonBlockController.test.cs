@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Collections.Generic;
+using System.Net;
 using System.Net.Http.Headers;
 using AlpimiAPI.Entities.ELesson.DTO;
 using AlpimiAPI.Entities.ELessonBlock;
@@ -539,6 +540,49 @@ namespace AlpimiTest.Entities.ELessonBlock
 
             var jsonResponse = await response.Content.ReadFromJsonAsync<ApiGetResponse<Guid>>();
             Assert.Equal(clusterId, jsonResponse!.Content);
+        }
+
+        [Fact]
+        public async Task UpdateLessonBlockUpdatesClusterDayOfWeek()
+        {
+            var lessonBlockClusterUpdateRequest = MockData.GetUpdateLessonBlockDTODetails();
+            var singleLessonBlockUpdateRequest = lessonBlockClusterUpdateRequest;
+            singleLessonBlockUpdateRequest.WeekDay = 3;
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "Bob", userId)
+            );
+            var clusterId = await DbHelper.SetupLessonBlock(
+                _client,
+                MockData.GetCreateThirdLessonBlockDTODetails(lessonId1, classroomId1)
+            );
+            var query = $"?id={clusterId}";
+            var response = await _client.GetAsync($"/api/LessonBlock{query}");
+            var getAllResponse = await response.Content.ReadFromJsonAsync<
+                ApiGetAllResponse<IEnumerable<LessonBlockDTO>>
+            >();
+            var lessonBlockId = getAllResponse!.Content.First()!.Id;
+            response = await _client.PatchAsJsonAsync(
+                $"/api/LessonBlock/{lessonBlockId}",
+                singleLessonBlockUpdateRequest
+            );
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            response = await _client.PatchAsJsonAsync(
+                $"/api/LessonBlock/{clusterId}",
+                lessonBlockClusterUpdateRequest
+            );
+
+            var jsonResponse = await response.Content.ReadFromJsonAsync<ApiGetResponse<Guid>>();
+            response = await _client.GetAsync($"/api/LessonBlock{query}");
+            getAllResponse = await response.Content.ReadFromJsonAsync<
+                ApiGetAllResponse<IEnumerable<LessonBlockDTO>>
+            >();
+            Assert.Equal(clusterId, jsonResponse!.Content);
+            Assert.Equal(
+                lessonBlockClusterUpdateRequest.WeekDay,
+                (int)getAllResponse!.Content.First().LessonDate.DayOfWeek
+            );
         }
 
         [Fact]

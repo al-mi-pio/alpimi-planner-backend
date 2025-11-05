@@ -230,7 +230,6 @@ namespace AlpimiAPI.Entities.ELessonBlock.Queries
             {
                 Dictionary<Guid, Lesson> lessonMap = new Dictionary<Guid, Lesson>();
                 Dictionary<Guid, Classroom> classroomMap = new Dictionary<Guid, Classroom>();
-                Dictionary<Guid, Teacher> teacherMap = new Dictionary<Guid, Teacher>();
                 foreach (var lessonBlock in lessonBlocks)
                 {
                     if (!lessonMap.ContainsKey(lessonBlock.LessonId))

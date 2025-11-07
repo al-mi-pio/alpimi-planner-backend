@@ -247,15 +247,6 @@ namespace alpimi_planner_backend.Collisions.CollisionDataGatherers
         {
             logMaker.writeLog("--Getting collision scan blocks");
             CollisionScanBlocks collisionScanBlocks = new CollisionScanBlocks();
-            if (collisionScanInfo.scanDate.HasValue)
-            {
-                logMaker.writeLog(
-                    DateOnlyUtils.getWeekStart(collisionScanInfo.scanDate.Value).ToString()
-                );
-                logMaker.writeLog(
-                    DateOnlyUtils.getWeekEnd(collisionScanInfo.scanDate.Value).ToString()
-                );
-            }
 
             if (collisionScanInfo.scanType == "Full")
             {
@@ -404,24 +395,10 @@ namespace alpimi_planner_backend.Collisions.CollisionDataGatherers
                             ORDER BY [Id];",
                     guidPar
                 );
+
                 if (daysOff != null)
                 {
                     collisionScanBlocks.daysOffFull = daysOff.ToList();
-
-                    collisionScanBlocks.daysOff = new List<DayOffInstance>();
-                    foreach (DayOff dayOff in collisionScanBlocks.daysOffFull)
-                    {
-                        for (
-                            DateOnly startDate = dayOff.From;
-                            startDate <= dayOff.To;
-                            startDate = startDate.AddDays(1)
-                        )
-                        {
-                            collisionScanBlocks.daysOff.Add(
-                                new DayOffInstance(dayOff.Id, dayOff.Name, startDate)
-                            );
-                        }
-                    }
                 }
             }
             else
@@ -581,24 +558,10 @@ namespace alpimi_planner_backend.Collisions.CollisionDataGatherers
                             ORDER BY [Id];",
                         timeIntervalPar
                     );
+
                     if (daysOff != null)
                     {
                         collisionScanBlocks.daysOffFull = daysOff.ToList();
-
-                        collisionScanBlocks.daysOff = new List<DayOffInstance>();
-                        foreach (DayOff dayOff in collisionScanBlocks.daysOffFull)
-                        {
-                            for (
-                                DateOnly startDate = dayOff.From;
-                                startDate <= dayOff.To;
-                                startDate = startDate.AddDays(1)
-                            )
-                            {
-                                collisionScanBlocks.daysOff.Add(
-                                    new DayOffInstance(dayOff.Id, dayOff.Name, startDate)
-                                );
-                            }
-                        }
                     }
                 }
             }
@@ -726,13 +689,22 @@ namespace alpimi_planner_backend.Collisions.CollisionDataGatherers
                     }
                 }
 
-                if (collisionScanBlocks.daysOff != null)
+                if (collisionScanBlocks.daysOffFull != null)
                 {
-                    foreach (DayOffInstance block in collisionScanBlocks.daysOff)
+                    foreach (DayOff block in collisionScanBlocks.daysOffFull)
                     {
                         logMaker.writeLog(("  - Data for DayOff: " + block.Id).ToString());
                         logMaker.writeLog(
-                            ("   * " + block.Id + " " + block.Name + " " + block.Date).ToString()
+                            (
+                                "   * "
+                                + block.Id
+                                + " "
+                                + block.Name
+                                + " "
+                                + block.From
+                                + " "
+                                + block.To
+                            ).ToString()
                         );
                     }
                 }

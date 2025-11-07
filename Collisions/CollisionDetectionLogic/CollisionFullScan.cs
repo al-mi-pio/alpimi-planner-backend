@@ -51,23 +51,14 @@ namespace alpimi_planner_backend.Collisions.CollisionDetectionLogic
 
                 if (collisionScanBlocks.daysOffFull != null)
                 {
-                    dayScanBlocks.daysOffFull = collisionScanBlocks.daysOffFull;
-                }
-
-                if (collisionScanBlocks.daysOff != null)
-                {
-                    for (int i = collisionScanBlocks.daysOff.Count - 1; i >= 0; i--)
+                    for (int i = collisionScanBlocks.daysOffFull.Count - 1; i >= 0; i--)
                     {
                         if (
-                            collisionScanBlocks.daysOff[i].Date >= weekStart
-                            && collisionScanBlocks.daysOff[i].Date <= weekEnd
+                            collisionScanBlocks.daysOffFull[i].To >= weekStart
+                            && collisionScanBlocks.daysOffFull[i].From <= weekEnd
                         )
                         {
-                            dayScanBlocks.daysOff.Add(collisionScanBlocks.daysOff[i]);
-                        }
-                        if (collisionScanBlocks.daysOff[i].Date == date)
-                        {
-                            collisionScanBlocks.daysOff.RemoveAt(i);
+                            dayScanBlocks.daysOffFull.Add(collisionScanBlocks.daysOffFull[i]);
                         }
                     }
                 }

@@ -36,6 +36,10 @@
   <ItemGroup>
     <InternalVisibleTo Include="AlpimiTest.Entities.EAuth" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Collisions\CollisionDataManipulators\" />
+    <Folder Include="Logs\" />
+  </ItemGroup>
   <Target Name="Husky" BeforeTargets="Restore;CollectPackageReferences" Condition="'$(HUSKY)' != 0">
     <Exec Command="dotnet tool restore" StandardOutputImportance="Low" StandardErrorImportance="High" />
     <Exec Command="dotnet husky install" StandardOutputImportance="Low" StandardErrorImportance="High" WorkingDirectory="." />

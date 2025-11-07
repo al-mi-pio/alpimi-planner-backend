@@ -3,6 +3,8 @@ using AlpimiAPI.Entities.ECollisionType;
 using AlpimiAPI.Entities.ECollisionType.Queries;
 using AlpimiAPI.Locales;
 using AlpimiAPI.Responses;
+using alpimi_planner_backend.Collisions.CollisionDetectionLogic;
+using alpimi_planner_backend.Collisions.CollisionUtils;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
@@ -70,6 +72,15 @@ namespace AlpimiAPI.Entities.ECollision.Queries
             {
                 throw new ApiErrorException(errors);
             }
+
+            LogMaker logMaker = new LogMaker();
+            logMaker.writeLog("START");
+            await GlobalCollisionDetectionManager.scanForCollisions(
+                request.Id,
+                _dbService,
+                cancellationToken,
+                logMaker
+            );
 
             IEnumerable<Collision>? collisions;
             int count;

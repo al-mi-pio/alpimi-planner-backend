@@ -168,7 +168,7 @@ namespace AlpimiAPI.Entities.ELessonBlock.Queries
                     lessonBlocks = await _dbService.GetAll<LessonBlock>(
                         $@"
                             SELECT 
-                            lb.[Id], [LessonDate], [LessonStart], [LessonEnd], lb.[LessonId], [ClusterId]   
+                            lb.[Id], [LessonDate], [LessonStart], [LessonEnd], lb.[LessonId], [ClassroomId], [ClusterId]   
                             FROM [LessonBlock] lb
                             INNER JOIN [Lesson] l ON l.[Id] = lb.[LessonId]
                             LEFT JOIN [LessonSubgroup] lsg ON lsg.[LessonId] = l.[Id]

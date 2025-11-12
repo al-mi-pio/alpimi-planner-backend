@@ -1,11 +1,14 @@
-﻿using System.Net;
+﻿using System.Diagnostics;
+using System.Net;
 using System.Net.Http.Headers;
+using AlpimiAPI.Entities.ELessonBlock;
 using AlpimiAPI.Entities.ELessonPeriod.DTO;
 using AlpimiAPI.Entities.ESchedule;
 using AlpimiAPI.Responses;
 using AlpimiAPI.Utilities;
 using AlpimiTest.TestSetup;
 using AlpimiTest.TestUtilities;
+using Moq;
 using Xunit;
 
 namespace AlpimiTest.Entities.ELessonPeriod
@@ -217,6 +220,35 @@ namespace AlpimiTest.Entities.ELessonPeriod
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.DoesNotContain(lessonPeriodRequest.Start.ToString()!, stringResponse);
+        }
+
+        [Fact]
+        public async Task DeleteLessonPeriodThrowsErrorWhenIfThereArentEnoughLessonPeriods()
+        {
+            var lessonPeriodRequest = MockData.GetCreateLessonPeriodDTODetails(scheduleId);
+            var lessonPeriodId = await DbHelper.SetupLessonPeriod(_client, lessonPeriodRequest);
+            var teacherId = await DbHelper.SetupTeacher(
+                _client,
+                MockData.GetCreateTeacherDTODetails(scheduleId)
+            );
+            await DbHelper.SetupAvailability(
+                _client,
+                MockData.GetCreateAvailabilityDTODetails(teacherId)
+            );
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", new Guid())
+            );
+
+            var response = await _client.DeleteAsync($"/api/LessonPeriod/{lessonPeriodId}");
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+            var jsonResponse = await response.Content.ReadFromJsonAsync<ApiErrorResponse>();
+            Debug.WriteLine(jsonResponse!.errors.First().ToString()!);
+            Assert.Contains(
+                "Lesson period cannot be deleted because it contains",
+                jsonResponse!.errors.First().ToString()!
+            );
         }
 
         [Fact]

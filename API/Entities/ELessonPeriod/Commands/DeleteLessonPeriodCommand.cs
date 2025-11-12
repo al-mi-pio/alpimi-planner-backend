@@ -5,8 +5,12 @@ using AlpimiAPI.Entities.EHistory.DTO;
 using AlpimiAPI.Entities.ELessonPeriod.DTO;
 using AlpimiAPI.Entities.EScheduleSettings;
 using AlpimiAPI.Entities.EScheduleSettings.Queries;
+using AlpimiAPI.Locales;
+using AlpimiAPI.Responses;
+using AlpimiAPI.Utilities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 
 namespace AlpimiAPI.Entities.ELessonPeriod.Commands
 {
@@ -15,10 +19,18 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Commands
     public class DeleteLessonPeriodHandler : IRequestHandler<DeleteLessonPeriodCommand>
     {
         private readonly IDbService _dbService;
+        private readonly IStringLocalizer<Errors> _str;
+        private readonly IStringLocalizer<Fields> _strFields;
 
-        public DeleteLessonPeriodHandler(IDbService dbService)
+        public DeleteLessonPeriodHandler(
+            IDbService dbService,
+            IStringLocalizer<Errors> str,
+            IStringLocalizer<Fields> strFields
+        )
         {
             _dbService = dbService;
+            _str = str;
+            _strFields = strFields;
         }
 
         public async Task Handle(
@@ -38,12 +50,16 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Commands
                             WHERE [Id] = @Id;",
                         request
                     );
-                    await _dbService.Delete(
-                        @"
+                    if (lessonPeriod != null)
+                    {
+                        await LessonBlockCheck(_dbService, lessonPeriod, cancellationToken);
+                        await _dbService.Delete(
+                            @"
                             DELETE [LessonPeriod] 
                             WHERE [Id] = @Id;",
-                        request
-                    );
+                            request
+                        );
+                    }
                     break;
                 default:
                     lessonPeriod = await _dbService.Get<LessonPeriod?>(
@@ -56,15 +72,19 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Commands
                             WHERE s.[UserId] = @FilteredId AND lp.[Id] = @Id;",
                         request
                     );
-                    await _dbService.Delete(
-                        @"
+                    if (lessonPeriod != null)
+                    {
+                        await LessonBlockCheck(_dbService, lessonPeriod, cancellationToken);
+                        await _dbService.Delete(
+                            @"
                             DELETE lp
                             FROM [LessonPeriod] lp
                             INNER JOIN [ScheduleSettings] ss ON ss.[Id] = lp.[ScheduleSettingsId]
                             INNER JOIN [Schedule] s ON s.[Id] = ss.[ScheduleId]
                             WHERE s.[UserId] = @FilteredId AND lp.[Id] = @Id;",
-                        request
-                    );
+                            request
+                        );
+                    }
                     break;
             }
 
@@ -103,6 +123,74 @@ namespace AlpimiAPI.Entities.ELessonPeriod.Commands
                 };
                 AddToHistoryCommand addToHistoryCommand = new AddToHistoryCommand(addToHistoryDTO);
                 await addToHistoryHandler.Handle(addToHistoryCommand, cancellationToken);
+            }
+        }
+
+        private async Task LessonBlockCheck(
+            IDbService dbService,
+            LessonPeriod lessonPeriod,
+            CancellationToken cancellationToken
+        )
+        {
+            var lessonPeriodCount = await LessonPeriodCount.Get(
+                dbService,
+                lessonPeriod.ScheduleSettingsId,
+                cancellationToken
+            );
+
+            var lessonBlocksOnFinalLessonHour = await _dbService.GetAll<Guid>(
+                $@"
+                    SELECT
+                    lb.[Id]
+                    FROM[LessonBlock] lb
+                    INNER JOIN [Lesson] l ON l.[Id] = lb.[LessonId]
+                    INNER JOIN [LessonType] lt ON lt.[Id] = l.[LessonTypeId]
+                    INNER JOIN [Schedule] s ON s.[Id] = lt.[ScheduleId]
+                    INNER JOIN [ScheduleSettings] ss ON ss.[ScheduleId] = s.[Id]
+                    WHERE ss.[Id] = @ScheduleSettingsId AND [LessonEnd] = {lessonPeriodCount - 1}",
+                lessonPeriod
+            );
+            var avaibilityOnFinalLessonHour = await _dbService.GetAll<Guid>(
+                $@" 
+                    SELECT 
+                    a.[Id]
+                    FROM [Availability] a
+                    INNER JOIN [Teacher] t ON t.[Id] = a.[TeacherId]
+                    INNER JOIN [Schedule] s ON s.[Id]= t.[ScheduleId]
+                    INNER JOIN [ScheduleSettings] ss ON ss.[ScheduleId] = s.[Id]
+                    WHERE ss.[Id] = @ScheduleSettingsId AND a.[End] = {lessonPeriodCount - 1}",
+                lessonPeriod
+            );
+            List<ErrorObject> errors = new List<ErrorObject>();
+            if (lessonBlocksOnFinalLessonHour!.Any())
+            {
+                errors.Add(
+                    new FieldErrorObject(
+                        $"{{lessonBlock: {string.Join(", ", lessonBlocksOnFinalLessonHour!)} }}",
+                        _str[
+                            "notEnoughLessonPeriods",
+                            _strFields["LessonPeriod"],
+                            _strFields["LessonBlock"]
+                        ]
+                    )
+                );
+            }
+            if (avaibilityOnFinalLessonHour!.Any())
+            {
+                errors.Add(
+                    new FieldErrorObject(
+                        $"{{availability: {string.Join(", ", avaibilityOnFinalLessonHour!)} }}",
+                        _str[
+                            "notEnoughLessonPeriods",
+                            _strFields["LessonPeriod"],
+                            _strFields["Availability"]
+                        ]
+                    )
+                );
+            }
+            if (errors.Count != 0)
+            {
+                throw new ApiErrorException(errors);
             }
         }
     }

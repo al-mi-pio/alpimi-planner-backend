@@ -204,4 +204,7 @@
   <data name="badImportData" xml:space="preserve">
     <value>Data format is invalid in this row</value>
   </data>
+  <data name="notEnoughLessonPeriods" xml:space="preserve">
+    <value>{0} cannot be deleted because it contains {1}</value>
+  </data>
 </root>

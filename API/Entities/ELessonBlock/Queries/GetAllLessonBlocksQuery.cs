@@ -124,10 +124,11 @@ namespace AlpimiAPI.Entities.ELessonBlock.Queries
                             COUNT(*)
                             FROM [LessonBlock] lb
                             INNER JOIN [Lesson] l ON l.[Id] = lb.[LessonId]
+                            INNER JOIN [LessonType] lt on lt.[Id] = l.[LessonTypeId]
                             LEFT JOIN [LessonSubgroup] lsg ON lsg.[LessonId] = l.[Id]
                             LEFT JOIN [Subgroup] sg ON sg.[Id] = lsg.[SubgroupId]
                             INNER JOIN [Group] g ON g.[Id] = sg.[GroupId]
-                            WHERE (sg.[Id] = @Id OR g.[Id] = @Id OR g.[ScheduleId] = @Id OR l.[Id] = @Id OR [ClassroomId] = @Id OR [ClusterId] = @Id OR l.[TeacherId] = @Id) AND lb.[LessonDate] BETWEEN @FromDate AND @ToDate;",
+                            WHERE (sg.[Id] = @Id OR g.[Id] = @Id OR lt.[ScheduleId] = @Id OR l.[Id] = @Id OR [ClassroomId] = @Id OR [ClusterId] = @Id OR l.[TeacherId] = @Id) AND lb.[LessonDate] BETWEEN @FromDate AND @ToDate;",
                         request
                     );
                     lessonBlocks = await _dbService.GetAll<LessonBlock>(
@@ -136,10 +137,11 @@ namespace AlpimiAPI.Entities.ELessonBlock.Queries
                             lb.[Id], [LessonDate], [LessonStart], [LessonEnd], lb.[LessonId], [ClassroomId], [ClusterId]  
                             FROM [LessonBlock] lb
                             INNER JOIN [Lesson] l ON l.[Id] = lb.[LessonId]
+                            INNER JOIN [LessonType] lt on lt.[Id] = l.[LessonTypeId]
                             LEFT JOIN [LessonSubgroup] lsg ON lsg.[LessonId] = l.[Id]
                             LEFT JOIN [Subgroup] sg ON sg.[Id] = lsg.[SubgroupId]
                             INNER JOIN [Group] g ON g.[Id] = sg.[GroupId]
-                            WHERE (sg.[Id] = @Id OR g.[Id] = @Id OR g.[ScheduleId] = @Id OR l.[Id] = @Id OR [ClassroomId] = @Id OR [ClusterId] = @Id OR l.[TeacherId] = @Id) AND lb.[LessonDate] BETWEEN @FromDate AND @ToDate
+                            WHERE (sg.[Id] = @Id OR g.[Id] = @Id OR lt.[ScheduleId] = @Id OR l.[Id] = @Id OR [ClassroomId] = @Id OR [ClusterId] = @Id OR l.[TeacherId] = @Id) AND lb.[LessonDate] BETWEEN @FromDate AND @ToDate
                             ORDER BY
                             {request.Pagination.SortBy}
                             {request.Pagination.SortOrder}
@@ -157,12 +159,13 @@ namespace AlpimiAPI.Entities.ELessonBlock.Queries
                             COUNT(*)
                             FROM [LessonBlock] lb
                             INNER JOIN [Lesson] l ON l.[Id] = lb.[LessonId]
+                            INNER JOIN [LessonType] lt on lt.[Id] = l.[LessonTypeId]
                             LEFT JOIN [LessonSubgroup] lsg ON lsg.[LessonId] = l.[Id]
                             LEFT JOIN [Subgroup] sg ON sg.[Id] = lsg.[SubgroupId]
                             INNER JOIN [Group] g ON g.[Id] = sg.[GroupId]
                             INNER JOIN [Schedule] s on s.[Id] = g.[ScheduleId]
                             INNER JOIN [ScheduleSettings] ss ON ss.[ScheduleId] = s.[Id]
-                            WHERE (s.[UserId] = @FilteredId OR ss.[IsPublic] = 'TRUE') AND (sg.[Id] = @Id OR g.[Id] = @Id OR g.[ScheduleId] = @Id OR l.[Id] = @Id OR [ClassroomId] = @Id OR [ClusterId] = @Id OR l.[TeacherId] = @Id) AND lb.[LessonDate] BETWEEN @FromDate AND @ToDate;",
+                            WHERE (s.[UserId] = @FilteredId OR ss.[IsPublic] = 'TRUE') AND (sg.[Id] = @Id OR g.[Id] = @Id OR lt.[ScheduleId] = @Id OR l.[Id] = @Id OR [ClassroomId] = @Id OR [ClusterId] = @Id OR l.[TeacherId] = @Id) AND lb.[LessonDate] BETWEEN @FromDate AND @ToDate;",
                         request
                     );
                     lessonBlocks = await _dbService.GetAll<LessonBlock>(
@@ -171,12 +174,13 @@ namespace AlpimiAPI.Entities.ELessonBlock.Queries
                             lb.[Id], [LessonDate], [LessonStart], [LessonEnd], lb.[LessonId], [ClassroomId], [ClusterId]   
                             FROM [LessonBlock] lb
                             INNER JOIN [Lesson] l ON l.[Id] = lb.[LessonId]
+                            INNER JOIN [LessonType] lt on lt.[Id] = l.[LessonTypeId]
                             LEFT JOIN [LessonSubgroup] lsg ON lsg.[LessonId] = l.[Id]
                             LEFT JOIN [Subgroup] sg ON sg.[Id] = lsg.[SubgroupId]
                             INNER JOIN [Group] g ON g.[Id] = sg.[GroupId]
                             INNER JOIN [Schedule] s on s.[Id] = g.[ScheduleId]
                             INNER JOIN [ScheduleSettings] ss ON ss.[ScheduleId] = s.[Id]
-                            WHERE (s.[UserId] = @FilteredId OR ss.[IsPublic] = 'TRUE') AND (sg.[Id] = @Id OR g.[Id] = @Id OR g.[ScheduleId] = @Id OR l.[Id] = @Id OR [ClassroomId] = @Id OR [ClusterId] = @Id OR l.[TeacherId] = @Id) AND lb.[LessonDate] BETWEEN @FromDate AND @ToDate
+                            WHERE (s.[UserId] = @FilteredId OR ss.[IsPublic] = 'TRUE') AND (sg.[Id] = @Id OR g.[Id] = @Id OR lt.[ScheduleId] = @Id OR l.[Id] = @Id OR [ClassroomId] = @Id OR [ClusterId] = @Id OR l.[TeacherId] = @Id) AND lb.[LessonDate] BETWEEN @FromDate AND @ToDate
                             ORDER BY
                             {request.Pagination.SortBy}
                             {request.Pagination.SortOrder}
@@ -194,12 +198,13 @@ namespace AlpimiAPI.Entities.ELessonBlock.Queries
                             COUNT(*)
                             FROM [LessonBlock] lb
                             INNER JOIN [Lesson] l ON l.[Id] = lb.[LessonId]
+                            INNER JOIN [LessonType] lt on lt.[Id] = l.[LessonTypeId]
                             LEFT JOIN [LessonSubgroup] lsg ON lsg.[LessonId] = l.[Id]
                             LEFT JOIN [Subgroup] sg ON sg.[Id] = lsg.[SubgroupId]
                             INNER JOIN [Group] g ON g.[Id] = sg.[GroupId]
                             INNER JOIN [Schedule] s on s.[Id] = g.[ScheduleId]
                             INNER JOIN [ScheduleSettings] ss ON ss.[ScheduleId] = s.[Id]
-                            WHERE ss.[IsPublic] = 'TRUE' AND (sg.[Id] = @Id OR g.[Id] = @Id OR g.[ScheduleId] = @Id OR l.[Id] = @Id OR [ClassroomId] = @Id OR [ClusterId] = @Id OR l.[TeacherId] = @Id) AND lb.[LessonDate] BETWEEN @FromDate AND @ToDate;",
+                            WHERE ss.[IsPublic] = 'TRUE' AND (sg.[Id] = @Id OR g.[Id] = @Id OR lt.[ScheduleId] = @Id OR l.[Id] = @Id OR [ClassroomId] = @Id OR [ClusterId] = @Id OR l.[TeacherId] = @Id) AND lb.[LessonDate] BETWEEN @FromDate AND @ToDate;",
                         request
                     );
                     lessonBlocks = await _dbService.GetAll<LessonBlock>(
@@ -208,12 +213,13 @@ namespace AlpimiAPI.Entities.ELessonBlock.Queries
                             lb.[Id], [LessonDate], [LessonStart], [LessonEnd], lb.[LessonId], [ClassroomId], [ClusterId]   
                             FROM [LessonBlock] lb
                             INNER JOIN [Lesson] l ON l.[Id] = lb.[LessonId]
+                            INNER JOIN [LessonType] lt on lt.[Id] = l.[LessonTypeId]
                             LEFT JOIN [LessonSubgroup] lsg ON lsg.[LessonId] = l.[Id]
                             LEFT JOIN [Subgroup] sg ON sg.[Id] = lsg.[SubgroupId]
                             INNER JOIN [Group] g ON g.[Id] = sg.[GroupId]
                             INNER JOIN [Schedule] s on s.[Id] = g.[ScheduleId]
                             INNER JOIN [ScheduleSettings] ss ON ss.[ScheduleId] = s.[Id]
-                            WHERE ss.[IsPublic] = 'TRUE' AND (sg.[Id] = @Id OR g.[Id] = @Id OR g.[ScheduleId] = @Id OR l.[Id] = @Id OR [ClassroomId] = @Id OR [ClusterId] = @Id OR l.[TeacherId] = @Id) AND lb.[LessonDate] BETWEEN @FromDate AND @ToDate
+                            WHERE ss.[IsPublic] = 'TRUE' AND (sg.[Id] = @Id OR g.[Id] = @Id OR lt.[ScheduleId] = @Id OR l.[Id] = @Id OR [ClassroomId] = @Id OR [ClusterId] = @Id OR l.[TeacherId] = @Id) AND lb.[LessonDate] BETWEEN @FromDate AND @ToDate
                             ORDER BY
                             {request.Pagination.SortBy}
                             {request.Pagination.SortOrder}

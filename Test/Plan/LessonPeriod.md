@@ -38,6 +38,9 @@
 - [DeleteLessonPeriodIsRedone()](../Entities/ELessonPeriod/LessonPeriodController.test.cs) - **integrity**  
   Check if delete lesson period is redone
 
+- [DeleteLessonPeriodThrowsErrorWhenIfThereArentEnoughLessonPeriods()](../Entities/ELessonPeriod/LessonPeriodController.test.cs) - **integrity**
+  Check if throws error when a availability/lesson block exists on the last lesson period
+
 
 ## `PATCH` `api/LessonPeriod/{id}`
 

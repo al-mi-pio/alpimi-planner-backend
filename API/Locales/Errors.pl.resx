@@ -204,4 +204,7 @@
   <data name="badImportData" xml:space="preserve">
     <value>Format danych jest niepoprawny w tym rzędzie</value>
   </data>
+  <data name="notEnoughLessonPeriods" xml:space="preserve">
+    <value>{0} nie może zostać usunięty, ponieważ zawiera {1}</value>
+  </data>
 </root>

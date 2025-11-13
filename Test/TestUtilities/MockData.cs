@@ -221,8 +221,8 @@ namespace AlpimiTest.TestUtilities
             return new Availability()
             {
                 WeekDay = 1,
-                End = 1,
-                Start = 1,
+                End = 0,
+                Start = 0,
                 Teacher = GetTeacherDetails(),
                 TeacherId = new Guid(),
             };

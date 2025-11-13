@@ -88,6 +88,7 @@ namespace AlpimiAPI.Entities.ELessonPeriod
         [HttpDelete("{id}")]
         [EnableRateLimiting("Moderate")]
         [ProducesResponseType(204)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         [ProducesResponseType(typeof(ApiErrorResponse), 401)]
         public async Task<ActionResult> Delete(
             [FromRoute] Guid id,
@@ -103,6 +104,10 @@ namespace AlpimiAPI.Entities.ELessonPeriod
                 await _mediator.Send(command);
 
                 return NoContent();
+            }
+            catch (ApiErrorException ex)
+            {
+                return BadRequest(new ApiErrorResponse(400, ex.errors));
             }
             catch (Exception ex)
             {

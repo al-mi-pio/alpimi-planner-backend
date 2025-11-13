@@ -248,6 +248,13 @@ namespace AlpimiTest.TestSetup
                 )
             },
             {
+                "notEnoughLessonPeriods",
+                args => new LocalizedString(
+                    "notEnoughLessonPeriods",
+                    string.Format("{0} cannot be deleted because it contains {1}", args[0], args[1])
+                )
+            },
+            {
                 "alreadyExists",
                 args => new LocalizedString(
                     "alreadyExists",

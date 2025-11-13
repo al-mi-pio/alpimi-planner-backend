@@ -283,7 +283,7 @@ namespace AlpimiAPI.Entities.EHistory.Commands
 
                         case "LessonPeriod":
                             DeleteLessonPeriodHandler deleteLessonPeriodHandler =
-                                new DeleteLessonPeriodHandler(_dbService);
+                                new DeleteLessonPeriodHandler(_dbService, _str, _strFields);
                             DeleteLessonPeriodCommand deleteLessonPeriodCommand =
                                 new DeleteLessonPeriodCommand(
                                     latestHistory.AffectedEntityId,

@@ -37,7 +37,6 @@
     <InternalVisibleTo Include="AlpimiTest.Entities.EAuth" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Collisions\CollisionDataManipulators\" />
     <Folder Include="Logs\" />
   </ItemGroup>
   <Target Name="Husky" BeforeTargets="Restore;CollectPackageReferences" Condition="'$(HUSKY)' != 0">

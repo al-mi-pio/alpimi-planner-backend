@@ -1,6 +1,7 @@
 ﻿using AlpimiAPI.Database;
 using AlpimiAPI.Entities.EScheduleSettings;
 using alpimi_planner_backend.Collisions.CollisionDataGatherers;
+using alpimi_planner_backend.Collisions.CollisionDataManipulators;
 using alpimi_planner_backend.Collisions.CollisionDataObjects;
 using alpimi_planner_backend.Collisions.CollisionUtils;
 
@@ -82,6 +83,15 @@ namespace alpimi_planner_backend.Collisions.CollisionDetectionLogic
             }
 
             //Add & remove from database
+
+            await CollisionCreator.SaveCollisions(
+                collisionScanInfo,
+                results,
+                scheduleId,
+                dbService,
+                cancellationToken,
+                logMaker
+            );
 
             return true;
         }

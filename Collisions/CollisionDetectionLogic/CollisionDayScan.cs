@@ -38,18 +38,37 @@ namespace alpimi_planner_backend.Collisions.CollisionDetectionLogic
                         results.AddList.ObjectCollisions.AddRange(
                             blockResults.AddList.ObjectCollisions
                         );
-                        results.AddList.TargetCollisions.AddRange(
-                            blockResults.AddList.TargetCollisions
-                        );
+                        foreach (CollisionBase collision in blockResults.AddList.TargetCollisions)
+                        {
+                            if (
+                                !results.AddList.TargetCollisions.Any(x =>
+                                    x.CollisionTypeId == collision.CollisionTypeId
+                                    && x.CollidingObject1 == collision.CollidingObject1
+                                    && x.CollidingObject2 == collision.CollidingObject2
+                                )
+                            )
+                            {
+                                results.AddList.TargetCollisions.AddRange(
+                                    blockResults.AddList.TargetCollisions
+                                );
+                            }
+                        }
                         results.AddList.ObjectTargetCollisions.AddRange(
                             blockResults.AddList.ObjectTargetCollisions
                         );
 
                         foreach (DateOnly date in blockResults.RemoveList.Days)
                         {
-                            if (results.RemoveList.Days.Contains(date))
+                            if (!results.RemoveList.Days.Contains(date))
                             {
                                 results.RemoveList.Days.Add(date);
+                            }
+                        }
+                        foreach (DateOnly date in blockResults.RemoveList.Weeks)
+                        {
+                            if (!results.RemoveList.Weeks.Contains(date))
+                            {
+                                results.RemoveList.Weeks.Add(date);
                             }
                         }
                         results.RemoveList.LessonBlockIds.AddRange(

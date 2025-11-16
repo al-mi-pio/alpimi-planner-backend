@@ -38,6 +38,7 @@ namespace alpimi_planner_backend.Collisions.CollisionDetectionLogic
 
                 results.RemoveList.Days.Add(scanDate);
                 results.RemoveList.LessonBlockIds.Add(scanBlockId);
+                results.RemoveList.Weeks.Add(DateOnlyUtils.getWeekStart(scanDate));
             }
 
             return results;

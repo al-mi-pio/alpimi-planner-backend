@@ -1,4 +1,5 @@
-﻿using AlpimiAPI.Database;
+﻿using System.Text.Json;
+using AlpimiAPI.Database;
 using AlpimiAPI.Entities.EAvailability;
 using AlpimiAPI.Entities.EClassroom;
 using AlpimiAPI.Entities.EClassroom.Queries;
@@ -85,7 +86,7 @@ namespace alpimi_planner_backend.Collisions.CollisionDataGatherers
             var guidPar = new GuidPar(scheduleId);
 
             logMaker.writeLog("--Getting lesson periods");
-            collisionScanStaticData.LessonPeriods = await dbService.GetAll<LessonPeriod>(
+            IEnumerable<LessonPeriod>? lessonPeriods = await dbService.GetAll<LessonPeriod>(
                 $@"
                             SELECT
                             lp.[Id], [Start], [ScheduleSettingsId] 
@@ -95,6 +96,10 @@ namespace alpimi_planner_backend.Collisions.CollisionDataGatherers
                             ORDER BY [Start];",
                 guidPar
             );
+            if (lessonPeriods != null)
+            {
+                collisionScanStaticData.LessonPeriods = lessonPeriods;
+            }
             if (collisionScanStaticData.LessonPeriods != null)
             {
                 if (logMaker.isLogEnabled())
@@ -109,7 +114,7 @@ namespace alpimi_planner_backend.Collisions.CollisionDataGatherers
             }
 
             logMaker.writeLog("--Getting availabilities");
-            collisionScanStaticData.Availabilities = await dbService.GetAll<Availability>(
+            IEnumerable<Availability>? availabilities = await dbService.GetAll<Availability>(
                 $@"
                             SELECT
                             a.[Id], a.[WeekDay], a.[Start], a.[End], a.[TeacherId] 
@@ -119,6 +124,10 @@ namespace alpimi_planner_backend.Collisions.CollisionDataGatherers
                             ORDER BY a.[TeacherId];",
                 guidPar
             );
+            if (availabilities != null)
+            {
+                collisionScanStaticData.Availabilities = availabilities;
+            }
             if (collisionScanStaticData.Availabilities != null)
             {
                 if (logMaker.isLogEnabled())
@@ -141,7 +150,7 @@ namespace alpimi_planner_backend.Collisions.CollisionDataGatherers
             }
 
             logMaker.writeLog("--Getting groups");
-            collisionScanStaticData.Groups = await dbService.GetAll<Group>(
+            IEnumerable<Group>? groups = await dbService.GetAll<Group>(
                 $@"
                             SELECT
                             [Id], [Name], [StudentCount], [ScheduleId] 
@@ -150,6 +159,10 @@ namespace alpimi_planner_backend.Collisions.CollisionDataGatherers
                             ORDER BY [Id];",
                 guidPar
             );
+            if (groups != null)
+            {
+                collisionScanStaticData.Groups = groups;
+            }
             if (collisionScanStaticData.Groups != null)
             {
                 if (logMaker.isLogEnabled())
@@ -170,7 +183,7 @@ namespace alpimi_planner_backend.Collisions.CollisionDataGatherers
             }
 
             logMaker.writeLog("--Getting subgroups");
-            collisionScanStaticData.Subgroups = await dbService.GetAll<Subgroup>(
+            IEnumerable<Subgroup>? subgroups = await dbService.GetAll<Subgroup>(
                 $@"
                             SELECT
                             sg.[Id], sg.[Name], sg.[StudentCount], sg.[GroupId] 
@@ -180,6 +193,10 @@ namespace alpimi_planner_backend.Collisions.CollisionDataGatherers
                             ORDER BY [Id];",
                 guidPar
             );
+            if (subgroups != null)
+            {
+                collisionScanStaticData.Subgroups = subgroups;
+            }
             if (collisionScanStaticData.Subgroups != null)
             {
                 if (logMaker.isLogEnabled())
@@ -200,7 +217,7 @@ namespace alpimi_planner_backend.Collisions.CollisionDataGatherers
             }
 
             logMaker.writeLog("--Getting collision types");
-            collisionScanStaticData.CollisionTypes = await dbService.GetAll<CollisionType>(
+            IEnumerable<CollisionType>? collisionTypes = await dbService.GetAll<CollisionType>(
                 $@"
                             SELECT
                             [Id], [Name], [Description], [Weight], [Filter], [Category], [ScheduleId]
@@ -209,6 +226,44 @@ namespace alpimi_planner_backend.Collisions.CollisionDataGatherers
                             ORDER BY [Id];",
                 guidPar
             );
+            if (collisionTypes != null)
+            {
+                List<CollisionTypeData> collisionTypeData = new List<CollisionTypeData>();
+                foreach (CollisionType collisionType in collisionTypes)
+                {
+                    if (collisionType.Filter != null)
+                    {
+                        Filter? filter = JsonSerializer.Deserialize<Filter>(collisionType.Filter);
+                        if (filter != null)
+                        {
+                            collisionTypeData.Add(
+                                new CollisionTypeData(
+                                    collisionType.Id,
+                                    collisionType.Name,
+                                    collisionType.Description,
+                                    collisionType.Weight,
+                                    filter,
+                                    collisionType.Category
+                                )
+                            );
+                        }
+                    }
+                    else
+                    {
+                        collisionTypeData.Add(
+                            new CollisionTypeData(
+                                collisionType.Id,
+                                collisionType.Name,
+                                collisionType.Description,
+                                collisionType.Weight,
+                                new Filter(),
+                                collisionType.Category
+                            )
+                        );
+                    }
+                }
+                collisionScanStaticData.CollisionTypes = collisionTypeData;
+            }
             if (collisionScanStaticData.CollisionTypes != null)
             {
                 if (logMaker.isLogEnabled())
@@ -216,19 +271,17 @@ namespace alpimi_planner_backend.Collisions.CollisionDataGatherers
                     foreach (var position in collisionScanStaticData.CollisionTypes)
                     {
                         logMaker.writeLog(
-                            position.Id
+                            position.id
                                 + "\t"
-                                + position.Name
+                                + position.name
                                 + "\t"
-                                + position.Description
+                                + position.description
                                 + "\t"
-                                + position.Weight
+                                + position.weight
                                 + "\t"
-                                + position.Filter
+                                + JsonSerializer.Serialize(position.filter).ToString()
                                 + "\t"
-                                + position.Category
-                                + "\t"
-                                + position.ScheduleId
+                                + position.category
                         );
                     }
                 }

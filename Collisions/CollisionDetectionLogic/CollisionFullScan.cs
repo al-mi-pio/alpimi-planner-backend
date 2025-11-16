@@ -74,7 +74,23 @@ namespace alpimi_planner_backend.Collisions.CollisionDetectionLogic
                 if (dayResults != null)
                 {
                     results.AddList.ObjectCollisions.AddRange(dayResults.AddList.ObjectCollisions);
-                    results.AddList.TargetCollisions.AddRange(dayResults.AddList.TargetCollisions);
+
+                    foreach (CollisionBase collision in dayResults.AddList.TargetCollisions)
+                    {
+                        if (
+                            !results.AddList.TargetCollisions.Any(x =>
+                                x.CollisionTypeId == collision.CollisionTypeId
+                                && x.CollidingObject1 == collision.CollidingObject1
+                                && x.CollidingObject2 == collision.CollidingObject2
+                            )
+                        )
+                        {
+                            results.AddList.TargetCollisions.AddRange(
+                                dayResults.AddList.TargetCollisions
+                            );
+                        }
+                    }
+
                     results.AddList.ObjectTargetCollisions.AddRange(
                         dayResults.AddList.ObjectTargetCollisions
                     );

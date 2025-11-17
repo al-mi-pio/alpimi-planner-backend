@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 using AlpimiAPI.Database;
 using AlpimiAPI.Entities.EAvailability.Commands;
 using AlpimiAPI.Entities.EAvailability.DTO;
@@ -113,9 +112,12 @@ namespace AlpimiAPI.Entities.EData.Commands
                     {
                         var cells = row.Descendants(ss + "Data").Select(d => d.Value).ToList();
 
+                        if (cells.ElementAtOrDefault(0) == null)
+                            continue;
+
                         var dto = new CreateLessonPeriodDTO
                         {
-                            Start = TimeOnly.Parse(cells.ElementAtOrDefault(0) ?? "00:00:00"),
+                            Start = TimeOnly.Parse(cells.ElementAtOrDefault(0)!),
                             ScheduleId = request.dto.ScheduleId
                         };
 

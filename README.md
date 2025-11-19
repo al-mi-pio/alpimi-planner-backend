@@ -5,7 +5,7 @@
 
 ## Requirements
 
-- [.NET SDK 10](https://dotnet.microsoft.com/en-us/download/dotnet/10.0)
+- [.NET SDK 9](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
 
 - [SQL Server Developer](https://www.microsoft.com/pl-pl/sql-server/sql-server-downloads)
 

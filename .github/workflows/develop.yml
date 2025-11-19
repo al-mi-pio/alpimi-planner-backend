@@ -29,7 +29,7 @@ jobs:
           dotnet tool restore
 
       - name: Build
-        run: dotnet build --no-restore --version 9.0.11
+        run: dotnet build --no-restore
 
   lint:
     name: Lint
@@ -67,7 +67,7 @@ jobs:
           dotnet tool restore
 
       - name: Install EF Core CLI
-        run: dotnet tool install dotnet-ef --global
+        run: dotnet tool install dotnet-ef --global --version 9.0.11
 
       - name: Install SQL Server
         uses: Particular/install-sql-server-action@v1.2.0

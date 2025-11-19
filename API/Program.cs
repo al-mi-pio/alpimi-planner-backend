@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Localization;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
 DotNetEnv.Env.Load();
@@ -59,20 +59,11 @@ try
                 }
             );
             options.AddSecurityRequirement(
-                new OpenApiSecurityRequirement
-                {
+                (document) =>
+                    new OpenApiSecurityRequirement()
                     {
-                        new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference
-                            {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = "Bearer"
-                            }
-                        },
-                        new String[] { }
+                        [new OpenApiSecuritySchemeReference("Bearer", document)] = []
                     }
-                }
             );
         });
     }

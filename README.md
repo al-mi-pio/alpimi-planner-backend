@@ -5,11 +5,11 @@
 
 ## Requirements
 
-- [.NET SDK 8](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
+- [.NET SDK 9](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
 
 - [SQL Server Developer](https://www.microsoft.com/pl-pl/sql-server/sql-server-downloads)
 
-- `Recommended` [Visual Studio Community 2022](https://visualstudio.microsoft.com/pl/vs/community/)
+- `Recommended` [Visual Studio Community 2026](https://visualstudio.microsoft.com/pl/vs/community/)
 
 ## Setup for development
 

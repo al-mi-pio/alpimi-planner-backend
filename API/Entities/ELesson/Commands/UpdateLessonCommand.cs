@@ -405,7 +405,7 @@ namespace AlpimiAPI.Entities.ELesson.Commands
                 $@"
                     UPDATE [Lesson] 
                     SET
-                    [Name] = @Name, [AmountOfHours] = @AmountOfHours 
+                    [Name] = @Name, [AmountOfHours] = @AmountOfHours, [TeacherId] = @TeacherId 
                     OUTPUT
                     INSERTED.[Id],
                     INSERTED.[Name],

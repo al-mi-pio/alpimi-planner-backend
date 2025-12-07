@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Net;
+﻿using System.Net;
 using System.Net.Http.Headers;
 using AlpimiAPI.Entities.ELesson.DTO;
 using AlpimiAPI.Entities.ELessonBlock;
@@ -993,6 +992,40 @@ namespace AlpimiTest.Entities.ELessonBlock
             Assert.Contains(teacherId2.ToString(), stringResponse);
             Assert.DoesNotContain(lessonId1.ToString(), stringResponse);
             Assert.Contains(lessonId2.ToString(), stringResponse);
+        }
+
+        [Fact]
+        public async Task GetAllLessonBlocksReturnsLessonBlocksFromStudentIfStudentIdIsProvided()
+        {
+            await DbHelper.PublishSchedule(_client, scheduleId);
+            var studentDTO = MockData.GetCreateStudentDTODetails(groupId);
+            studentDTO.SubgroupIds = [subgroupId1];
+            var studentId = await DbHelper.SetupStudent(_client, studentDTO);
+            await DbHelper.SetupLessonBlock(
+                _client,
+                MockData.GetCreateLessonBlockDTODetails(lessonId1, classroomId1)
+            );
+            await DbHelper.SetupLessonBlock(
+                _client,
+                MockData.GetCreateSecondLessonBlockDTODetails(lessonId1, classroomId1)
+            );
+            await DbHelper.SetupLessonBlock(
+                _client,
+                MockData.GetCreateThirdLessonBlockDTODetails(lessonId2, classroomId2)
+            );
+            _client.DefaultRequestHeaders.Authorization = null;
+
+            var query = $"?id={studentId}";
+            var response = await _client.GetAsync($"/api/LessonBlock{query}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            var stringResponse = await response.Content.ReadAsStringAsync();
+
+            Assert.Contains(classroomId1.ToString(), stringResponse);
+            Assert.DoesNotContain(classroomId2.ToString(), stringResponse);
+            Assert.Contains(teacherId1.ToString(), stringResponse);
+            Assert.DoesNotContain(teacherId2.ToString(), stringResponse);
+            Assert.Contains(lessonId1.ToString(), stringResponse);
+            Assert.DoesNotContain(lessonId2.ToString(), stringResponse);
         }
 
         [Fact]

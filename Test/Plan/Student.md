@@ -126,6 +126,17 @@
   Check if returns an error when a schedule is inaccessible for user
 
 - [GetStudentThrowsNotFoundWhenWrongIdIsGiven()](../Entities/EStudent/StudentController.test.cs) - **integrity**  
-  Check if returns no days off when wrong id is provided
+  Check if returns no students when wrong id is given
+
+## `GET` `api/Student/byAlbumNumber{albumNumber}`
+
+- [GetStudentByAlbumNumberReturnsStudent()](../Entities/EStudent/StudentController.test.cs) - **integrity**  
+  Check if returns a student when a valid token is provided
+
+- [GetStudentByAlbumNumberThrowsNotFoundWhenWrongAlbumNumberIsGiven()](../Entities/EStudent/StudentController.test.cs) - **integrity**  
+  Check if returns no student when wrong album number is provided
+
+- [GetStudentThrowsNotFoundErrorWhenWrongScheduleIdIsGiven()](../Entities/EStudent/StudentController.test.cs) - **integrity** 
+  Check if returns no student when wrong schedule id is provided
 
 

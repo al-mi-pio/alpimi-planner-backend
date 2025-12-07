@@ -167,8 +167,11 @@
 - [GetAllLessonBlocksReturnsLessonBlocksFromTeacherIfTeacherIdIsProvided()](../Entities/ELessonBlock/LessonBlockController.test.cs) - **integrity**  
   Check if returns lesson blocks when a valid teacher id provided
 
-- [GetAllLessonBlocksReturnsLessonBlocksFromClsterIfClusterIdIsProvided()](../Entities/ELessonBlock/LessonBlockController.test.cs) - **integrity**  
-  Check if returns lesson blocks when a valid classroom id provided
+- [GetAllLessonBlocksReturnsLessonBlocksFromClusterIfClusterIdIsProvided()](../Entities/ELessonBlock/LessonBlockController.test.cs) - **integrity**  
+  Check if returns lesson blocks when a valid cluster id provided
+
+- [GetAllLessonBlocksReturnsLessonBlocksFromStudentIfStudentIdIsProvided()](../Entities/ELessonBlock/LessonBlockController.test.cs) - **integrity**  
+  Check if returns lesson blocks when a valid student id provided
 
 - [GetAllLessonBlocksReturnsLessonBlocksFromPublicSchedules()](../Entities/ELessonBlock/LessonBlockController.test.cs) - **integrity**  
   Check if returns lesson blocks when no token is provided

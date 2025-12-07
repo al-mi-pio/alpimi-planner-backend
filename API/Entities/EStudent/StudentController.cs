@@ -293,5 +293,57 @@ namespace AlpimiAPI.Entities.EStudent
                 );
             }
         }
+
+        /// <summary>
+        /// Gets a Student by album number
+        /// </summary>
+        /// <remarks>
+        /// - JWT token is required
+        /// </remarks>
+        [AllowAnonymous]
+        [HttpGet("{scheduleId}/{albumNumber}")]
+        [EnableRateLimiting("Regular")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 400)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 404)]
+        public async Task<ActionResult<ApiGetResponse<StudentDTO>>> GetOneByAlbumNumber(
+            [FromRoute] string albumNumber,
+            [FromRoute] Guid scheduleId
+        )
+        {
+            var query = new GetStudentByAlbumNumberQuery(albumNumber, scheduleId);
+            try
+            {
+                Student? result = await _mediator.Send(query);
+                if (result == null)
+                {
+                    return NotFound(
+                        new ApiErrorResponse(
+                            404,
+                            [new ErrorObject(_str["notFound", _strFields["Student"]])]
+                        )
+                    );
+                }
+
+                var allSubgroupsQuery = new GetAllSubgroupsQuery(
+                    result.Id,
+                    new Guid(),
+                    "",
+                    new PaginationParams(int.MaxValue, 0, "Id", "ASC")
+                );
+                (IEnumerable<Subgroup>?, int) subgroups = await _mediator.Send(allSubgroupsQuery);
+
+                var response = new ApiGetResponse<StudentDTO>(
+                    DataTrimmer.Trim(result, subgroups.Item1!)
+                );
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(
+                    new ApiErrorResponse(400, [new ErrorObject(_str["unknownError", ex])])
+                );
+            }
+        }
     }
 }

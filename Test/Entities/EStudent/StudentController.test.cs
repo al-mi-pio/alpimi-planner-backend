@@ -1,10 +1,12 @@
-﻿using System.Net;
+﻿using System.Diagnostics;
+using System.Net;
 using System.Net.Http.Headers;
 using AlpimiAPI.Entities.EStudent.DTO;
 using AlpimiAPI.Responses;
 using AlpimiAPI.Utilities;
 using AlpimiTest.TestSetup;
 using AlpimiTest.TestUtilities;
+using MediatR.NotificationPublishers;
 using Xunit;
 
 namespace AlpimiTest.Entities.EStudent
@@ -123,6 +125,11 @@ namespace AlpimiTest.Entities.EStudent
             for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
                 await _client.GetAsync($"/api/Student/{new Guid()}");
             response = await _client.GetAsync($"/api/Student/{new Guid()}");
+            Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
+
+            for (int i = 0; i != Configuration.GetLoosePermitLimit(); i++)
+                await _client.GetAsync($"/api/Student/byAlbumNumber/{new Guid()}");
+            response = await _client.GetAsync($"/api/Student/{new Guid()}/pp");
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
         }
 
@@ -549,6 +556,59 @@ namespace AlpimiTest.Entities.EStudent
             );
 
             var response = await _client.GetAsync($"/api/Student/{new Guid()}");
+
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task GetStudentByAlbumNumberReturnsStudent()
+        {
+            var studentRequest = MockData.GetCreateStudentDTODetails(groupId1);
+            var studentId = await DbHelper.SetupStudent(_client, studentRequest);
+            await DbHelper.PublishSchedule(_client, scheduleId);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", userId)
+            );
+
+            var response = await _client.GetAsync(
+                $"/api/Student/{scheduleId}/{studentRequest.AlbumNumber}"
+            );
+            var jsonResponse = await response.Content.ReadFromJsonAsync<
+                ApiGetResponse<StudentDTO>
+            >();
+
+            Assert.Equal(studentRequest.AlbumNumber, jsonResponse!.Content.AlbumNumber);
+        }
+
+        [Fact]
+        public async Task GetStudentByAlbumNumberThrowsNotFoundWhenWrongAlbumNumberIsGiven()
+        {
+            var studentRequest = MockData.GetCreateStudentDTODetails(groupId1);
+            await DbHelper.SetupStudent(_client, studentRequest);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", userId)
+            );
+
+            var response = await _client.GetAsync($"/api/Student/{scheduleId}/pp");
+
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task GetStudentThrowsNotFoundErrorWhenWrongScheduleIdIsGiven()
+        {
+            var studentRequest = MockData.GetCreateStudentDTODetails(groupId1);
+            await DbHelper.SetupStudent(_client, studentRequest);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                TestAuthorization.GetToken("Admin", "User", userId)
+            );
+
+            var response = await _client.GetAsync(
+                $"/api/Student/{new Guid()}/{studentRequest.AlbumNumber}"
+            );
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }

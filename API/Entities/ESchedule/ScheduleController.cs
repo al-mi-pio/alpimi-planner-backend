@@ -324,7 +324,7 @@ namespace AlpimiAPI.Entities.ESchedule
         public async Task<ActionResult<ApiGetResponse<ScheduleDTO>>> GetOneByURLAndName(
             [FromRoute] string URL,
             [FromRoute] string name,
-            [FromHeader] string Authorization
+            [FromHeader] string? Authorization
         )
         {
             Guid filteredId = Privileges.GetUserIdFromToken(Authorization);

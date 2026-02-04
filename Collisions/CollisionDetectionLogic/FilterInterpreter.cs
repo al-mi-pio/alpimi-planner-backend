@@ -8,6 +8,7 @@ using AlpimiAPI.Entities.EScheduleSettings;
 using alpimi_planner_backend.Collisions.CollisionDataObjects;
 using alpimi_planner_backend.Collisions.CollisionUtils;
 using alpimi_planner_backend.Collisions.RuleLibrary;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace alpimi_planner_backend.Collisions.CollisionDetectionLogic
 {
@@ -96,7 +97,10 @@ namespace alpimi_planner_backend.Collisions.CollisionDetectionLogic
                     {
                         foreach (CollisionLessonBlock block in collisionScanBlocks.lessonBlocks)
                         {
-                            if (lessonBlock.LessonDate == block.LessonDate)
+                            if (
+                                lessonBlock.LessonDate == block.LessonDate
+                                && lessonBlock.Id != block.Id
+                            )
                             {
                                 CollisionLessonBlock objectBlock = lessonBlock;
                                 CollisionLessonBlock targetBlock = block;
@@ -288,6 +292,7 @@ namespace alpimi_planner_backend.Collisions.CollisionDetectionLogic
                                         - lessonBlock.LessonDate.ToDateTime(TimeOnly.MinValue)
                                     ).Days
                                 ) <= 1
+                                && lessonBlock.Id != block.Id
                             )
                             {
                                 CollisionLessonBlock objectBlock = lessonBlock;
@@ -473,98 +478,12 @@ namespace alpimi_planner_backend.Collisions.CollisionDetectionLogic
                     {
                         foreach (CollisionLessonBlock block in collisionScanBlocks.lessonBlocks)
                         {
-                            CollisionLessonBlock objectBlock = lessonBlock;
-                            CollisionLessonBlock targetBlock = block;
-                            bool ruleCheckObject = true;
-                            bool ruleCheckTarget = true;
-
-                            foreach (Rule rule in objectRules)
+                            if (lessonBlock.Id != block.Id)
                             {
-                                ruleCheckObject = rule.CheckBlock(
-                                    objectBlock,
-                                    scanDate,
-                                    collisionScanBlocks,
-                                    scheduleSettings,
-                                    collisionScanStaticData,
-                                    logMaker
-                                );
-                                if (!ruleCheckObject)
-                                {
-                                    break;
-                                }
-                            }
-
-                            foreach (Rule rule in targetRules)
-                            {
-                                ruleCheckTarget = rule.CheckBlock(
-                                    targetBlock,
-                                    scanDate,
-                                    collisionScanBlocks,
-                                    scheduleSettings,
-                                    collisionScanStaticData,
-                                    logMaker
-                                );
-                                if (!ruleCheckTarget)
-                                {
-                                    break;
-                                }
-                            }
-
-                            if (ruleCheckObject && ruleCheckTarget)
-                            {
-                                bool ruleCheck = true;
-
-                                foreach (Rule rule in methodRules)
-                                {
-                                    ruleCheck = rule.CheckPair(
-                                        objectBlock,
-                                        targetBlock,
-                                        scanDate,
-                                        collisionScanBlocks,
-                                        scheduleSettings,
-                                        collisionScanStaticData,
-                                        logMaker
-                                    );
-                                    if (!ruleCheck)
-                                    {
-                                        break;
-                                    }
-                                }
-
-                                if (ruleCheck)
-                                {
-                                    string collidingObject1;
-                                    string collidingObject2;
-
-                                    if (objectBlock.Id.CompareTo(targetBlock.Id) < 0)
-                                    {
-                                        collidingObject1 = objectBlock.Id.ToString();
-                                        collidingObject2 = targetBlock.Id.ToString();
-                                    }
-                                    else
-                                    {
-                                        collidingObject1 = targetBlock.Id.ToString();
-                                        collidingObject2 = objectBlock.Id.ToString();
-                                    }
-                                    collisions.Add(
-                                        new CollisionBase
-                                        {
-                                            Id = Guid.NewGuid(),
-                                            CollidingObject1 = collidingObject1,
-                                            CollidingObject2 = collidingObject2,
-                                            Ignored = false,
-                                            CollisionTypeId = collisionTypeData.id
-                                        }
-                                    );
-                                }
-                            }
-                            else
-                            {
-                                objectBlock = block;
-                                targetBlock = lessonBlock;
-
-                                ruleCheckObject = true;
-                                ruleCheckTarget = true;
+                                CollisionLessonBlock objectBlock = lessonBlock;
+                                CollisionLessonBlock targetBlock = block;
+                                bool ruleCheckObject = true;
+                                bool ruleCheckTarget = true;
 
                                 foreach (Rule rule in objectRules)
                                 {
@@ -644,6 +563,95 @@ namespace alpimi_planner_backend.Collisions.CollisionDetectionLogic
                                                 CollisionTypeId = collisionTypeData.id
                                             }
                                         );
+                                    }
+                                }
+                                else
+                                {
+                                    objectBlock = block;
+                                    targetBlock = lessonBlock;
+
+                                    ruleCheckObject = true;
+                                    ruleCheckTarget = true;
+
+                                    foreach (Rule rule in objectRules)
+                                    {
+                                        ruleCheckObject = rule.CheckBlock(
+                                            objectBlock,
+                                            scanDate,
+                                            collisionScanBlocks,
+                                            scheduleSettings,
+                                            collisionScanStaticData,
+                                            logMaker
+                                        );
+                                        if (!ruleCheckObject)
+                                        {
+                                            break;
+                                        }
+                                    }
+
+                                    foreach (Rule rule in targetRules)
+                                    {
+                                        ruleCheckTarget = rule.CheckBlock(
+                                            targetBlock,
+                                            scanDate,
+                                            collisionScanBlocks,
+                                            scheduleSettings,
+                                            collisionScanStaticData,
+                                            logMaker
+                                        );
+                                        if (!ruleCheckTarget)
+                                        {
+                                            break;
+                                        }
+                                    }
+
+                                    if (ruleCheckObject && ruleCheckTarget)
+                                    {
+                                        bool ruleCheck = true;
+
+                                        foreach (Rule rule in methodRules)
+                                        {
+                                            ruleCheck = rule.CheckPair(
+                                                objectBlock,
+                                                targetBlock,
+                                                scanDate,
+                                                collisionScanBlocks,
+                                                scheduleSettings,
+                                                collisionScanStaticData,
+                                                logMaker
+                                            );
+                                            if (!ruleCheck)
+                                            {
+                                                break;
+                                            }
+                                        }
+
+                                        if (ruleCheck)
+                                        {
+                                            string collidingObject1;
+                                            string collidingObject2;
+
+                                            if (objectBlock.Id.CompareTo(targetBlock.Id) < 0)
+                                            {
+                                                collidingObject1 = objectBlock.Id.ToString();
+                                                collidingObject2 = targetBlock.Id.ToString();
+                                            }
+                                            else
+                                            {
+                                                collidingObject1 = targetBlock.Id.ToString();
+                                                collidingObject2 = objectBlock.Id.ToString();
+                                            }
+                                            collisions.Add(
+                                                new CollisionBase
+                                                {
+                                                    Id = Guid.NewGuid(),
+                                                    CollidingObject1 = collidingObject1,
+                                                    CollidingObject2 = collidingObject2,
+                                                    Ignored = false,
+                                                    CollisionTypeId = collisionTypeData.id
+                                                }
+                                            );
+                                        }
                                     }
                                 }
                             }

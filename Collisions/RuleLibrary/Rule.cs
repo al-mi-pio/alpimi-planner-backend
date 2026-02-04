@@ -17,6 +17,7 @@ namespace alpimi_planner_backend.Collisions.RuleLibrary
             LogMaker logMaker
         )
         {
+            logMaker.writeLog("Nie rozpoznano zasady");
             return false;
         }
 
@@ -30,6 +31,7 @@ namespace alpimi_planner_backend.Collisions.RuleLibrary
             LogMaker logMaker
         )
         {
+            logMaker.writeLog("Nie rozpoznano zasady");
             return false;
         }
 
@@ -42,6 +44,7 @@ namespace alpimi_planner_backend.Collisions.RuleLibrary
             LogMaker logMaker
         )
         {
+            logMaker.writeLog("Nie rozpoznano zasady");
             return new List<Guid>();
         }
 
@@ -55,6 +58,7 @@ namespace alpimi_planner_backend.Collisions.RuleLibrary
             LogMaker logMaker
         )
         {
+            logMaker.writeLog("Nie rozpoznano zasady");
             return false;
         }
 
@@ -68,6 +72,7 @@ namespace alpimi_planner_backend.Collisions.RuleLibrary
             LogMaker logMaker
         )
         {
+            logMaker.writeLog("Nie rozpoznano zasady");
             return false;
         }
 

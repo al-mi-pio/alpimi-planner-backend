@@ -1,4 +1,5 @@
 ﻿using AlpimiAPI.Database;
+using AlpimiAPI.Entities.ELessonPeriod;
 using AlpimiAPI.Entities.EScheduleSettings;
 using alpimi_planner_backend.Collisions.CollisionDataGatherers;
 using alpimi_planner_backend.Collisions.CollisionDataManipulators;
@@ -18,7 +19,7 @@ namespace alpimi_planner_backend.Collisions.CollisionDetectionLogic
         {
             logMaker.writeLog("--Starting scan");
 
-            ScheduleSettings? scheduleSettings = await DataHarvester.getScheduleSettings(
+            ScheduleSettings? scheduleSettings = await DataHarvester.GetScheduleSettings(
                 scheduleId,
                 dbService,
                 cancellationToken,
@@ -27,7 +28,7 @@ namespace alpimi_planner_backend.Collisions.CollisionDetectionLogic
 
             if (scheduleSettings != null)
             {
-                List<CollisionScanInfo> scanList = await GetCollisionScanInfo.getScanData(
+                List<CollisionScanInfo> scanList = await GetCollisionScanInfo.getScanInfo(
                     scheduleId,
                     dbService,
                     cancellationToken,
@@ -43,6 +44,13 @@ namespace alpimi_planner_backend.Collisions.CollisionDetectionLogic
                             cancellationToken,
                             logMaker
                         );
+
+                    logMaker.writeLog("Lesson periods:");
+                    foreach (LessonPeriod period in collisionScanStaticData.LessonPeriods)
+                    {
+                        var periodTime = (period.Start.Hour * 60) + period.Start.Minute;
+                        logMaker.writeLog(periodTime.ToString());
+                    }
 
                     CollisionScanInfo? fullScan = scanList.FirstOrDefault(info =>
                         info.scanType == "Full"

@@ -20,7 +20,7 @@ namespace alpimi_planner_backend.Collisions.CollisionDataGatherers
 
         public record DayOffDates(DateOnly From, DateOnly To);
 
-        public static async Task<List<CollisionScanInfo>> getScanData(
+        public static async Task<List<CollisionScanInfo>> getScanInfo(
             Guid scheduleId,
             IDbService dbService,
             CancellationToken cancellationToken,

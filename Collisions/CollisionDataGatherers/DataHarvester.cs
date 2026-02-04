@@ -31,7 +31,7 @@ namespace alpimi_planner_backend.Collisions.CollisionDataGatherers
 
         public record TimeIntervalPar(Guid Id, DateOnly FromDate, DateOnly ToDate);
 
-        public static async Task<ScheduleSettings?> getScheduleSettings(
+        public static async Task<ScheduleSettings?> GetScheduleSettings(
             Guid scheduleId,
             IDbService dbService,
             CancellationToken cancellationToken,

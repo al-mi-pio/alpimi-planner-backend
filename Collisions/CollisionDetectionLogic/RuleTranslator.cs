@@ -45,6 +45,12 @@ namespace alpimi_planner_backend.Collisions.CollisionDetectionLogic
                     case "test":
                         ruleList.Add(new TestRule(rule.data));
                         break;
+                    case "coincide":
+                        ruleList.Add(new CoincideRule(rule.data));
+                        break;
+                    case "sameteacher":
+                        ruleList.Add(new SameTeacherRule(rule.data));
+                        break;
                     default:
                         ruleList.Add(new Rule(rule.data));
                         break;

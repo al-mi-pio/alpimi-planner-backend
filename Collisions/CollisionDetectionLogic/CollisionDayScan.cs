@@ -19,7 +19,7 @@ namespace alpimi_planner_backend.Collisions.CollisionDetectionLogic
             CollisionScanResults results = new CollisionScanResults();
 
             logMaker.writeLog("***Starting day scan");
-
+            //logMaker.writeLog(collisionScanBlocks.lessonBlocks.Count.ToString());
             for (int i = collisionScanBlocks.lessonBlocks.Count - 1; i >= 0; i--)
             {
                 if (collisionScanBlocks.lessonBlocks[i].LessonDate == scanDate)
@@ -78,6 +78,7 @@ namespace alpimi_planner_backend.Collisions.CollisionDetectionLogic
 
                     collisionScanBlocks.lessonBlocks.RemoveAt(i);
                 }
+                //logMaker.writeLog(i.ToString());
             }
 
             return results;

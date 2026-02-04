@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using AlpimiAPI.Entities.ECollision;
 using AlpimiAPI.Entities.ECollisionType.DTO;
+using AlpimiAPI.Entities.EDayOff;
 using AlpimiAPI.Entities.ELessonBlock;
 using AlpimiAPI.Entities.EScheduleSettings;
 using alpimi_planner_backend.Collisions.CollisionDataObjects;
@@ -27,6 +28,15 @@ namespace alpimi_planner_backend.Collisions.CollisionDetectionLogic
                 CollisionLessonBlock? lessonBlock = collisionScanBlocks.lessonBlocks.FirstOrDefault(
                     block => block.Id == scanBlockId
                 );
+                CollisionScanBlocks tempScanBlocks = new CollisionScanBlocks();
+                tempScanBlocks.daysOffFull = new List<DayOff>(collisionScanBlocks.daysOffFull);
+                tempScanBlocks.lessonBlocks = new List<CollisionLessonBlock>(
+                    collisionScanBlocks.lessonBlocks
+                );
+                if (lessonBlock != null)
+                {
+                    tempScanBlocks.lessonBlocks.RemoveAll(block => block.Id == scanBlockId);
+                }
                 List<CollisionBase> collisions = FilterInterpreter.Interpret(
                     collisionType,
                     lessonBlock,

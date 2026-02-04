@@ -33,11 +33,21 @@ namespace alpimi_planner_backend.Collisions.RuleLibrary
                         + Params.liczba
                         + " To jest kolejna liczba: "
                         + Params.liczba2
+                        + " To jest suma: "
+                        + (Params.liczba + Params.liczba2)
                         + " To jest tekst: "
                         + Params.text
                 );
             }
-            return true;
+            if (objectBlock.Lesson != null)
+            {
+                if (objectBlock.Lesson.Teacher.Name == "Jan Kowalski")
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

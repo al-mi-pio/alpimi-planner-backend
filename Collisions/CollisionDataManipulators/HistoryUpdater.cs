@@ -23,9 +23,9 @@ namespace alpimi_planner_backend.Collisions.CollisionDataManipulators
                     UPDATE [History] 
                     SET
                     [CollisionChecked] = 1
-                    OUTPUT
-                    INSERTED.[CollisionChecked]
-                    WHERE [Id] = @Id OR [ScheduleId] = @Id;",
+                    WHERE [Id] = @Id OR [ScheduleId] = @Id;
+
+                    SELECT CASE WHEN @@ROWCOUNT > 0 THEN 1 ELSE 0 END;",
                 guidPar
             );
             return true;
